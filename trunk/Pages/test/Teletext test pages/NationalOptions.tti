@@ -1,0 +1,32 @@
+DE,(no description)
+DS,Wales
+SP,C:\dev\zwintest\wxTED\Pages\test\Teletext test pages\NationalOptions.tti
+CT,15,T
+PS,8080
+PN,30600
+SC,0000
+OL,1,Ñùá     Éç  National Options Test       
+OL,2,                                        
+OL,3,Ñùá                                     
+OL,4,Ñùá    # hash                           
+OL,5,Ñùá    $ dollar                         
+OL,6,Ñùá    @ at                             
+OL,7,Ñùá    [ Left square bracket            
+OL,8,Ñùá    \ Forward slash                  
+OL,9,Ñùá    ] Right square bracket           
+OL,10,Ñùá    ^ Caret                          
+OL,11,Ñùá    _ Underscore                     
+OL,12,Ñùá    ` Left single quote              
+OL,13,Ñùá    { Left curly bracket             
+OL,14,Ñùá    | Pipe                           
+OL,15,Ñùá    } Right curly bracket            
+OL,16,Ñùá    ~ Tilde                          
+OL,17,Ñùá                                     
+OL,18,Ñùá                                     
+OL,19,Ñùá                                     
+OL,20,Ñùá                                     
+OL,21,Ñùá                                     
+OL,22,Ñùá                                     
+OL,23,Ñùá                                     
+OL,24,  Å100      Ç200      É300      Ü400    
+FL,100,200,300,400,0,0
