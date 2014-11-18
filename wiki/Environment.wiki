@@ -9,3 +9,16 @@ wxTED is written in C++ with the wxWidgets GUI library. It also uses the wxSmith
 This is what I use to develop wxTED.
   * Code::Blocks IDE bundled with the mingw compiler.
   * wxWidgets GUI
+
+= Configuring =
+wxWidgets takes a bit of configuring. First you need to change your PATH variable to allow the makefile to work. This was what I added to the Windows PATH.
+
+C:\Program Files (x86)\CodeBlocks\MinGW\bin;
+
+The options I chose to set are the default ones documented which are:
+
+ * MONOLITHIC
+ * UNICODE
+ * SHARED
+
+This makes the dll, which I copied to the bin\Release folder.
