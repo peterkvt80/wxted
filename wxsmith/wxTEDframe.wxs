@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxFrame" name="wxTEDFrame">
+		<title>wxTED 1.02</title>
+		<font>
+			<size>10</size>
+			<style>normal</style>
+			<weight>normal</weight>
+			<underlined>0</underlined>
+			<family>swiss</family>
+			<face>teletext2</face>
+		</font>
+		<id_arg>0</id_arg>
+		<handler function="OnSetFocus" entry="EVT_SET_FOCUS" />
+		<handler function="OnKillFocus" entry="EVT_KILL_FOCUS" />
+		<object class="wxNotebook" name="ID_NOTEBOOK1" variable="Notebook1" member="yes">
+			<size>400,24</size>
+			<enabled>0</enabled>
+			<hidden>1</hidden>
+			<object class="notebookpage">
+				<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
+					<size>392,332</size>
+				</object>
+				<label>P1</label>
+			</object>
+		</object>
+		<object class="wxMenuBar" variable="MenuBar1" member="no">
+			<object class="wxMenu" variable="Menu1" member="no">
+				<label>&amp;File</label>
+				<object class="wxMenuItem" name="idNewPage" variable="MenuItem1" member="yes">
+					<label>New</label>
+					<accel>CTRL-N</accel>
+					<help>Create a new page</help>
+					<handler function="OnMenuNew" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idOpenPage" variable="MenuItem3" member="yes">
+					<label>Open</label>
+					<accel>CTRL-O</accel>
+					<help>Open a teletext page</help>
+				</object>
+				<object class="wxMenuItem" name="idSavePage" variable="MenuItem4" member="yes">
+					<label>Save</label>
+					<accel>CTRL-S</accel>
+					<help>Save a teletext page</help>
+				</object>
+				<object class="wxMenuItem" name="isSavePageAs" variable="MenuItemSaveAs" member="yes">
+					<label>Save as</label>
+					<help>Save a teletext page with a different name</help>
+					<handler function="OnMenuSaveAs" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idProperties" variable="MenuItemProperties" member="yes">
+					<label>Properties</label>
+					<help>Page properties</help>
+					<handler function="OnMenuItemProperties" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idPublish" variable="MenuItemPublish" member="yes">
+					<label>Publish</label>
+					<help>Publish the page to an inserter</help>
+					<handler function="OnMenuItemPublish" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuQuit" variable="MenuItemQuit" member="no">
+					<label>Quit</label>
+					<accel>Alt-F4</accel>
+					<help>Quit the application</help>
+					<handler function="OnQuit" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu3" member="yes">
+				<label>Edit</label>
+				<object class="wxMenuItem" name="idUndo" variable="MenuItemUndo" member="yes">
+					<label>Undo</label>
+					<enabled>0</enabled>
+					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idCut" variable="MenuItem11" member="yes">
+					<label>Cut</label>
+					<help>Cut the selected area</help>
+					<enabled>0</enabled>
+					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idCopy" variable="MenuItem12" member="yes">
+					<label>Copy</label>
+					<help>Copy the selected area</help>
+					<enabled>0</enabled>
+					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idPaste" variable="MenuItem13" member="yes">
+					<label>Paste</label>
+					<help>Paste text from the clipboard</help>
+					<enabled>0</enabled>
+					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idSelectAll" variable="MenuItem14" member="yes">
+					<label>Select All</label>
+					<help>Select the entire page</help>
+					<enabled>0</enabled>
+					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idInsertPage" variable="MenuItemInsertSubpage" member="yes">
+					<label>Insert subpage after this one</label>
+					<help>Add a subpage after this page</help>
+					<handler function="OnMenuItemInsertSubpage" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idDeleteSubPage" variable="MenuItemDeletePage" member="yes">
+					<label>Delete this subpage</label>
+					<handler function="OnMenuItemDeletePage" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="MenuPresentation" member="yes">
+				<label>Presentation</label>
+				<object class="wxMenu" name="ID_MENUITEM1" variable="MenuItemLanguage" member="yes">
+					<label>Language</label>
+					<object class="wxMenuItem" name="idLanguageEnglish" variable="MenuItemEnglish" member="yes">
+						<label>English</label>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="idLanguageFrench" variable="MenuItemFrench" member="yes">
+						<label>French</label>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="idLanguageSwedish" variable="MenuItemSwedish" member="yes">
+						<label>Swedish/Finnish/Hungarian</label>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="idLanguageCzechSlovak" variable="MenuItemCzech" member="yes">
+						<label>Czech/Slovak</label>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="idLanguageGerman" variable="MenuItemGerman" member="yes">
+						<label>German</label>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="idLanguageSpanish" variable="MenuItemSpanish" member="yes">
+						<label>Spanish/Portuguese</label>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="idLanguageItalian" variable="MenuItemItalian" member="yes">
+						<label>Italian</label>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+				</object>
+				<object class="wxMenuItem" name="idPageNumber" variable="MenuItemPageNumber" member="yes">
+					<label>Properties</label>
+					<help>Set the page number for transmission</help>
+					<handler function="OnMenuItemProperties" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="ID_MENUITEMSHOWHEADER" variable="MenuItemShowHeader" member="yes">
+					<label>Show header</label>
+					<checkable>1</checkable>
+				</object>
+			</object>
+			<object class="wxMenu" variable="MenuHelp" member="no">
+				<label>Help</label>
+				<object class="wxMenuItem" name="idMenuAbout" variable="MenuItemAbout" member="no">
+					<label>About</label>
+					<accel>F1</accel>
+					<help>Show info about this application</help>
+					<handler function="OnAbout" entry="EVT_MENU" />
+				</object>
+			</object>
+		</object>
+		<object class="wxStatusBar" name="ID_STATUSBAR1" variable="StatusBar1" member="yes">
+			<fields>1</fields>
+			<widths>-1</widths>
+			<styles>wxSB_NORMAL</styles>
+		</object>
+		<object class="wxFileDialog" variable="LoadPageFileDialog" member="yes">
+			<message>Select teletext file</message>
+			<wildcard>*.tti*</wildcard>
+			<style>wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
+		</object>
+		<object class="wxTimer" name="ID_TIMER1" variable="m_Timer1" member="yes">
+			<interval>456</interval>
+		</object>
+		<object class="wxFileDialog" variable="FileDialogSaveAs" member="yes">
+			<message>Save file as...</message>
+			<wildcard>*.tti</wildcard>
+			<style>wxFD_SAVE|wxFD_OVERWRITE_PROMPT</style>
+		</object>
+	</object>
+</wxsmith>

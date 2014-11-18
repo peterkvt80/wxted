@@ -1,0 +1,33 @@
+DS,Wales
+SP,C:\HTV\TESTIN~1\TELETE~1\INTRO.TTI
+DE,(no description)
+PN,40000
+CT,15,C
+SC,0001
+PS,8040
+MS,0
+OL,1,ƒ                                     
+OL,2,ƒThe following  pages will test       
+OL,3,ƒ                                     
+OL,4,ƒevery capability of teletext.        
+OL,5,ƒ                                     
+OL,6,ƒ                                     
+OL,7,ƒ                                     
+OL,8,ƒ Page 401  :†Different colours       
+OL,9,ƒ                                     
+OL,10,ƒ Page 402  :†Images                  
+OL,11,ƒ                                     
+OL,12,ƒ Page 403  :†Steady and Flashing     
+OL,13,ƒ                                     
+OL,14,ƒ Page 404  :†Text Size               
+OL,15,ƒ                                     
+OL,16,ƒ Page 405  :†Concealing text         
+OL,17,ƒ                                     
+OL,18,ƒ Page 406  :†Mosaic                  
+OL,19,ƒ                                     
+OL,20,ƒ Page 407  :†Boxes                   
+OL,21,ƒ                                     
+OL,22,ƒ Page 408  :†Holding Graphics        
+OL,23,ƒ                                     
+OL,24,  100      ‚200      ƒ300      †400    
+FL,100,200,300,400,0,0
