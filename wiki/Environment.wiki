@@ -1,0 +1,11 @@
+#summary Development Environment for wxTED
+
+= Introduction =
+
+wxTED is written in C++ with the wxWidgets GUI library. It also uses the wxSmith helper to do the layout. I used Windows.
+
+= Details =
+
+This is what I use to develop wxTED.
+  * Code::Blocks IDE bundled with the mingw compiler.
+  * wxWidgets GUI
