@@ -30,3 +30,5 @@ For the FTP uploading function of the Publish option in Linker settings-->Other 
 There is no install for the finished system. It must be distributed with the dll  that was made during the install of wxWidgets, which on my setup is called wxmsw30u_gcc_custom.dll.
 =Font=
 The font that I used is teletext2.ttf. I can't remember where it came from and I didn't see any author or copyright. I found it referenced by some css one day so I grabbed it as it looked useful. It has most European and Middle Eastern languages and the G3 smooth graphics shapes. The font appears to be suitable for teletext level 2.5 and 3.5.
+
+I am targetting this application to use Unicode but where possible I will use methods to make it work when compiled for ASCII.,
