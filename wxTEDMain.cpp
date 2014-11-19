@@ -386,6 +386,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         bool separated=false;
         bool doubleheight=false;
         bool flashing=false;
+        bool hold=false;
+        char holdChar=' ';
 
 
         fg=wxWHITE;
@@ -519,22 +521,30 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeNewBackground : // New background
                     bg=fg;
                     break;
-                case ttxCodeHoldGraphics : // Separated gfx
-                    std::cout << "Hold gfx not implemented" << std::endl;
+                case ttxCodeHoldGraphics : // Hold gfx
+                    hold=true;
                     break;
                 case ttxCodeReleaseGraphics : // Separated gfx
                     std::cout << "Release gfx not implemented" << std::endl;
+                    hold=false;
+                    break;
+                case 14:; // Ignore shift in/shift out and avoid them falling into default
+                case 15:;
+                case 16:;
                     break;
                 default :
                     // std::cout << "Trace OL:ordinary character " << ch << std::endl;
-                    ch=str[col];
+                    ch=str[col] & 0x7f;
                     ch2=str[col];
                     ch2=mapTextChar(ch2);
+                    if ((ch>0x20 && ch<0x40) || ch>=0x60) holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
                 }
-                if (graphics && (ch<0x40 || ch>=0x60) ) // Also need exception for A..Z . TODO
+                if (graphics && ((ch>=0x20 && ch<0x40) || ch>=0x60) ) // Graphics (but not capital A..Z)
                 {
+                    if (hold)
+                        ch=holdChar;
                     int j=0x01;
-                    for (int i=0;i<6;i++)
+                    for (int i=0;i<6;i++) // for each of the six pixels in this character
                     {
                         if (ch & j)
                         {
@@ -565,7 +575,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                                                                  (i/2)*m_ttxH/3),
                                               wxSize(k+m_ttxW/2,k+m_ttxH/3));
                     }
-                }
+
+                } // Graphic block
                 else
                 {
                     if (m_blinkToggle || !flashing)
@@ -973,7 +984,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_resize(GetSize()); // Adjust the font to fit the available space
 
     /* Initial page */
-    m_rootPage = new TTXPage("BBC100.tti");
+    m_rootPage = new TTXPage("BBC100.tti","");
     m_setLanguage();
     iPageCount=m_rootPage->GetPageCount();
     iPage=0;
@@ -1021,8 +1032,9 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     wxString filename=LoadPageFileDialog->GetFilename();
     std::cout << "the filename was " << filename << std::endl;
     std::cout << "Loading a teletext page " << str << std::endl;
+    m_rootPage = new TTXPage(str,filename.ToStdString());
     iPageCount=m_rootPage->GetPageCount();
-    m_rootPage = new TTXPage(str,filename);
+
     wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
     iPage=0;
@@ -1081,30 +1093,29 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
 {
     // If the page has no filename, we can not save it. Do Save As or load another page.
-    std::string s=m_rootPage->GetSourcePage();
-    if (s.empty())
+    // We probably alao want to prevent Publishing a page with unsaved work in it. TODO.
+    wxString sp=m_rootPage->GetSourcePage();
+    wxString spShort=m_rootPage->GetShortFilename();
+    if (sp.IsEmpty())
     {
         wxString msg="To publish this Page, do Save As first";
         wxMessageBox(msg, _("Not saved"));
         return;
     }
-    // Ascii to wide
-    //LPTSTR
-    /*
-    std::string str="something";
-TCHAR *param=new TCHAR[str.size()+1];
-param[str.size()]=0;
-//As much as we'd love to, we can't use memcpy() because
-//sizeof(TCHAR)==sizeof(char) may not be true:
-std::copy(str.begin(),str.end(),param);
-*/
-wxString path=_T("htdocs/teletext/wxted/");
-std::cout << "Destination filename=" << s << std::endl;
-return;
-    int result=send(_T("ftp.plus.net"),_T("randomsite"),_T("thepassword"),_T("c:\\dev\\zwintest\\wxTED\\bin\\debug\\ttxline.cpp"),_T("htdocs/teletext/wxted/blah"));
-                    //"/htdocs/teletext/wxted/");
+
+    // Work out the source
+    LPCTSTR source=sp.ToStdWstring().c_str();
+
+    // Work out the destination
+    LPCTSTR path=_T("htdocs/teletext/wxted/");
+    TCHAR buff[100]=_T("");
+    LPTSTR destination=buff;
+    _tcscat(destination,path);
+    _tcscat(destination,spShort.ToStdWstring().c_str());
+
+    // And do the send
+    int result=send(FTP_SERVER,FTP_USER,FTP_PASSWORD,source,destination);
     std::cout << "result of publish=" << result << std::endl;
-    // int send(const char * ftp, const char * user, const char * pass, const char * pathondisk, char * nameonftp)
 }
 
 void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
@@ -1347,9 +1358,7 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 	    std::cout << "[send] InternetConnect Failed" << std::endl;
 		return 1;
 	}
-	TCHAR * buf=nameonftp;
-	//_tcscat(buf,_T(".txt"));
-	int x = FtpPutFile(hFtpSession, (LPTSTR)pathondisk, (LPTSTR)buf, FTP_TRANSFER_TYPE_ASCII, 0);
+	int x = FtpPutFile(hFtpSession, (LPTSTR)pathondisk, (LPTSTR)nameonftp, FTP_TRANSFER_TYPE_ASCII, 0);
 	int y=GetLastError();
 	std::cout << "y=" << y << std::endl;
 	Sleep(1000);

@@ -47,6 +47,18 @@
 #include <wininet.h>
 #pragma comment(lib, "wininet")
 
+#include "c:\users\Peter\Documents\My Projects\ftplogin\ftplogin.h"
+
+#ifndef _FTPLOGIN.H_
+#define _FTPLOGIN.H_
+// Obviously you move this section into your own ftplogin.h at the moment
+// Longer term you put it in the persistent settings
+#define FTP_SERVER   _T("your.ftp.server")
+#define FTP_USER     _T("username")
+#define FTP_PASSWORD _T("password")
+
+#endif
+
 class wxTEDFrame: public wxFrame
 {
     public:
