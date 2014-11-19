@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1385316876 source:c:\dev\zwintest\wxted\resource.rc
+1416333268 source:c:\dev\zwintest\wxted\resource.rc
 	"wx/msw/wx.rc"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\wx.rc
@@ -19,12 +19,12 @@
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\rcdefs.h
 
-1414759011 source:c:\dev\zwintest\wxted\wxtedapp.cpp
+1416333297 source:c:\dev\zwintest\wxted\wxtedapp.cpp
 	"wxTEDApp.h"
 	"wxTEDMain.h"
 	<wx/image.h>
 
-1414677543 c:\dev\zwintest\wxted\wxtedapp.h
+1416333292 c:\dev\zwintest\wxted\wxtedapp.h
 	<wx/app.h>
 
 1412504348 c:\wxwidgets-3.0.2\include\wx\app.h
@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1416306935 c:\dev\zwintest\wxted\wxtedmain.h
+1416352446 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -911,6 +911,7 @@
 	"ttxpage.h"
 	"PageSettingsDialog.h"
 	<wininet.h>
+	"c:\users\Peter\Documents\My Projects\ftplogin\ftplogin.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\menu.h
 	"wx/defs.h"
@@ -1415,7 +1416,7 @@
 	"wx/event.h"
 	"wx/control.h"
 
-1416313844 c:\dev\zwintest\wxted\ttxpage.h
+1416333934 c:\dev\zwintest\wxted\ttxpage.h
 	<stdlib.h>
 	<iostream>
 	<fstream>
@@ -1427,12 +1428,12 @@
 	"ttxcodes.h"
 	"ttxline.h"
 
-1415707692 c:\dev\zwintest\wxted\ttxline.h
+1416333292 c:\dev\zwintest\wxted\ttxline.h
 	<iostream>
 	<string>
 	"ttxcodes.h"
 
-1416267479 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1416352446 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -1492,10 +1493,10 @@
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\msgdlg.h
 
-1415707933 source:c:\dev\zwintest\wxted\ttxline.cpp
+1416333297 source:c:\dev\zwintest\wxted\ttxline.cpp
 	"ttxline.h"
 
-1416313866 source:c:\dev\zwintest\wxted\ttxpage.cpp
+1416333268 source:c:\dev\zwintest\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\filedlg.h
@@ -2026,9 +2027,9 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\mdi.h
 	"wx/frame.h"
 
-1415636202 c:\dev\zwintest\wxted\ttxcodes.h
+1416333268 c:\dev\zwintest\wxted\ttxcodes.h
 
-1416070234 c:\dev\zwintest\wxted\pagesettingsdialog.h
+1416333297 c:\dev\zwintest\wxted\pagesettingsdialog.h
 	<wx/stattext.h>
 	<wx/radiobox.h>
 	<wx/textctrl.h>
@@ -2036,8 +2037,10 @@
 	<wx/button.h>
 	<wx/dialog.h>
 
-1416070234 source:c:\dev\zwintest\wxted\pagesettingsdialog.cpp
+1416333269 source:c:\dev\zwintest\wxted\pagesettingsdialog.cpp
 	"PageSettingsDialog.h"
 	<wx/intl.h>
 	<wx/string.h>
+
+1416348325 c:\users\peter\documents\my projects\ftplogin\ftplogin.h
 

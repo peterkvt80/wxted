@@ -40,7 +40,7 @@ class TTXPage
         TTXPage();
 
         /** Construct from a file */
-        TTXPage(std::string filename);
+        TTXPage(std::string filename,  std::string shortFilename);
 
         /** Default destructor */
         ~TTXPage();
