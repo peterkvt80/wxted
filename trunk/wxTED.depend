@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1416352446 c:\dev\zwintest\wxted\wxtedmain.h
+1416444827 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -911,6 +911,7 @@
 	"ttxpage.h"
 	"PageSettingsDialog.h"
 	<wininet.h>
+	"PublishSetupDialog.h"
 	"c:\users\Peter\Documents\My Projects\ftplogin\ftplogin.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\menu.h
@@ -2043,4 +2044,16 @@
 	<wx/string.h>
 
 1416348325 c:\users\peter\documents\my projects\ftplogin\ftplogin.h
+
+1416445303 c:\dev\zwintest\wxted\publishsetupdialog.h
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/choice.h>
+	<wx/button.h>
+	<wx/dialog.h>
+
+1416443833 source:c:\dev\zwintest\wxted\publishsetupdialog.cpp
+	"PublishSetupDialog.h"
+	<wx/intl.h>
+	<wx/string.h>
 
