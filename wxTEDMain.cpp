@@ -72,6 +72,7 @@ const long wxTEDFrame::idSavePage = wxNewId();
 const long wxTEDFrame::isSavePageAs = wxNewId();
 const long wxTEDFrame::idProperties = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
+const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
 const long wxTEDFrame::idUndo = wxNewId();
 const long wxTEDFrame::idCut = wxNewId();
@@ -525,7 +526,6 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     hold=true;
                     break;
                 case ttxCodeReleaseGraphics : // Separated gfx
-                    std::cout << "Release gfx not implemented" << std::endl;
                     hold=false;
                     break;
                 case 14:; // Ignore shift in/shift out and avoid them falling into default
@@ -844,6 +844,10 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_blinkToggle=false;
     m_propertiesDlg=new PageSettingsDialog(this,1000);
 
+    m_publish_ftp_server=FTP_SERVER;
+    m_publish_ftp_username=FTP_USER;
+    m_publish_ftp_password=FTP_PASSWORD;
+
     //(*Initialize(wxTEDFrame)
     wxMenu* MenuHelp;
     wxMenuItem* MenuItemAbout;
@@ -874,6 +878,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Menu1->Append(MenuItemProperties);
     MenuItemPublish = new wxMenuItem(Menu1, idPublish, _("Publish"), _("Publish the page to an inserter"), wxITEM_NORMAL);
     Menu1->Append(MenuItemPublish);
+    MenuItemPublishSettings = new wxMenuItem(Menu1, idPublishSettings, _("Publish settings..."), _("Choose publish method"), wxITEM_NORMAL);
+    Menu1->Append(MenuItemPublishSettings);
     MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
     Menu1->Append(MenuItemQuit);
     MenuBar1->Append(Menu1, _("&File"));
@@ -942,6 +948,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idProperties,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
+    Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
     Connect(idCut,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
@@ -1377,3 +1384,25 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 }
 
 
+
+void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
+{
+    // Create the dialog object
+    PublishSetupDialog dlg(this,1001);
+    // Load the dialog fields
+    dlg.TextCtrlFTPServer->SetValue(m_publish_ftp_server);
+    dlg.TextCtrlFTPUsername->SetValue(m_publish_ftp_username);
+    dlg.TextCtrlFTPPassword->SetValue(m_publish_ftp_password);
+    // Show the dialog
+    int result=dlg.ShowModal();
+
+    // If Cancel then forget about it
+    if (result==wxID_CANCEL)
+    {
+        return;
+    }
+
+    // Extract the new settings
+
+
+}

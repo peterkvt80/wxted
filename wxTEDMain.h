@@ -47,12 +47,15 @@
 #include <wininet.h>
 #pragma comment(lib, "wininet")
 
+// Publish setup
+#include "PublishSetupDialog.h"
+
 #include "c:\users\Peter\Documents\My Projects\ftplogin\ftplogin.h"
 
 #ifndef _FTPLOGIN.H_
 #define _FTPLOGIN.H_
 // Obviously you move this section into your own ftplogin.h at the moment
-// Longer term you put it in the persistent settings
+// Longer term this needs to move to the persistent settings
 #define FTP_SERVER   _T("your.ftp.server")
 #define FTP_USER     _T("username")
 #define FTP_PASSWORD _T("password")
@@ -90,6 +93,13 @@ class wxTEDFrame: public wxFrame
         // Properties Dialog
         PageSettingsDialog* m_propertiesDlg;
 
+        // Need to apply wxPersistence Manager to this code
+
+        // Publishing
+        wxString m_publish_ftp_server;
+        wxString m_publish_ftp_username;
+        wxString m_publish_ftp_password;
+
         // Header
         /** Takes a teletext header template and does the field substitutions
          * \param line of text to transform
@@ -112,6 +122,7 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemDeletePage(wxCommandEvent& event);
         void OnMenuItemLanguageSelected(wxCommandEvent& event);
         void OnMenuItemLanguage(wxCommandEvent& event);
+        void OnMenuItemPublishSettings(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -143,6 +154,7 @@ class wxTEDFrame: public wxFrame
         static const long isSavePageAs;
         static const long idProperties;
         static const long idPublish;
+        static const long idPublishSettings;
         static const long idMenuQuit;
         static const long idUndo;
         static const long idCut;
@@ -173,6 +185,7 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemCzech;
         wxNotebook* Notebook1;
         wxMenuItem* MenuItemSaveAs;
+        wxMenuItem* MenuItemPublishSettings;
         wxMenu* Menu3;
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;
