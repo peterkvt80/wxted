@@ -21,6 +21,7 @@ enum ttxCodes {
     ttxCodeStartBox = 11,           // Ctrl-K
     ttxCodeNormalHeight = 12,       // Ctrl-L
     ttxCodeDoubleHeight = 13,       // Ctrl-M
+    // double width etc goes here
     ttxCodeGraphicsRed = 17,        // Ctrl-F1
     ttxCodeGraphicsGreen = 18,      // Ctrl-F2
     ttxCodeGraphicsYellow = 19,     // Ctrl-F3
@@ -31,6 +32,7 @@ enum ttxCodes {
     ttxCodeConcealDisplay = 24,     // Ctrl-R
     ttxCodeContiguousGraphics = 25, // Ctrl-Y
     ttxCodeSeparatedGraphics = 26,  // Ctrl-T
+    ttxCodeSwitch = 27,              // ESC Toggles between the first and second G0 sets defined by packets X/28/0 Format 1, X/28/4, M/29/0 or M/29/4.
     ttxCodeBlackBackground = 28,    // Ctrl-U
     ttxCodeNewBackground = 29,      // Ctrl-V
     ttxCodeHoldGraphics = 30,       // Ctrl-W

@@ -77,6 +77,7 @@ class wxTEDFrame: public wxFrame
         bool m_cursorIsAlpha; /// Selects graphics or alpha
         void m_SetStatus(); /// Shows cursor location and character info
 
+        bool m_reveal;  /// True if we should reveal concealed text
 
         // Page
         TTXPage* m_rootPage; /// This is the root page used for load/save
@@ -123,6 +124,7 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemLanguageSelected(wxCommandEvent& event);
         void OnMenuItemLanguage(wxCommandEvent& event);
         void OnMenuItemPublishSettings(wxCommandEvent& event);
+        void OnClose(wxCloseEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -173,6 +175,7 @@ class wxTEDFrame: public wxFrame
         static const long ID_MENUITEM1;
         static const long idPageNumber;
         static const long ID_MENUITEMSHOWHEADER;
+        static const long ID_HIDECONCEAL;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_TIMER1;
@@ -182,14 +185,15 @@ class wxTEDFrame: public wxFrame
         wxMenu* MenuPresentation;
         wxMenuItem* MenuItemSpanish;
         wxMenuItem* MenuItemItalian;
+        wxMenuItem* MenuItemSave;
         wxMenuItem* MenuItemCzech;
         wxNotebook* Notebook1;
         wxMenuItem* MenuItemSaveAs;
         wxMenuItem* MenuItemPublishSettings;
+        wxMenuItem* MenuItem2;
         wxMenu* Menu3;
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;
-        wxMenuItem* MenuItem4;
         wxMenuItem* MenuItem14;
         wxMenuItem* MenuItem11;
         wxMenuItem* MenuItemDeletePage;
