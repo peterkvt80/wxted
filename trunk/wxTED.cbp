@@ -68,6 +68,8 @@
 		</Linker>
 		<Unit filename="PageSettingsDialog.cpp" />
 		<Unit filename="PageSettingsDialog.h" />
+		<Unit filename="PublishSetupDialog.cpp" />
+		<Unit filename="PublishSetupDialog.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -81,6 +83,7 @@
 		<Unit filename="wxTEDMain.cpp" />
 		<Unit filename="wxTEDMain.h" />
 		<Unit filename="wxsmith/PageSettingsDialog.wxs" />
+		<Unit filename="wxsmith/PublishSetupDialog.wxs" />
 		<Unit filename="wxsmith/wxTEDframe.wxs" />
 		<Extensions>
 			<code_completion />
@@ -92,6 +95,7 @@
 				<resources>
 					<wxFrame wxs="wxsmith/wxTEDframe.wxs" src="wxTEDMain.cpp" hdr="wxTEDMain.h" fwddecl="0" i18n="1" name="wxTEDFrame" language="CPP" />
 					<wxDialog wxs="wxsmith/PageSettingsDialog.wxs" src="PageSettingsDialog.cpp" hdr="PageSettingsDialog.h" fwddecl="0" i18n="1" name="PageSettingsDialog" language="CPP" />
+					<wxDialog wxs="wxsmith/PublishSetupDialog.wxs" src="PublishSetupDialog.cpp" hdr="PublishSetupDialog.h" fwddecl="0" i18n="1" name="PublishSetupDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

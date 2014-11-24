@@ -91,6 +91,7 @@ const long wxTEDFrame::idLanguageItalian = wxNewId();
 const long wxTEDFrame::ID_MENUITEM1 = wxNewId();
 const long wxTEDFrame::idPageNumber = wxNewId();
 const long wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
+const long wxTEDFrame::ID_HIDECONCEAL = wxNewId();
 const long wxTEDFrame::idMenuAbout = wxNewId();
 const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
 const long wxTEDFrame::ID_TIMER1 = wxNewId();
@@ -142,6 +143,9 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
         if (iPage<0) iPage=0;
         m_currentPage=m_rootPage->GetPage(iPage);
         //std::cout << "iPage= " << iPage << std::endl;
+        break;
+    case WXK_F11: // Reveal concealed text
+        m_reveal=!m_reveal;
         break;
     default:
         m_currentPage->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
@@ -389,7 +393,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         bool flashing=false;
         bool hold=false;
         char holdChar=' ';
-
+        bool concealed=false;
 
         fg=wxWHITE;
         bg=wxBLACK;
@@ -431,34 +435,42 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 {
                 case ttxCodeAlphaBlack :    // Invalid Farrimond mode. Might want to make this black fg.
                     fg=wxBLACK;
+                    concealed=false;    // Side effect of colour. It cancels a conceal.
                     graphics=false;
                     break;
                 case ttxCodeAlphaRed :
                     fg=wxRED;
+                    concealed=false;
                     graphics=false;
                     break;
                 case ttxCodeAlphaGreen :
                     fg=wxGREEN;
+                    concealed=false;
                     graphics=false;
                     break;
                 case ttxCodeAlphaYellow :
                     fg=wxYELLOW;
+                    concealed=false;
                     graphics=false;
                     break;
                 case ttxCodeAlphaBlue :
                     fg=wxBLUE;
+                    concealed=false;
                     graphics=false;
                     break;
                 case ttxCodeAlphaMagenta :
                     fg=magenta; // wxMAGENTA
+                    concealed=false;
                     graphics=false;
                     break;
                 case ttxCodeAlphaCyan :
                     fg=wxCYAN;
+                    concealed=false;
                     graphics=false;
                     break;
                 case ttxCodeAlphaWhite :
                     fg=wxWHITE;
+                    concealed=false;
                     graphics=false;
                     break;
                 case ttxCodeFlash :
@@ -480,35 +492,42 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     doubleheight=true;
                     break;
                 case ttxCodeGraphicsRed : // Graphics red
+                    concealed=false;
                     graphics=true;
                     fg=wxRED;
                     break;
                 case ttxCodeGraphicsGreen : // Graphics green
+                    concealed=false;
                     graphics=true;
                     fg=wxGREEN;
                     break;
                 case ttxCodeGraphicsYellow : // Graphics yellow
+                    concealed=false;
                     graphics=true;
                     fg=wxYELLOW;
                     break;
                 case ttxCodeGraphicsBlue : // Graphics blue
+                    concealed=false;
                     graphics=true;
                     fg=wxBLUE;
                     break;
                 case ttxCodeGraphicsMagenta : // Graphics magenta
+                    concealed=false;
                     graphics=true;
                     fg=magenta;
                     break;
                 case ttxCodeGraphicsCyan : // Graphics cyan
+                    concealed=false;
                     graphics=true;
                     fg=wxCYAN;
                     break;
                 case ttxCodeGraphicsWhite : // Graphics white
+                    concealed=false;
                     graphics=true;
                     fg=wxWHITE;
                     break;
                 case ttxCodeConcealDisplay : // Conceal display
-                    std::cout << "Conceal not implemented" << std::endl;
+                    concealed=true;
                     break;
                 case ttxCodeContiguousGraphics : // Contiguous graphics
                     separated=false;
@@ -538,6 +557,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     ch2=str[col];
                     ch2=mapTextChar(ch2);
                     if ((ch>0x20 && ch<0x40) || ch>=0x60) holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
+                }
+                if (concealed && !m_reveal) // Replace text with spaces
+                {
+                    ch=' ';
+                    holdChar=' ';
+                    ch2=' ';
                 }
                 if (graphics && ((ch>=0x20 && ch<0x40) || ch>=0x60) ) // Graphics (but not capital A..Z)
                 {
@@ -788,33 +813,33 @@ void wxTEDFrame::m_SetStatus()
         switch (ch)
         {
             case ttxCodeAlphaBlack:    code<<"Alpha black";break;
-            case ttxCodeAlphaRed:      code<<"Alpha Red";break;
-            case ttxCodeAlphaGreen:    code<<"Alpha Green";break;
-            case ttxCodeAlphaYellow:   code<<"Alpha Yellow";break;
-            case ttxCodeAlphaBlue:     code<<"Alpha Blue";break;
-            case ttxCodeAlphaMagenta:  code<<"Alpha Magenta";break;
-            case ttxCodeAlphaCyan:     code<<"Alpha Cyan";break;
-            case ttxCodeAlphaWhite:    code<<"Alpha White";break;
-            case ttxCodeFlash:         code<<"Flash";break;
-            case ttxCodeSteady:        code<<"Steady";break;
-            case ttxCodeEndBox:        code<<"End box";break;
-            case ttxCodeStartBox:      code<<"Start box";break;
-            case ttxCodeNormalHeight:  code<<"Normal height";break;
-            case ttxCodeDoubleHeight:  code<<"Double height";break;
-            case ttxCodeGraphicsRed:   code<<"Graphics Red";break;
-            case ttxCodeGraphicsGreen: code<<"Graphics Green";break;
-            case ttxCodeGraphicsYellow: code<<"Graphics Yellow";break;
-            case ttxCodeGraphicsBlue:  code<<"Graphics Blue";break;
-            case ttxCodeGraphicsMagenta: code<<"Graphics Magenta";break;
-            case ttxCodeGraphicsCyan:  code<<"Graphics Cyan";break;
-            case ttxCodeGraphicsWhite: code<<"Graphics White";break;
-            case ttxCodeConcealDisplay: code<<"Conceal";break;
+            case ttxCodeAlphaRed:      code<<"Alpha Red=Shift F1";break;
+            case ttxCodeAlphaGreen:    code<<"Alpha Green=Shift F2";break;
+            case ttxCodeAlphaYellow:   code<<"Alpha Yellow=Shift F3";break;
+            case ttxCodeAlphaBlue:     code<<"Alpha Blue=Shift F4";break;
+            case ttxCodeAlphaMagenta:  code<<"Alpha Magenta=Shift F5";break;
+            case ttxCodeAlphaCyan:     code<<"Alpha Cyan=Shift F6";break;
+            case ttxCodeAlphaWhite:    code<<"Alpha White=Shift F7";break;
+            case ttxCodeFlash:         code<<"Flash=Ctrl-H";break;
+            case ttxCodeSteady:        code<<"Steady=Ctrl-I";break;
+            case ttxCodeEndBox:        code<<"End box=Ctrl-J";break;
+            case ttxCodeStartBox:      code<<"Start box=Ctrl-K";break;
+            case ttxCodeNormalHeight:  code<<"Normal height=Ctrl-L";break;
+            case ttxCodeDoubleHeight:  code<<"Double height=Ctrl-M";break;
+            case ttxCodeGraphicsRed:   code<<"Graphics Red=Ctrl-F1";break;
+            case ttxCodeGraphicsGreen: code<<"Graphics Green=Ctrl-F2";break;
+            case ttxCodeGraphicsYellow: code<<"Graphics Yellow=Ctrl-F3";break;
+            case ttxCodeGraphicsBlue:  code<<"Graphics Blue=Ctrl-F4";break;
+            case ttxCodeGraphicsMagenta: code<<"Graphics Magenta=Ctrl-F5";break;
+            case ttxCodeGraphicsCyan:  code<<"Graphics Cyan=Ctrl-F6";break;
+            case ttxCodeGraphicsWhite: code<<"Graphics White=Ctrl-F7";break;
+            case ttxCodeConcealDisplay: code<<"Conceal=Shift W (F11 to toggle)";break;
             case ttxCodeContiguousGraphics: code<<"Continguous graphics";break;
-            case ttxCodeSeparatedGraphics: code<<"Separated graphics";break;
-            case ttxCodeBlackBackground: code<<"Black background";break;
-            case ttxCodeNewBackground: code<<"New background";break;
-            case ttxCodeHoldGraphics:  code<<"Hold graphics";break;
-            case ttxCodeReleaseGraphics: code<<"Release graphics";break;
+            case ttxCodeSeparatedGraphics: code<<"Separated graphics=Ctrl-T";break;
+            case ttxCodeBlackBackground: code<<"Black background=Ctrl-U";break;
+            case ttxCodeNewBackground: code<<"New background=Ctrl-V";break;
+            case ttxCodeHoldGraphics:  code<<"Hold graphics=Ctrl-W";break;
+            case ttxCodeReleaseGraphics: code<<"Release graphics=Ctrl-X";break;
             case ' ': code<<"Space";break;
             default: code << "unknown " << (int)ch;
         }
@@ -844,9 +869,11 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_blinkToggle=false;
     m_propertiesDlg=new PageSettingsDialog(this,1000);
 
+
     m_publish_ftp_server=FTP_SERVER;
     m_publish_ftp_username=FTP_USER;
     m_publish_ftp_password=FTP_PASSWORD;
+    m_reveal=true; // As this is an editor, reveal the text by default.
 
     //(*Initialize(wxTEDFrame)
     wxMenu* MenuHelp;
@@ -869,8 +896,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Menu1->Append(MenuItem1);
     MenuItem3 = new wxMenuItem(Menu1, idOpenPage, _("Open\tCTRL-O"), _("Open a teletext page"), wxITEM_NORMAL);
     Menu1->Append(MenuItem3);
-    MenuItem4 = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
-    Menu1->Append(MenuItem4);
+    MenuItemSave = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
+    Menu1->Append(MenuItemSave);
+    MenuItemSave->Enable(false);
     MenuItemSaveAs = new wxMenuItem(Menu1, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSaveAs);
     Menu1->AppendSeparator();
@@ -923,10 +951,13 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuItemItalian = new wxMenuItem(MenuItemLanguage, idLanguageItalian, _("Italian"), wxEmptyString, wxITEM_RADIO);
     MenuItemLanguage->Append(MenuItemItalian);
     MenuPresentation->Append(ID_MENUITEM1, _("Language"), MenuItemLanguage, wxEmptyString);
-    MenuItemPageNumber = new wxMenuItem(MenuPresentation, idPageNumber, _("Properties"), _("Set the page number for transmission"), wxITEM_NORMAL);
+    MenuItemPageNumber = new wxMenuItem(MenuPresentation, idPageNumber, _("Properties..."), _("Set the page number for transmission"), wxITEM_NORMAL);
     MenuPresentation->Append(MenuItemPageNumber);
     MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), wxEmptyString, wxITEM_CHECK);
     MenuPresentation->Append(MenuItemShowHeader);
+    MenuItemShowHeader->Check(true);
+    MenuItem2 = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Hide Concealed text"), wxEmptyString, wxITEM_NORMAL);
+    MenuPresentation->Append(MenuItem2);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
     MenuHelp = new wxMenu();
     MenuItemAbout = new wxMenuItem(MenuHelp, idMenuAbout, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
@@ -966,6 +997,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(idLanguageItalian,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idPageNumber,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnAbout);
+    Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&wxTEDFrame::OnClose);
     Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
     Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus);
     //*)
@@ -1040,6 +1072,8 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     std::cout << "the filename was " << filename << std::endl;
     std::cout << "Loading a teletext page " << str << std::endl;
     m_rootPage = new TTXPage(str,filename.ToStdString());
+    MenuItemSave->Enable(true);
+
     iPageCount=m_rootPage->GetPageCount();
 
     wxPaintEvent Pevent(0); // Make a dummy event
@@ -1106,7 +1140,7 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
     if (sp.IsEmpty())
     {
         wxString msg="To publish this Page, do Save As first";
-        wxMessageBox(msg, _("Not saved"));
+        wxMessageBox(msg, _("Page not sent"));
         return;
     }
 
@@ -1123,6 +1157,11 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
     // And do the send
     int result=send(FTP_SERVER,FTP_USER,FTP_PASSWORD,source,destination);
     std::cout << "result of publish=" << result << std::endl;
+    if (result)
+    {
+        wxString msg="Publish failed";
+        wxMessageBox(msg, _("Page not sent"));
+    }
 }
 
 void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
@@ -1383,8 +1422,6 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 	return 1;
 }
 
-
-
 void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 {
     // Create the dialog object
@@ -1405,4 +1442,8 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
     // Extract the new settings
 
 
+}
+
+void wxTEDFrame::OnClose(wxCloseEvent& event)
+{
 }

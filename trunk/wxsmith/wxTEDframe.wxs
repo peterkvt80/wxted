@@ -11,6 +11,7 @@
 			<face>teletext2</face>
 		</font>
 		<id_arg>0</id_arg>
+		<handler function="OnClose" entry="EVT_CLOSE" />
 		<handler function="OnSetFocus" entry="EVT_SET_FOCUS" />
 		<handler function="OnKillFocus" entry="EVT_KILL_FOCUS" />
 		<object class="wxNotebook" name="ID_NOTEBOOK1" variable="Notebook1" member="yes">
@@ -38,10 +39,11 @@
 					<accel>CTRL-O</accel>
 					<help>Open a teletext page</help>
 				</object>
-				<object class="wxMenuItem" name="idSavePage" variable="MenuItem4" member="yes">
+				<object class="wxMenuItem" name="idSavePage" variable="MenuItemSave" member="yes">
 					<label>Save</label>
 					<accel>CTRL-S</accel>
 					<help>Save a teletext page</help>
+					<enabled>0</enabled>
 				</object>
 				<object class="wxMenuItem" name="isSavePageAs" variable="MenuItemSaveAs" member="yes">
 					<label>Save as</label>
@@ -155,13 +157,17 @@
 					</object>
 				</object>
 				<object class="wxMenuItem" name="idPageNumber" variable="MenuItemPageNumber" member="yes">
-					<label>Properties</label>
+					<label>Properties...</label>
 					<help>Set the page number for transmission</help>
 					<handler function="OnMenuItemProperties" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="ID_MENUITEMSHOWHEADER" variable="MenuItemShowHeader" member="yes">
 					<label>Show header</label>
+					<checked>1</checked>
 					<checkable>1</checkable>
+				</object>
+				<object class="wxMenuItem" name="ID_HIDECONCEAL" variable="MenuItem2" member="yes">
+					<label>Hide Concealed text</label>
 				</object>
 			</object>
 			<object class="wxMenu" variable="MenuHelp" member="no">

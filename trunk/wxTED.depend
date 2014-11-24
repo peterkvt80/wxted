@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1416444827 c:\dev\zwintest\wxted\wxtedmain.h
+1416775135 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -1434,7 +1434,7 @@
 	<string>
 	"ttxcodes.h"
 
-1416352446 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1416776164 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -2028,7 +2028,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\mdi.h
 	"wx/frame.h"
 
-1416333268 c:\dev\zwintest\wxted\ttxcodes.h
+1416776164 c:\dev\zwintest\wxted\ttxcodes.h
 
 1416333297 c:\dev\zwintest\wxted\pagesettingsdialog.h
 	<wx/stattext.h>
@@ -2052,7 +2052,7 @@
 	<wx/button.h>
 	<wx/dialog.h>
 
-1416443833 source:c:\dev\zwintest\wxted\publishsetupdialog.cpp
+1416445305 source:c:\dev\zwintest\wxted\publishsetupdialog.cpp
 	"PublishSetupDialog.h"
 	<wx/intl.h>
 	<wx/string.h>
