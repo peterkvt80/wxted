@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1416875288 c:\dev\zwintest\wxted\wxtedmain.h
+1416917231 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -907,9 +907,9 @@
 	<wx/frame.h>
 	<wx/timer.h>
 	<wx/statusbr.h>
+	<wx/config.h>
 	<wx/persist.h>
 	<wx/persist/toplevel.h>
-	<wx/config.h>
 	<sstream>
 	"ttxpage.h"
 	"PageSettingsDialog.h"
@@ -1436,7 +1436,7 @@
 	<string>
 	"ttxcodes.h"
 
-1416873755 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1416875491 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
