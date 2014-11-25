@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1416775135 c:\dev\zwintest\wxted\wxtedmain.h
+1416875288 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -907,12 +907,14 @@
 	<wx/frame.h>
 	<wx/timer.h>
 	<wx/statusbr.h>
+	<wx/persist.h>
+	<wx/persist/toplevel.h>
+	<wx/config.h>
 	<sstream>
 	"ttxpage.h"
 	"PageSettingsDialog.h"
 	<wininet.h>
 	"PublishSetupDialog.h"
-	"c:\users\Peter\Documents\My Projects\ftplogin\ftplogin.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\menu.h
 	"wx/defs.h"
@@ -1434,7 +1436,7 @@
 	<string>
 	"ttxcodes.h"
 
-1416776164 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1416873755 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -2043,17 +2045,88 @@
 	<wx/intl.h>
 	<wx/string.h>
 
-1416348325 c:\users\peter\documents\my projects\ftplogin\ftplogin.h
+1416850727 c:\users\peter\documents\my projects\ftplogin\ftplogin.h
 
-1416445303 c:\dev\zwintest\wxted\publishsetupdialog.h
+1416871768 c:\dev\zwintest\wxted\publishsetupdialog.h
 	<wx/stattext.h>
 	<wx/textctrl.h>
 	<wx/choice.h>
 	<wx/button.h>
 	<wx/dialog.h>
 
-1416445305 source:c:\dev\zwintest\wxted\publishsetupdialog.cpp
+1416871999 source:c:\dev\zwintest\wxted\publishsetupdialog.cpp
 	"PublishSetupDialog.h"
 	<wx/intl.h>
 	<wx/string.h>
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\persist.h
+	"wx/string.h"
+	"wx/hashmap.h"
+	"wx/confbase.h"
+
+1412504348 c:\wxwidgets-3.0.2\include\wx\confbase.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/object.h"
+	"wx/base64.h"
+
+1412504348 c:\wxwidgets-3.0.2\include\wx\base64.h
+	"wx/string.h"
+	"wx/buffer.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\persist\toplevel.h
+	"wx/persist/window.h"
+	"wx/toplevel.h"
+	"wx/display.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\persist\window.h
+	"wx/persist.h"
+	"wx/window.h"
+
+1412504348 c:\wxwidgets-3.0.2\include\wx\display.h
+	"wx/dynarray.h"
+	"wx/vidmode.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\vidmode.h
+
+1416869350 c:\dev\zwintest\wxted\wxtedpersist.h
+	<string>
+	<iostream>
+	<wx/persist.h>
+	<wx/persist/toplevel.h>
+
+1412504348 c:\wxwidgets-3.0.2\include\wx\config.h
+	"wx/confbase.h"
+	"wx/msw/regconf.h"
+	"wx/os2/iniconf.h"
+	"wx/fileconf.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\msw\regconf.h
+	"wx/defs.h"
+	"wx/msw/registry.h"
+	"wx/object.h"
+	"wx/confbase.h"
+	"wx/buffer.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\msw\registry.h
+	"wx/defs.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\fileconf.h
+	"wx/defs.h"
+	"wx/textfile.h"
+	"wx/string.h"
+	"wx/confbase.h"
+	"wx/filename.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\textfile.h
+	"wx/defs.h"
+	"wx/textbuf.h"
+	"wx/file.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\textbuf.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/convauto.h"
+	"wx/string.h"
+	"wx/dynarray.h"
 

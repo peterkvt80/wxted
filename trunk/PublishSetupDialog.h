@@ -17,6 +17,7 @@ class PublishSetupDialog: public wxDialog
 		virtual ~PublishSetupDialog();
 
 		//(*Declarations(PublishSetupDialog)
+		wxTextCtrl* TextCtrlFTPRemote;
 		wxStaticText* StaticText2;
 		wxTextCtrl* TextCtrlFTPUsername;
 		wxButton* ButtonOK;
@@ -24,6 +25,7 @@ class PublishSetupDialog: public wxDialog
 		wxStaticText* StaticText3;
 		wxButton* ButtonCancel;
 		wxTextCtrl* TextCtrlFTPServer;
+		wxStaticText* StaticText5;
 		wxTextCtrl* TextCtrlFTPPassword;
 		wxStaticText* StaticText4;
 		wxChoice* Choice1;
@@ -34,9 +36,11 @@ class PublishSetupDialog: public wxDialog
 		//(*Identifiers(PublishSetupDialog)
 		static const long ID_CHOICE1;
 		static const long ID_STATICTEXT2;
+		static const long ID_STATICTEXT5;
 		static const long ID_STATICTEXT3;
 		static const long ID_STATICTEXT1;
-		static const long ID_TEXTCTRL1;
+		static const long ID_TEXTCTRLFTPPASSWORD;
+		static const long ID_TEXTCTRLFTPREMOTE;
 		static const long ID_TEXTCTRLFTPSERVER;
 		static const long ID_TEXTCTRLUSERNAME;
 		static const long ID_STATICTEXT4;

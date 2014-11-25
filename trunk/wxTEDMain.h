@@ -38,10 +38,19 @@
 #include <wx/frame.h>
 #include <wx/timer.h>
 #include <wx/statusbr.h>
+#include <wx/persist.h>
+#include <wx/persist/toplevel.h>
+#include <wx/config.h>
 //*)
+/*
+<wx/confbase.h> - Base config class.
+<wx/fileconf.h> - wxFileConfig class.
+<wx/msw/regconf.h> - wxRegConfig class, see also wxRegKey.
+*/
 #include <sstream>
 #include "ttxpage.h"
 #include "PageSettingsDialog.h"
+
 
 // ftp
 #include <wininet.h>
@@ -49,18 +58,6 @@
 
 // Publish setup
 #include "PublishSetupDialog.h"
-
-#include "c:\users\Peter\Documents\My Projects\ftplogin\ftplogin.h"
-
-#ifndef _FTPLOGIN.H_
-#define _FTPLOGIN.H_
-// Obviously you move this section into your own ftplogin.h at the moment
-// Longer term this needs to move to the persistent settings
-#define FTP_SERVER   _T("your.ftp.server")
-#define FTP_USER     _T("username")
-#define FTP_PASSWORD _T("password")
-
-#endif
 
 class wxTEDFrame: public wxFrame
 {
@@ -94,12 +91,15 @@ class wxTEDFrame: public wxFrame
         // Properties Dialog
         PageSettingsDialog* m_propertiesDlg;
 
-        // Need to apply wxPersistence Manager to this code
+        // Config
+        wxConfig *m_config;
+
 
         // Publishing
         wxString m_publish_ftp_server;
         wxString m_publish_ftp_username;
         wxString m_publish_ftp_password;
+        wxString m_publish_ftp_remote;
 
         // Header
         /** Takes a teletext header template and does the field substitutions
@@ -125,6 +125,7 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemLanguage(wxCommandEvent& event);
         void OnMenuItemPublishSettings(wxCommandEvent& event);
         void OnClose(wxCloseEvent& event);
+        void OnMenuItemConcealToggle(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -190,7 +191,6 @@ class wxTEDFrame: public wxFrame
         wxNotebook* Notebook1;
         wxMenuItem* MenuItemSaveAs;
         wxMenuItem* MenuItemPublishSettings;
-        wxMenuItem* MenuItem2;
         wxMenu* Menu3;
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;
@@ -203,6 +203,7 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItem13;
         wxMenuItem* MenuItem12;
         wxMenuItem* MenuItem3;
+        wxMenuItem* MenuItemConcealToggle;
         wxStatusBar* StatusBar1;
         wxMenuItem* MenuItemSwedish;
         wxFileDialog* LoadPageFileDialog;
