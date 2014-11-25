@@ -166,8 +166,9 @@
 					<checked>1</checked>
 					<checkable>1</checkable>
 				</object>
-				<object class="wxMenuItem" name="ID_HIDECONCEAL" variable="MenuItem2" member="yes">
-					<label>Hide Concealed text</label>
+				<object class="wxMenuItem" name="ID_HIDECONCEAL" variable="MenuItemConcealToggle" member="yes">
+					<label>Toggle Conceal</label>
+					<handler function="OnMenuItemConcealToggle" entry="EVT_MENU" />
 				</object>
 			</object>
 			<object class="wxMenu" variable="MenuHelp" member="no">

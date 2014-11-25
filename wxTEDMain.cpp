@@ -158,6 +158,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     Refresh();
 }
 
+
+
 void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 {
 //    std::cout << "Left button pressed..." << std::endl;
@@ -833,8 +835,8 @@ void wxTEDFrame::m_SetStatus()
             case ttxCodeGraphicsMagenta: code<<"Graphics Magenta=Ctrl-F5";break;
             case ttxCodeGraphicsCyan:  code<<"Graphics Cyan=Ctrl-F6";break;
             case ttxCodeGraphicsWhite: code<<"Graphics White=Ctrl-F7";break;
-            case ttxCodeConcealDisplay: code<<"Conceal=Shift W (F11 to toggle)";break;
-            case ttxCodeContiguousGraphics: code<<"Continguous graphics";break;
+            case ttxCodeConcealDisplay: code<<"Conceal=Shift W (F11 toggle)";break;
+            case ttxCodeContiguousGraphics: code<<"Contiguous graphics";break;
             case ttxCodeSeparatedGraphics: code<<"Separated graphics=Ctrl-T";break;
             case ttxCodeBlackBackground: code<<"Black background=Ctrl-U";break;
             case ttxCodeNewBackground: code<<"New background=Ctrl-V";break;
@@ -869,11 +871,11 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_blinkToggle=false;
     m_propertiesDlg=new PageSettingsDialog(this,1000);
 
-
-    m_publish_ftp_server=FTP_SERVER;
-    m_publish_ftp_username=FTP_USER;
-    m_publish_ftp_password=FTP_PASSWORD;
     m_reveal=true; // As this is an editor, reveal the text by default.
+
+    // config
+    m_config=new wxConfig("wxTED");
+
 
     //(*Initialize(wxTEDFrame)
     wxMenu* MenuHelp;
@@ -956,8 +958,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), wxEmptyString, wxITEM_CHECK);
     MenuPresentation->Append(MenuItemShowHeader);
     MenuItemShowHeader->Check(true);
-    MenuItem2 = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Hide Concealed text"), wxEmptyString, wxITEM_NORMAL);
-    MenuPresentation->Append(MenuItem2);
+    MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), wxEmptyString, wxITEM_NORMAL);
+    MenuPresentation->Append(MenuItemConcealToggle);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
     MenuHelp = new wxMenu();
     MenuItemAbout = new wxMenuItem(MenuHelp, idMenuAbout, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
@@ -996,6 +998,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(idLanguageSpanish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idLanguageItalian,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idPageNumber,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
+    Connect(ID_HIDECONCEAL,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnAbout);
     Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&wxTEDFrame::OnClose);
     Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
@@ -1040,6 +1043,15 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     //Notebook1->AddPage(Panel1,"TAB 1"); // see http://www.codeprogress.com/cpp/libraries/wxwidgets/showWxExample.php?index=35&key=wxNotebookBackgroundImage
     //Notebook1->AddPage(Panel1,"TAB 2");
     //Notebook1->AddPage(Panel1,"TAB 3");
+
+    // Persistence
+    this->SetName("wxTED");
+    wxPersistenceManager::Get().RegisterAndRestore((wxFrame*)this);
+
+    m_publish_ftp_server=m_config->Read("/wxted/FTP/Server");
+    m_publish_ftp_username=m_config->Read("/wxted/FTP/Username");
+    m_publish_ftp_password=m_config->Read("/wxted/FTP/Password");
+    m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
     std::cout << "Finished starting frame" << std::endl;
 }
@@ -1148,20 +1160,22 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
     LPCTSTR source=sp.ToStdWstring().c_str();
 
     // Work out the destination
-    LPCTSTR path=_T("htdocs/teletext/wxted/");
+    LPCTSTR path=m_publish_ftp_remote;
     TCHAR buff[100]=_T("");
     LPTSTR destination=buff;
     _tcscat(destination,path);
     _tcscat(destination,spShort.ToStdWstring().c_str());
 
     // And do the send
-    int result=send(FTP_SERVER,FTP_USER,FTP_PASSWORD,source,destination);
+    int result=send(m_publish_ftp_server,m_publish_ftp_username,m_publish_ftp_password,source,destination);
     std::cout << "result of publish=" << result << std::endl;
     if (result)
     {
         wxString msg="Publish failed";
         wxMessageBox(msg, _("Page not sent"));
     }
+    else
+        StatusBar1->SetLabel("FTP Finished OK"); // This doesn't work!
 }
 
 void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
@@ -1396,7 +1410,7 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 	    std::cout << "[send] InternetOpen Failed" << std::endl;
 		return 1;
 	}
-	std::cout << "tryna connect with ftp=" << ftp << " user=" << user << " pass=" << pass << std::endl;
+	std::cout << "Connecting with ftp=" << ftp << " user=" << user << " pass=" << pass << std::endl;
 	hFtpSession = InternetConnect(hInternet,(LPTSTR)ftp , INTERNET_DEFAULT_FTP_PORT, (LPTSTR)user, (LPTSTR)pass, INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE, 0);
 	// hFtpSession = InternetConnect(hInternet,L"ftp.plus.net" , INTERNET_DEFAULT_FTP_PORT,L"teastop", L"passkey6", INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE, 0);
 	if(hFtpSession==NULL)
@@ -1430,6 +1444,7 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
     dlg.TextCtrlFTPServer->SetValue(m_publish_ftp_server);
     dlg.TextCtrlFTPUsername->SetValue(m_publish_ftp_username);
     dlg.TextCtrlFTPPassword->SetValue(m_publish_ftp_password);
+    dlg.TextCtrlFTPRemote->SetValue(m_publish_ftp_remote);
     // Show the dialog
     int result=dlg.ShowModal();
 
@@ -1440,10 +1455,23 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
     }
 
     // Extract the new settings
+    m_publish_ftp_server=dlg.TextCtrlFTPServer->GetValue();
+    m_publish_ftp_username=dlg.TextCtrlFTPUsername->GetValue();
+    m_publish_ftp_password=dlg.TextCtrlFTPPassword->GetValue();
+    m_publish_ftp_remote=dlg.TextCtrlFTPRemote->GetValue();
 
+    m_config->Write("/wxted/FTP/Server"  ,m_publish_ftp_server);
+    m_config->Write("/wxted/FTP/Username",m_publish_ftp_username);
+    m_config->Write("/wxted/FTP/Password",m_publish_ftp_password);
+    m_config->Write("/wxted/FTP/Remote"  ,m_publish_ftp_remote);
 
 }
 
 void wxTEDFrame::OnClose(wxCloseEvent& event)
 {
+}
+
+void wxTEDFrame::OnMenuItemConcealToggle(wxCommandEvent& event)
+{
+    m_reveal=!m_reveal;
 }
