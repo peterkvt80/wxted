@@ -38,10 +38,10 @@
 #include <wx/frame.h>
 #include <wx/timer.h>
 #include <wx/statusbr.h>
+//*)
+#include <wx/config.h>
 #include <wx/persist.h>
 #include <wx/persist/toplevel.h>
-#include <wx/config.h>
-//*)
 /*
 <wx/confbase.h> - Base config class.
 <wx/fileconf.h> - wxFileConfig class.

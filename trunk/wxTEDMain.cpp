@@ -1092,6 +1092,8 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     m_setLanguage();
     iPage=0;
     m_currentPage=m_rootPage;
+
+    SetTitle(str);
     OnPaint(Pevent);    // Refresh with the new page
 
     // m_parentWindow->Refresh();
