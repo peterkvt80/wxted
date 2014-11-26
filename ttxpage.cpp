@@ -81,22 +81,73 @@ TTXPage::~TTXPage()
     }
 }
 
-/* TODO: move the body of this out into a LoadPage function */
-/** ctor
- *  Load a teletext page from file
- * \param filename : Name of teletext file to load
- * \param shortFilename : Filename without path
- */
-TTXPage::TTXPage(std::string filename, std::string shortFilename)
+bool TTXPage::m_LoadEP1(std::string filename)
+{
+    char buf[100];
+    TTXPage* p=this;
+    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+    // First 6 chars should be FE 01 09 00 00 00
+    filein.read(buf,6);
+    if ((buf[0]!=(char)0xFE) || (buf[1]!=(char)0x01) || (buf[2]!=(char)0x09))
+    {
+        filein.close();
+        return false;
+    }
+    SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+    // Next we load 24 lines  of 40 characters
+    for (int i=0;i<24;i++)
+    {
+        filein.read(buf,40); // TODO: Check for a failed read and abandon
+        buf[40]=0;
+        std::string s(buf);
+        p->SetRow(i,s);
+    }
+    p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+    // With a pair of zeros at the end we can skip
+    filein.close(); // Not sure that we need to close it
+    p->Setm_SubPage(NULL);
+    return true;
+}
+
+bool TTXPage::m_LoadTTX(std::string filename)
+{
+    char buf[100];
+    TTXPage* p=this;
+    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+    // First 0x61 chars are some sort of header. TODO: Find out what the format is to get metadata out
+    filein.read(buf,0x61);
+
+    // TODO: More validation for this format
+    // File must start with CEBRA
+    if ((buf[0]!='C') || (buf[1]!='E') || (buf[2]!='B') || (buf[3]!='R') || (buf[4]!='A'))
+    {
+        filein.close();
+        return false;
+    }
+
+    SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+    // Next we load 24 lines  of 40 characters
+    for (int i=0;i<24;i++)
+    {
+        filein.read(buf,7); // Skip preamble
+        filein.read(buf,40); // TODO: Check for a failed read and abandon
+        buf[40]=0;
+        std::string s(buf);
+        p->SetRow(i+1,s);
+    }
+    p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+
+    filein.close();
+    p->Setm_SubPage(NULL);
+    return true;
+}
+
+bool TTXPage::m_LoadTTI(std::string filename)
 {
     const std::string cmd[]={"DS","SP","DE","CT","PN","SC","PS","MS","OL","FL","RD"};
     const int cmdCount = 11; // There are 10 possible commands, maybe DT and RT too on really old files
     unsigned int lineNumber;
     int lines=0;
-    //std::cout << "[TTXPage] file constructor" << std::endl;
-    m_Init();
-    SetSourcePage(filename);
-    SetShortFilename(shortFilename);
     // Open the file
     std::ifstream filein(filename.c_str());
     TTXPage* p=this;
@@ -190,6 +241,7 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename)
                     std::getline(filein, line);
                     if (lineNumber>24) break;
                     p->m_pLine[lineNumber]=new TTXLine(line);
+                    // TODO: Change this implementation to use SetRow
                     // std::cout << lineNumber << ": OL partly implemented. " << line << std::endl;
                     lines++;
                     break;
@@ -215,12 +267,47 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename)
     }
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(NULL);
-    std::cout << "Finished reading page. Line count=" << lines << std::endl;
+    std::cout << "Finished reading TTI page. Line count=" << lines << std::endl;
+    return true;
 }
+
+/* TODO: move the body of this out into a LoadPage function */
+/** ctor
+ *  Load a teletext page from file
+ * \param filename : Name of teletext file to load
+ * \param shortFilename : Filename without path
+ */
+TTXPage::TTXPage(std::string filename, std::string shortFilename)
+{
+
+    bool loaded=false;
+    //std::cout << "[TTXPage] file constructor" << std::endl;
+    m_Init();
+    SetSourcePage(filename);
+    SetShortFilename(shortFilename);
+
+    // Try all the possible formats. EP1 first
+    if (m_LoadEP1(filename))
+        loaded=true;
+
+    if (!loaded)
+        if (m_LoadTTX(filename))
+            loaded=true;
+
+    if (!loaded)
+        if (m_LoadTTI(filename))
+            loaded=true;
+
+
+
+    std::cout << "Finished reading page. Loaded=" << loaded << std::endl;
+}
+
 
 TTXPage::TTXPage(const TTXPage& other)
 {
-    //copy ctor
+    //copy ctor.
+    std::cout << "Would be a great idea to implement the copy constructor" << std::endl;
 }
 
 TTXPage& TTXPage::operator=(const TTXPage& rhs)
@@ -269,6 +356,10 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     if (ShowHeader)
         yMin=0;
     if (cursorLoc.y>24 || cursorLoc.y<yMin) return;       // Out of range. Don't allow row 0 either.
+
+    // Do not allow DoubleHeight on row 23 or 24
+    if (cursorLoc.y>22 && code==WXK_CONTROL_M) return;
+
     TTXLine* line=m_pLine[cursorLoc.y];
 
     // Is the line NULL? If so we had better make the line!
@@ -311,7 +402,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     if (modifiers & wxMOD_CONTROL) // Graphics Colours
     {
         char ch;
-        switch (code)
+        switch (code) // Map key stroke to control code
         {
             // Graphics colours
             case WXK_F1: ch=ttxCodeGraphicsRed;break;       // Ctrl-F1 red

@@ -2,6 +2,7 @@
 #define TTXPAGE_H
 #include <stdlib.h>
 #include <iostream>
+
 #include <fstream>
 #include <string>
 
@@ -134,11 +135,29 @@ class TTXPage
          */
          void SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cursorSubLoc, bool ShowHeader);
 
+        /** Load an EP1 page
+         * \param filename : The source file
+         * \return true if the page was loaded
+         */
+        bool m_LoadEP1(std::string filename);
+
+        /** Load a TTX page (Cebra)
+         * \param filename : The source file
+         * \return true if the page was loaded
+         */
+        bool m_LoadTTX(std::string filename);
+
+        /** Load a TTI page (MRG Systems)
+         * \param filename : The source file
+         * \return true if the page was loaded
+         */
+        bool m_LoadTTI(std::string filename);
+
         /** Save the whole page set
          * \param filename : The destination file
          * \return false if the save failed
          */
-         bool SavePage(std::string filename);
+        bool SavePage(std::string filename);
 
         /** Save the page set back to the original file
          * \return false if the save failed
