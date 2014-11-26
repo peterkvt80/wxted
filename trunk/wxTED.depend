@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1416917231 c:\dev\zwintest\wxted\wxtedmain.h
+1416932810 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -1419,7 +1419,7 @@
 	"wx/event.h"
 	"wx/control.h"
 
-1416333934 c:\dev\zwintest\wxted\ttxpage.h
+1416959976 c:\dev\zwintest\wxted\ttxpage.h
 	<stdlib.h>
 	<iostream>
 	<fstream>
@@ -1436,7 +1436,7 @@
 	<string>
 	"ttxcodes.h"
 
-1416875491 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1416960843 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -1499,7 +1499,7 @@
 1416333297 source:c:\dev\zwintest\wxted\ttxline.cpp
 	"ttxline.h"
 
-1416333268 source:c:\dev\zwintest\wxted\ttxpage.cpp
+1416961791 source:c:\dev\zwintest\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\filedlg.h

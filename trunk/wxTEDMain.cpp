@@ -884,7 +884,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     wxMenuItem* MenuItemQuit;
     wxMenuBar* MenuBar1;
 
-    Create(parent, wxID_ANY, _("wxTED 1.02"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("wxTED 1.03"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     wxFont thisFont(10,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
     Notebook1 = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxSize(400,24), 0, _T("ID_NOTEBOOK1"));
@@ -972,7 +972,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     StatusBar1->SetFieldsCount(1,__wxStatusBarWidths_1);
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
-    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("*.tti*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("*.tti"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
@@ -1030,6 +1030,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_setLanguage();
     iPageCount=m_rootPage->GetPageCount();
     iPage=0;
+
+    SetTitle(_("wxTED ")+VERSION_STRING);
 
     m_rootPage->SetSourcePage(""); // Prevent an accidental Save
     m_currentPage=m_rootPage;
@@ -1093,7 +1095,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     iPage=0;
     m_currentPage=m_rootPage;
 
-    SetTitle(str);
+    SetTitle(m_rootPage->GetSourcePage());
     OnPaint(Pevent);    // Refresh with the new page
 
     // m_parentWindow->Refresh();
@@ -1129,7 +1131,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msg="Cross platform teletext editor\n(c) 2014, Peter Kwan.\nteastop.co.uk/teletext/wxted";
-    wxMessageBox(msg, _("Welcome to wxTED 1.02"));
+    wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 
 void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
@@ -1137,6 +1139,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
     std::cout << "New page" << std::endl;
     delete m_rootPage;
     m_rootPage=new TTXPage();
+    SetTitle("");
     m_setLanguage();
     iPageCount=0;
     iPage=0;

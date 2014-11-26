@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
 	<object class="wxFrame" name="wxTEDFrame">
-		<title>wxTED 1.02</title>
+		<title>wxTED 1.03</title>
 		<font>
 			<size>10</size>
 			<style>normal</style>
@@ -188,7 +188,7 @@
 		</object>
 		<object class="wxFileDialog" variable="LoadPageFileDialog" member="yes">
 			<message>Select teletext file</message>
-			<wildcard>*.tti*</wildcard>
+			<wildcard>TTI files (*.tti)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx</wildcard>
 			<style>wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
 		</object>
 		<object class="wxTimer" name="ID_TIMER1" variable="m_Timer1" member="yes">

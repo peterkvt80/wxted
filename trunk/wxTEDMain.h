@@ -51,6 +51,10 @@
 #include "ttxpage.h"
 #include "PageSettingsDialog.h"
 
+// Version number
+#define VERSION_STRING   wxT("1.03")
+
+
 
 // ftp
 #include <wininet.h>
