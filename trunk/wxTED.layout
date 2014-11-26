@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Release" />
-	<File name="wxTEDMain.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<ActiveTarget name="Debug" />
+	<File name="wxTEDMain.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="47908" topLine="1153" />
+			<Cursor1 position="1994" topLine="33" />
 		</Cursor>
 	</File>
-	<File name="PublishSetupDialog.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="wxTEDMain.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="45995" topLine="1080" />
+		</Cursor>
+	</File>
+	<File name="PublishSetupDialog.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="539" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="PublishSetupDialog.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="PublishSetupDialog.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3487" topLine="40" />
-		</Cursor>
-	</File>
-	<File name="ttxpage.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="161" topLine="0" />
+			<Cursor1 position="3487" topLine="38" />
 		</Cursor>
 	</File>
 	<File name="ttxline.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -26,19 +26,14 @@
 			<Cursor1 position="4979" topLine="125" />
 		</Cursor>
 	</File>
-	<File name="ttxline.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ttxline.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="59" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="ttxpage.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ttxpage.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="10373" topLine="34" />
-		</Cursor>
-	</File>
-	<File name="wxTEDMain.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2061" topLine="49" />
+			<Cursor1 position="6853" topLine="192" />
 		</Cursor>
 	</File>
 	<File name="ttxcodes.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -49,6 +44,11 @@
 	<File name="PageSettingsDialog.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="4727" topLine="32" />
+		</Cursor>
+	</File>
+	<File name="ttxpage.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3020" topLine="79" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

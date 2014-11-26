@@ -1126,6 +1126,14 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
         wxString msg="File NOT saved.\nUse Save As and choose a new name";
         wxMessageBox(msg, _("Error"));
     }
+    else // Set the filename
+    {
+        wxString filename=LoadPageFileDialog->GetFilename();
+        m_rootPage->SetSourcePage(str);
+        m_rootPage->SetShortFilename(filename.ToStdString());
+        SetTitle(str);
+    }
+
 }
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
