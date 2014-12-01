@@ -41,7 +41,7 @@ void TTXPage::m_Init()
     }
     for (int i=0;i<6;i++)
     {
-        m_fastextlinks[i]=0x100;
+        SetFastextLink(i,0x100);
     }
     // Member variables
     m_destination="inserter";
@@ -251,7 +251,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     for (int fli=0;fli<6;fli++)
                     {
                         std::getline(filein, line, ',');
-                        m_fastextlinks[fli]=std::strtol(line.c_str(), &ptr, 16); // TODO: Validate conversion
+                        SetFastextLink(fli,std::strtol(line.c_str(), &ptr, 16));
                     }
                     break;
                 case 10 : // "RD"; - not sure!
@@ -738,7 +738,7 @@ void TTXPage::CopyMetaData(TTXPage* page)
 {
     m_PageNumber=page->m_PageNumber;
     for (int i=0;i<6;i++)
-        m_fastextlinks[i]=page->m_fastextlinks[i];
+        SetFastextLink(i,page->GetFastextLink(i));
 
     m_destination=page->m_destination;  // DS
     SetSourcePage(page->GetSourcePage());// SP
@@ -777,6 +777,23 @@ void TTXPage::SetPageNumber(int page)
     m_PageNumber=page;
     //std::cout << std::hex << m_PageNumber << std::endl;
 }
+
+int TTXPage::GetFastextLink(int link)
+{
+    if (link<0 || link>5)
+        return 0;
+    return m_fastextlinks[link];
+}
+
+void TTXPage::SetFastextLink(int link, int value)
+{
+    if (link<0 || link>5 || value>0x8ff)
+        return;
+    m_fastextlinks[link]=value;
+}
+
+
+
 
 
 

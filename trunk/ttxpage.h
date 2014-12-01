@@ -196,6 +196,17 @@ class TTXPage
          */
         int GetLanguage();
 
+        /** Get a Fastext link
+         * \param link 0..5 where 0..3 are the main links, 5 is index and 4, nobody knows why
+         * \return A link number (in hex base)
+         */
+        int GetFastextLink(int link);
+
+        /** Set a Fastext link
+         * \param link 0..5 where 0..3 are the main links, 5 is index and 4, nobody knows why
+         * \param value - The link page number. Note that out of range numbers less than 0x100 are permitted. Droidfax can use these to switch services.
+         */
+        void SetFastextLink(int link, int value);
 
     protected:
     private:
