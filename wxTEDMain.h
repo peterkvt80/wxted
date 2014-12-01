@@ -52,7 +52,7 @@
 #include "PageSettingsDialog.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.03")
+#define VERSION_STRING   wxT("1.04")
 
 
 
@@ -159,7 +159,6 @@ class wxTEDFrame: public wxFrame
         static const long idOpenPage;
         static const long idSavePage;
         static const long isSavePageAs;
-        static const long idProperties;
         static const long idPublish;
         static const long idPublishSettings;
         static const long idMenuQuit;
@@ -215,7 +214,6 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemInsertSubpage;
         wxMenuItem* MenuItemFrench;
         wxMenuItem* MenuItemShowHeader;
-        wxMenuItem* MenuItemProperties;
         wxTimer m_Timer1;
         wxMenuItem* MenuItemEnglish;
         wxMenuItem* MenuItemUndo;

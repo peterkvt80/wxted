@@ -22,18 +22,25 @@ class PageSettingsDialog: public wxDialog
 
 		//(*Declarations(PageSettingsDialog)
 		wxStaticText* StaticTextLabel1;
+		wxTextCtrl* TextCtrlFastext2;
 		wxCheckBox* CheckBoxC5Newsflash;
+		wxTextCtrl* TextCtrlFastext3;
+		wxTextCtrl* TextCtrlFastextIndex;
 		wxRadioBox* RadioBoxCycleMode;
 		wxStaticText* StaticText2;
 		wxCheckBox* CheckBoxC7SuppressHeader;
 		wxButton* ButtonOK;
+		wxTextCtrl* TextCtrlFastext1;
 		wxStaticText* StaticText1;
+		wxStaticText* StaticText3;
 		wxTextCtrl* TextCtrlDescription;
 		wxButton* ButtonCancel;
 		wxTextCtrl* TextCtrlPageNumber;
 		wxCheckBox* CheckBoxC8Update;
 		wxCheckBox* CheckBoxC4ErasePage;
 		wxCheckBox* CheckBoxC6Subtitle;
+		wxStaticText* StaticText4;
+		wxTextCtrl* TextCtrlFastext4;
 		wxCheckBox* CheckBoxTransmitPage;
 		wxTextCtrl* TextCtrlCycleTime;
 		//*)
@@ -41,6 +48,8 @@ class PageSettingsDialog: public wxDialog
 	protected:
 
 		//(*Identifiers(PageSettingsDialog)
+		static const long ID_STATICTEXT4;
+		static const long ID_STATICTEXT5;
 		static const long ID_STATICTEXT2;
 		static const long ID_STATICTEXT3;
 		static const long ID_STATICTEXT1;
@@ -54,6 +63,11 @@ class PageSettingsDialog: public wxDialog
 		static const long ID_CHECKBOXC8UPDATE;
 		static const long ID_CHECKBOXC7SuppressHeader;
 		static const long ID_CHECKBOXC6Subtitle;
+		static const long ID_TEXTCTRLFASTEXTLINK1;
+		static const long ID_TEXTCTRLFASTEXTINDEX;
+		static const long ID_TEXTCTRLFASTEXTLINK4;
+		static const long ID_TEXTCTRLFASTEXTLINK3;
+		static const long ID_TEXTCTRLFASTEXTLINK2;
 		//*)
 
 	private:

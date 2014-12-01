@@ -70,7 +70,6 @@ const long wxTEDFrame::idNewPage = wxNewId();
 const long wxTEDFrame::idOpenPage = wxNewId();
 const long wxTEDFrame::idSavePage = wxNewId();
 const long wxTEDFrame::isSavePageAs = wxNewId();
-const long wxTEDFrame::idProperties = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
@@ -273,7 +272,8 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
         val << std::dec << std::setw(2) << std::setfill('0') << timeinfo->tm_min;
         str.replace(i,2,val.str());
     }
-    if (i>8) // nn Day of month
+    i=str.find("uu");
+    if (i>8) // uu Month (two digits)
     {
         val.str("");
         val << std::dec << std::setw(2) << std::setfill('0') << timeinfo->tm_mon+1;
@@ -904,8 +904,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuItemSaveAs = new wxMenuItem(Menu1, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSaveAs);
     Menu1->AppendSeparator();
-    MenuItemProperties = new wxMenuItem(Menu1, idProperties, _("Properties"), _("Page properties"), wxITEM_NORMAL);
-    Menu1->Append(MenuItemProperties);
     MenuItemPublish = new wxMenuItem(Menu1, idPublish, _("Publish"), _("Publish the page to an inserter"), wxITEM_NORMAL);
     Menu1->Append(MenuItemPublish);
     MenuItemPublishSettings = new wxMenuItem(Menu1, idPublishSettings, _("Publish settings..."), _("Choose publish method"), wxITEM_NORMAL);
@@ -979,7 +977,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
 
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
-    Connect(idProperties,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
@@ -1365,12 +1362,34 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
     else
         m_propertiesDlg->RadioBoxCycleMode->SetSelection(1);
 
+    // FASTEXT Link
+    value.str("");
+    value << std::hex << m_rootPage->GetFastextLink(0);
+    m_propertiesDlg->TextCtrlFastext1->SetValue(value.str());
+    value.str("");
+    value << std::hex << m_rootPage->GetFastextLink(1);
+    m_propertiesDlg->TextCtrlFastext2->SetValue(value.str());
+    value.str("");
+    value << std::hex << m_rootPage->GetFastextLink(2);
+    m_propertiesDlg->TextCtrlFastext3->SetValue(value.str());
+    value.str("");
+    value << std::hex << m_rootPage->GetFastextLink(3);
+    m_propertiesDlg->TextCtrlFastext4->SetValue(value.str());
+
+    // FASTEXT Index
+    value.str("");
+    value << std::hex << m_rootPage->GetFastextLink(5);
+    m_propertiesDlg->TextCtrlFastextIndex->SetValue(value.str());
+
+    // Properties are now populated. Now show the dialog
+
     int result=m_propertiesDlg->ShowModal();
 
     if (result==wxID_CANCEL)
     {
         return;
     }
+
 
     // Now extract the parameters from the dialog and put them back in the loaded page
 
@@ -1409,6 +1428,19 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
 
         char ctmode=(m_propertiesDlg->RadioBoxCycleMode->GetSelection())==0?'C':'T';
         m_rootPage->SetCycleTimeMode(ctmode);
+
+        // Fastext
+        int link;
+        link=std::strtol(m_propertiesDlg->TextCtrlFastext1->GetValue().ToStdString().c_str(), &ptr, 16);
+        m_rootPage->SetFastextLink(0,link);
+        link=std::strtol(m_propertiesDlg->TextCtrlFastext2->GetValue().ToStdString().c_str(), &ptr, 16);
+        m_rootPage->SetFastextLink(1,link);
+        link=std::strtol(m_propertiesDlg->TextCtrlFastext3->GetValue().ToStdString().c_str(), &ptr, 16);
+        m_rootPage->SetFastextLink(2,link);
+        link=std::strtol(m_propertiesDlg->TextCtrlFastext4->GetValue().ToStdString().c_str(), &ptr, 16);
+        m_rootPage->SetFastextLink(3,link);
+        link=std::strtol(m_propertiesDlg->TextCtrlFastextIndex->GetValue().ToStdString().c_str(), &ptr, 16);
+        m_rootPage->SetFastextLink(5,link);
     }
 }
 

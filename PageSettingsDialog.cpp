@@ -6,6 +6,8 @@
 //*)
 
 //(*IdInit(PageSettingsDialog)
+const long PageSettingsDialog::ID_STATICTEXT4 = wxNewId();
+const long PageSettingsDialog::ID_STATICTEXT5 = wxNewId();
 const long PageSettingsDialog::ID_STATICTEXT2 = wxNewId();
 const long PageSettingsDialog::ID_STATICTEXT3 = wxNewId();
 const long PageSettingsDialog::ID_STATICTEXT1 = wxNewId();
@@ -19,6 +21,11 @@ const long PageSettingsDialog::ID_CHECKBOXTransmitPage = wxNewId();
 const long PageSettingsDialog::ID_CHECKBOXC8UPDATE = wxNewId();
 const long PageSettingsDialog::ID_CHECKBOXC7SuppressHeader = wxNewId();
 const long PageSettingsDialog::ID_CHECKBOXC6Subtitle = wxNewId();
+const long PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK1 = wxNewId();
+const long PageSettingsDialog::ID_TEXTCTRLFASTEXTINDEX = wxNewId();
+const long PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK4 = wxNewId();
+const long PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK3 = wxNewId();
+const long PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK2 = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(PageSettingsDialog,wxDialog)
@@ -31,10 +38,12 @@ PageSettingsDialog::PageSettingsDialog(wxWindow* parent,wxWindowID id,const wxPo
 	//(*Initialize(PageSettingsDialog)
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	SetClientSize(wxSize(397,278));
-	StaticText1 = new wxStaticText(this, ID_STATICTEXT2, _("Page number"), wxPoint(8,16), wxSize(72,16), 0, _T("ID_STATICTEXT2"));
+	StaticText3 = new wxStaticText(this, ID_STATICTEXT4, _("Page number"), wxPoint(8,16), wxSize(72,16), 0, _T("ID_STATICTEXT4"));
+	StaticText4 = new wxStaticText(this, ID_STATICTEXT5, _("Links:"), wxPoint(8,184), wxSize(32,16), 0, _T("ID_STATICTEXT5"));
+	StaticText1 = new wxStaticText(this, ID_STATICTEXT2, _("Index"), wxPoint(8,240), wxSize(32,16), 0, _T("ID_STATICTEXT2"));
 	StaticText2 = new wxStaticText(this, ID_STATICTEXT3, _("Description"), wxPoint(8,48), wxSize(72,16), 0, _T("ID_STATICTEXT3"));
 	StaticTextLabel1 = new wxStaticText(this, ID_STATICTEXT1, _("Cycle time"), wxPoint(8,88), wxSize(72,16), 0, _T("ID_STATICTEXT1"));
-	TextCtrlPageNumber = new wxTextCtrl(this, ID_TEXTCTRLPAGENUMBER, _("10000"), wxPoint(88,16), wxSize(72,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLPAGENUMBER"));
+	TextCtrlPageNumber = new wxTextCtrl(this, ID_TEXTCTRLPAGENUMBER, _("10000"), wxPoint(88,16), wxSize(56,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLPAGENUMBER"));
 	ButtonOK = new wxButton(this, wxID_OK, _("OK"), wxPoint(184,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_OK"));
 	ButtonOK->SetHelpText(_("Keep the current settings"));
 	ButtonCancel = new wxButton(this, wxID_CANCEL, _("Cancel"), wxPoint(272,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_CANCEL"));
@@ -59,6 +68,15 @@ PageSettingsDialog::PageSettingsDialog(wxWindow* parent,wxWindowID id,const wxPo
 	CheckBoxC7SuppressHeader->SetValue(false);
 	CheckBoxC6Subtitle = new wxCheckBox(this, ID_CHECKBOXC6Subtitle, _("C6 Subtitle"), wxPoint(192,136), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC6Subtitle"));
 	CheckBoxC6Subtitle->SetValue(false);
+	TextCtrlFastext1 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK1, _("100"), wxPoint(8,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK1"));
+	TextCtrlFastext1->SetBackgroundColour(wxColour(255,174,174));
+	TextCtrlFastextIndex = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTINDEX, _("100"), wxPoint(48,240), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTINDEX"));
+	TextCtrlFastext4 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK4, _("100"), wxPoint(128,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK4"));
+	TextCtrlFastext4->SetBackgroundColour(wxColour(177,249,252));
+	TextCtrlFastext3 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK3, _("100"), wxPoint(88,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK3"));
+	TextCtrlFastext3->SetBackgroundColour(wxColour(249,253,176));
+	TextCtrlFastext2 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK2, _("100"), wxPoint(48,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK2"));
+	TextCtrlFastext2->SetBackgroundColour(wxColour(184,249,181));
 
 	Connect(wxID_OK,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&PageSettingsDialog::OnButtonOKClick);
 	Connect(wxID_CANCEL,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&PageSettingsDialog::OnButtonCancelClick);
