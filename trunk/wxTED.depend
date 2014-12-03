@@ -1431,12 +1431,12 @@
 	"ttxcodes.h"
 	"ttxline.h"
 
-1416333292 c:\dev\zwintest\wxted\ttxline.h
+1417606537 c:\dev\zwintest\wxted\ttxline.h
 	<iostream>
 	<string>
 	"ttxcodes.h"
 
-1417003929 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1417631433 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -1496,10 +1496,10 @@
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\msgdlg.h
 
-1416333297 source:c:\dev\zwintest\wxted\ttxline.cpp
+1417608051 source:c:\dev\zwintest\wxted\ttxline.cpp
 	"ttxline.h"
 
-1417431622 source:c:\dev\zwintest\wxted\ttxpage.cpp
+1417628128 source:c:\dev\zwintest\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\filedlg.h

@@ -203,7 +203,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     // std::cout << "PN enters with m_PageNumber=" << m_PageNumber << " param=" << pageNumber << std::endl;
                     if (p->m_PageNumber!=FIRSTPAGE) // // Subsequent pages need new page instances
                     {
-                        // std::cout << "Created a new subpage" << std::endl;
+                        std::cout << "Created a new subpage" << std::endl;
                         TTXPage* newSubPage=new TTXPage();  // Create a new instance for the subpage
                         p->Setm_SubPage(newSubPage);            // Put in a link to it
                         p=newSubPage;                       // And jump to the next subpage ready to populate
@@ -240,6 +240,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     lineNumber=atoi(line.c_str());
                     std::getline(filein, line);
                     if (lineNumber>24) break;
+                    // std::cout << "reading " << lineNumber << std::endl;
                     p->m_pLine[lineNumber]=new TTXLine(line);
                     // TODO: Change this implementation to use SetRow
                     // std::cout << lineNumber << ": OL partly implemented. " << line << std::endl;
@@ -578,7 +579,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             }
             break;
         default :
-            std::cout << "Default branch taken in SetCharAt " << (int)code << "i=" << instance << std::endl;
+            // std::cout << "Default branch taken in SetCharAt " << (int)code << "i=" << instance << std::endl;
             if (line!=NULL)
             {
                 // By now we should only have teletext codes. If the new code is NOT a graphic then treat it as a character
@@ -586,7 +587,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                 {
                     if (AlphaMode || (code>='@' && code<=0x5f) || code<' ')
                     {
-                        std::cout << "Setting alpha char " << (int)code << std::endl;
+                        // std::cout << "Setting alpha char " << (int)code << std::endl;
                         line->SetCharAt(cursorLoc.x,code);
                         if (cursorLoc.x<39) cursorLoc.x++; // right
                     }
@@ -639,19 +640,20 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
 
 void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
 {
-    ttxfile << "PN," << std::hex << std::setw(5) << p->m_PageNumber << std::endl;
-    if (p->m_subcode==-1)
-        ttxfile << "SC,0000" << std::endl;
+    ttxfile << "PN," << std::hex << std::setw(5) << p->m_PageNumber << "\n";
+    if (p->m_subcode<0)
+        ttxfile << "SC,0000" << "\n";
     else
-        ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << p->m_subcode << std::endl;   // Subcode for these lines
+        ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << p->m_subcode << "\n";   // Subcode for these lines
     for (int i=0;i<25;i++)
     {
         if (p->m_pLine[i]!=NULL) // Skip empty lines
         {
-            std::string s=p->m_pLine[i]->GetMappedline();
-            ttxfile << "OL," << i << "," << s << std::dec << std::endl;
+            std::string s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+            ttxfile << "OL," << std::dec << i << "," << s << "\n";
         }
     }
+    std::cout << "sent a subpage" << "\n";
 }
 
 bool TTXPage::SavePageDefault()
@@ -660,7 +662,7 @@ bool TTXPage::SavePageDefault()
 }
 
 
-/* Write this out to stdout while we are developing */
+/* 8 bit save */
 bool TTXPage::SavePage(std::string filename)
 {
     std::ofstream ttxfile(filename.c_str()); // TODO: Save and Save as
@@ -682,7 +684,7 @@ bool TTXPage::SavePage(std::string filename)
             if (Getm_SubPage()->m_subcode>=0) // Shouldn't have to test this!
             {
                 std::cout << "m_SubPage=" << std::hex << Getm_SubPage() << std::endl;
-                for (TTXPage* p=this->m_SubPage;p->m_SubPage!=NULL;p=p->m_SubPage)
+                for (TTXPage* p=this->m_SubPage;p!=NULL;p=p->m_SubPage)
                     m_OutputLines(ttxfile, p);
 
             }

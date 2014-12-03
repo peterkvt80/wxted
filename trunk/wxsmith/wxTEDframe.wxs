@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
 	<object class="wxFrame" name="wxTEDFrame">
-		<title>wxTED 1.03</title>
+		<title>wxTED 1.04</title>
 		<font>
 			<size>10</size>
 			<style>normal</style>
@@ -191,7 +191,7 @@
 		</object>
 		<object class="wxFileDialog" variable="FileDialogSaveAs" member="yes">
 			<message>Save file as...</message>
-			<wildcard>*.tti</wildcard>
+			<wildcard>TTI files (*.tti)|*.tti;*.ttix</wildcard>
 			<style>wxFD_SAVE|wxFD_OVERWRITE_PROMPT</style>
 		</object>
 	</object>
