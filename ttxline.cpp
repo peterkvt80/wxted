@@ -59,10 +59,10 @@ std::string TTXLine::validate(std::string const& val)
 {
     char ch;
     int j=0;
-    std::string str;
+    std::string str="                                       ";
     str.resize(80);
-
-    for (unsigned int i=0;i<val.length();i++)
+    // std::cout << "Validating length= " << val.length() << std::endl;
+    for (unsigned int i=0;i<val.length() && i<80;i++)
     {
         ch=val[i] & 0x7f;   // Convert to 7 bits
         if (ch==0x1b) // escape?
@@ -77,6 +77,7 @@ std::string TTXLine::validate(std::string const& val)
     if (str[j-1]=='\n') j--;
     if (str[j-1]=='\r') j--;
     str.resize(j);
+    // std::cout << "Validating done " << std::endl;
     return str;
 }
 
@@ -97,6 +98,30 @@ std::string TTXLine::GetMappedline()
         if (ch<' ') ch |= 0x80;
         str[j++]=ch;
     }
+    return str;
+}
+
+/** GetMappedLine7bit - returns a string with text file-safe mappings applied.
+ * Escape to 7 bit (required by Javascript Droidfax)
+ */
+std::string TTXLine::GetMappedline7bit()
+{
+    char ch;
+    int j=0;
+    std::string str;
+    str.resize(80);
+
+    for (unsigned int i=0;i<40;i++)
+    {
+        ch=m_textline[i] & 0x7f;   // Strip bit 7
+        if (ch<' ')
+        {
+            str[j++]=0x1b;  // <ESC>
+            ch |= 0x40;     // Move control code up
+        }
+        str[j++]=ch;
+    }
+    str.resize(j);
     return str;
 }
 

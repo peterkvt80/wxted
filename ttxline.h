@@ -50,6 +50,10 @@ class TTXLine
          * \return The mapped line
          */
         std::string GetMappedline();
+        /** GetMappedLine7bit - returns a string with text file-safe mappings applied.
+         * Escape to 7 bit (required by Javascript Droidfax)
+         */
+        std::string GetMappedline7bit();
 
         /** Determine if a location on the line is in alpha or graphics mode
          * \param loc The column address to look at

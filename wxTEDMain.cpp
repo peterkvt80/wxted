@@ -668,9 +668,13 @@ wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
     // Could put in an enum for the languages, but that would only apply to west europe
     /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
        The only exception is 7/F which is common to all languages*/
+    ch&=0x7f;
+    // std::cout << "trace1" << std::endl;
     switch (m_rootPage->GetLanguage())
     {
     case 0 : // English
+        // std::cout << "trace2" << std::endl;
+
         // Nat. opt. 1
         if (ch=='#')  ch=0x00A3; // 2/3 # is mapped to pound sign
         //if (ch=='$')  ch=0x0024; // 2/4 Dollar sign (no change!)
@@ -686,7 +690,7 @@ wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
         if (ch=='|')  ch=0x2016; // 7/C Double pipe
         if (ch=='}')  ch=0xbe;   // 7/D Three quarters
         if (ch=='~')  ch=0x00f7; // 7/E Divide
-        // Another mapping but not in the nat. opts.
+        // std::cout << "trace3" << std::endl;
         break;
     case 1 : // French
         // Nat. opt. 1
@@ -795,6 +799,9 @@ wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
     }
     // More language mappings including Greek
     if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
+
+    //std::cout << "trace4" << std::endl;
+
     return ch;
 }
 
@@ -884,7 +891,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     wxMenuItem* MenuItemQuit;
     wxMenuBar* MenuBar1;
 
-    Create(parent, wxID_ANY, _("wxTED 1.03"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("wxTED 1.04"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     wxFont thisFont(10,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
     Notebook1 = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxSize(400,24), 0, _T("ID_NOTEBOOK1"));
@@ -973,7 +980,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
-    FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("*.tti"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
@@ -1185,7 +1192,10 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
         wxMessageBox(msg, _("Page not sent"));
     }
     else
+    {
         StatusBar1->SetLabel("FTP Finished OK"); // This doesn't work!
+        std::cout << "Publish OK. source=" << _(source) << " destination=" << _(destination ) << std::endl;
+    }
 }
 
 void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
@@ -1455,7 +1465,7 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 	    std::cout << "[send] InternetOpen Failed" << std::endl;
 		return 1;
 	}
-	std::cout << "Connecting with ftp=" << ftp << " user=" << user << " pass=" << pass << std::endl;
+	std::cout << "Connecting with ftp=" << _(ftp) << " user=" << _(user) << " pass=" << _(pass) << std::endl;
 	hFtpSession = InternetConnect(hInternet,(LPTSTR)ftp , INTERNET_DEFAULT_FTP_PORT, (LPTSTR)user, (LPTSTR)pass, INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE, 0);
 	// hFtpSession = InternetConnect(hInternet,L"ftp.plus.net" , INTERNET_DEFAULT_FTP_PORT,L"teastop", L"passkey6", INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE, 0);
 	if(hFtpSession==NULL)

@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
+	<File name="ttxcodes.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="942" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="PageSettingsDialog.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4727" topLine="32" />
+		</Cursor>
+	</File>
+	<File name="ttxpage.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="29739" topLine="765" />
+		</Cursor>
+	</File>
 	<File name="wxTEDMain.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1941" topLine="33" />
+		</Cursor>
+	</File>
+	<File name="wxTEDMain.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="58502" topLine="1416" />
 		</Cursor>
 	</File>
 	<File name="PublishSetupDialog.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -16,14 +36,9 @@
 			<Cursor1 position="3487" topLine="38" />
 		</Cursor>
 	</File>
-	<File name="wxTEDMain.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ttxline.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8883" topLine="269" />
-		</Cursor>
-	</File>
-	<File name="ttxline.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4979" topLine="125" />
+			<Cursor1 position="2119" topLine="49" />
 		</Cursor>
 	</File>
 	<File name="ttxline.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -31,24 +46,9 @@
 			<Cursor1 position="59" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="ttxcodes.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="942" topLine="6" />
-		</Cursor>
-	</File>
 	<File name="ttxpage.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6853" topLine="192" />
-		</Cursor>
-	</File>
-	<File name="ttxpage.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="11252" topLine="274" />
-		</Cursor>
-	</File>
-	<File name="PageSettingsDialog.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4727" topLine="32" />
+			<Cursor1 position="7082" topLine="177" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
