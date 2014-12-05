@@ -183,7 +183,7 @@
 		</object>
 		<object class="wxFileDialog" variable="LoadPageFileDialog" member="yes">
 			<message>Select teletext file</message>
-			<wildcard>TTI files (*.tti)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx</wildcard>
+			<wildcard>TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx</wildcard>
 			<style>wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
 		</object>
 		<object class="wxTimer" name="ID_TIMER1" variable="m_Timer1" member="yes">
@@ -191,7 +191,7 @@
 		</object>
 		<object class="wxFileDialog" variable="FileDialogSaveAs" member="yes">
 			<message>Save file as...</message>
-			<wildcard>TTI files (*.tti)|*.tti;*.ttix</wildcard>
+			<wildcard>TTI files (*.tti, *.ttix)|*.tti;*.ttix</wildcard>
 			<style>wxFD_SAVE|wxFD_OVERWRITE_PROMPT</style>
 		</object>
 	</object>
