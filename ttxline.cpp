@@ -134,9 +134,11 @@ bool TTXLine::IsDoubleHeight()
     return false;
 }
 
-void TTXLine::SetCharAt(int x,int code)
+char TTXLine::SetCharAt(int x,int code)
 {
+    char c=m_textline[x];
     m_textline[x]=code & 0x7f;
+    return c;
 }
 
 char TTXLine::GetCharAt(int xLoc)

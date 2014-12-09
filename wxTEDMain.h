@@ -52,7 +52,7 @@
 #include "PageSettingsDialog.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.04")
+#define VERSION_STRING   wxT("1.05")
 
 
 

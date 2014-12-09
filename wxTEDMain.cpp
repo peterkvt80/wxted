@@ -125,6 +125,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     int modifiers=event.GetModifiers();
     // std::cout << "Key event..." << code << std::endl;
     // We look at a few codes which apply to a page set rather than just a single page
+    TEDEvent* tev;
     switch (code)
     {
     case WXK_PAGEUP:
@@ -145,6 +146,16 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
         break;
     case WXK_F11: // Reveal concealed text
         m_reveal=!m_reveal;
+        break;
+    case WXK_CONTROL_Y:
+        std::cout << "CTRL-Y test" << std::endl; // Testing
+        tev=m_currentPage->GetUndo();
+        tev->dump();
+        break;
+    case WXK_CONTROL_Z:
+        std::cout << "CTRL-Z undo" << std::endl;
+        // tev=m_currentPage->GetUndo();
+        m_currentPage->Undo(m_cursorPoint);
         break;
     default:
         m_currentPage->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
@@ -883,7 +894,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     // config
     m_config=new wxConfig("wxTED");
 
-
     //(*Initialize(wxTEDFrame)
     wxMenu* MenuHelp;
     wxMenuItem* MenuItemAbout;
@@ -919,9 +929,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Menu1->Append(MenuItemQuit);
     MenuBar1->Append(Menu1, _("&File"));
     Menu3 = new wxMenu();
-    MenuItemUndo = new wxMenuItem(Menu3, idUndo, _("Undo"), wxEmptyString, wxITEM_NORMAL);
+    MenuItemUndo = new wxMenuItem(Menu3, idUndo, _("Undo\tCTRL-Z"), wxEmptyString, wxITEM_NORMAL);
     Menu3->Append(MenuItemUndo);
-    MenuItemUndo->Enable(false);
     Menu3->AppendSeparator();
     MenuItem11 = new wxMenuItem(Menu3, idCut, _("Cut"), _("Cut the selected area"), wxITEM_NORMAL);
     Menu3->Append(MenuItem11);
@@ -1200,8 +1209,8 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
 {
-    wxString msg="Edit: None of this is implemented";
-    wxMessageBox(msg, _("Not implemented"));
+    // TODO: Grey out this option when there is nothing to undo.
+    m_currentPage->Undo(m_cursorPoint);
 }
 
 void wxTEDFrame::OnKillFocus(wxFocusEvent& event)
@@ -1316,7 +1325,7 @@ void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
 
 void wxTEDFrame::m_setLanguage()
 {
-    std::cout << "m_setLanguage " << m_rootPage->GetLanguage() << std::endl;
+//    std::cout << "m_setLanguage " << m_rootPage->GetLanguage() << std::endl;
     int language=m_rootPage->GetLanguage();
     // idLanguageEnglish
     /*

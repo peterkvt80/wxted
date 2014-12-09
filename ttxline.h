@@ -37,8 +37,9 @@ class TTXLine
 
         /** Place a character in a line. Must be an actual teletext code.
          *  Bit 7 will be stripped off.
+         * \return previous character at that location (for undo)
          */
-        void SetCharAt(int x,int code);
+        char SetCharAt(int x,int code);
 
         /** Get one character from this line.
          *  If there is no data set then return a space
