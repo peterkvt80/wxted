@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1417439662 c:\dev\zwintest\wxted\wxtedmain.h
+1418049233 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -1419,7 +1419,7 @@
 	"wx/event.h"
 	"wx/control.h"
 
-1417431277 c:\dev\zwintest\wxted\ttxpage.h
+1418081783 c:\dev\zwintest\wxted\ttxpage.h
 	<stdlib.h>
 	<iostream>
 	<fstream>
@@ -1430,13 +1430,14 @@
 	<wx/defs.h>
 	"ttxcodes.h"
 	"ttxline.h"
+	"tedevent.h"
 
-1417606537 c:\dev\zwintest\wxted\ttxline.h
+1418056204 c:\dev\zwintest\wxted\ttxline.h
 	<iostream>
 	<string>
 	"ttxcodes.h"
 
-1417696768 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1418081754 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -1496,10 +1497,10 @@
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\msgdlg.h
 
-1417648270 source:c:\dev\zwintest\wxted\ttxline.cpp
+1418056204 source:c:\dev\zwintest\wxted\ttxline.cpp
 	"ttxline.h"
 
-1417648270 source:c:\dev\zwintest\wxted\ttxpage.cpp
+1418081822 source:c:\dev\zwintest\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\filedlg.h
@@ -2129,4 +2130,18 @@
 	"wx/convauto.h"
 	"wx/string.h"
 	"wx/dynarray.h"
+
+1418062242 source:c:\dev\zwintest\wxted\charchange.cpp
+	"charchange.h"
+
+1418082932 c:\dev\zwintest\wxted\charchange.h
+	<iostream>
+	"wx/gdicmn.h"
+
+1418082615 source:c:\dev\zwintest\wxted\tedevent.cpp
+	"tedevent.h"
+
+1418082615 c:\dev\zwintest\wxted\tedevent.h
+	<iostream>
+	"charchange.h"
 

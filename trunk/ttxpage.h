@@ -19,6 +19,8 @@
 #include "ttxcodes.h"
 #include "ttxline.h"
 
+#include "tedevent.h"
+
 #define FIRSTPAGE 0x1ff00
 
 // MiniTED Page Status word
@@ -208,6 +210,16 @@ class TTXPage
          */
         void SetFastextLink(int link, int value);
 
+        /** undo/redo
+         * \return the last event
+         */
+        TEDEvent* GetUndo();
+
+        /** undo/redo
+         * Step back one keystroke
+         */
+        void Undo(wxPoint& cursorloc);
+
     protected:
     private:
         // Private variables
@@ -230,6 +242,11 @@ class TTXPage
         void m_Init();
         void m_OutputLines(std::ofstream& ttxfile, TTXPage* p);
         int instance;
+
+        /* Undo/Redo */
+        TEDEvent* undoList; // Root
+        TEDEvent* m_current;  // Current pointer
+        void AddEvent(EventType evt, wxPoint wxc, char oldchar, char newchar); // Add an event to the undo list
 
 
 };

@@ -72,7 +72,7 @@
 				<label>Edit</label>
 				<object class="wxMenuItem" name="idUndo" variable="MenuItemUndo" member="yes">
 					<label>Undo</label>
-					<enabled>0</enabled>
+					<accel>CTRL-Z</accel>
 					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
 				</object>
 				<object class="separator" />

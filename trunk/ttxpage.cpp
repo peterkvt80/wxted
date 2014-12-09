@@ -203,7 +203,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     // std::cout << "PN enters with m_PageNumber=" << m_PageNumber << " param=" << pageNumber << std::endl;
                     if (p->m_PageNumber!=FIRSTPAGE) // // Subsequent pages need new page instances
                     {
-                        std::cout << "Created a new subpage" << std::endl;
+                        // std::cout << "Created a new subpage" << std::endl;
                         TTXPage* newSubPage=new TTXPage();  // Create a new instance for the subpage
                         p->Setm_SubPage(newSubPage);            // Put in a link to it
                         p=newSubPage;                       // And jump to the next subpage ready to populate
@@ -278,15 +278,13 @@ bool TTXPage::m_LoadTTI(std::string filename)
  * \param filename : Name of teletext file to load
  * \param shortFilename : Filename without path
  */
-TTXPage::TTXPage(std::string filename, std::string shortFilename)
+TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NULL), m_current(NULL)
 {
-
-    bool loaded=false;
     //std::cout << "[TTXPage] file constructor" << std::endl;
+    bool loaded=false;
     m_Init();
     SetSourcePage(filename);
     SetShortFilename(shortFilename);
-
     // Try all the possible formats. EP1 first
     if (m_LoadEP1(filename))
         loaded=true;
@@ -298,8 +296,6 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename)
     if (!loaded)
         if (m_LoadTTI(filename))
             loaded=true;
-
-
 
     std::cout << "Finished reading page. Loaded=" << loaded << std::endl;
 }
@@ -327,6 +323,22 @@ TTXPage* TTXPage::GetPage(unsigned int pageNumber)
     return p;
 }
 
+void TTXPage::Undo(wxPoint& cursorloc)
+{
+    TEDEvent* tev=m_current; // This is the event we are going to undo
+    // TODO: Check the event type
+    char oldChar=tev->GetCharList()->GetOldChar();   // What character
+    wxPoint loc=tev->GetCharList()->GetLoc();    // and where are we putting it?
+    // Write to the edit window
+    TTXLine* line=m_pLine[loc.y];
+    line->SetCharAt(loc.x,oldChar);
+    // Dump the Undo (or do we?) No, just move the m_current pointer. Keep it in case we want to do a Redo
+    // Step back to the previous event
+    TEDEvent* last=tev->GetlastEvent();
+    if (last!=0) m_current=last;
+    cursorloc=loc;
+}
+
 TTXLine* TTXPage::GetRow(unsigned int row)
 {
     // std::cout << "[TTXPage::GetRow] getting row " << row << std::endl;
@@ -340,6 +352,43 @@ void TTXPage::SetRow(unsigned int rownumber, std::string line)
         m_pLine[rownumber]=new TTXLine(line); // Didn't exist before
     else
         m_pLine[rownumber]->Setm_textline(line);
+}
+
+void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldchar, char newchar)
+{
+    TEDEvent* tev=new TEDEvent(evt);
+    CharChange* cc=NULL;
+    if (undoList==NULL) // First time we need to set the root
+    {
+        undoList=tev;
+        m_current=undoList;
+    }
+    else    // Subsequently we add to the list and move the current pointer to the end of the list
+    {
+        m_current->SetnextEvent(tev);
+        tev->SetlastEvent(m_current);
+        m_current=tev;
+    }
+    switch (evt)
+    {
+    case EventNone:
+        break;
+    case EventSave :    // Save to file
+        break;
+    case EventKey :     // Keyboard press
+        cc=new CharChange(); // A bit redundant. This is always executed
+        tev->SetCharList(cc);
+        // tev->SetCharList(cc); // not correct. Need to add to the end of the list NOT the root
+        cc->AddChange(wxc,oldchar,newchar);
+        break;
+    case EventLanguage :     // No idea
+        break;
+    }
+}
+
+TEDEvent* TTXPage::GetUndo()
+{
+    return m_current;
 }
 
 
@@ -395,7 +444,8 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
         }
         if (ch>0)
         {
-            line->SetCharAt(cursorLoc.x,ch);
+            char oldChar=line->SetCharAt(cursorLoc.x,ch);
+            AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
             return;
         }
@@ -433,7 +483,9 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
         if (ch>0)
         {
             std::cout << "Control code sent: " << (int)ch << std::endl;
-            line->SetCharAt(cursorLoc.x,ch);
+            char oldChar;
+            oldChar=line->SetCharAt(cursorLoc.x,ch);
+            AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
             return;
         }
@@ -588,7 +640,8 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                     if (AlphaMode || (code>='@' && code<=0x5f) || code<' ')
                     {
                         // std::cout << "Setting alpha char " << (int)code << std::endl;
-                        line->SetCharAt(cursorLoc.x,code);
+                        char oldChar=line->SetCharAt(cursorLoc.x,code);
+                        AddEvent(EventKey,cursorLoc,oldChar,code);
                         if (cursorLoc.x<39) cursorLoc.x++; // right
                     }
                     else
@@ -607,7 +660,9 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                             case 4: bit=0x10;break;
                             case 5: bit=0x40;break;
                             }
-                            line->SetCharAt(cursorLoc.x,line->GetLine()[cursorLoc.x]^bit);
+                            char ch1;
+                            char oldChar=line->SetCharAt(cursorLoc.x,ch1=line->GetLine()[cursorLoc.x]^bit);
+                            AddEvent(EventKey,cursorLoc,oldChar,ch1);
                         }
                         else std::cout << "Key ignored" << std::endl;
                     }
@@ -621,16 +676,19 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     {
         // Deal with control codes that we might get sent
         // Backspace, line feed, carriage return. A lot of stuff to trap
+        char oldChar;
         switch (code)
         {
         case WXK_BACK : // backspace 8
             // Also want to delete!
             if (cursorLoc.x>0) cursorLoc.x--;   // Move left if possible
-            line->SetCharAt(cursorLoc.x,' ');   // And clear the character that we land on
+            oldChar=line->SetCharAt(cursorLoc.x,' ');   // And clear the character that we land on
+            std::cout << "TODO: Implement AddChange" << std::endl;
             break;
         case WXK_RETURN : // Double height
-            line->SetCharAt(cursorLoc.x,'\r');   // Insert a double height
+            oldChar=line->SetCharAt(cursorLoc.x,'\r');   // Insert a double height
             if (cursorLoc.x<39) cursorLoc.x++;   // Move right if possible
+            std::cout << "TODO: Implement AddChange" << std::endl;
         default:
             std::cout << "This key code is not implemented: " << code << std::endl;
         }
