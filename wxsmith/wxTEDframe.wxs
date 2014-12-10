@@ -14,6 +14,8 @@
 		<handler function="OnClose" entry="EVT_CLOSE" />
 		<handler function="OnSetFocus" entry="EVT_SET_FOCUS" />
 		<handler function="OnKillFocus" entry="EVT_KILL_FOCUS" />
+		<handler function="OnLeftUp" entry="EVT_LEFT_UP" />
+		<handler function="OnMouseWheel" entry="EVT_MOUSEWHEEL" />
 		<object class="wxNotebook" name="ID_NOTEBOOK1" variable="Notebook1" member="yes">
 			<size>400,24</size>
 			<enabled>0</enabled>

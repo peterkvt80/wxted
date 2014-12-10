@@ -168,8 +168,6 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     Refresh();
 }
 
-
-
 void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 {
 //    std::cout << "Left button pressed..." << std::endl;
@@ -1016,6 +1014,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&wxTEDFrame::OnClose);
     Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
     Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus);
+    Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp);
+    Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
 
     Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnOpen);
@@ -1538,4 +1538,29 @@ void wxTEDFrame::OnClose(wxCloseEvent& event)
 void wxTEDFrame::OnMenuItemConcealToggle(wxCommandEvent& event)
 {
     m_reveal=!m_reveal;
+}
+
+void wxTEDFrame::OnMouseWheel(wxMouseEvent& event)
+{
+   // Want to click up and down the pages
+   //int delta=event.GetWheelDelta();
+   int rotate=event.GetWheelRotation();
+   //std::cout << "Wheel Delta is " << delta << " Distance=" << rotate << std::endl;
+   iPageCount=m_rootPage->GetPageCount();
+   if (rotate>=0)
+   {
+        iPage++;
+        if (iPage>=iPageCount) iPage=iPageCount-1;
+   }
+   if (rotate<0)
+   {
+        iPage--;
+        if (iPage<0) iPage=0;
+   }
+   m_currentPage=m_rootPage->GetPage(iPage);
+}
+
+void wxTEDFrame::OnLeftUp(wxMouseEvent& event)
+{
+    // TODO: When left button goes up this ends a drag.
 }
