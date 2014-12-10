@@ -130,6 +130,8 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemPublishSettings(wxCommandEvent& event);
         void OnClose(wxCloseEvent& event);
         void OnMenuItemConcealToggle(wxCommandEvent& event);
+        void OnMouseWheel(wxMouseEvent& event);
+        void OnLeftUp(wxMouseEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
