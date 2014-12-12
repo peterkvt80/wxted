@@ -70,9 +70,13 @@
 		<Unit filename="PageSettingsDialog.h" />
 		<Unit filename="PublishSetupDialog.cpp" />
 		<Unit filename="PublishSetupDialog.h" />
+		<Unit filename="charchange.cpp" />
+		<Unit filename="charchange.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="tedevent.cpp" />
+		<Unit filename="tedevent.h" />
 		<Unit filename="ttxcodes.h" />
 		<Unit filename="ttxline.cpp" />
 		<Unit filename="ttxline.h" />

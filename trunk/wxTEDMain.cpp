@@ -168,25 +168,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     Refresh();
 }
 
-void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
-{
-//    std::cout << "Left button pressed..." << std::endl;
-    wxPoint save=m_cursorPoint;
-    m_cursorPoint=event.GetPosition();
-    // Adjust to character location
-    m_cursorPoint.x/=m_ttxW;
-    m_cursorPoint.y/=m_ttxH;
-    // Revert if clicked outside the page
-    if (m_cursorPoint.x<0 || m_cursorPoint.x>39 || m_cursorPoint.y<0 || m_cursorPoint.y>24)
-        m_cursorPoint=save;
-    else
-    {
-        m_blinkToggle=true; // HCI: Make cursor moves immediately visible
-        Refresh();
-    }
-    std::cout << "(x,y)=(" << m_cursorPoint.x << ", " << m_cursorPoint.y << ")" << std::endl;
-    // Skip(); // Is this needed? Probably is!
-}
+
 
 void wxTEDFrame::OnTimer(wxTimerEvent& event)
 {
@@ -666,6 +648,28 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         paintDC.SetPen(*wxTRANSPARENT_PEN);
     }
     m_SetStatus();
+
+    // Marquee.
+    // TODO: Make the marquee and cursor mutually exclusive
+    wxPen pen(*wxWHITE,1,wxSHORT_DASH);
+    paintDC.SetPen(pen); // outline on
+    wxCoord x1,y1,x2,y2;
+    x1=m_MarqueeStart.x*m_ttxW;
+    x2=m_MarqueeEnd.x  *m_ttxW;
+    y1=m_MarqueeStart.y*m_ttxH;
+    y2=m_MarqueeEnd.y  *m_ttxH;
+    // Backwards?
+    if (x1>x2) x1+=m_ttxW;
+    if (y1>y2) y1+=m_ttxH;
+    // Draw a box
+    // TODO: Marquee crawling ants
+    paintDC.DrawLine(x1,y1,x2,y1); // Top
+    paintDC.DrawLine(x1,y1,x1,y2); // Left
+    paintDC.DrawLine(x2,y1,x2,y2); // Right
+    paintDC.DrawLine(x1,y2,x2,y2); // Bottom
+
+
+
     // std::cout << "[OnPaint] exits " << std::endl;
 }
 
@@ -881,6 +885,7 @@ void wxTEDFrame::m_SetStatus()
 }
 
 wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_ttxW(15), m_ttxH(20), m_cursorIsAlpha(true), m_subPixelPoint(wxPoint(0,0))
+ , m_dragging(false), m_MarqueeStart(wxPoint(0,0))
 {
     // std::cout << "[wxTEDFrame] Entered" << std::endl;
     m_parentWindow=parent;
@@ -1015,6 +1020,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
     Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus);
     Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp);
+    Connect(wxEVT_MOTION,(wxObjectEventFunction)&wxTEDFrame::OnMouseMove);
     Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
 
@@ -1562,5 +1568,55 @@ void wxTEDFrame::OnMouseWheel(wxMouseEvent& event)
 
 void wxTEDFrame::OnLeftUp(wxMouseEvent& event)
 {
+    m_dragging=false;
     // TODO: When left button goes up this ends a drag.
+    wxPoint p=event.GetPosition();
+    p.x/=m_ttxW;
+    p.y/=m_ttxH;
+    // std::cout << "end a drag at " << p.x << ", " << p.y << std::endl;
+
 }
+
+
+
+void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
+{
+    // TODO: Extend this to highlight links on rollover
+    // TODO: When left button moves, continue drag.
+    if (m_dragging)
+    {
+        wxPoint p=event.GetPosition();
+        p.x/=m_ttxW;
+        p.y/=m_ttxH;
+        m_MarqueeEnd=p; // Marquee end
+        // std::cout << "continue drag at " << p.x << ", " << p.y << std::endl;
+    }
+
+}
+
+void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
+{
+    m_dragging=true;
+
+//    std::cout << "Left button pressed..." << std::endl;
+    wxPoint save=m_cursorPoint;
+    m_cursorPoint=event.GetPosition();
+    // Adjust to character location
+    m_cursorPoint.x/=m_ttxW;
+    m_cursorPoint.y/=m_ttxH;
+    // Revert if clicked outside the page
+    if (m_cursorPoint.x<0 || m_cursorPoint.x>39 || m_cursorPoint.y<0 || m_cursorPoint.y>24)
+        m_cursorPoint=save;
+    else
+    {
+        m_blinkToggle=true; // HCI: Make cursor moves immediately visible
+        Refresh();
+    }
+    // std::cout << "(x,y)=(" << m_cursorPoint.x << ", " << m_cursorPoint.y << ")" << std::endl;
+
+    m_MarqueeStart=m_cursorPoint; // In case we start a marquee
+    m_MarqueeEnd=m_cursorPoint;
+
+    // Skip(); // TODO: Is this needed? Probably is!
+}
+

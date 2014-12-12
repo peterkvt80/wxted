@@ -13,42 +13,65 @@
 	</File>
 	<File name="ttxpage.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="29739" topLine="765" />
+			<Cursor1 position="13858" topLine="350" />
+		</Cursor>
+	</File>
+	<File name="tedevent.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1241" topLine="23" />
 		</Cursor>
 	</File>
 	<File name="wxTEDMain.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1941" topLine="33" />
+			<Cursor1 position="2801" topLine="60" />
 		</Cursor>
 	</File>
-	<File name="wxTEDMain.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="tedevent.cpp" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="58502" topLine="1416" />
+			<Cursor1 position="1723" topLine="33" />
 		</Cursor>
+	</File>
+	<File name="wxTEDMain.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="23629" topLine="639" />
+		</Cursor>
+		<Folding>
+			<Collapse line="1568" />
+		</Folding>
 	</File>
 	<File name="PublishSetupDialog.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="539" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="charchange.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="203" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="charchange.cpp" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="592" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="PublishSetupDialog.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3487" topLine="38" />
+			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="ttxline.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2119" topLine="49" />
+			<Cursor1 position="4218" topLine="118" />
 		</Cursor>
 	</File>
-	<File name="ttxline.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ttxline.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="59" topLine="0" />
+			<Cursor1 position="1043" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="ttxpage.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="7082" topLine="177" />
+			<Cursor1 position="7320" topLine="197" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
