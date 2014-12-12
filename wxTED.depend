@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1418166737 c:\dev\zwintest\wxted\wxtedmain.h
+1418257280 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -1437,7 +1437,7 @@
 	<string>
 	"ttxcodes.h"
 
-1418081754 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1418252413 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

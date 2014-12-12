@@ -79,6 +79,10 @@ class wxTEDFrame: public wxFrame
         void m_SetStatus(); /// Shows cursor location and character info
 
         bool m_reveal;  /// True if we should reveal concealed text
+        bool m_dragging;
+
+        wxPoint m_MarqueeStart;
+        wxPoint m_MarqueeEnd;
 
         // Page
         TTXPage* m_rootPage; /// This is the root page used for load/save
@@ -132,6 +136,7 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemConcealToggle(wxCommandEvent& event);
         void OnMouseWheel(wxMouseEvent& event);
         void OnLeftUp(wxMouseEvent& event);
+        void OnMouseMove(wxMouseEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
