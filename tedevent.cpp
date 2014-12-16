@@ -13,7 +13,7 @@ TEDEvent::TEDEvent() : eventType(EventNone), nextEvent(0), lastEvent(0)
 TEDEvent::~TEDEvent()
 {
     //dtor
-    if (this->nextEvent!=0)
+    if (this->nextEvent!=NULL)
         delete (nextEvent);
 }
 
@@ -64,6 +64,7 @@ void TEDEvent::dump()
 void TEDEvent::SetnextEvent(TEDEvent* val)
 {
     // Before setting the next event, clear the previous head.
-    delete nextEvent;
+    if (nextEvent!=NULL)
+        delete nextEvent;
     nextEvent = val;
 }

@@ -150,7 +150,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     case WXK_CONTROL_Y:
         std::cout << "CTRL-Y test" << std::endl; // Testing
         tev=m_currentPage->GetUndo();
-        tev->dump();
+        if (tev!=NULL)
+            tev->dump();
         break;
     case WXK_CONTROL_Z:
         std::cout << "CTRL-Z undo" << std::endl;
@@ -1538,6 +1539,21 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 
 void wxTEDFrame::OnClose(wxCloseEvent& event)
 {
+    // TODO:
+    /*
+    if ( event.CanVeto() && m_bFileNotSaved )
+    {
+        if ( wxMessageBox("The file has not been saved... continue closing?",
+                          "Please confirm",
+                          wxICON_QUESTION | wxYES_NO) != wxYES )
+        {
+            event.Veto();
+            return;
+        }
+    }
+    */
+    Destroy();  // you may also do:  event.Skip();
+                // since the default event handler does call Destroy(), too
 }
 
 void wxTEDFrame::OnMenuItemConcealToggle(wxCommandEvent& event)
@@ -1659,6 +1675,7 @@ void wxTEDFrame::OnMenuItemCopySelected(wxCommandEvent& event)
         {
             wxChar wxc=line->GetCharAt(x);
             // std::cout << "char=" << (char)wxc << std::endl;
+            if (wxc==0x0d) wxc=0x8d;    // Protect double height
             wxs[ix++]=wxc;
         }
         wxs[ix++]=0xff; // need some special character
@@ -1717,6 +1734,7 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
         else
             if (x<=40 && y<=25) // Clip to frame!
                 line->SetCharAt(x++,ch);
+        if (y>25) break;    // Off the bottom of the page? We are done.
    }
    //std::cout << "Paste=" << wxs << std::endl;
 }
