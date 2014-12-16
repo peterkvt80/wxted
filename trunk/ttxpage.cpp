@@ -24,7 +24,7 @@
  *************************************************************************** **/
  #include "ttxpage.h"
 
-TTXPage::TTXPage()     //ctor
+TTXPage::TTXPage() : undoList(0), m_current(0)    //ctor
 {
     m_Init();
 }
@@ -301,7 +301,7 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
 }
 
 
-TTXPage::TTXPage(const TTXPage& other)
+TTXPage::TTXPage(const TTXPage& other) : undoList(0), m_current(NULL)
 {
     //copy ctor.
     std::cout << "Would be a great idea to implement the copy constructor" << std::endl;
@@ -326,6 +326,8 @@ TTXPage* TTXPage::GetPage(unsigned int pageNumber)
 void TTXPage::Undo(wxPoint& cursorloc)
 {
     TEDEvent* tev=m_current; // This is the event we are going to undo
+    if (m_current==NULL) // Nothing to undo?
+        return;
     // TODO: Check the event type
     char oldChar=tev->GetCharList()->GetOldChar();   // What character
     wxPoint loc=tev->GetCharList()->GetLoc();    // and where are we putting it?
@@ -344,11 +346,12 @@ TTXLine* TTXPage::GetRow(unsigned int row)
     // std::cout << "[TTXPage::GetRow] getting row " << row << std::endl;
     if (row>=25 || row<0)
     {
-        std::cout << "GetRow returned NULL. Oh dear" << std::endl;
+        std::cout << "[TTXPage::GetRow]Invalid row requested: " << row << std::endl;
         return NULL;
     }
     TTXLine* line=m_pLine[row];
-    if (line==NULL)
+    // Don't create row 0, as that is special.
+    if (line==NULL && row>0)
         line=m_pLine[row]=new TTXLine("                                        ");
     return line;
 }
