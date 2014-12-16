@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1418257280 c:\dev\zwintest\wxted\wxtedmain.h
+1418690261 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -907,6 +907,7 @@
 	<wx/frame.h>
 	<wx/timer.h>
 	<wx/statusbr.h>
+	<wx/clipbrd.h>
 	<wx/config.h>
 	<wx/persist.h>
 	<wx/persist/toplevel.h>
@@ -1437,7 +1438,7 @@
 	<string>
 	"ttxcodes.h"
 
-1418252413 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1418690558 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -1500,7 +1501,7 @@
 1418056204 source:c:\dev\zwintest\wxted\ttxline.cpp
 	"ttxline.h"
 
-1418081822 source:c:\dev\zwintest\wxted\ttxpage.cpp
+1418690959 source:c:\dev\zwintest\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\filedlg.h
@@ -2144,4 +2145,21 @@
 1418082615 c:\dev\zwintest\wxted\tedevent.h
 	<iostream>
 	"charchange.h"
+
+1412504348 c:\wxwidgets-3.0.2\include\wx\clipbrd.h
+	"wx/defs.h"
+	"wx/event.h"
+	"wx/chartype.h"
+	"wx/dataobj.h"
+	"wx/vector.h"
+	"wx/msw/clipbrd.h"
+	"wx/motif/clipbrd.h"
+	"wx/gtk/clipbrd.h"
+	"wx/gtk1/clipbrd.h"
+	"wx/x11/clipbrd.h"
+	"wx/osx/clipbrd.h"
+	"wx/cocoa/clipbrd.h"
+	"wx/os2/clipbrd.h"
+
+1412504350 c:\wxwidgets-3.0.2\include\wx\msw\clipbrd.h
 

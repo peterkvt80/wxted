@@ -342,8 +342,15 @@ void TTXPage::Undo(wxPoint& cursorloc)
 TTXLine* TTXPage::GetRow(unsigned int row)
 {
     // std::cout << "[TTXPage::GetRow] getting row " << row << std::endl;
-    if (row>=25 || row<0) return NULL;
-    return m_pLine[row];
+    if (row>=25 || row<0)
+    {
+        std::cout << "GetRow returned NULL. Oh dear" << std::endl;
+        return NULL;
+    }
+    TTXLine* line=m_pLine[row];
+    if (line==NULL)
+        line=m_pLine[row]=new TTXLine("                                        ");
+    return line;
 }
 
 void TTXPage::SetRow(unsigned int rownumber, std::string line)
@@ -475,7 +482,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_CONTROL_Y: ch=ttxCodeContiguousGraphics;break; // Ctrl-Y:
             case WXK_CONTROL_T: ch=ttxCodeSeparatedGraphics;break;  // Ctrl-T:
             case WXK_CONTROL_U: ch=ttxCodeBlackBackground;break;    // Ctrl-U:
-            case WXK_CONTROL_V: ch=ttxCodeNewBackground;break;      // Ctrl-V:
+            case WXK_CONTROL_B: ch=ttxCodeNewBackground;break;      // Ctrl-B:
             case WXK_CONTROL_W: ch=ttxCodeHoldGraphics;break;       // Ctrl-W:
             case WXK_CONTROL_X: ch=ttxCodeReleaseGraphics;break;    // Ctrl-X:
             default: ch=0;
