@@ -39,6 +39,7 @@
 #include <wx/timer.h>
 #include <wx/statusbr.h>
 //*)
+#include <wx/clipbrd.h>
 #include <wx/config.h>
 #include <wx/persist.h>
 #include <wx/persist/toplevel.h>
@@ -79,10 +80,15 @@ class wxTEDFrame: public wxFrame
         void m_SetStatus(); /// Shows cursor location and character info
 
         bool m_reveal;  /// True if we should reveal concealed text
-        bool m_dragging;
 
+        // Copy buffer
+        bool m_dragging;
         wxPoint m_MarqueeStart;
         wxPoint m_MarqueeEnd;
+        void CopyTextToClipboard(wxString text);
+        wxString GetTextFromClipboard();
+
+        wxClipboard *m_clip;
 
         // Page
         TTXPage* m_rootPage; /// This is the root page used for load/save
@@ -137,6 +143,9 @@ class wxTEDFrame: public wxFrame
         void OnMouseWheel(wxMouseEvent& event);
         void OnLeftUp(wxMouseEvent& event);
         void OnMouseMove(wxMouseEvent& event);
+        void OnMenuItemCopySelected(wxCommandEvent& event);
+        void OnMenuItemPasteSelected(wxCommandEvent& event);
+        void OnMenuItemSelectAllSelected(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -204,23 +213,23 @@ class wxTEDFrame: public wxFrame
         wxMenu* Menu3;
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;
-        wxMenuItem* MenuItem14;
         wxMenuItem* MenuItem11;
         wxMenuItem* MenuItemDeletePage;
         wxMenuItem* MenuItemGerman;
         wxPanel* Panel1;
         wxMenuItem* MenuItemPageNumber;
-        wxMenuItem* MenuItem13;
-        wxMenuItem* MenuItem12;
         wxMenuItem* MenuItem3;
         wxMenuItem* MenuItemConcealToggle;
         wxStatusBar* StatusBar1;
+        wxMenuItem* MenuItemSelectAll;
         wxMenuItem* MenuItemSwedish;
         wxFileDialog* LoadPageFileDialog;
+        wxMenuItem* MenuItemCopy;
         wxMenuItem* MenuItemPublish;
         wxMenuItem* MenuItemInsertSubpage;
         wxMenuItem* MenuItemFrench;
         wxMenuItem* MenuItemShowHeader;
+        wxMenuItem* MenuItemPaste;
         wxTimer m_Timer1;
         wxMenuItem* MenuItemEnglish;
         wxMenuItem* MenuItemUndo;

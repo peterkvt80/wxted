@@ -85,23 +85,23 @@
 					<enabled>0</enabled>
 					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
 				</object>
-				<object class="wxMenuItem" name="idCopy" variable="MenuItem12" member="yes">
+				<object class="wxMenuItem" name="idCopy" variable="MenuItemCopy" member="yes">
 					<label>Copy</label>
+					<accel>CTRL-C</accel>
 					<help>Copy the selected area</help>
-					<enabled>0</enabled>
-					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+					<handler function="OnMenuItemCopySelected" entry="EVT_MENU" />
 				</object>
-				<object class="wxMenuItem" name="idPaste" variable="MenuItem13" member="yes">
+				<object class="wxMenuItem" name="idPaste" variable="MenuItemPaste" member="yes">
 					<label>Paste</label>
+					<accel>CTRL-V</accel>
 					<help>Paste text from the clipboard</help>
-					<enabled>0</enabled>
-					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+					<handler function="OnMenuItemPasteSelected" entry="EVT_MENU" />
 				</object>
-				<object class="wxMenuItem" name="idSelectAll" variable="MenuItem14" member="yes">
+				<object class="wxMenuItem" name="idSelectAll" variable="MenuItemSelectAll" member="yes">
 					<label>Select All</label>
+					<accel>CTRL-A</accel>
 					<help>Select the entire page</help>
-					<enabled>0</enabled>
-					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
+					<handler function="OnMenuItemSelectAllSelected" entry="EVT_MENU" />
 				</object>
 				<object class="separator" />
 				<object class="wxMenuItem" name="idInsertPage" variable="MenuItemInsertSubpage" member="yes">

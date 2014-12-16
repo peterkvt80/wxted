@@ -859,7 +859,7 @@ void wxTEDFrame::m_SetStatus()
             case ttxCodeContiguousGraphics: code<<"Contiguous graphics";break;
             case ttxCodeSeparatedGraphics: code<<"Separated graphics=Ctrl-T";break;
             case ttxCodeBlackBackground: code<<"Black background=Ctrl-U";break;
-            case ttxCodeNewBackground: code<<"New background=Ctrl-V";break;
+            case ttxCodeNewBackground: code<<"New background=Ctrl-B";break;
             case ttxCodeHoldGraphics:  code<<"Hold graphics=Ctrl-W";break;
             case ttxCodeReleaseGraphics: code<<"Release graphics=Ctrl-X";break;
             case ' ': code<<"Space";break;
@@ -893,6 +893,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_propertiesDlg=new PageSettingsDialog(this,1000);
 
     m_reveal=true; // As this is an editor, reveal the text by default.
+
+    m_clip = new wxClipboard();
 
     // config
     m_config=new wxConfig("wxTED");
@@ -938,15 +940,12 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuItem11 = new wxMenuItem(Menu3, idCut, _("Cut"), _("Cut the selected area"), wxITEM_NORMAL);
     Menu3->Append(MenuItem11);
     MenuItem11->Enable(false);
-    MenuItem12 = new wxMenuItem(Menu3, idCopy, _("Copy"), _("Copy the selected area"), wxITEM_NORMAL);
-    Menu3->Append(MenuItem12);
-    MenuItem12->Enable(false);
-    MenuItem13 = new wxMenuItem(Menu3, idPaste, _("Paste"), _("Paste text from the clipboard"), wxITEM_NORMAL);
-    Menu3->Append(MenuItem13);
-    MenuItem13->Enable(false);
-    MenuItem14 = new wxMenuItem(Menu3, idSelectAll, _("Select All"), _("Select the entire page"), wxITEM_NORMAL);
-    Menu3->Append(MenuItem14);
-    MenuItem14->Enable(false);
+    MenuItemCopy = new wxMenuItem(Menu3, idCopy, _("Copy\tCTRL-C"), _("Copy the selected area"), wxITEM_NORMAL);
+    Menu3->Append(MenuItemCopy);
+    MenuItemPaste = new wxMenuItem(Menu3, idPaste, _("Paste\tCTRL-V"), _("Paste text from the clipboard"), wxITEM_NORMAL);
+    Menu3->Append(MenuItemPaste);
+    MenuItemSelectAll = new wxMenuItem(Menu3, idSelectAll, _("Select All\tCTRL-A"), _("Select the entire page"), wxITEM_NORMAL);
+    Menu3->Append(MenuItemSelectAll);
     Menu3->AppendSeparator();
     MenuItemInsertSubpage = new wxMenuItem(Menu3, idInsertPage, _("Insert subpage after this one"), _("Add a subpage after this page"), wxITEM_NORMAL);
     Menu3->Append(MenuItemInsertSubpage);
@@ -1001,9 +1000,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
     Connect(idCut,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
-    Connect(idCopy,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
-    Connect(idPaste,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
-    Connect(idSelectAll,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
+    Connect(idCopy,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemCopySelected);
+    Connect(idPaste,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPasteSelected);
+    Connect(idSelectAll,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemSelectAllSelected);
     Connect(idInsertPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemInsertSubpage);
     Connect(idDeleteSubPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemDeletePage);
     Connect(idLanguageEnglish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
@@ -1570,7 +1569,7 @@ void wxTEDFrame::OnLeftUp(wxMouseEvent& event)
 {
     m_dragging=false;
     // TODO: When left button goes up this ends a drag.
-    wxPoint p=event.GetPosition();
+    wxPoint p=event.GetPosition(); // This is  pointless. What was I going to do?
     p.x/=m_ttxW;
     p.y/=m_ttxH;
     // std::cout << "end a drag at " << p.x << ", " << p.y << std::endl;
@@ -1583,11 +1582,15 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
 {
     // TODO: Extend this to highlight links on rollover
     // TODO: When left button moves, continue drag.
+    if (!event.LeftIsDown()) // OnLeftUp only fires if you are over the frame.
+        m_dragging=false;
     if (m_dragging)
     {
         wxPoint p=event.GetPosition();
         p.x/=m_ttxW;
         p.y/=m_ttxH;
+        if (p.x>40) p.x=40;
+        if (p.y>=25) p.y=25;
         m_MarqueeEnd=p; // Marquee end
         // std::cout << "continue drag at " << p.x << ", " << p.y << std::endl;
     }
@@ -1620,3 +1623,106 @@ void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
     // Skip(); // TODO: Is this needed? Probably is!
 }
 
+
+void wxTEDFrame::OnMenuItemCopySelected(wxCommandEvent& event)
+{
+    // *thinks*
+    // How can we cut and paste between instances of wxTED because that would be really useful.
+    // What data did we just copy?
+    //std::cout << m_MarqueeStart.x << "," << m_MarqueeStart.y << "    " << m_MarqueeEnd.x  << "," << m_MarqueeEnd.y << std::endl;
+    // These are the coordinates
+    int x1=m_MarqueeStart.x;
+    int y1=m_MarqueeStart.y;
+    int x2=m_MarqueeEnd.x;
+    int y2=m_MarqueeEnd.y;
+
+    // Flip left right if needed
+    if (x1>x2)
+    {
+        x1=m_MarqueeEnd.x;
+        x2=m_MarqueeStart.x;
+    }
+    // Flip up down if needed
+    if (y1>y2)
+    {
+        y1=m_MarqueeEnd.y;
+        y2=m_MarqueeStart.y;
+    }
+    wxString wxs;
+    wxs.Pad((y2-y1)*(x2-x1+1),'X');    // Make a blank array.
+    // row
+    int ix=0;
+    for (int y=y1;y<y2;y++)
+    {
+        TTXLine* line=m_currentPage->GetRow(y);
+        for (int x=x1;x<x2;x++)
+        {
+            wxChar wxc=line->GetCharAt(x);
+            // std::cout << "char=" << (char)wxc << std::endl;
+            wxs[ix++]=wxc;
+        }
+        wxs[ix++]=0xff; // need some special character
+    }
+    //std::cout << "wxs=" << _(wxs) << std::endl;
+    CopyTextToClipboard(_(wxs));
+}
+
+void wxTEDFrame::CopyTextToClipboard(wxString text)
+{
+   if (m_clip->Open())
+   {
+      m_clip->Clear();
+      m_clip->SetData( new wxTextDataObject( text ) );
+      m_clip->Flush();
+      m_clip->Close();
+   }
+}
+
+wxString wxTEDFrame::GetTextFromClipboard()
+{
+   wxString wxs;
+   if (m_clip->Open())
+   {
+      if (m_clip->IsSupported( wxDF_TEXT ))
+      {
+          wxTextDataObject data;
+          m_clip->GetData(data);
+          wxs=data.GetText();
+      }
+      else
+        wxs="";
+      m_clip->Close();
+   }
+   return wxs;
+}
+
+void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
+{
+   wxString wxs;
+   wxs=GetTextFromClipboard();
+   // Now paste this text at the location m_cursorPoint
+   // A NULL char is the end of a line. Note: This will conflict with AlphaBlack code.
+   wxChar ch;
+   int x=m_cursorPoint.x;
+   int y=m_cursorPoint.y;
+   TTXLine* line=m_currentPage->GetRow(y++);
+   for (int i=0;i<wxs.Length();i++)
+   {
+        ch=wxs[i];
+        if (ch==0xff)
+        {
+            line=m_currentPage->GetRow(y++);
+            x=m_cursorPoint.x;
+        }
+        else
+            if (x<=40 && y<=25) // Clip to frame!
+                line->SetCharAt(x++,ch);
+   }
+   //std::cout << "Paste=" << wxs << std::endl;
+}
+
+void wxTEDFrame::OnMenuItemSelectAllSelected(wxCommandEvent& event)
+{
+    m_MarqueeStart=wxPoint(0,0);
+    m_MarqueeEnd=wxPoint(40,25);
+}
