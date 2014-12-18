@@ -154,6 +154,49 @@
 						<radio>1</radio>
 					</object>
 				</object>
+				<object class="wxMenu" name="ID_REGION" variable="MenuItem2" member="yes">
+					<label>Region</label>
+					<object class="wxMenuItem" name="ID_REGION0" variable="MenuItemRegion0" member="yes">
+						<label>0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="ID_REGION1" variable="MenuItemRegion1" member="yes">
+						<label>1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="ID_REGION2" variable="MenuItemRegion2" member="yes">
+						<label>2: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Tur</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="ID_REGION3" variable="MenuItemRegion3" member="yes">
+						<label>3: Ser/Cro/Slovenian</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="ID_REGION4" variable="MenuItemRegion4" member="yes">
+						<label>4: Ser/Cro/Ger/Est/Lit/Rus/Bul/Ukr/Cze/Slo</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="ID_REGION6" variable="MenuItemRegion6" member="yes">
+						<label>6: Tur/Gre</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="ID_REGION8" variable="MenuItemRegion8" member="yes">
+						<label>8: Eng/Fre/Arabic</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+					<object class="wxMenuItem" name="ID_REGION10" variable="MenuItemRegion10" member="yes">
+						<label>10: Hebrew/Arabic</label>
+						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
+				</object>
 				<object class="wxMenuItem" name="idPageNumber" variable="MenuItemPageNumber" member="yes">
 					<label>Properties...</label>
 					<help>Set the page number for transmission</help>

@@ -53,7 +53,7 @@
 #include "PageSettingsDialog.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.05")
+#define VERSION_STRING   wxT("1.06")
 
 
 
@@ -146,6 +146,7 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemCopySelected(wxCommandEvent& event);
         void OnMenuItemPasteSelected(wxCommandEvent& event);
         void OnMenuItemSelectAllSelected(wxCommandEvent& event);
+        void OnMenuItemRegionSelected(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -193,6 +194,15 @@ class wxTEDFrame: public wxFrame
         static const long idLanguageSpanish;
         static const long idLanguageItalian;
         static const long ID_MENUITEM1;
+        static const long ID_REGION0;
+        static const long ID_REGION1;
+        static const long ID_REGION2;
+        static const long ID_REGION3;
+        static const long ID_REGION4;
+        static const long ID_REGION6;
+        static const long ID_REGION8;
+        static const long ID_REGION10;
+        static const long ID_REGION;
         static const long idPageNumber;
         static const long ID_MENUITEMSHOWHEADER;
         static const long ID_HIDECONCEAL;
@@ -203,7 +213,9 @@ class wxTEDFrame: public wxFrame
 
         //(*Declarations(wxTEDFrame)
         wxMenu* MenuPresentation;
+        wxMenu* MenuItem2;
         wxMenuItem* MenuItemSpanish;
+        wxMenuItem* MenuItemRegion0;
         wxMenuItem* MenuItemItalian;
         wxMenuItem* MenuItemSave;
         wxMenuItem* MenuItemCzech;
@@ -215,9 +227,12 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItem1;
         wxMenuItem* MenuItem11;
         wxMenuItem* MenuItemDeletePage;
+        wxMenuItem* MenuItemRegion6;
         wxMenuItem* MenuItemGerman;
         wxPanel* Panel1;
+        wxMenuItem* MenuItemRegion10;
         wxMenuItem* MenuItemPageNumber;
+        wxMenuItem* MenuItemRegion2;
         wxMenuItem* MenuItem3;
         wxMenuItem* MenuItemConcealToggle;
         wxStatusBar* StatusBar1;
@@ -225,9 +240,13 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemSwedish;
         wxFileDialog* LoadPageFileDialog;
         wxMenuItem* MenuItemCopy;
+        wxMenuItem* MenuItemRegion1;
         wxMenuItem* MenuItemPublish;
         wxMenuItem* MenuItemInsertSubpage;
+        wxMenuItem* MenuItemRegion4;
+        wxMenuItem* MenuItemRegion8;
         wxMenuItem* MenuItemFrench;
+        wxMenuItem* MenuItemRegion3;
         wxMenuItem* MenuItemShowHeader;
         wxMenuItem* MenuItemPaste;
         wxTimer m_Timer1;
