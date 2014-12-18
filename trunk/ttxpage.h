@@ -198,6 +198,18 @@ class TTXPage
          */
         int GetLanguage();
 
+        /** Set the region.
+         * A region is just one of the 16 sets of character sets.
+         * \param region : A hex value 0..f
+         * \return Nothing.
+         */
+        void SetRegion(int region){m_region=region;}
+
+        /** Get the region.
+         * \return region 0..f.
+         */
+        int GetRegion(){return m_region;}
+
         /** Get a Fastext link
          * \param link 0..5 where 0..3 are the main links, 5 is index and 4, nobody knows why
          * \return A link number (in hex base)
@@ -237,7 +249,7 @@ class TTXPage
         char m_cycletimetype;       // CT
         int m_subcode;              // SC
         int m_pagestatus;           // PS
-
+        int m_region;               // RE
         // Private functions
         void m_Init();
         void m_OutputLines(std::ofstream& ttxfile, TTXPage* p);
