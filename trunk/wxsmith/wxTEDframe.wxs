@@ -153,6 +153,12 @@
 						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
+					<object class="wxMenuItem" name="idLanguageUnused" variable="MenuItemUnused" member="yes">
+						<label>Unused</label>
+						<enabled>0</enabled>
+						<handler function="OnMenuItemLanguage" entry="EVT_MENU" />
+						<radio>1</radio>
+					</object>
 				</object>
 				<object class="wxMenu" name="ID_REGION" variable="MenuItem2" member="yes">
 					<label>Region</label>

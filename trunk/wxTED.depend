@@ -899,7 +899,7 @@
 1412504350 c:\wxwidgets-3.0.2\include\wx\univ\theme.h
 	"wx/string.h"
 
-1418861845 c:\dev\zwintest\wxted\wxtedmain.h
+1418921161 c:\dev\zwintest\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -914,6 +914,7 @@
 	<sstream>
 	"ttxpage.h"
 	"PageSettingsDialog.h"
+	"mapchar.h"
 	<wininet.h>
 	"PublishSetupDialog.h"
 
@@ -1438,7 +1439,7 @@
 	<string>
 	"ttxcodes.h"
 
-1418732355 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1418922619 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -2162,4 +2163,11 @@
 	"wx/os2/clipbrd.h"
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\clipbrd.h
+
+1418929809 c:\dev\zwintest\wxted\mapchar.h
+	<iostream>
+	<wx/string.h>
+
+1418989143 source:c:\dev\zwintest\wxted\mapchar.cpp
+	"mapchar.h"
 
