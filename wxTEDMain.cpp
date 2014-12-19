@@ -87,6 +87,7 @@ const long wxTEDFrame::idLanguageCzechSlovak = wxNewId();
 const long wxTEDFrame::idLanguageGerman = wxNewId();
 const long wxTEDFrame::idLanguageSpanish = wxNewId();
 const long wxTEDFrame::idLanguageItalian = wxNewId();
+const long wxTEDFrame::idLanguageUnused = wxNewId();
 const long wxTEDFrame::ID_MENUITEM1 = wxNewId();
 const long wxTEDFrame::ID_REGION0 = wxNewId();
 const long wxTEDFrame::ID_REGION1 = wxNewId();
@@ -685,147 +686,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
 wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
 {
-    // These mappings are for when using the teletext2 font
-    // Some mappings are required from true Teletext to teletext2
-    // There is one set of national options for each language
-    // Could put in an enum for the languages, but that would only apply to west europe
-    /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
-       The only exception is 7/F which is common to all languages*/
-    ch&=0x7f;
-    // std::cout << "trace1" << std::endl;
-    switch (m_rootPage->GetLanguage())
-    {
-    case 0 : // English
-        // std::cout << "trace2" << std::endl;
-
-        // Nat. opt. 1
-        if (ch=='#')  ch=0x00A3; // 2/3 # is mapped to pound sign
-        //if (ch=='$')  ch=0x0024; // 2/4 Dollar sign (no change!)
-        //if (ch=='@')  ch=0x0040; // 4/0 No change
-        if (ch=='[')  ch=0x2190; // 5/B Left arrow.
-        if (ch=='\\') ch=0xbd;   // 5/C Half
-        // Nat. opt. 2
-        if (ch==']')  ch=0x2192; // 5/D Right arrow.
-        if (ch=='^')  ch=0x2191; // 5/E Up arrow.
-        if (ch=='_')  ch=0x0023; // 5/F Underscore is hash sign
-        if (ch=='`')  ch=0x2014; // 6/0 Centre dash. The full width dash e731
-        if (ch=='{')  ch=0xbc;   // 7/B Quarter
-        if (ch=='|')  ch=0x2016; // 7/C Double pipe
-        if (ch=='}')  ch=0xbe;   // 7/D Three quarters
-        if (ch=='~')  ch=0x00f7; // 7/E Divide
-        // std::cout << "trace3" << std::endl;
-        break;
-    case 1 : // French
-        // Nat. opt. 1
-        if (ch=='#')  ch=0x00e9; // 2/3 e acute
-        if (ch=='$')  ch=0x00ef; // 2/4 i umlaut
-        if (ch=='@')  ch=0x00e0; // 4/0 a grave
-        if (ch=='[')  ch=0x00eb; // 5/B e umlaut
-        if (ch=='\\') ch=0x00ea; // 5/C e circumflex
-        // Nat. opt. 2
-        if (ch==']')  ch=0x00f9; // 5/D u grave
-        if (ch=='^')  ch=0x00ee; // 5/E i circumflex
-        if (ch=='_')  ch='#';    // 5/F #
-        if (ch=='`')  ch=0x00e8; // 6/0 e grave
-        if (ch=='{')  ch=0x00e2; // 7/B a circumflex
-        if (ch=='|')  ch=0x00f4; // 7/C o circumflex
-        if (ch=='}')  ch=0x00fb; // 7/D u circumflex
-        if (ch=='~')  ch=0x00e7; // 7/E c cedilla
-        break;
-    case 2 : // Swedish
-        // Nat. opt. 1
-        if (ch=='#')  ch='#'; // 2/3 hash
-        if (ch=='$')  ch=0x00a4; // 2/4 currency bug
-        if (ch=='@')  ch=0x00c9; // 4/0 E acute
-        if (ch=='[')  ch=0x00c4; // 5/B A umlaut
-        if (ch=='\\') ch=0x00d4; // 5/C O umlaut
-        // Nat. opt. 2
-        if (ch==']')  ch=0x00c5; // 5/D A ring
-        if (ch=='^')  ch=0x00dc; // 5/E U umlaut
-        if (ch=='_')  ch=0x005f; // 5/F Underscore (not mapped)
-        if (ch=='`')  ch=0x00e9; // 6/0 e acute
-        if (ch=='{')  ch=0x00e4; // 7/B a umlaut
-        if (ch=='|')  ch=0x00d6; // 7/C o umlaut
-        if (ch=='}')  ch=0x00e5; // 7/D a ring
-        if (ch=='~')  ch=0x00fc; // 7/E u umlaut
-        break;
-    case 3 : // Czech/Slovak
-        // Nat. opt. 1
-        if (ch=='#')  ch='#';    // 2/3 hash
-        if (ch=='$')  ch=0x016f; // 2/4 u ring
-        if (ch=='@')  ch=0x010d; // 4/0 c caron
-        if (ch=='[')  ch=0x0165; // 5/B t caron
-        if (ch=='\\') ch=0x017e; // 5/C z caron
-        // Nat. opt. 2
-        if (ch==']')  ch=0x00fd; // 5/D y acute
-        if (ch=='^')  ch=0x00ed; // 5/E i acute
-        if (ch=='_')  ch=0x0159; // 5/F r caron
-        if (ch=='`')  ch=0x00e9; // 6/0 e acute
-        if (ch=='{')  ch=0x00e1; // 7/B a acute
-        if (ch=='|')  ch=0x011b; // 7/C e caron
-        if (ch=='}')  ch=0x00fa; // 7/D u acute
-        if (ch=='~')  ch=0x0161; // 7/E s caron
-        break;
-    case 4 : // German
-        // Nat. opt. 1
-        if (ch=='#')  ch='#';    // 2/3 # is not mapped
-        if (ch=='$')  ch=0x0024; // 2/4 Dollar sign not mapped
-        if (ch=='@')  ch=0x00a7; // 4/0 Section sign
-        if (ch=='[')  ch=0x00c4; // 5/B A umlaut
-        if (ch=='\\') ch=0x00d6; // 5/C O umlaut
-        // Nat. opt. 2
-        if (ch==']')  ch=0x00dc; // 5/D U umlaut
-        if (ch=='^')  ch='^';    // 5/E Caret (not mapped)
-        if (ch=='_')  ch=0x005f; // 5/F Underscore (not mapped)
-        if (ch=='`')  ch=0x00b0; // 6/0 Masculine ordinal indicator
-        if (ch=='{')  ch=0x00e4; // 7/B a umlaut
-        if (ch=='|')  ch=0x00f6; // 7/C o umlaut
-        if (ch=='}')  ch=0x00fc; // 7/D u umlaut
-        if (ch=='~')  ch=0x00df; // 7/E SS
-        break;
-    case 5 : // Spanish/Portuguese
-        // Nat. opt. 1
-        if (ch=='#')  ch=0x00e7; // 2/3 c cedilla
-        if (ch=='$')  ch='$';    // 2/4 Dollar sign not mapped
-        if (ch=='@')  ch=0x00a1; // 4/0 inverted exclamation mark
-        if (ch=='[')  ch=0x00e1; // 5/B a acute
-        if (ch=='\\') ch=0x00e9; // 5/C e acute
-        // Nat. opt. 2
-        if (ch==']')  ch=0x00ed; // 5/D i acute
-        if (ch=='^')  ch=0x00f3; // 5/E o acute
-        if (ch=='_')  ch=0x00fa; // 5/F u acute
-        if (ch=='`')  ch=0x00bf; // 6/0 Inverted question mark
-        if (ch=='{')  ch=0x00fc; // 7/B u umlaut
-        if (ch=='|')  ch=0x00f1; // 7/C n tilde
-        if (ch=='}')  ch=0x00e8; // 7/D e grave
-        if (ch=='~')  ch=0x00e0; // 7/E a grave
-        break;
-    case 6 : // Italian
-        // Nat. opt. 1
-        if (ch=='#')  ch=0x00a3; // 2/3 Pound
-        if (ch=='$')  ch='$';    // 2/4 Dollar sign not mapped
-        if (ch=='@')  ch=0x00e9; // 4/0 e acute
-        if (ch=='[')  ch=0x00b0; // 5/B ring
-        if (ch=='\\') ch=0x00e7; // 5/C c cedilla
-        // Nat. opt. 2
-        if (ch==']')  ch=0x2192; // 5/D right arrow
-        if (ch=='^')  ch=0x2191; // 5/E up arrow
-        if (ch=='_')  ch='#';    // 5/F hash
-        if (ch=='`')  ch=0x00f9; // 6/0 u grave
-        if (ch=='{')  ch=0x00e0; // 7/B a grave
-        if (ch=='|')  ch=0x00f2; // 7/C o grave
-        if (ch=='}')  ch=0x00e8; // 7/D e grave
-        if (ch=='~')  ch=0x00ec; // 7/E i grave
-        break;
-    default:
-        std::cout << "Language not implemented yet: " << m_rootPage->GetLanguage() << std::endl;;
-    }
-    // More language mappings including Greek
-    if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
-
-    //std::cout << "trace4" << std::endl;
-
-    return ch;
+    return MapChar(ch,m_rootPage->GetLanguage(),m_rootPage->GetRegion());
 }
 
 void wxTEDFrame::m_SetStatus()
@@ -978,6 +839,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuItemLanguage->Append(MenuItemSpanish);
     MenuItemItalian = new wxMenuItem(MenuItemLanguage, idLanguageItalian, _("Italian"), wxEmptyString, wxITEM_RADIO);
     MenuItemLanguage->Append(MenuItemItalian);
+    MenuItemUnused = new wxMenuItem(MenuItemLanguage, idLanguageUnused, _("Unused"), wxEmptyString, wxITEM_RADIO);
+    MenuItemLanguage->Append(MenuItemUnused);
+    MenuItemUnused->Enable(false);
     MenuPresentation->Append(ID_MENUITEM1, _("Language"), MenuItemLanguage, wxEmptyString);
     MenuItem2 = new wxMenu();
     MenuItemRegion0 = new wxMenuItem(MenuItem2, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
@@ -1040,6 +904,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(idLanguageGerman,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idLanguageSpanish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idLanguageItalian,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageUnused,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(ID_REGION0,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
@@ -1082,6 +947,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     /* Initial page */
     m_rootPage = new TTXPage("BBC100.tti","");
     m_setLanguage();
+
     iPageCount=m_rootPage->GetPageCount();
     iPage=0;
 
@@ -1109,6 +975,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_publish_ftp_password=m_config->Read("/wxted/FTP/Password");
     m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
+    SetRegionMenu(m_rootPage->GetRegion()); // Region language
     std::cout << "Finished starting frame" << std::endl;
 }
 
@@ -1148,6 +1015,8 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     m_setLanguage();
     iPage=0;
     m_currentPage=m_rootPage;
+
+    SetRegionMenu(m_rootPage->GetRegion()); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
     OnPaint(Pevent);    // Refresh with the new page
@@ -1203,6 +1072,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
     m_rootPage=new TTXPage();
     SetTitle("");
     m_setLanguage();
+    SetRegionMenu(0);
     iPageCount=0;
     iPage=0;
     m_currentPage=m_rootPage;
@@ -1276,6 +1146,7 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     // Create a new page
     p=new TTXPage();
     m_setLanguage();
+    SetRegionMenu(m_rootPage->GetRegion()); // Region language
     iPage++;
     // Save the child page pointer
     childPage=m_currentPage->Getm_SubPage();
@@ -1361,7 +1232,6 @@ void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
     int language=event.GetId()-(MenuItemEnglish->GetId() & 0x07);
     m_rootPage->SetLanguage(language);
     std::cout << "Language handler " << m_rootPage->GetLanguage() << std::endl;
-
 }
 
 void wxTEDFrame::m_setLanguage()
@@ -1783,27 +1653,129 @@ void wxTEDFrame::OnMenuItemSelectAllSelected(wxCommandEvent& event)
 void wxTEDFrame::OnMenuItemRegionSelected(wxCommandEvent& event)
 {
     int region=event.GetId()-MenuItemRegion0->GetId();
-    std::cout << "Region changed to " << region << std::endl;
-    // TODO: Remember the reserved regions we need to map over
-    switch (region) // Admittedly, the first 5 are redundant!
+    // Map menu numbers to regions
+    switch (region)
     {
     case 0: region=0;
-        MenuItemEnglish->SetItemLabel(_("English"));
         break;
     case 1: region=1;
-        MenuItemEnglish->SetItemLabel(_("Polish"));
         break;
     case 2: region=2;
         break;
     case 3: region=3;
         break;
-    case 4: region=4;;
+    case 4: region=4;
         break;
     case 5: region=6; // Turkish and Greek
         break;
     case 6: region=8; // English/French/Arabic;
         break;
     case 7: region=10; // Hebrew/Arabic
+        break;
+    default: region=0;
+    }
+    std::cout << "Region changed to " << region << std::endl;
+    // TODO: Remember the reserved regions we need to map over
+    // Note that the C12,C13,C14 bits determine the order of the languages
+    // and we reverse them from transmission order.
+    // See Table 32: Function of Default G0 and G2 Character Set Designation and National Option
+    // Selection bits in packets X/28/0 Format 1, X/28/4, M/29/0 and M/29/4
+
+    SetRegionMenu(region);
+}
+
+void wxTEDFrame::SetRegionMenu(int region)
+{
+    // Enable everything
+    MenuItemEnglish->Enable(true);
+    MenuItemFrench->Enable(true);
+    MenuItemSwedish->Enable(true);
+    MenuItemCzech->Enable(true);
+    MenuItemGerman->Enable(true);
+    MenuItemSpanish->Enable(true);
+    MenuItemItalian->Enable(true);
+    MenuItemUnused->Enable(true);
+    switch (region) // Admittedly, the first 5 are redundant!
+    {
+    case 0:
+        MenuItemEnglish->SetItemLabel(_("English"));
+        MenuItemFrench->SetItemLabel (_("French"));
+        MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
+        MenuItemCzech->SetItemLabel  (_("Czech/Slovak"));
+        MenuItemGerman->SetItemLabel (_("German"));
+        MenuItemSpanish->SetItemLabel(_("Portuguese/Spanish"));
+        MenuItemItalian->SetItemLabel(_("Italian"));
+        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
+        break;
+    case 1:
+        MenuItemEnglish->SetItemLabel(_("Polish"));
+        MenuItemFrench->SetItemLabel (_("French"));
+        MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
+        MenuItemCzech->SetItemLabel  (_("Czech/Slovak"));
+        MenuItemGerman->SetItemLabel (_("German"));
+        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemUnused->Enable(false);
+        MenuItemItalian->SetItemLabel(_("Italian"));
+        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
+        break;
+    case 2:
+        MenuItemEnglish->SetItemLabel(_("English"));
+        MenuItemFrench->SetItemLabel (_("French"));
+        MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
+        MenuItemCzech->SetItemLabel  (_("Turkish"));
+        MenuItemGerman->SetItemLabel (_("German"));
+        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
+        MenuItemItalian->SetItemLabel(_("Italian"));
+        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
+        break;
+    case 3:
+        MenuItemEnglish->SetItemLabel(_("Unused")); MenuItemEnglish->Enable(false);
+        MenuItemFrench->SetItemLabel (_("Unused")); MenuItemFrench->Enable(false);
+        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
+        MenuItemCzech->SetItemLabel  (_("Unused")); MenuItemCzech->Enable(false);
+        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
+        MenuItemSpanish->SetItemLabel(_("Serbian/Croatian/Slovenian"));
+        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
+        MenuItemUnused->SetItemLabel (_("Rumanian"));
+        break;
+    case 4:
+        MenuItemEnglish->SetItemLabel(_("Serbian/Croatian"));
+        MenuItemFrench->SetItemLabel (_("Russian/Bulgarian"));
+        MenuItemSwedish->SetItemLabel(_("Estonian"));
+        MenuItemCzech->SetItemLabel  (_("Czech/Slovak"));
+        MenuItemGerman->SetItemLabel (_("German"));
+        MenuItemSpanish->SetItemLabel(_("Ukrainian"));
+        MenuItemItalian->SetItemLabel(_("Lettish/Lithuanian"));
+        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
+        break;
+    case 6: // Turkish and Greek
+        MenuItemEnglish->SetItemLabel(_("Unused")); MenuItemEnglish->Enable(false);
+        MenuItemFrench->SetItemLabel (_("Unused")); MenuItemFrench->Enable(false);
+        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
+        MenuItemCzech->SetItemLabel  (_("Turkish"));
+        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
+        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
+        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
+        MenuItemUnused->SetItemLabel (_("Greek"));
+        break;
+    case 8: // English/French/Arabic;
+        MenuItemEnglish->SetItemLabel(_("English"));
+        MenuItemFrench->SetItemLabel (_("Franch"));
+        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
+        MenuItemCzech->SetItemLabel  (_("Unused")); MenuItemCzech->Enable(false);
+        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
+        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
+        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
+        MenuItemUnused->SetItemLabel (_("Arabic"));
+        break;
+    case 10: // Hebrew/Arabic
+        MenuItemEnglish->SetItemLabel(_("Unused")); MenuItemEnglish->Enable(false);
+        MenuItemFrench->SetItemLabel (_("Unused")); MenuItemFrench->Enable(false);
+        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
+        MenuItemCzech->SetItemLabel  (_("Unused")); MenuItemCzech->Enable(false);
+        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
+        MenuItemSpanish->SetItemLabel(_("Hebrew"));
+        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
+        MenuItemUnused->SetItemLabel (_("Arabic"));
         break;
     default: region=0;
     }

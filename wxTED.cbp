@@ -72,6 +72,8 @@
 		<Unit filename="PublishSetupDialog.h" />
 		<Unit filename="charchange.cpp" />
 		<Unit filename="charchange.h" />
+		<Unit filename="mapchar.cpp" />
+		<Unit filename="mapchar.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

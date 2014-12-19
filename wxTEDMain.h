@@ -51,6 +51,7 @@
 #include <sstream>
 #include "ttxpage.h"
 #include "PageSettingsDialog.h"
+#include "mapchar.h"
 
 // Version number
 #define VERSION_STRING   wxT("1.06")
@@ -72,6 +73,9 @@ class wxTEDFrame: public wxFrame
         virtual ~wxTEDFrame();
 
     private:
+        // Language menu
+        void SetRegionMenu(int region);
+
         // Cursor
         wxPoint m_cursorPoint; /// Cursor location (in character coordinates)
         wxPoint m_subPixelPoint; /// Sub-pixel location when in graphics mode
@@ -193,6 +197,7 @@ class wxTEDFrame: public wxFrame
         static const long idLanguageGerman;
         static const long idLanguageSpanish;
         static const long idLanguageItalian;
+        static const long idLanguageUnused;
         static const long ID_MENUITEM1;
         static const long ID_REGION0;
         static const long ID_REGION1;
@@ -248,6 +253,7 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemFrench;
         wxMenuItem* MenuItemRegion3;
         wxMenuItem* MenuItemShowHeader;
+        wxMenuItem* MenuItemUnused;
         wxMenuItem* MenuItemPaste;
         wxTimer m_Timer1;
         wxMenuItem* MenuItemEnglish;
