@@ -1439,7 +1439,7 @@
 	<string>
 	"ttxcodes.h"
 
-1418922619 source:c:\dev\zwintest\wxted\wxtedmain.cpp
+1419020763 source:c:\dev\zwintest\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -2164,10 +2164,10 @@
 
 1412504350 c:\wxwidgets-3.0.2\include\wx\msw\clipbrd.h
 
-1418929809 c:\dev\zwintest\wxted\mapchar.h
+1419029880 c:\dev\zwintest\wxted\mapchar.h
 	<iostream>
 	<wx/string.h>
 
-1418989143 source:c:\dev\zwintest\wxted\mapchar.cpp
+1419012566 source:c:\dev\zwintest\wxted\mapchar.cpp
 	"mapchar.h"
 
