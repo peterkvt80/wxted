@@ -16,6 +16,10 @@ wchar_t MapChar(wchar_t ch, int language, int region)
         return mapRegion4(ch,language);
     case 6:
         return mapRegion6(ch,language);
+    case 8:
+        return mapRegion8(ch,language);
+    case 10:
+        return mapRegion10(ch,language);
     default:
         std::cout << "Sorry, region not implemented: " << region << std::endl;
         return '?';
@@ -566,22 +570,8 @@ wchar_t mapRegion4(wchar_t ch, int language) // Rus/Bul
         if ((ch>='@') && (ch<='~')) ch=ch+(0x040f)-'@'; // Map anything left over
         break;
 
-       case 2 : // Latin G0 Set - Option 2 Estonian
+    case 2 : // Latin G0 Set - Option 2 Estonian
         // Nat. opt
-        if (ch=='#')  ch=0x0023; // 2/3
-        if (ch=='$')  ch=0x00f5; // 2/4
-        if (ch=='@')  ch=0x0160; // 4/0
-        if (ch=='[')  ch=0x00c4; // 5/B
-        if (ch=='\\') ch=0x00d6; // 5/C
-        if (ch==']')  ch=0x017d; // 5/D
-        if (ch=='^')  ch=0x00dc; // 5/E
-        if (ch=='_')  ch=0x00d5; // 5/F
-        if (ch=='`')  ch=0x0161; // 6/0
-        if (ch=='{')  ch=0x00e4; // 7/B
-        if (ch=='|')  ch=0x00f6; // 7/C
-        if (ch=='}')  ch=0x017e; // 7/D
-        if (ch=='~')  ch=0x00fc; // 7/E
-        break;
 
     case 3 : // Czech/Slovak
         // Nat. opt. 1
@@ -683,7 +673,19 @@ wchar_t mapRegion4(wchar_t ch, int language) // Rus/Bul
         if (ch=='p')  ch=0x006e; // 7/0 - redo this
         break;
     case 6 : // Lettish/Lithuanian (Latin)
-        return '!';
+        if (ch=='#')  ch=0x0023; // 2/3
+        if (ch=='$')  ch=0x0024; // 2/4
+        if (ch=='@')  ch=0x0160; // 4/0
+        if (ch=='[')  ch=0x0117; // 5/B
+        if (ch=='\\') ch=0x0229; // 5/C
+        if (ch==']')  ch=0x017d; // 5/D
+        if (ch=='^')  ch=0x010d; // 5/E
+        if (ch=='_')  ch=0x016b; // 5/F
+        if (ch=='`')  ch=0x0161; // 6/0
+        if (ch=='{')  ch=0x0105; // 7/B
+        if (ch=='|')  ch=0x0173; // 7/C
+        if (ch=='}')  ch=0x017e; // 7/D
+        if (ch=='~')  ch=0x012f; // 7/E This is the best match in teletext2
         break;
     // case 7 : // Unused
 
@@ -753,3 +755,189 @@ wchar_t mapRegion6(wchar_t ch, int language) // Turkish=3, Greek=7
 
     return ch;
 } // mapRegion6
+
+wchar_t mapRegion8(wchar_t ch, int language)
+{
+    // These mappings are for when using the teletext2 font
+    // Some mappings are required from true Teletext to teletext2
+    // There is one set of national options for each language
+    // Could put in an enum for the languages, but that would only apply to west europe
+    /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
+       The only exception is 7/F which is common to all languages*/
+    ch&=0x7f;
+    // std::cout << "trace1" << std::endl;
+    switch (language)
+    {
+    case 0 : // English
+        // std::cout << "trace2" << std::endl;
+
+        // Nat. opt. 1
+        if (ch=='#')  ch=0x00A3; // 2/3 # is mapped to pound sign
+        //if (ch=='$')  ch=0x0024; // 2/4 Dollar sign (no change!)
+        //if (ch=='@')  ch=0x0040; // 4/0 No change
+        if (ch=='[')  ch=0x2190; // 5/B Left arrow.
+        if (ch=='\\') ch=0xbd;   // 5/C Half
+        // Nat. opt. 2
+        if (ch==']')  ch=0x2192; // 5/D Right arrow.
+        if (ch=='^')  ch=0x2191; // 5/E Up arrow.
+        if (ch=='_')  ch=0x0023; // 5/F Underscore is hash sign
+        if (ch=='`')  ch=0x2014; // 6/0 Centre dash. The full width dash e731
+        if (ch=='{')  ch=0xbc;   // 7/B Quarter
+        if (ch=='|')  ch=0x2016; // 7/C Double pipe
+        if (ch=='}')  ch=0xbe;   // 7/D Three quarters
+        if (ch=='~')  ch=0x00f7; // 7/E Divide
+        // std::cout << "trace3" << std::endl;
+        break;
+    case 1 : // French
+        // Nat. opt. 1
+        if (ch=='#')  ch=0x00e9; // 2/3 e acute
+        if (ch=='$')  ch=0x00ef; // 2/4 i umlaut
+        if (ch=='@')  ch=0x00e0; // 4/0 a grave
+        if (ch=='[')  ch=0x00eb; // 5/B e umlaut
+        if (ch=='\\') ch=0x00ea; // 5/C e circumflex
+        // Nat. opt. 2
+        if (ch==']')  ch=0x00f9; // 5/D u grave
+        if (ch=='^')  ch=0x00ee; // 5/E i circumflex
+        if (ch=='_')  ch='#';    // 5/F #
+        if (ch=='`')  ch=0x00e8; // 6/0 e grave
+        if (ch=='{')  ch=0x00e2; // 7/B a circumflex
+        if (ch=='|')  ch=0x00f4; // 7/C o circumflex
+        if (ch=='}')  ch=0x00fb; // 7/D u circumflex
+        if (ch=='~')  ch=0x00e7; // 7/E c cedilla
+        break;
+    case 7 : // Arabic
+        switch (ch)
+        {
+        case ' ':; // 2/0
+        case '!':; // 2/1
+        case '"':; // 2/2
+        case '£':; // 2/3
+        case '$':; // 2/4
+        case '%':; // 2/5
+        case ')':; // 2/8
+        case '(':; // 2/9
+        case '*':; // 2/A
+        case '+':; // 2/B
+        case '-':; // 2/D
+        case '.':; // 2/E
+        case '/':; // 2/F
+        case '0':; // 3/0
+        case '1':; // 3/1
+        case '2':; // 3/2
+        case '3':; // 3/3
+        case '4':; // 3/4
+        case '5':; // 3/5
+        case '6':; // 3/6
+        case '7':; // 3/7
+        case '8':; // 3/8
+        case '9':; // 3/9
+        case ':':; // 3/a
+        //case '0':; // 3/b
+            break;
+        case '>': ch='<'; // 3/c
+            break;
+        case '=':; // 3/d
+            break;
+        case '<': ch='>'; // 3/e
+            break;
+        // case '?':; // 3/f
+        default :
+            ch=ch+0xe606-'&'; // 2/6 onwards
+        }
+        break;
+    default:
+        //std::cout << "Language not implemented yet: " << m_rootPage->GetLanguage() << std::endl;
+        ;
+    }
+    // More language mappings including Greek
+    if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
+
+    //std::cout << "trace4" << std::endl;
+
+    return ch;
+} // region 8
+
+wchar_t mapRegion10(wchar_t ch, int language)
+{
+    // These mappings are for when using the teletext2 font
+    // Some mappings are required from true Teletext to teletext2
+    // There is one set of national options for each language
+    // Could put in an enum for the languages, but that would only apply to west europe
+    /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
+       The only exception is 7/F which is common to all languages*/
+    ch&=0x7f;
+    // std::cout << "trace1" << std::endl;
+    switch (language)
+    {
+    case 5 : // Hebrew
+        switch (ch) // Mostly the same as English nat. opts.
+        {
+        case '#':  ch=0x00A3;  break;// 2/3 # is mapped to pound sign
+        case '[':  ch=0x2190;  break;// 5/B Left arrow.
+        case '\\': ch=0xbd;    break;// 5/C Half
+        case ']':  ch=0x2192;  break;// 5/D Right arrow.
+        case '^':  ch=0x2191;  break;// 5/E Up arrow.
+        case '_':  ch=0x0023;  break;// 5/F Underscore is hash sign
+        case '{':  ch=0x20aa;  break;// 7/B sheqel
+        case '|':  ch=0x2016;  break;// 7/C Double pipe
+        case '}':  ch=0xbe;    break;// 7/D Three quarters
+        case '~':  ch=0x00f7;  break;// 7/E Divide
+        default:
+            if ((ch>0x5f) && (ch<0x7b)) // Hebrew characters
+            {
+                ch=ch+0x05d0-0x60;
+            }
+        }
+        break;
+
+    case 7 : // Arabic
+        switch (ch)
+        {
+        case ' ':; // 2/0
+        case '!':; // 2/1
+        case '"':; // 2/2
+        case '£': ch='#'; // 2/3
+        case '$':; // 2/4
+        case '%':; // 2/5
+        case ')':; // 2/8
+        case '(':; // 2/9
+        case '*':; // 2/A
+        case '+':; // 2/B
+        case '-':; // 2/D
+        case '.':; // 2/E
+        case '/':; // 2/F
+        case '0':; // 3/0
+        case '1':; // 3/1
+        case '2':; // 3/2
+        case '3':; // 3/3
+        case '4':; // 3/4
+        case '5':; // 3/5
+        case '6':; // 3/6
+        case '7':; // 3/7
+        case '8':; // 3/8
+        case '9':; // 3/9
+        case ':':; // 3/a
+        //case '0':; // 3/b
+            break;
+        case '>': ch='<'; // 3/c
+            break;
+        case '=':; // 3/d
+            break;
+        case '<': ch='>'; // 3/e
+            break;
+        // case '?':; // 3/f
+        default :
+            ch=ch+0xe606-'&'; // 2/6 onwards
+        }
+        break;
+    default:
+        //std::cout << "Language not implemented yet: " << m_rootPage->GetLanguage() << std::endl;
+        ;
+    }
+    // More language mappings including Greek
+    if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
+
+    //std::cout << "trace4" << std::endl;
+
+    return ch;
+} // region 10
