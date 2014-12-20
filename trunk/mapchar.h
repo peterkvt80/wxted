@@ -26,6 +26,8 @@ wchar_t mapRegion2(wchar_t ch, int language); // west europe + turkish
 wchar_t mapRegion3(wchar_t ch, int language); // west europe + turkish
 wchar_t mapRegion4(wchar_t ch, int language); // 4: Ser/Cro/Ger/Est/Lit/Rus/Bul/Ukr/Cze/Slo
 wchar_t mapRegion6(wchar_t ch, int language);
+wchar_t mapRegion8(wchar_t ch, int language); // 8: English/French/Arabic
+wchar_t mapRegion10(wchar_t ch, int language); // 10: Hebrew/Arabic
 
 
 
