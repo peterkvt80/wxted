@@ -850,7 +850,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuItem2->Append(MenuItemRegion1);
     MenuItemRegion2 = new wxMenuItem(MenuItem2, ID_REGION2, _("2: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Tur"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion2);
-    MenuItemRegion3 = new wxMenuItem(MenuItem2, ID_REGION3, _("3: Ser/Cro/Slovenian"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion3 = new wxMenuItem(MenuItem2, ID_REGION3, _("3: Ser/Cro/Slovenian/Romanian"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion3);
     MenuItemRegion4 = new wxMenuItem(MenuItem2, ID_REGION4, _("4: Ser/Cro/Ger/Est/Lit/Rus/Bul/Ukr/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion4);
@@ -1257,6 +1257,7 @@ void wxTEDFrame::m_setLanguage()
     case 4: MenuItemGerman ->Check(true);break;
     case 5: MenuItemSpanish->Check(true);break;
     case 6: MenuItemItalian->Check(true);break;
+    case 7: MenuItemUnused ->Check(true);break;
     }
 }
 
@@ -1713,7 +1714,7 @@ void wxTEDFrame::SetRegionMenu(int region)
         MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
         MenuItemCzech->SetItemLabel  (_("Czech/Slovak"));
         MenuItemGerman->SetItemLabel (_("German"));
-        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemUnused->Enable(false);
+        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
         MenuItemItalian->SetItemLabel(_("Italian"));
         MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
         break;
@@ -1759,7 +1760,7 @@ void wxTEDFrame::SetRegionMenu(int region)
         break;
     case 8: // English/French/Arabic;
         MenuItemEnglish->SetItemLabel(_("English"));
-        MenuItemFrench->SetItemLabel (_("Franch"));
+        MenuItemFrench->SetItemLabel (_("French"));
         MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
         MenuItemCzech->SetItemLabel  (_("Unused")); MenuItemCzech->Enable(false);
         MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
@@ -1780,4 +1781,27 @@ void wxTEDFrame::SetRegionMenu(int region)
     default: region=0;
     }
     m_currentPage->SetRegion(region);
+    int language=m_currentPage->GetLanguage();
+    switch (language)
+    {
+    case 0: MenuItemEnglish->Check(true);break;
+    case 1: MenuItemFrench ->Check(true);break;
+    case 2: MenuItemSwedish->Check(true);break;
+    case 3: MenuItemCzech  ->Check(true);break;
+    case 4: MenuItemGerman ->Check(true);break;
+    case 5: MenuItemSpanish->Check(true);break;
+    case 6: MenuItemItalian->Check(true);break;
+    case 7: MenuItemUnused ->Check(true);break;
+    }
+    switch (region)
+    {
+    case 0:  MenuItemRegion0 ->Check(true);break;
+    case 1:  MenuItemRegion1 ->Check(true);break;
+    case 2:  MenuItemRegion2 ->Check(true);break;
+    case 3:  MenuItemRegion3 ->Check(true);break;
+    case 4:  MenuItemRegion4 ->Check(true);break;
+    case 6:  MenuItemRegion6 ->Check(true);break;
+    case 8:  MenuItemRegion8 ->Check(true);break;
+    case 10: MenuItemRegion10->Check(true);break;
+    }
 }

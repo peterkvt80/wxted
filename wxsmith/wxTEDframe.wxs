@@ -178,7 +178,7 @@
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION3" variable="MenuItemRegion3" member="yes">
-						<label>3: Ser/Cro/Slovenian</label>
+						<label>3: Ser/Cro/Slovenian/Romanian</label>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
