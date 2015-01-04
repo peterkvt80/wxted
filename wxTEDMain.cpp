@@ -1,6 +1,6 @@
 /***************************************************************
  * Name:      wxTEDMain.cpp
- * Purpose:   Code for Application Frame
+ * Purpose:   Teletext editor Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
  * Copyright: Peter Kwan (http://www.teastop.co.uk)
