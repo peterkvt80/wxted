@@ -2,6 +2,6 @@
 
 = wxTED Binaries =
 
-If you are like most people and just want to use wxTED then head on over to http:://www.teastop.co.uk/teletext/wxted. You'll find a download link with ready-to-run binaries and instructions.
+If you are like most people and just want to use wxTED then head on over to http://www.teastop.co.uk/teletext/wxted. You'll find a download link with ready-to-run binaries and instructions.
 
-This Google Code project site contains the sources only, so if you know what to do with raw CPP files then this is the right place for you.
+This Google Code project site contains the sources only, so if you know what to do with raw CPP files then this is the right place for you. If you want to set up a development environment then there are instructions at the end of manual.pdf 
