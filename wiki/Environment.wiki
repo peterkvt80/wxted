@@ -22,6 +22,9 @@ The options I chose to set are the default ones documented which are:
  * SHARED
 Make sure that DEBUG is off otherwise your dll will be very big.
 
+You should set these options in config.gcc then you can compile the wxWidgets dll.
+mingw32-make.exe -f makefile.gcc
+
 This makes the dll, which I copied to the bin\Release folder.
 
 Code::Blocks Project Build Options needs wxWidgets in the Search directories. On my system this is C:\wxWidgets-3.0.2\include
