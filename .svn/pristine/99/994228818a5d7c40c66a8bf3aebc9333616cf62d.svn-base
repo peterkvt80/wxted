@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="PageSettingsDialog">
+		<size>397,278</size>
+		<id_arg>0</id_arg>
+		<object class="wxStaticText" name="ID_STATICTEXT4" variable="StaticText3" member="yes">
+			<label>Page number</label>
+			<pos>8,16</pos>
+			<size>72,16</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT5" variable="StaticText4" member="yes">
+			<label>Links:</label>
+			<pos>8,184</pos>
+			<size>32,16</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticText1" member="yes">
+			<label>Index</label>
+			<pos>8,240</pos>
+			<size>32,16</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT3" variable="StaticText2" member="yes">
+			<label>Description</label>
+			<pos>8,48</pos>
+			<size>72,16</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticTextLabel1" member="yes">
+			<label>Cycle time</label>
+			<pos>8,88</pos>
+			<size>72,16</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLPAGENUMBER" variable="TextCtrlPageNumber" member="yes">
+			<value>10000</value>
+			<pos>88,16</pos>
+			<size>56,21</size>
+		</object>
+		<object class="wxButton" name="wxID_OK" variable="ButtonOK" member="yes">
+			<label>OK</label>
+			<pos>184,240</pos>
+			<help>Keep the current settings</help>
+			<handler function="OnButtonOKClick" entry="EVT_BUTTON" />
+		</object>
+		<object class="wxButton" name="wxID_CANCEL" variable="ButtonCancel" member="yes">
+			<label>Cancel</label>
+			<pos>272,240</pos>
+			<handler function="OnButtonCancelClick" entry="EVT_BUTTON" />
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLDESCRIPTION" variable="TextCtrlDescription" member="yes">
+			<value>Text</value>
+			<pos>88,48</pos>
+			<size>304,21</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLCYCLETIME" variable="TextCtrlCycleTime" member="yes">
+			<value>8</value>
+			<pos>88,88</pos>
+			<size>72,21</size>
+		</object>
+		<object class="wxRadioBox" name="ID_RADIOBOXCYCLE" variable="RadioBoxCycleMode" member="yes">
+			<label>Mode</label>
+			<content>
+				<item>Cycled</item>
+				<item>Timed</item>
+			</content>
+			<default>1</default>
+			<pos>0,120</pos>
+			<size>88,56</size>
+		</object>
+		<object class="wxCheckBox" name="ID_CHECKBOXC4ERASEPAGE" variable="CheckBoxC4ErasePage" member="yes">
+			<label>C4 Erase Page</label>
+			<pos>192,88</pos>
+			<size>150,13</size>
+		</object>
+		<object class="wxCheckBox" name="ID_CHECKBOXC5Newsflash" variable="CheckBoxC5Newsflash" member="yes">
+			<label>C5 Newsflash</label>
+			<pos>192,112</pos>
+			<size>150,13</size>
+		</object>
+		<object class="wxCheckBox" name="ID_CHECKBOXTransmitPage" variable="CheckBoxTransmitPage" member="yes">
+			<label>Transmit Page</label>
+			<pos>192,208</pos>
+			<size>104,13</size>
+		</object>
+		<object class="wxCheckBox" name="ID_CHECKBOXC8UPDATE" variable="CheckBoxC8Update" member="yes">
+			<label>C8 Update</label>
+			<pos>192,184</pos>
+			<size>150,13</size>
+		</object>
+		<object class="wxCheckBox" name="ID_CHECKBOXC7SuppressHeader" variable="CheckBoxC7SuppressHeader" member="yes">
+			<label>C7 Suppress Header</label>
+			<pos>192,160</pos>
+			<size>150,13</size>
+		</object>
+		<object class="wxCheckBox" name="ID_CHECKBOXC6Subtitle" variable="CheckBoxC6Subtitle" member="yes">
+			<label>C6 Subtitle</label>
+			<pos>192,136</pos>
+			<size>150,13</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFASTEXTLINK1" variable="TextCtrlFastext1" member="yes">
+			<value>100</value>
+			<pos>8,208</pos>
+			<size>32,21</size>
+			<bg>#FFAEAE</bg>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFASTEXTINDEX" variable="TextCtrlFastextIndex" member="yes">
+			<value>100</value>
+			<pos>48,240</pos>
+			<size>32,21</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFASTEXTLINK4" variable="TextCtrlFastext4" member="yes">
+			<value>100</value>
+			<pos>128,208</pos>
+			<size>32,21</size>
+			<bg>#B1F9FC</bg>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFASTEXTLINK3" variable="TextCtrlFastext3" member="yes">
+			<value>100</value>
+			<pos>88,208</pos>
+			<size>32,21</size>
+			<bg>#F9FDB0</bg>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFASTEXTLINK2" variable="TextCtrlFastext2" member="yes">
+			<value>100</value>
+			<pos>48,208</pos>
+			<size>32,21</size>
+			<bg>#B8F9B5</bg>
+		</object>
+	</object>
+</wxsmith>

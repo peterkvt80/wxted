@@ -64,6 +64,11 @@
 					<help>Choose publish method</help>
 					<handler function="OnMenuItemPublishSettings" entry="EVT_MENU" />
 				</object>
+				<object class="wxMenuItem" name="idExportTTX40" variable="MenuItemExportTTX40" member="yes">
+					<label>Export Teletext40</label>
+					<help>Open page on Teletext40 website</help>
+					<handler function="OnMenuItemExportTTX40Selected" entry="EVT_MENU" />
+				</object>
 				<object class="wxMenuItem" name="idMenuQuit" variable="MenuItemQuit" member="no">
 					<label>Quit</label>
 					<accel>Alt-F4</accel>
@@ -220,6 +225,11 @@
 			</object>
 			<object class="wxMenu" variable="MenuHelp" member="no">
 				<label>Help</label>
+				<object class="wxMenuItem" name="idSpecialKeys" variable="MenuItemSpecialKeys" member="yes">
+					<label>Special keys</label>
+					<help>Show the special function key table</help>
+					<handler function="OnMenuSpecialKeys" entry="EVT_MENU" />
+				</object>
 				<object class="wxMenuItem" name="idMenuAbout" variable="MenuItemAbout" member="no">
 					<label>About</label>
 					<accel>F1</accel>

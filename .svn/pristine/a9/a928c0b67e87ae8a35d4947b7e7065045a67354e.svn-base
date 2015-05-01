@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="PublishSetupDialog">
+		<size>289,282</size>
+		<pos_arg>1</pos_arg>
+		<size_arg>1</size_arg>
+		<object class="wxChoice" name="ID_CHOICE1" variable="Choice1" member="yes">
+			<content>
+				<item>FTP</item>
+				<item>TED Scheduler</item>
+				<item>VBIT </item>
+				<item>Local folder</item>
+				<item>MRG Serial</item>
+				<item>MRG Network</item>
+				<item>Astet serial</item>
+			</content>
+			<selection>0</selection>
+			<pos>16,40</pos>
+			<size>168,21</size>
+			<handler function="OnChoice1Select" entry="EVT_CHOICE" />
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticText2" member="yes">
+			<label>FTP server</label>
+			<pos>16,72</pos>
+			<size>64,13</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT5" variable="StaticText5" member="yes">
+			<label>Password</label>
+			<pos>16,152</pos>
+			<size>64,13</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT3" variable="StaticText3" member="yes">
+			<label>Remote path</label>
+			<pos>16,192</pos>
+			<size>64,13</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="yes">
+			<label>Username</label>
+			<pos>16,112</pos>
+			<size>64,13</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFTPPASSWORD" variable="TextCtrlFTPPassword" member="yes">
+			<value>&lt;password&gt;</value>
+			<pos>88,152</pos>
+			<size>168,21</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFTPREMOTE" variable="TextCtrlFTPRemote" member="yes">
+			<value>&lt;remote path&gt;</value>
+			<pos>88,192</pos>
+			<size>168,21</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLFTPSERVER" variable="TextCtrlFTPServer" member="yes">
+			<value>&lt;server&gt;</value>
+			<pos>88,72</pos>
+			<size>168,21</size>
+		</object>
+		<object class="wxTextCtrl" name="ID_TEXTCTRLUSERNAME" variable="TextCtrlFTPUsername" member="yes">
+			<value>&lt;username&gt;</value>
+			<pos>88,112</pos>
+			<size>168,21</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT4" variable="StaticText4" member="yes">
+			<label>Publish to...</label>
+			<pos>8,8</pos>
+		</object>
+		<object class="wxButton" name="wxID_OK" variable="ButtonOK" member="yes">
+			<label>OK</label>
+			<pos>96,240</pos>
+			<handler function="OnButtonOKClick" entry="EVT_BUTTON" />
+		</object>
+		<object class="wxButton" name="wxID_CANCEL" variable="ButtonCancel" member="yes">
+			<label>Cancel</label>
+			<pos>192,240</pos>
+			<handler function="OnButtonCancelClick" entry="EVT_BUTTON" />
+		</object>
+	</object>
+</wxsmith>

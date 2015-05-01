@@ -1,0 +1,33 @@
+DS,Inserter
+SP,c:\minited\Inserter\onair\P401.tti
+DE,Weather Map
+PN,40100
+CT,99,C
+SC,0000
+PS,8000
+MS,0
+OL,1,”‡ Weather for Thursday 1200 to 1800   
+OL,2,†Cold and  š– 4`~|}            ‡ 1/2 
+OL,3,†windy     š–`?0~‡4–%   †Heavy snow    
+OL,4,†          –šj**gppp  †showers in the
+OL,5,†Sunny     š–({5 †north         
+OL,6,†spells and š–!'~‡3–! ƒ              
+OL,7,†wintry    š– ~o–w1  ƒ              
+OL,8,†showers   š–*y?sp  ƒ              
+OL,9,†          š–j)"‡ 7–} ƒ              
+OL,10,‚      š’p|t –x“g–0 ƒ             
+OL,11,†      š’n‡6’t–+"“‡8– ƒ             
+OL,12,†      š’+ `4“+–|0 ƒPatchy rain
+OL,13,‚Showersš’+%*o! " “ *u ƒclearing   
+OL,14,‚mostly       š’`  “*‡9“} ƒ          
+OL,15,‚dying out   š’k|“  ƒBrighter 
+OL,16,‚            š’'o‡ 9“}zt ƒbut    
+OL,17,‚Sunny spells  š’j“‡ 9“ ƒcolder 
+OL,18,‚developing  š’x|‡ 9“' ƒ       
+OL,19,‚            š’! +/'i“qp0 ƒWindy 
+OL,20,‚Feeling coldš’  t‡ 10“/! ƒ      
+OL,21,‚            š’ z‡10’/s/“/?           
+OL,22,‚Windy      š’8?' "'    "               
+OL,23,„‡Data: BBC Weather Centre/Met Office  
+OL,24,WestWeath ‚Sport ƒTrav Head †Main Menu 
+FL,402,300,430,100,0,109

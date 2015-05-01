@@ -26,6 +26,7 @@
  * arising out of or in connection with the use or performance of
  * this software.
  *************************************************************************** **/
+
 #include "wxTEDMain.h"
 #include <wx/msgdlg.h>
 #include "wx/wx.h"
@@ -36,6 +37,7 @@
 #include <wx/string.h>
 //*)
 #include <wx/dcbuffer.h>
+
 
 //helper functions
 enum wxbuildinfoformat {
@@ -72,6 +74,7 @@ const long wxTEDFrame::idSavePage = wxNewId();
 const long wxTEDFrame::isSavePageAs = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
+const long wxTEDFrame::idExportTTX40 = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
 const long wxTEDFrame::idUndo = wxNewId();
 const long wxTEDFrame::idCut = wxNewId();
@@ -101,6 +104,7 @@ const long wxTEDFrame::ID_REGION = wxNewId();
 const long wxTEDFrame::idPageNumber = wxNewId();
 const long wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
 const long wxTEDFrame::ID_HIDECONCEAL = wxNewId();
+const long wxTEDFrame::idSpecialKeys = wxNewId();
 const long wxTEDFrame::idMenuAbout = wxNewId();
 const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
 const long wxTEDFrame::ID_TIMER1 = wxNewId();
@@ -402,7 +406,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         fg=wxWHITE;
         bg=wxBLACK;
 
-        doubleHeightDC.SetBackground(*wxBLACK_BRUSH);
+        doubleHeightDC.SetBackground(*wxGREY_BRUSH); //  wxBLACK_BRUSH
         doubleHeightDC.Clear();
 
         // std::cout << "Trace 3. Row=" << row << std::endl;
@@ -801,6 +805,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Menu1->Append(MenuItemPublish);
     MenuItemPublishSettings = new wxMenuItem(Menu1, idPublishSettings, _("Publish settings..."), _("Choose publish method"), wxITEM_NORMAL);
     Menu1->Append(MenuItemPublishSettings);
+    MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export Teletext40"), _("Open page on Teletext40 website"), wxITEM_NORMAL);
+    Menu1->Append(MenuItemExportTTX40);
     MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
     Menu1->Append(MenuItemQuit);
     MenuBar1->Append(Menu1, _("&File"));
@@ -870,6 +876,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuPresentation->Append(MenuItemConcealToggle);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
     MenuHelp = new wxMenu();
+    MenuItemSpecialKeys = new wxMenuItem(MenuHelp, idSpecialKeys, _("Special keys"), _("Show the special function key table"), wxITEM_NORMAL);
+    MenuHelp->Append(MenuItemSpecialKeys);
     MenuItemAbout = new wxMenuItem(MenuHelp, idMenuAbout, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
     MenuHelp->Append(MenuItemAbout);
     MenuBar1->Append(MenuHelp, _("Help"));
@@ -889,6 +897,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
+    Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
     Connect(idCut,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
@@ -915,6 +924,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(ID_REGION10,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(idPageNumber,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
     Connect(ID_HIDECONCEAL,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
+    Connect(idSpecialKeys,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSpecialKeys);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnAbout);
     Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&wxTEDFrame::OnClose);
     Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
@@ -976,6 +986,19 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
     SetRegionMenu(m_rootPage->GetRegion()); // Region language
+
+
+// wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
+    wxPoint wxP;
+    wxP.x=50;
+    wxP.y=50;
+    wxSize wxS;
+    wxS.SetWidth(200);
+    wxS.SetHeight(600);
+
+
+    helpFrame=new HelpFrame(this->GetDefaultItem(),1,wxP,wxS);
+
     std::cout << "Finished starting frame" << std::endl;
 }
 
@@ -1619,28 +1642,40 @@ wxString wxTEDFrame::GetTextFromClipboard()
    return wxs;
 }
 
+/** Paste
+ * One sneaky trick, is if the URL starts
+ * http://editor.teletext40.com
+ * then we assume that the clipboard contains a URL from the teletext40 editor and should be decoded as such.
+ */
 void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
 {
    wxString wxs;
    wxs=GetTextFromClipboard();
-   // Now paste this text at the location m_cursorPoint
-   // A NULL char is the end of a line. Note: This will conflict with AlphaBlack code.
-   wxChar ch;
-   int x=m_cursorPoint.x;
-   int y=m_cursorPoint.y;
-   TTXLine* line=m_currentPage->GetRow(y++);
-   for (int i=0;i<wxs.Length();i++)
+   if (wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) // Paste a teletext40 URL?
    {
-        ch=wxs[i];
-        if (ch==0xff)
-        {
-            line=m_currentPage->GetRow(y++);
-            x=m_cursorPoint.x;
-        }
-        else
-            if (x<=40 && y<=25) // Clip to frame!
-                line->SetCharAt(x++,ch);
-        if (y>25) break;    // Off the bottom of the page? We are done.
+       load_from_hash(m_currentPage,wxs.char_str());
+   }
+   else
+   {
+       // Now paste this text at the location m_cursorPoint
+       // A NULL char is the end of a line. Note: This will conflict with AlphaBlack code.
+       wxChar ch;
+       int x=m_cursorPoint.x;
+       int y=m_cursorPoint.y;
+       TTXLine* line=m_currentPage->GetRow(y++);
+       for (int i=0;i<wxs.Length();i++)
+       {
+            ch=wxs[i];
+            if (ch==0xff)
+            {
+                line=m_currentPage->GetRow(y++);
+                x=m_cursorPoint.x;
+            }
+            else
+                if (x<=40 && y<=25) // Clip to frame!
+                    line->SetCharAt(x++,ch);
+            if (y>25) break;    // Off the bottom of the page? We are done.
+       }
    }
    //std::cout << "Paste=" << wxs << std::endl;
 }
@@ -1804,4 +1839,31 @@ void wxTEDFrame::SetRegionMenu(int region)
     case 8:  MenuItemRegion8 ->Check(true);break;
     case 10: MenuItemRegion10->Check(true);break;
     }
+}
+
+void wxTEDFrame::OnMenuSpecialKeys(wxCommandEvent& event)
+{
+    helpFrame->Show(true);
+}
+
+void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
+{
+
+    // Extract a character array
+    uint8_t cc[24][40];
+    for (uint8_t y=0;y<24;y++)
+    {
+        TTXLine* line=m_currentPage->GetRow(y);
+        for (uint8_t x=0;x<40;x++)
+        {
+            uint8_t c=line->GetCharAt(x) & 0x7f;
+            cc[y][x]=c;
+        }
+    }
+    // Convert to a teletext 40 URL
+    // TODO: Implement character set
+    char page[1200];
+    save_to_hash(1, page,cc);
+    CopyTextToClipboard(page);
+    // Launch a browser with the URL
 }

@@ -1,0 +1,34 @@
+DS,
+SP,C:\Users\Peter\Pictures\teletext\testpage3.tti
+DE,
+PN,
+CT,0,T
+SC,1
+PS,0
+MS,0
+RD,
+OL,1,`: Centre dash      p: Letter P         
+OL,2,a: Letter A         q: Letter Q         
+OL,3,b: Letter B         r: Letter R         
+OL,4,c: Letter C         s: Letter S         
+OL,5,d: Letter D         t: Letter T         
+OL,6,e: Letter E         u: Letter U         
+OL,7,f: Letter F         v: Letter V         
+OL,8,g: Letter G         w: Letter W         
+OL,9,h: Letter H         x: Letter X         
+OL,10,i: Letter I         y: Letter Y         
+OL,11,j: Letter J         z: Letter Z         
+OL,12,k: Letter K         {: quarter          
+OL,13,l: Letter L         |: double pipe      
+OL,14,m: Letter M         }: three quarters   
+OL,15,n: Letter N         ~: divide           
+OL,16,o: Letter O         : bullet           
+OL,17,                                        
+OL,18,Teletext character code text page 3     
+OL,19,                                        
+OL,20,                                        
+OL,21,                                        
+OL,22,                                        
+OL,23,                                        
+OL,24,                                        
+FL,0,0,0,0,0,0

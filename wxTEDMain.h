@@ -48,13 +48,15 @@
 <wx/fileconf.h> - wxFileConfig class.
 <wx/msw/regconf.h> - wxRegConfig class, see also wxRegKey.
 */
+
+#include "HelpFrame.h"
 #include <sstream>
 #include "ttxpage.h"
 #include "PageSettingsDialog.h"
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.07")
+#define VERSION_STRING   wxT("1.08")
 
 
 
@@ -64,6 +66,9 @@
 
 // Publish setup
 #include "PublishSetupDialog.h"
+
+// Export to teletext40
+#include "teletext40.h"
 
 class wxTEDFrame: public wxFrame
 {
@@ -112,6 +117,9 @@ class wxTEDFrame: public wxFrame
         // Config
         wxConfig *m_config;
 
+        // Help
+        HelpFrame* helpFrame;
+
 
         // Publishing
         wxString m_publish_ftp_server;
@@ -151,6 +159,8 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemPasteSelected(wxCommandEvent& event);
         void OnMenuItemSelectAllSelected(wxCommandEvent& event);
         void OnMenuItemRegionSelected(wxCommandEvent& event);
+        void OnMenuSpecialKeys(wxCommandEvent& event);
+        void OnMenuItemExportTTX40Selected(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -182,6 +192,7 @@ class wxTEDFrame: public wxFrame
         static const long isSavePageAs;
         static const long idPublish;
         static const long idPublishSettings;
+        static const long idExportTTX40;
         static const long idMenuQuit;
         static const long idUndo;
         static const long idCut;
@@ -211,6 +222,7 @@ class wxTEDFrame: public wxFrame
         static const long idPageNumber;
         static const long ID_MENUITEMSHOWHEADER;
         static const long ID_HIDECONCEAL;
+        static const long idSpecialKeys;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_TIMER1;
@@ -220,6 +232,7 @@ class wxTEDFrame: public wxFrame
         wxMenu* MenuPresentation;
         wxMenu* MenuItem2;
         wxMenuItem* MenuItemSpanish;
+        wxMenuItem* MenuItemExportTTX40;
         wxMenuItem* MenuItemRegion0;
         wxMenuItem* MenuItemItalian;
         wxMenuItem* MenuItemSave;
@@ -227,6 +240,7 @@ class wxTEDFrame: public wxFrame
         wxNotebook* Notebook1;
         wxMenuItem* MenuItemSaveAs;
         wxMenuItem* MenuItemPublishSettings;
+        wxMenuItem* MenuItemSpecialKeys;
         wxMenu* Menu3;
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;

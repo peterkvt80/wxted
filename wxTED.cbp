@@ -19,13 +19,15 @@
 					<Add option="-Wredundant-decls" />
 					<Add option="-Wunreachable-code" />
 					<Add option="-g" />
-					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll/mswu" />
+					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
+					<Add directory="E:/dev/downloads/wxWidgets302/include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll/mswu" />
+					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
+					<Add directory="E:/dev/downloads/wxWidgets302/include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="libwxmsw30u.a" />
+					<Add library="..\downloads\wxWidgets302\lib\gcc_dll\libwxmsw30ud.a" />
 					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll" />
 				</Linker>
 			</Target>
@@ -37,14 +39,16 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll/mswu" />
+					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
+					<Add directory="E:/dev/downloads/wxWidgets302/include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll/mswu" />
+					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
+					<Add directory="E:/dev/downloads/wxWidgets302/include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="libwxmsw30u.a" />
+					<Add library="..\downloads\wxWidgets302\lib\gcc_dll\libwxmsw30u.a" />
 					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll" />
 				</Linker>
 			</Target>
@@ -57,15 +61,19 @@
 			<Add option="-D__WXMSW__" />
 			<Add option="-DWXUSINGDLL" />
 			<Add option="-DwxUSE_UNICODE" />
-			<Add directory="C:/wxWidgets-3.0.2/include" />
+			<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll/mswud" />
+			<Add directory="E:/dev/downloads/wxWidgets302/include" />
 		</Compiler>
 		<ResourceCompiler>
-			<Add directory="C:/wxWidgets-3.0.2/include" />
+			<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll/mswud" />
+			<Add directory="E:/dev/downloads/wxWidgets302/include" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-mthreads" />
 			<Add option="-lwininet" />
 		</Linker>
+		<Unit filename="HelpFrame.cpp" />
+		<Unit filename="HelpFrame.h" />
 		<Unit filename="PageSettingsDialog.cpp" />
 		<Unit filename="PageSettingsDialog.h" />
 		<Unit filename="PublishSetupDialog.cpp" />
@@ -79,6 +87,8 @@
 		</Unit>
 		<Unit filename="tedevent.cpp" />
 		<Unit filename="tedevent.h" />
+		<Unit filename="teletext40.cpp" />
+		<Unit filename="teletext40.h" />
 		<Unit filename="ttxcodes.h" />
 		<Unit filename="ttxline.cpp" />
 		<Unit filename="ttxline.h" />
@@ -88,6 +98,7 @@
 		<Unit filename="wxTEDApp.h" />
 		<Unit filename="wxTEDMain.cpp" />
 		<Unit filename="wxTEDMain.h" />
+		<Unit filename="wxsmith/HelpFrame1.wxs" />
 		<Unit filename="wxsmith/PageSettingsDialog.wxs" />
 		<Unit filename="wxsmith/PublishSetupDialog.wxs" />
 		<Unit filename="wxsmith/wxTEDframe.wxs" />
@@ -102,6 +113,7 @@
 					<wxFrame wxs="wxsmith/wxTEDframe.wxs" src="wxTEDMain.cpp" hdr="wxTEDMain.h" fwddecl="0" i18n="1" name="wxTEDFrame" language="CPP" />
 					<wxDialog wxs="wxsmith/PageSettingsDialog.wxs" src="PageSettingsDialog.cpp" hdr="PageSettingsDialog.h" fwddecl="0" i18n="1" name="PageSettingsDialog" language="CPP" />
 					<wxDialog wxs="wxsmith/PublishSetupDialog.wxs" src="PublishSetupDialog.cpp" hdr="PublishSetupDialog.h" fwddecl="0" i18n="1" name="PublishSetupDialog" language="CPP" />
+					<wxFrame wxs="wxsmith/HelpFrame1.wxs" src="HelpFrame.cpp" hdr="HelpFrame.h" fwddecl="0" i18n="1" name="HelpFrame" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>
