@@ -1,6 +1,7 @@
 #ifndef TTXPAGE_H
 #define TTXPAGE_H
 #include <stdlib.h>
+#include "string.h"
 #include <iostream>
 
 #include <fstream>

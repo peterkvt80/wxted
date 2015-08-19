@@ -71,6 +71,10 @@ std::string TTXLine::validate(std::string const& val)
             ch=val[i] & 0x3f;
         }
         // std::cout << val[i] << std::endl;
+        if (ch==0x00) // null?
+        {
+            ch='?'; // Don't know what it means
+        }
         str[j++]=ch;
     }
     // short line? Remove the text terminator.

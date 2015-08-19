@@ -1,0 +1,11 @@
+Release Procedure
+=================
+
+1) Increment the version string. This is in wxTEDMain.h as #define VERSION_STRING wxT("1.08")
+
+2) Set the current build to Release by selecting
+Build->Select Target
+
+3) Select Build->Rebuild
+
+4) Run wxTED. It should show the new version string in the window title bar.

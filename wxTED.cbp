@@ -27,7 +27,7 @@
 					<Add directory="E:/dev/downloads/wxWidgets302/include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add library="..\downloads\wxWidgets302\lib\gcc_dll\libwxmsw30ud.a" />
+					<Add library="..\..\downloads\wxWidgets302\lib\gcc_dll\libwxmsw30ud.a" />
 					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll" />
 				</Linker>
 			</Target>
@@ -48,7 +48,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="..\downloads\wxWidgets302\lib\gcc_dll\libwxmsw30u.a" />
+					<Add library="..\..\downloads\wxWidgets302\lib\gcc_dll\libwxmsw30u.a" />
 					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll" />
 				</Linker>
 			</Target>

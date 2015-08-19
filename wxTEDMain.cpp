@@ -199,13 +199,17 @@ void wxTEDFrame::OnTimer(wxTimerEvent& event)
 
 /* mpp page number
  * dd date
- * nn month
+ * uu month
  * yy year
  * DAY day
  * MTH month
  * hh hour
  * nn minute
  * ss second
+ *
+ * Example ARD. "mpp<cyan>ARDtext<white>Mo dd.uu.yy hh:nn:ss"
+ * @todo We do not yet implement two character day codes
+ * as is possible in German ddso you have to edit it every day!
  */
 void wxTEDFrame::GenerateHeader(TTXLine* line)
 {

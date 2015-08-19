@@ -112,7 +112,7 @@ bool TTXPage::m_LoadEP1(std::string filename)
 
 bool TTXPage::m_LoadTTX(std::string filename)
 {
-    char buf[100];
+    char buf[1100];
     TTXPage* p=this;
     std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
     // First 0x61 chars are some sort of header. TODO: Find out what the format is to get metadata out
@@ -122,10 +122,35 @@ bool TTXPage::m_LoadTTX(std::string filename)
     // File must start with CEBRA
     if ((buf[0]!='C') || (buf[1]!='E') || (buf[2]!='B') || (buf[3]!='R') || (buf[4]!='A'))
     {
-        filein.close();
-        return false;
-    }
+        char buf2[1100];
+        // Not a CEBRA file. Could be a raw 1000 byte file?
+        // get length of file:
+        filein.seekg (0, filein.end);
+        int length = filein.tellg();
+        filein.seekg (0, filein.beg);
+        std::cout << "length=" << length << std::endl;
+        if (length==1000) // Raw file? Yes!
+        {
+            SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+            // Next we load 24 lines  of 40 characters
+            for (int i=0;i<25;i++)
+            {
+                filein.read(buf,40);
+                for (int j=0;j<40;j++) if (buf[j]=='\0') buf[j]=ttxCodeAlphaBlue; // Should be Alpha black! But tricky!
+                p->SetRow(i,buf);
+            }
 
+            filein.close();
+            p->Setm_SubPage(NULL);
+            return true;
+        }
+        else
+        {
+            filein.close();
+            return false;
+        }
+    }
+    // Cebra file follows....
     SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
     // Next we load 24 lines  of 40 characters
     for (int i=0;i<24;i++)
