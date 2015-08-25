@@ -765,6 +765,21 @@ bool TTXPage::SavePage(std::string filename)
 {
     std::ofstream ttxfile(filename.c_str()); // TODO: Save and Save as
     SetSourcePage(filename);
+    // Fix up subcodes.
+    // Subcodes need to be ascending starting from 1
+    if (Getm_SubPage()!=NULL)
+    {
+        // Fix up subcodes.
+        // Subcodes need to be ascending starting from 1
+        int sc=1;
+        int pageNum=this->GetPageNumber() & 0xfff00; // Mask off the original subcode
+        for (TTXPage* p=this;p!=NULL;p=p->m_SubPage)
+        {
+            p->SetSubCode(sc);            // Monotonic subcode
+            p->SetPageNumber(pageNum + (sc & 0xff)); // Fix the page number too. (@todo: sc needs to be decimal, not hex)
+            sc++;
+        }
+    }
     if (ttxfile.is_open())
     {
         ttxfile << std::dec ;
