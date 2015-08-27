@@ -1388,17 +1388,24 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
         m_rootPage->SetCycleTimeMode(ctmode);
 
         // Fastext
+        // Changed to ensure that ALL subpages have the same fastext links. It makes VBIT work much better
+        //.. Hmm doesn't work
         int link;
         link=std::strtol(m_propertiesDlg->TextCtrlFastext1->GetValue().ToStdString().c_str(), &ptr, 16);
-        m_rootPage->SetFastextLink(0,link);
+        // m_rootPage->SetFastextLink(0,link);
+        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(0,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext2->GetValue().ToStdString().c_str(), &ptr, 16);
-        m_rootPage->SetFastextLink(1,link);
+        //m_rootPage->SetFastextLink(1,link);
+        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(1,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext3->GetValue().ToStdString().c_str(), &ptr, 16);
-        m_rootPage->SetFastextLink(2,link);
+        //m_rootPage->SetFastextLink(2,link);
+        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(2,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext4->GetValue().ToStdString().c_str(), &ptr, 16);
-        m_rootPage->SetFastextLink(3,link);
+        // m_rootPage->SetFastextLink(3,link);
+        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(3,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastextIndex->GetValue().ToStdString().c_str(), &ptr, 16);
-        m_rootPage->SetFastextLink(5,link);
+        // m_rootPage->SetFastextLink(5,link);
+        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(5,link);
     }
 }
 

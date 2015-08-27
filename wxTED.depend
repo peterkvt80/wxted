@@ -5567,7 +5567,7 @@
 1420392992 e:\dev\wxted-github\wxted\wxtedapp.h
 	<wx/app.h>
 
-1440535397 e:\dev\wxted-github\wxted\wxtedmain.h
+1440619404 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -5599,7 +5599,7 @@
 	"string.h"
 	"ttxpage.h"
 
-1436902968 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1440619942 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

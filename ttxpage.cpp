@@ -791,18 +791,8 @@ bool TTXPage::SavePage(std::string filename)
         ttxfile << "CT," << m_cycletimeseconds << "," << m_cycletimetype << std::dec << std::endl;
         ttxfile << "PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
         ttxfile << "RE," << std::setw(1) << std::hex << m_region << std::endl;
+        // My spidey instincts tell me that this code could be factorised
         m_OutputLines(ttxfile, this);
-        // Now also have to traverse the rest of the page tree
-        if (Getm_SubPage()!=NULL)
-        {
-            if (Getm_SubPage()->m_subcode>=0) // Shouldn't have to test this!
-            {
-                std::cout << "m_SubPage=" << std::hex << Getm_SubPage() << std::endl;
-                for (TTXPage* p=this->m_SubPage;p!=NULL;p=p->m_SubPage)
-                    m_OutputLines(ttxfile, p);
-
-            }
-        }
         ttxfile << std::hex;
         ttxfile << "FL,"
         << m_fastextlinks[0] << ","
@@ -812,6 +802,31 @@ bool TTXPage::SavePage(std::string filename)
         << m_fastextlinks[4] << ","
         << m_fastextlinks[5] << std::endl;
         ttxfile << std::dec;
+        // Now also have to traverse the rest of the page tree
+        if (Getm_SubPage()!=NULL)
+        {
+            if (Getm_SubPage()->m_subcode>=0) // Shouldn't have to test this!
+            {
+                std::cout << "m_SubPage=" << std::hex << Getm_SubPage() << std::endl;
+                for (TTXPage* p=this->m_SubPage;p!=NULL;p=p->m_SubPage)
+                {
+                    m_OutputLines(ttxfile, p);
+                    // Subpages now have an identical copy of the main fastext links
+                    ttxfile << std::hex;
+                    ttxfile << "FL,"
+                    << m_fastextlinks[1] << ","
+                    << m_fastextlinks[1] << ","
+                    << m_fastextlinks[2] << ","
+                    << m_fastextlinks[3] << ","
+                    << m_fastextlinks[4] << ","
+                    << m_fastextlinks[5] << std::endl;
+                    ttxfile << std::dec;
+
+                }
+
+            }
+        }
+
     }
     else
         return false; // fail
