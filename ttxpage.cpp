@@ -183,7 +183,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
     for (std::string line; std::getline(filein, line, ','); )
     {
         // This shows the command code:
-        //std::cout << line << std::endl;
+        std::cout << line << std::endl;
         bool found=false;
         for (int i=0;i<cmdCount && !found; i++)
         {
@@ -226,10 +226,10 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     // PN,10000
                     std::getline(filein, line);
                     pageNumber=std::strtol(line.c_str(), &ptr, 16);
-                    // std::cout << "PN enters with m_PageNumber=" << m_PageNumber << " param=" << pageNumber << std::endl;
+                    std::cout << "PN enters with m_PageNumber=" << std::hex << m_PageNumber << " param=" << std::hex << pageNumber << std::endl;
                     if (p->m_PageNumber!=FIRSTPAGE) // // Subsequent pages need new page instances
                     {
-                        // std::cout << "Created a new subpage" << std::endl;
+                        std::cout << "Created a new subpage" << std::endl;
                         TTXPage* newSubPage=new TTXPage();  // Create a new instance for the subpage
                         p->Setm_SubPage(newSubPage);            // Put in a link to it
                         p=newSubPage;                       // And jump to the next subpage ready to populate
@@ -277,7 +277,10 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     // std::cout << "FL not implemented\n";
                     for (int fli=0;fli<6;fli++)
                     {
-                        std::getline(filein, line, ',');
+                        if (fli<5)
+                            std::getline(filein, line, ',');
+                        else
+                            std::getline(filein, line); // Last parameter no comma
                         SetFastextLink(fli,std::strtol(line.c_str(), &ptr, 16));
                     }
                     break;

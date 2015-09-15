@@ -398,10 +398,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         firstRow=0;
     TTXLine row0;
     for (unsigned int row=firstRow;row<25;row++)
+//    for (int row=24;row>=firstRow;row--)
     {
         bool graphics=false;
         bool separated=false;
         bool doubleheight=false;
+        bool skipnextrow=false;
         bool flashing=false;
         bool hold=false;
         char holdChar=' ';
@@ -410,7 +412,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         fg=wxWHITE;
         bg=wxBLACK;
 
-        doubleHeightDC.SetBackground(*wxGREY_BRUSH); //  wxBLACK_BRUSH
+        doubleHeightDC.SetBackground(*wxBLACK_BRUSH); //  wxBLACK_BRUSH. Change this to GREY to track down bugs
         doubleHeightDC.Clear();
 
         // std::cout << "Trace 3. Row=" << row << std::endl;
@@ -443,9 +445,139 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 // std::cout << "Trace 5" << std::endl;
                 char ch=' ';
                 wchar_t ch2=ch;
-                switch (str[col]) // TODO: Replace all of these with teletext codes
+                // Check the Set-before code
+                switch (str[col])
                 {
-                case ttxCodeAlphaBlack :    // Invalid Farrimond mode. Might want to make this black fg.
+                // If a case is ignored, you'll find it in the set-after section
+                case ttxCodeAlphaBlack :
+                case ttxCodeAlphaRed :
+                case ttxCodeAlphaGreen :
+                case ttxCodeAlphaYellow :
+                case ttxCodeAlphaBlue :
+                case ttxCodeAlphaMagenta :
+                case ttxCodeAlphaCyan :
+                case ttxCodeAlphaWhite :
+                case ttxCodeFlash :
+                    break;
+                case ttxCodeSteady :
+                    flashing=false;
+                    break;
+                case ttxCodeEndBox :
+                case ttxCodeStartBox :
+                    break;
+                case ttxCodeNormalHeight : // Normal height. Not sure this is ever used.
+                    doubleheight=false;
+                    break;
+                case ttxCodeDoubleHeight : // Double height
+                case ttxCodeGraphicsBlack : // Graphics black (level 2.5+)
+                case ttxCodeGraphicsRed : // Graphics red
+                case ttxCodeGraphicsGreen : // Graphics green
+                case ttxCodeGraphicsYellow : // Graphics yellow
+                case ttxCodeGraphicsBlue : // Graphics blue
+                case ttxCodeGraphicsMagenta : // Graphics magenta
+                case ttxCodeGraphicsCyan : // Graphics cyan
+                case ttxCodeGraphicsWhite : // Graphics white
+                    break;
+                case ttxCodeConcealDisplay : // Conceal display
+                    concealed=true;
+                    break;
+                case ttxCodeContiguousGraphics : // Contiguous graphics
+                    separated=false;
+                    break;
+                case ttxCodeSeparatedGraphics : // Separated gfx
+                    separated=true;
+                    break;
+                case ttxCodeBlackBackground : // Background black
+                    bg=wxBLACK;
+                    break;
+                case ttxCodeNewBackground : // New background
+                    bg=fg;
+                    break;
+                case ttxCodeHoldGraphics : // Hold gfx
+                    hold=true;
+                    break;
+                case ttxCodeReleaseGraphics : // Separated gfx
+                    break;
+                case 14:; // Ignore shift in/shift out and avoid them falling into default
+                case 15:;
+                    break;
+                default :
+                    // std::cout << "Trace OL:ordinary character " << ch << std::endl;
+                    ch=str[col] & 0x7f;
+                    ch2=str[col];
+                    ch2=mapTextChar(ch2);
+                    if ((ch>0x20 && ch<0x40) || ch>=0x60) holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
+                }
+                if (concealed && !m_reveal) // Replace text with spaces
+                {
+                    ch=' ';
+                    holdChar=' ';
+                    ch2=' ';
+                }
+                if (graphics && ((ch>=0x20 && ch<0x40) || ch>=0x60) ) // Graphics (but not capital A..Z)
+                {
+                    if (hold)
+                        ch=holdChar;
+                    int j=0x01;
+                    for (int i=0;i<6;i++) // for each of the six pixels in this character
+                    {
+                        if (ch & j)
+                        {
+                            if (m_blinkToggle || !flashing)
+                            {
+                                paintDC.SetBrush(wxBrush(*fg)); // Normal
+                                doubleHeightDC.SetBrush(*fg); // Normal
+                            }
+                            else
+                            {
+                                paintDC.SetBrush(wxBrush(*bg)); // Blinked off
+                                doubleHeightDC.SetBrush(*bg); // blink off
+                            }
+                        }
+                        else // Pixel is not set
+                        {
+                            paintDC.SetBrush(wxBrush(*bg));
+                            doubleHeightDC.SetBrush(*bg); // off
+                        }
+                        j<<=1;
+                        if (j==0x20) j<<=1; // Skip the alphabet exception
+                        int k=separated?-2:1; // Add or subtract a line
+                        paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                      row*m_ttxH+(i/2)*m_ttxH/3),
+                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                        if (doubleheight)
+                            doubleHeightDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                                 (i/2)*m_ttxH/3),
+                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                    }
+
+                } // Graphic block
+                else
+                {
+                    if (m_blinkToggle || !flashing)
+                        paintDC.SetTextForeground(*fg); // Normal
+                    else
+                        paintDC.SetTextForeground(*bg); // Blink off
+                    paintDC.SetTextBackground(*bg);
+                    paintDC.DrawText(_(ch2),wxPoint(col*m_ttxW,row*m_ttxH));
+                    if (doubleheight)
+                    {
+                        if (m_blinkToggle || !flashing)
+                            doubleHeightDC.SetTextForeground(*fg); // Normal
+                        else
+                            doubleHeightDC.SetTextForeground(*bg); // blink off
+                        doubleHeightDC.SetTextBackground(*bg);
+                        doubleHeightDC.DrawText(_(ch2),wxPoint(col*m_ttxW,0));
+                    }
+                }
+                if (doubleheight)
+                    paintDC.StretchBlit(wxPoint(col*m_ttxW,row*m_ttxH),wxSize(m_ttxW,m_ttxH*2), // dest
+                                    &doubleHeightDC,
+                                    wxPoint(col*m_ttxW,0),wxSize(m_ttxW,m_ttxH)); //src
+                // Set-after codes go here
+                switch (str[col])
+                {
+                case ttxCodeAlphaBlack :
                     fg=wxBLACK;
                     concealed=false;    // Side effect of colour. It cancels a conceal.
                     graphics=false;
@@ -488,20 +620,20 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeFlash :
                     flashing=true;
                     break;
-                case ttxCodeSteady :
-                    flashing=false;
-                    break;
                 case ttxCodeEndBox :
                     std::cout << "End Box not implemented" << std::endl;
                     break;
                 case ttxCodeStartBox :
                     std::cout << "Start box not implemented" << std::endl;
                     break;
-                case ttxCodeNormalHeight : // Normal height. Not sure this is ever used.
-                    doubleheight=false;
-                    break;
                 case ttxCodeDoubleHeight : // Double height
                     doubleheight=true;
+                    skipnextrow=true;   // ETSI: Don't use content from next row
+                    break;
+                case ttxCodeGraphicsBlack : // Graphics black
+                    concealed=false;
+                    graphics=true;
+                    fg=wxBLACK;
                     break;
                 case ttxCodeGraphicsRed : // Graphics red
                     concealed=false;
@@ -538,110 +670,16 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     graphics=true;
                     fg=wxWHITE;
                     break;
-                case ttxCodeConcealDisplay : // Conceal display
-                    concealed=true;
-                    break;
-                case ttxCodeContiguousGraphics : // Contiguous graphics
-                    separated=false;
-                    break;
-                case ttxCodeSeparatedGraphics : // Separated gfx
-                    separated=true;
-                    break;
-                case ttxCodeBlackBackground : // Background black
-                    bg=wxBLACK;
-                    break;
-                case ttxCodeNewBackground : // New background
-                    bg=fg;
-                    break;
-                case ttxCodeHoldGraphics : // Hold gfx
-                    hold=true;
-                    break;
                 case ttxCodeReleaseGraphics : // Separated gfx
                     hold=false;
                     break;
-                case 14:; // Ignore shift in/shift out and avoid them falling into default
-                case 15:;
-                case 16:;
-                    break;
-                default :
-                    // std::cout << "Trace OL:ordinary character " << ch << std::endl;
-                    ch=str[col] & 0x7f;
-                    ch2=str[col];
-                    ch2=mapTextChar(ch2);
-                    if ((ch>0x20 && ch<0x40) || ch>=0x60) holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
-                }
-                if (concealed && !m_reveal) // Replace text with spaces
-                {
-                    ch=' ';
-                    holdChar=' ';
-                    ch2=' ';
-                }
-                if (graphics && ((ch>=0x20 && ch<0x40) || ch>=0x60) ) // Graphics (but not capital A..Z)
-                {
-                    if (hold)
-                        ch=holdChar;
-                    int j=0x01;
-                    for (int i=0;i<6;i++) // for each of the six pixels in this character
-                    {
-                        if (ch & j)
-                        {
-                            if (m_blinkToggle || !flashing)
-                            {
-                                paintDC.SetBrush(wxBrush(*fg)); // Normal
-                                doubleHeightDC.SetBrush(*fg); // Normal
-                            }
-                            else
-                            {
-                                paintDC.SetBrush(wxBrush(*bg)); // Blinked off
-                                doubleHeightDC.SetBrush(*bg); // blink off
-                            }
-                        }
-                        else // Pixel is not set
-                        {
-                            paintDC.SetBrush(wxBrush(*bg));
-                            doubleHeightDC.SetBrush(*bg); // off
-                        }
-                        j<<=1;
-                        if (j==0x20) j<<=1; // Skip the alphabet exception
-                        int k=separated?-1:1; // Add or subtract a line
-                        paintDC.DrawRectangle(wxPoint(           col*m_ttxW + (i % 2)*m_ttxW/2,
-                                                      row*m_ttxH+(i/2)*m_ttxH/3),
-                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
-                        if (doubleheight)
-                            doubleHeightDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                                                 (i/2)*m_ttxH/3),
-                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
-                    }
 
-                } // Graphic block
-                else
-                {
-                    if (m_blinkToggle || !flashing)
-                        paintDC.SetTextForeground(*fg); // Normal
-                    else
-                        paintDC.SetTextForeground(*bg); // Blink off
-                    paintDC.SetTextBackground(*bg);
-                    paintDC.DrawText(_(ch2),wxPoint(col*m_ttxW,row*m_ttxH));
-                    if (doubleheight)
-                    {
-                        if (m_blinkToggle || !flashing)
-                            doubleHeightDC.SetTextForeground(*fg); // Normal
-                        else
-                            doubleHeightDC.SetTextForeground(*bg); // blink off
-                        doubleHeightDC.SetTextBackground(*bg);
-                        doubleHeightDC.DrawText(_(ch2),wxPoint(col*m_ttxW,0));
-                    }
+                default:;
                 }
+
             } // each character on this row
-            // The line is drawn. Do we need to double height it?
-            if (doubleheight)
-            {
-                // Write into a bitmap and stretch blit it into the main DC at double height
-                paintDC.StretchBlit(wxPoint(0,row*m_ttxH),wxSize(40*m_ttxW,m_ttxH*2), // dest
-                                    &doubleHeightDC,
-                                    wxPoint(0,0),wxSize(40*m_ttxW,m_ttxH)); //src
-                row++;  // Skip the next row or it will overwrite the lower half of the blit
-            }
+            if (skipnextrow) row++; // Don't use next row if there was any double height
+
         } // row not null?
         /* else
             std::cout << "row is null " << row << std::endl; */

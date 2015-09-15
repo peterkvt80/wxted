@@ -22,6 +22,7 @@ enum ttxCodes {
     ttxCodeNormalHeight = 12,       // Ctrl-L
     ttxCodeDoubleHeight = 13,       // Ctrl-M
     // double width etc goes here
+    ttxCodeGraphicsBlack = 16,      // Level 2.5 and above
     ttxCodeGraphicsRed = 17,        // Ctrl-F1
     ttxCodeGraphicsGreen = 18,      // Ctrl-F2
     ttxCodeGraphicsYellow = 19,     // Ctrl-F3

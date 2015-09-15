@@ -5540,9 +5540,9 @@
 	<string>
 	"ttxcodes.h"
 
-1420392984 e:\dev\wxted-github\wxted\ttxcodes.h
+1442262867 e:\dev\wxted-github\wxted\ttxcodes.h
 
-1440414152 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1440718067 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1436219836 e:\dev\wxted-github\wxted\ttxpage.h
@@ -5567,7 +5567,7 @@
 1420392992 e:\dev\wxted-github\wxted\wxtedapp.h
 	<wx/app.h>
 
-1440619404 e:\dev\wxted-github\wxted\wxtedmain.h
+1442264261 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -5599,7 +5599,7 @@
 	"string.h"
 	"ttxpage.h"
 
-1440619942 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1442263686 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
