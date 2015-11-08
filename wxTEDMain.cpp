@@ -1700,7 +1700,9 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
 {
    wxString wxs;
    wxs=GetTextFromClipboard();
-   if (wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) // Paste a teletext40 URL?
+   /// @todo Make this more general to identify a valid hash string
+   if ((wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) ||  // Paste a teletext40 URL?
+    (wxs.Find("www.uniquecodeanddata.co.uk/editor")!=wxNOT_FOUND))    // Paste a uniquecodeandadata URL?
    {
        load_from_hash(m_currentPage,wxs.char_str());
    }

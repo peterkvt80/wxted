@@ -4105,7 +4105,7 @@
 1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\wince\smartphone.rc
 	<aygshell.h>
 
-1420419327 e:\dev\downloads\wxwidgets302\lib\gcc_dll\mswud\wx\msw\rcdefs.h
+1420415727 e:\dev\downloads\wxwidgets302\lib\gcc_dll\mswud\wx\msw\rcdefs.h
 
 1420392984 source:e:\dev\wxted\tedevent.cpp
 	"tedevent.h"
@@ -5481,28 +5481,28 @@
 1430434792 source:e:\dev\wxted\teletext40.cpp
 	"teletext40.h"
 
-1420392984 source:e:\dev\wxted-github\wxted\charchange.cpp
+1420389384 source:e:\dev\wxted-github\wxted\charchange.cpp
 	"charchange.h"
 
-1420392995 e:\dev\wxted-github\wxted\charchange.h
+1420389395 e:\dev\wxted-github\wxted\charchange.h
 	<iostream>
 	"wx/gdicmn.h"
 
-1427412323 source:e:\dev\wxted-github\wxted\helpframe.cpp
+1427408723 source:e:\dev\wxted-github\wxted\helpframe.cpp
 	"HelpFrame.h"
 	<wx/intl.h>
 	<wx/string.h>
 
-1427410761 e:\dev\wxted-github\wxted\helpframe.h
+1427407161 e:\dev\wxted-github\wxted\helpframe.h
 	<wx/frame.h>
 	<wx/html/htmlwin.h>
 
-1420392984 source:e:\dev\wxted-github\wxted\pagesettingsdialog.cpp
+1420389384 source:e:\dev\wxted-github\wxted\pagesettingsdialog.cpp
 	"PageSettingsDialog.h"
 	<wx/intl.h>
 	<wx/string.h>
 
-1420392995 e:\dev\wxted-github\wxted\pagesettingsdialog.h
+1420389395 e:\dev\wxted-github\wxted\pagesettingsdialog.h
 	<wx/stattext.h>
 	<wx/radiobox.h>
 	<wx/textctrl.h>
@@ -5510,32 +5510,32 @@
 	<wx/button.h>
 	<wx/dialog.h>
 
-1420392984 source:e:\dev\wxted-github\wxted\publishsetupdialog.cpp
+1420389384 source:e:\dev\wxted-github\wxted\publishsetupdialog.cpp
 	"PublishSetupDialog.h"
 	<wx/intl.h>
 	<wx/string.h>
 
-1420392992 e:\dev\wxted-github\wxted\publishsetupdialog.h
+1420389392 e:\dev\wxted-github\wxted\publishsetupdialog.h
 	<wx/stattext.h>
 	<wx/textctrl.h>
 	<wx/choice.h>
 	<wx/button.h>
 	<wx/dialog.h>
 
-1420392984 source:e:\dev\wxted-github\wxted\resource.rc
+1420389384 source:e:\dev\wxted-github\wxted\resource.rc
 	"wx/msw/wx.rc"
 
-1420392984 source:e:\dev\wxted-github\wxted\tedevent.cpp
+1420389384 source:e:\dev\wxted-github\wxted\tedevent.cpp
 	"tedevent.h"
 
-1420392995 e:\dev\wxted-github\wxted\tedevent.h
+1420389395 e:\dev\wxted-github\wxted\tedevent.h
 	<iostream>
 	"charchange.h"
 
 1439919771 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1420392992 e:\dev\wxted-github\wxted\ttxline.h
+1420389392 e:\dev\wxted-github\wxted\ttxline.h
 	<iostream>
 	<string>
 	"ttxcodes.h"
@@ -5559,15 +5559,15 @@
 	"ttxline.h"
 	"tedevent.h"
 
-1420392995 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
+1420389395 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
 	"wxTEDApp.h"
 	"wxTEDMain.h"
 	<wx/image.h>
 
-1420392992 e:\dev\wxted-github\wxted\wxtedapp.h
+1420389392 e:\dev\wxted-github\wxted\wxtedapp.h
 	<wx/app.h>
 
-1442264261 e:\dev\wxted-github\wxted\wxtedmain.h
+1447000011 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -5588,7 +5588,7 @@
 	"PublishSetupDialog.h"
 	"teletext40.h"
 
-1420392984 e:\dev\wxted-github\wxted\mapchar.h
+1420389384 e:\dev\wxted-github\wxted\mapchar.h
 	<iostream>
 	<wx/string.h>
 
@@ -5599,7 +5599,7 @@
 	"string.h"
 	"ttxpage.h"
 
-1442263686 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1446999923 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
