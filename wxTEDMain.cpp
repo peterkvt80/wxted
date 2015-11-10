@@ -28,8 +28,10 @@
  *************************************************************************** **/
 
 #include "wxTEDMain.h"
+#include "quit.h"
 #include <wx/msgdlg.h>
 #include "wx/wx.h"
+#include <winver.h>
 
 //(*InternalHeaders(wxTEDFrame)
 #include <wx/font.h>
@@ -183,8 +185,6 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     Refresh();
 }
 
-
-
 void wxTEDFrame::OnTimer(wxTimerEvent& event)
 {
     // Only blink while focused otherwise stay on.
@@ -193,6 +193,9 @@ void wxTEDFrame::OnTimer(wxTimerEvent& event)
         m_blinkToggle=false;
     else
         m_blinkToggle=true;
+
+    wxString s=GetTitle();
+    if (m_currentPage)
     // Paint it
     Refresh();
 }
@@ -823,7 +826,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     wxMenuItem* MenuItemQuit;
     wxMenuBar* MenuBar1;
 
-    Create(parent, wxID_ANY, _("wxTED 1.04"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("wxTED 1.15"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     wxFont thisFont(10,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
     Notebook1 = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxSize(400,24), 0, _T("ID_NOTEBOOK1"));
@@ -1120,13 +1123,14 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
         m_rootPage->SetSourcePage(str);
         m_rootPage->SetShortFilename(filename.ToStdString());
         SetTitle(str);
+        MenuItemSave->Enable(true);
     }
 
 }
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg="Cross platform teletext editor\n(c) 2014, Peter Kwan.\nteastop.co.uk/teletext/wxted";
+    wxString msg="Cross platform teletext editor\n(c) 2014-2015, Peter Kwan.\nteastop.co.uk/teletext/wxted";
     wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 
@@ -1517,9 +1521,7 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 
 void wxTEDFrame::OnClose(wxCloseEvent& event)
 {
-    // TODO:
-    /*
-    if ( event.CanVeto() && m_bFileNotSaved )
+    if ( event.CanVeto() && TTXPage::pageChanged )
     {
         if ( wxMessageBox("The file has not been saved... continue closing?",
                           "Please confirm",
@@ -1529,7 +1531,7 @@ void wxTEDFrame::OnClose(wxCloseEvent& event)
             return;
         }
     }
-    */
+
     Destroy();  // you may also do:  event.Skip();
                 // since the default event handler does call Destroy(), too
 }

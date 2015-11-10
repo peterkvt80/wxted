@@ -85,6 +85,7 @@
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="teddybear.ico" />
 		<Unit filename="tedevent.cpp" />
 		<Unit filename="tedevent.h" />
 		<Unit filename="teletext40.cpp" />

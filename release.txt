@@ -9,3 +9,13 @@ Build->Select Target
 3) Select Build->Rebuild
 
 4) Run wxTED. It should show the new version string in the window title bar.
+
+5) Run InnoSetup that is in the Release folder and load winpackage.iss.
+   This creates a setup.exe in the same folder.
+   Rename setup.exe to include the version number like setup_1_14.exe.
+  
+6) Publish. 
+Copy setup_x_yy.exe to e:\dev\wxted-web-release.
+Edit index.html to reflect the new file.
+Upload the changed files to the home page for wxTED at
+http://teastop.co.uk/teletext/wxted/

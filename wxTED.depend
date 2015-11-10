@@ -5522,7 +5522,7 @@
 	<wx/button.h>
 	<wx/dialog.h>
 
-1420389384 source:e:\dev\wxted-github\wxted\resource.rc
+1447004907 source:e:\dev\wxted-github\wxted\resource.rc
 	"wx/msw/wx.rc"
 
 1420389384 source:e:\dev\wxted-github\wxted\tedevent.cpp
@@ -5542,10 +5542,10 @@
 
 1442262867 e:\dev\wxted-github\wxted\ttxcodes.h
 
-1440718067 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1447192528 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
-1436219836 e:\dev\wxted-github\wxted\ttxpage.h
+1447192500 e:\dev\wxted-github\wxted\ttxpage.h
 	<stdlib.h>
 	"string.h"
 	<iostream>
@@ -5567,7 +5567,7 @@
 1420389392 e:\dev\wxted-github\wxted\wxtedapp.h
 	<wx/app.h>
 
-1447000011 e:\dev\wxted-github\wxted\wxtedmain.h
+1447193478 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -5599,10 +5599,12 @@
 	"string.h"
 	"ttxpage.h"
 
-1446999923 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1447193901 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
+	"quit.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
+	<winver.h>
 	<wx/font.h>
 	<wx/intl.h>
 	<wx/string.h>
@@ -5613,4 +5615,14 @@
 
 1430499620 source:e:\dev\wxted-github\wxted\teletext40.cpp
 	"teletext40.h"
+
+1447192973 source:e:\dev\wxted-github\wxted\quit.cpp
+	"Quit.h"
+	<wx/intl.h>
+	<wx/string.h>
+
+1447192932 e:\dev\wxted-github\wxted\quit.h
+	<wx/stattext.h>
+	<wx/button.h>
+	<wx/dialog.h>
 

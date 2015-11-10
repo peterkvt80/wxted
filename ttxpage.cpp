@@ -24,6 +24,9 @@
  *************************************************************************** **/
  #include "ttxpage.h"
 
+
+bool TTXPage::pageChanged=false;
+
 TTXPage::TTXPage() : undoList(0), m_current(0)    //ctor
 {
     m_Init();
@@ -55,6 +58,7 @@ void TTXPage::m_Init()
     m_pagestatus=0x8000;
     instance=instanceCount++;
     // std::cout << "[TTXPage::TTXPage()] instance=" << instance << std::endl;
+    TTXPage::pageChanged=false;
 
 }
 
@@ -107,6 +111,7 @@ bool TTXPage::m_LoadEP1(std::string filename)
     // With a pair of zeros at the end we can skip
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(NULL);
+    TTXPage::pageChanged=false;
     return true;
 }
 
@@ -132,7 +137,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
         if (length==1000) // Raw file? Yes!
         {
             SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
-            // Next we load 24 lines  of 40 characters
+            // Next we load 24 lines of 40 characters
             for (int i=0;i<25;i++)
             {
                 filein.read(buf,40);
@@ -142,6 +147,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
 
             filein.close();
             p->Setm_SubPage(NULL);
+            TTXPage::pageChanged=false;
             return true;
         }
         else
@@ -165,6 +171,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
 
     filein.close();
     p->Setm_SubPage(NULL);
+    TTXPage::pageChanged=false;
     return true;
 }
 
@@ -302,6 +309,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(NULL);
     std::cout << "Finished reading TTI page. Line count=" << lines << std::endl;
+    TTXPage::pageChanged=false;
     return true;
 }
 
@@ -330,6 +338,7 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
         if (m_LoadTTI(filename))
             loaded=true;
 
+    TTXPage::pageChanged=false;
     std::cout << "Finished reading page. Loaded=" << loaded << std::endl;
 }
 
@@ -370,7 +379,10 @@ void TTXPage::Undo(wxPoint& cursorloc)
     // Dump the Undo (or do we?) No, just move the m_current pointer. Keep it in case we want to do a Redo
     // Step back to the previous event
     TEDEvent* last=tev->GetlastEvent();
-    if (last!=0) m_current=last;
+    if (last!=0)
+        m_current=last;
+    else
+        TTXPage::pageChanged=false; // No more UNDO? Clear the changed flag. (actually can never happen!)
     cursorloc=loc;
 }
 
@@ -490,6 +502,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             char oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
+            TTXPage::pageChanged=true;
             return;
         }
     }
@@ -530,6 +543,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
+            TTXPage::pageChanged=true;
             return;
         }
     }
@@ -680,6 +694,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                 // By now we should only have teletext codes. If the new code is NOT a graphic then treat it as a character
                 if (code<0x80) // Only want basic ASCII codes
                 {
+                    TTXPage::pageChanged=true;
                     if (AlphaMode || (code>='@' && code<=0x5f) || code<' ')
                     {
                         // std::cout << "Setting alpha char " << (int)code << std::endl;

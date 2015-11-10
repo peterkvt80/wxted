@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
 	<object class="wxFrame" name="wxTEDFrame">
-		<title>wxTED 1.04</title>
+		<title>wxTED 1.15</title>
 		<font>
 			<size>10</size>
 			<style>normal</style>

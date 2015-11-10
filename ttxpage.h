@@ -36,6 +36,7 @@
 #define PAGESTATUS_SUBSTITUTEPAGE   0x0800
 #define PAGESTATUS_C11_SERIALMAG    0x0040
 
+
 class TTXPage
 {
     public:
@@ -233,6 +234,11 @@ class TTXPage
          */
         void Undo(wxPoint& cursorloc);
 
+        /** @brief Should check this before closing a page
+         */
+        inline bool PageChanged(){return pageChanged;};
+        static bool pageChanged;         /// True if we have done some edits
+
     protected:
     private:
         // Private variables
@@ -260,7 +266,6 @@ class TTXPage
         TEDEvent* undoList; // Root
         TEDEvent* m_current;  // Current pointer
         void AddEvent(EventType evt, wxPoint wxc, char oldchar, char newchar); // Add an event to the undo list
-
 
 };
 

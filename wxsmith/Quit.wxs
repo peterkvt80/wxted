@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="Quit">
+		<size>400,229</size>
+		<pos_arg>1</pos_arg>
+		<size_arg>1</size_arg>
+		<object class="wxButton" name="ID_BUTTON_QUIT" variable="QuitNoSave" member="yes">
+			<label>Quit without saving</label>
+			<pos>104,128</pos>
+			<size>140,24</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="yes">
+			<label>WARNING! This page has unsaved changes</label>
+			<pos>24,16</pos>
+			<size>272,24</size>
+		</object>
+		<object class="wxButton" name="ID_BUTTON_CANCEL" variable="ButtonCancel" member="yes">
+			<label>Cancel</label>
+			<pos>16,128</pos>
+			<handler function="OnButtonCancelClick" entry="EVT_BUTTON" />
+		</object>
+		<object class="wxButton" name="ID_BUTTON_SAVE_EXIT" variable="ButtonSaveExit" member="yes">
+			<label>Save and exit</label>
+			<pos>256,128</pos>
+			<handler function="OnButtonSaveExitClick" entry="EVT_BUTTON" />
+		</object>
+	</object>
+</wxsmith>
