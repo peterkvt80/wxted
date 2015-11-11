@@ -91,7 +91,7 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[24][40])
 	// if ( blackfg != 0 ) { metadata += 8; } // wxTED says NO
 	//encoding += metadata.toString(16);
 	//encoding += ":";
-	sprintf(encoding,"http://editor.teletext40.com/#%d:",metadata);
+	sprintf(encoding,"http://edit.tf/#%d:",metadata);
 
 	// Construct a base-64 array by iterating over each character
 	// in the frame.
