@@ -178,7 +178,7 @@
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION2" variable="MenuItemRegion2" member="yes">
-						<label>2: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Tur</label>
+						<label>2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita</label>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
@@ -188,7 +188,7 @@
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION4" variable="MenuItemRegion4" member="yes">
-						<label>4: Ser/Cro/Ger/Est/Lit/Rus/Bul/Ukr/Cze/Slo</label>
+						<label>4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo</label>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>

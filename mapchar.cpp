@@ -300,7 +300,7 @@ wchar_t mapRegion1(wchar_t ch, int language) // West Europe plus Polish
         if (ch=='}')  ch=0x00fc; // 7/D u umlaut
         if (ch=='~')  ch=0x00df; // 7/E SS
         break;
-    // 5 is not used
+    // 5 is not used in region 0
     case 6 : // Italian
         // Nat. opt. 1
         if (ch=='#')  ch=0x00a3; // 2/3 Pound
@@ -345,7 +345,7 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
     case 0 : // English
         // std::cout << "trace2" << std::endl;
 
-        // Nat. opt. 1
+        // Nat. opt. 2
         if (ch=='#')  ch=0x00A3; // 2/3 # is mapped to pound sign
         //if (ch=='$')  ch=0x0024; // 2/4 Dollar sign (no change!)
         //if (ch=='@')  ch=0x0040; // 4/0 No change
@@ -363,7 +363,7 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
         // std::cout << "trace3" << std::endl;
         break;
     case 1 : // French
-        // Nat. opt. 1
+        // Nat. opt
         if (ch=='#')  ch=0x00e9; // 2/3 e acute
         if (ch=='$')  ch=0x00ef; // 2/4 i umlaut
         if (ch=='@')  ch=0x00e0; // 4/0 a grave
@@ -380,12 +380,12 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
         if (ch=='~')  ch=0x00e7; // 7/E c cedilla
         break;
     case 2 : // Swedish
-        // Nat. opt. 1
+        // Nat. opt. 2
         if (ch=='#')  ch='#'; // 2/3 hash
         if (ch=='$')  ch=0x00a4; // 2/4 currency bug
         if (ch=='@')  ch=0x00c9; // 4/0 E acute
         if (ch=='[')  ch=0x00c4; // 5/B A umlaut
-        if (ch=='\\') ch=0x00d4; // 5/C O umlaut
+        if (ch=='\\') ch=0x00d6; // 5/C O umlaut (was d4)
         // Nat. opt. 2
         if (ch==']')  ch=0x00c5; // 5/D A ring
         if (ch=='^')  ch=0x00dc; // 5/E U umlaut
@@ -412,8 +412,9 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
         if (ch=='}')  ch=0x00e7; // 7/D
         if (ch=='~')  ch=0x00fc; // 7/E
         break;
+
     case 4 : // German
-        // Nat. opt. 1
+        // Nat. opt. 2
         if (ch=='#')  ch='#';    // 2/3 # is not mapped
         if (ch=='$')  ch=0x0024; // 2/4 Dollar sign not mapped
         if (ch=='@')  ch=0x00a7; // 4/0 Section sign
@@ -429,15 +430,30 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
         if (ch=='}')  ch=0x00fc; // 7/D u umlaut
         if (ch=='~')  ch=0x00df; // 7/E SS
         break;
-    // 5 is not used
-    case 6 : // Italian
+    case 5 : // Spanish/Portuguese
         // Nat. opt. 1
+        if (ch=='#')  ch=0x00e7; // 2/3 c cedilla
+        if (ch=='$')  ch='$';    // 2/4 Dollar sign not mapped
+        if (ch=='@')  ch=0x00a1; // 4/0 inverted exclamation mark
+        if (ch=='[')  ch=0x00e1; // 5/B a acute
+        if (ch=='\\') ch=0x00e9; // 5/C e acute
+        // Nat. opt. 2
+        if (ch==']')  ch=0x00ed; // 5/D i acute
+        if (ch=='^')  ch=0x00f3; // 5/E o acute
+        if (ch=='_')  ch=0x00fa; // 5/F u acute
+        if (ch=='`')  ch=0x00bf; // 6/0 Inverted question mark
+        if (ch=='{')  ch=0x00fc; // 7/B u umlaut
+        if (ch=='|')  ch=0x00f1; // 7/C n tilde
+        if (ch=='}')  ch=0x00e8; // 7/D e grave
+        if (ch=='~')  ch=0x00e0; // 7/E a grave
+        break;
+    case 6 : // Italian
+        // Nat. opt. 2
         if (ch=='#')  ch=0x00a3; // 2/3 Pound
         if (ch=='$')  ch='$';    // 2/4 Dollar sign not mapped
         if (ch=='@')  ch=0x00e9; // 4/0 e acute
         if (ch=='[')  ch=0x00b0; // 5/B ring
         if (ch=='\\') ch=0x00e7; // 5/C c cedilla
-        // Nat. opt. 2
         if (ch==']')  ch=0x2192; // 5/D right arrow
         if (ch=='^')  ch=0x2191; // 5/E up arrow
         if (ch=='_')  ch='#';    // 5/F hash
@@ -454,8 +470,6 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
     }
     // More language mappings including Greek
     if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
-
-    //std::cout << "trace4" << std::endl;
 
     return ch;
 } // region 2
@@ -924,7 +938,9 @@ wchar_t mapRegion10(wchar_t ch, int language)
         case ' ':; // 2/0
         case '!':; // 2/1
         case '"':; // 2/2
+            break;
         case '£': ch='#'; // 2/3
+            break;
         case '$':; // 2/4
         case '%':; // 2/5
         case ')':; // 2/8
@@ -962,7 +978,7 @@ wchar_t mapRegion10(wchar_t ch, int language)
         //std::cout << "Language not implemented yet: " << m_rootPage->GetLanguage() << std::endl;
         ;
     }
-    // More language mappings including Greek
+
     if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
 
     //std::cout << "trace4" << std::endl;

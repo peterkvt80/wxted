@@ -28,7 +28,6 @@
  *************************************************************************** **/
 
 #include "wxTEDMain.h"
-#include "quit.h"
 #include <wx/msgdlg.h>
 #include "wx/wx.h"
 #include <winver.h>
@@ -899,11 +898,11 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     MenuItem2->Append(MenuItemRegion0);
     MenuItemRegion1 = new wxMenuItem(MenuItem2, ID_REGION1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion1);
-    MenuItemRegion2 = new wxMenuItem(MenuItem2, ID_REGION2, _("2: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Tur"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion2 = new wxMenuItem(MenuItem2, ID_REGION2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion2);
     MenuItemRegion3 = new wxMenuItem(MenuItem2, ID_REGION3, _("3: Ser/Cro/Slovenian/Romanian"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion3);
-    MenuItemRegion4 = new wxMenuItem(MenuItem2, ID_REGION4, _("4: Ser/Cro/Ger/Est/Lit/Rus/Bul/Ukr/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion4 = new wxMenuItem(MenuItem2, ID_REGION4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion4);
     MenuItemRegion6 = new wxMenuItem(MenuItem2, ID_REGION6, _("6: Tur/Gre"), wxEmptyString, wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion6);
@@ -1226,10 +1225,8 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     // Set the child pointer to the saved pointer
     m_currentPage->Setm_SubPage(childPage);
 
-
     // Recalculate the subcode sequence.
     iPageCount=m_rootPage->GetPageCount();
-
     std::cout << "Suspect that we are in trouble AFTER this" << std::endl;
 
     // Put up a welcome message
@@ -1812,7 +1809,7 @@ void wxTEDFrame::SetRegionMenu(int region)
         MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
         MenuItemCzech->SetItemLabel  (_("Turkish"));
         MenuItemGerman->SetItemLabel (_("German"));
-        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
+        MenuItemSpanish->SetItemLabel(_("Portuguese/Spanish"));
         MenuItemItalian->SetItemLabel(_("Italian"));
         MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
         break;

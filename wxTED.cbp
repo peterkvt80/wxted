@@ -115,6 +115,7 @@
 					<wxDialog wxs="wxsmith/PageSettingsDialog.wxs" src="PageSettingsDialog.cpp" hdr="PageSettingsDialog.h" fwddecl="0" i18n="1" name="PageSettingsDialog" language="CPP" />
 					<wxDialog wxs="wxsmith/PublishSetupDialog.wxs" src="PublishSetupDialog.cpp" hdr="PublishSetupDialog.h" fwddecl="0" i18n="1" name="PublishSetupDialog" language="CPP" />
 					<wxFrame wxs="wxsmith/HelpFrame1.wxs" src="HelpFrame.cpp" hdr="HelpFrame.h" fwddecl="0" i18n="1" name="HelpFrame" language="CPP" />
+					<wxDialog wxs="wxsmith/Quit.wxs" src="Quit.cpp" hdr="Quit.h" fwddecl="0" i18n="1" name="Quit" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

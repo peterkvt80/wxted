@@ -5599,9 +5599,8 @@
 	"string.h"
 	"ttxpage.h"
 
-1447193901 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1447517736 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
-	"quit.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
 	<winver.h>
@@ -5610,10 +5609,10 @@
 	<wx/string.h>
 	<wx/dcbuffer.h>
 
-1430509828 source:e:\dev\wxted-github\wxted\mapchar.cpp
+1447524283 source:e:\dev\wxted-github\wxted\mapchar.cpp
 	"mapchar.h"
 
-1430499620 source:e:\dev\wxted-github\wxted\teletext40.cpp
+1447264854 source:e:\dev\wxted-github\wxted\teletext40.cpp
 	"teletext40.h"
 
 1447192973 source:e:\dev\wxted-github\wxted\quit.cpp
