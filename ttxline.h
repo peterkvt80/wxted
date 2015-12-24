@@ -32,6 +32,7 @@ class TTXLine
         std::string GetLine();
 
         /** True if the line is double height
+         * @todo This is not good enough. Need to know the state at a particular point on a line. Add a character position parameter.
          */
         bool IsDoubleHeight();
 

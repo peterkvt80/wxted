@@ -765,7 +765,10 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
     {
         if (p->m_pLine[i]!=NULL) // Skip empty lines
         {
-            std::string s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+            // This one for Andreas
+            std::string s=p->m_pLine[i]->GetMappedline(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+            // This one for Droidfax compatibility
+//            std::string s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
             ttxfile << "OL," << std::dec << i << "," << s << "\n";
         }
     }

@@ -692,17 +692,31 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     {
         paintDC.SetPen(*wxBLACK_PEN); // outline on
         paintDC.SetBrush(wxBrush(*wxWHITE));
+            // In the current page, get the line that the cursor is on, and test if it is double height
+        bool doubleHeight;
+        doubleHeight=m_currentPage->GetRow(m_cursorPoint.y)->IsDoubleHeight(); // @todo Extend to deal with double height transitions.
         if (m_cursorIsAlpha)
         {
             paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH),wxSize(m_ttxW,m_ttxH));
+            if (doubleHeight)
+                paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH),wxSize(m_ttxW,m_ttxH*2));
         }
         else
         {
             int halfw=m_ttxW/2;
             int thirdh=m_ttxH/3;
-            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW+m_subPixelPoint.x*halfw,
-                                          m_cursorPoint.y*m_ttxH+m_subPixelPoint.y*thirdh),
-                                  wxSize(halfw,thirdh));
+            if (doubleHeight)
+            {
+                thirdh*=2;
+                paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW+m_subPixelPoint.x*halfw,
+                                              m_cursorPoint.y*m_ttxH+m_subPixelPoint.y*thirdh),
+                                      wxSize(halfw,thirdh));
+            }
+            else
+                paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW+m_subPixelPoint.x*halfw,
+                                              m_cursorPoint.y*m_ttxH+m_subPixelPoint.y*thirdh),
+                                      wxSize(halfw,thirdh));
+
         }
         paintDC.SetPen(*wxTRANSPARENT_PEN);
     }
