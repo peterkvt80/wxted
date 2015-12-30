@@ -5488,7 +5488,7 @@
 	<iostream>
 	"wx/gdicmn.h"
 
-1427408723 source:e:\dev\wxted-github\wxted\helpframe.cpp
+1451495063 source:e:\dev\wxted-github\wxted\helpframe.cpp
 	"HelpFrame.h"
 	<wx/intl.h>
 	<wx/string.h>
@@ -5599,7 +5599,7 @@
 	"string.h"
 	"ttxpage.h"
 
-1447517736 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1451495104 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
