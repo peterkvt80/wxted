@@ -56,9 +56,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.15")
-
-
+#define VERSION_STRING   wxT("1.16")
 
 // ftp
 #include <wininet.h>
@@ -78,6 +76,10 @@ class wxTEDFrame: public wxFrame
         virtual ~wxTEDFrame();
 
     private:
+
+        bool m_ShowMarkup; // If true, we show ttx markup
+        bool m_Released;   // If true, m_ShowMarkup can be toggled
+
         // Language menu
         void SetRegionMenu(int region);
 
@@ -161,6 +163,8 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemRegionSelected(wxCommandEvent& event);
         void OnMenuSpecialKeys(wxCommandEvent& event);
         void OnMenuItemExportTTX40Selected(wxCommandEvent& event);
+        void OnKeyDown(wxKeyEvent& event);
+        void OnKeyUp(wxKeyEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);

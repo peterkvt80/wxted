@@ -12,6 +12,8 @@
 		</font>
 		<id_arg>0</id_arg>
 		<handler function="OnClose" entry="EVT_CLOSE" />
+		<handler function="OnKeyDown" entry="EVT_KEY_DOWN" />
+		<handler function="OnKeyUp" entry="EVT_KEY_UP" />
 		<handler function="OnSetFocus" entry="EVT_SET_FOCUS" />
 		<handler function="OnKillFocus" entry="EVT_KILL_FOCUS" />
 		<handler function="OnLeftUp" entry="EVT_LEFT_UP" />
