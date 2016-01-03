@@ -612,7 +612,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaYellow :
                     fg=wxYELLOW;
                     concealed=false;
-                    graphics=false;
+                    graphics=false;http://www.mrsmasseysdeliciousdiner.com/
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -626,12 +626,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)'\xEF\x5E'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
-                    }
-
+                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeAlphaMagenta :
@@ -833,8 +828,16 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
 
                 default:;
-                }
+                    // If this is a graphics cell, draw the cell outline
+                    if (graphics && m_ShowMarkup)
+                    {
+                        paintDC.SetPen(*wxGREY_PEN);
+                        paintDC.DrawLine(col*m_ttxW,row*m_ttxH,(col+1)*m_ttxW,(row+1)*m_ttxH);
 
+                        //paintDC.DrawText('g',wxPoint(col*m_ttxW,row*m_ttxH)); // (r)elease
+
+                    }
+                }
             } // each character on this row
             if (skipnextrow) row++; // Don't use next row if there was any double height
 
@@ -1222,6 +1225,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
 
 wxTEDFrame::~wxTEDFrame()
 {
+    delete helpFrame;
+    delete m_config;
     if (m_rootPage!=NULL)
     {
         delete m_rootPage;
@@ -2094,7 +2099,7 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
 void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
 {
     int k=event.GetKeyCode();
-    if (k==308 && m_Released)
+    if (k==WXK_ALT && m_Released)
     {
         m_ShowMarkup=!m_ShowMarkup;
         m_Released=false;
@@ -2105,7 +2110,7 @@ void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
 void wxTEDFrame::OnKeyUp(wxKeyEvent& event)
 {
     int k=event.GetKeyCode();
-    if (k==308)
+    if (k==WXK_ALT)
     {
         m_Released=true;
     }
