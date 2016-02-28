@@ -186,7 +186,9 @@ bool TTXPage::m_LoadTTI(std::string filename)
     TTXPage* p=this;
     char * ptr;
     int subcode;
+    std::string subpage;
     int pageNumber;
+    char m;
     for (std::string line; std::getline(filein, line, ','); )
     {
         // This shows the command code:
@@ -230,10 +232,29 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     // TODO: CT is not decoded correctly
                     break;
                 case 4 : // "PN" - Page Number mppss
+                    // Where m=1..8
+                    // pp=00 to ff (hex)
+                    // ss=00 to 99 (decimal)
                     // PN,10000
                     std::getline(filein, line);
+                    if (line.length()<3) // Must have at least three characters for a page number
+                        break;
+                    m=line[0];
+                    if (m<'1' || m>'8') // Magazine must be 1 to 8
+                        break;
                     pageNumber=std::strtol(line.c_str(), &ptr, 16);
-                    std::cout << "PN enters with m_PageNumber=" << std::hex << m_PageNumber << " param=" << std::hex << pageNumber << std::endl;
+                    std::cout << "Line=" << line << " " << "line length=" << line.length() << std::endl;
+                    if (line.length()<5 && pageNumber<0x8ff) // Page number without subpage? Shouldn't happen but you never know.
+                    {
+                        pageNumber*=0x100;
+                    }
+                    else   // Normally has a subpage
+                    {
+                        subpage=line.substr(3,2);
+                        std::cout << "Subpage=" << subpage << std::endl;
+                        pageNumber=(pageNumber & 0xfff00) + std::strtol(subpage.c_str(),NULL,10);
+                    }
+                    std::cout << "PN enters with m_PageNumber=" << std::hex << m_PageNumber << " pageNumber=" << std::hex << pageNumber << std::endl;
                     if (p->m_PageNumber!=FIRSTPAGE) // // Subsequent pages need new page instances
                     {
                         std::cout << "Created a new subpage" << std::endl;
@@ -756,7 +777,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
 
 void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
 {
-    ttxfile << "PN," << std::hex << std::setw(5) << p->m_PageNumber << "\n";
+    ttxfile << "PN," << m_FormatPageNumber(p) << "\n";
     if (p->m_subcode<0)
         ttxfile << "SC,0000" << "\n";
     else
@@ -773,6 +794,17 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
         }
     }
     std::cout << "sent a subpage" << "\n";
+}
+
+std::string TTXPage::m_FormatPageNumber(TTXPage* p)
+{
+    std::ostringstream PN;
+    int page=p->m_PageNumber;
+    // Split the page number mppss
+    int mpp=page >> 8; // This bit is hex
+    int ss=page & 0xff; // But this bit is decimal
+    PN << std::hex << std::setw(3) << mpp << std::setfill('0') << std::dec << std::setw(2) << ss;
+    return PN.str();
 }
 
 bool TTXPage::SavePageDefault()

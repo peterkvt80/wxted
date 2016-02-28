@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "string.h"
 #include <iostream>
+#include <sstream>
 
 #include <fstream>
 #include <string>
@@ -237,7 +238,7 @@ class TTXPage
         /** @brief Should check this before closing a page
          */
         inline bool PageChanged(){return pageChanged;};
-        static bool pageChanged;         /// True if we have done some edits
+        static bool pageChanged;         // / True if we have done some edits
 
     protected:
     private:
@@ -266,6 +267,8 @@ class TTXPage
         TEDEvent* undoList; // Root
         TEDEvent* m_current;  // Current pointer
         void AddEvent(EventType evt, wxPoint wxc, char oldchar, char newchar); // Add an event to the undo list
+
+        std::string m_FormatPageNumber(TTXPage* p); /// \return the page number ready to write to file
 
 };
 
