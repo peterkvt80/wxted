@@ -71,10 +71,15 @@ std::string TTXLine::validate(std::string const& val)
             ch=val[i] & 0x3f;
         }
         // std::cout << val[i] << std::endl;
+
+        // This code maps nulls to ? which was needed because we used null terminated strings.
+        // If we use null terminated strings anywhere it will go wrong.
+        /*
         if (ch==0x00) // null?
         {
-            ch='?'; // Don't know what it means
+            ch='?'; // Black text.
         }
+        */
         str[j++]=ch;
     }
     // short line? Remove the text terminator.

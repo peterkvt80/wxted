@@ -2,7 +2,7 @@
  * Description       : Class for a teletext page
  * Compiler          : C++
  *
- * Copyright (C) 2014, Peter Kwan
+ * Copyright (C) 2014-2016, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -84,6 +84,101 @@ TTXPage::~TTXPage()
         delete m_SubPage;
         m_SubPage=NULL;
     }
+}
+
+// See http://rtlalphanet.asp.tss.nl/RTL4/100s01 for examples
+bool TTXPage::m_LoadVTX(std::string filename)
+{
+    std::cout << "Trying VTX" << std::endl;
+    char buf[500];
+    TTXPage* p=this;
+    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+    // First 10 chars should be ham encoded. No error correction allowed
+    filein.read(buf,9);
+    for (int i=0;i<9;i++)
+    {
+        char ch=buf[i];
+        switch (ch)
+        {
+        case 0x15: break;
+        case 0x02: break;
+        case 0x49: break;
+        case 0x5e: break;
+        case 0x64: break;
+        case 0x73: break;
+        case 0x38: break;
+        case 0x2f: break;
+        case 0xd0: break;
+        case 0xc7: break;
+        case 0x8c: break;
+        case 0x9b: break;
+        case 0xa1: break;
+        case 0xb6: break;
+        case 0xfd: break;
+        case 0xea: break;
+        default:
+            return false; // Not a VTX if not HAM
+        }
+    }
+    std::cout << std::endl;
+    filein.read(buf,119); // This contains headery stuff to be decoded
+
+    for (int line=1;line<25;line++)
+    {
+        filein.read(buf,42); // TODO: Check for a failed read and abandon
+        std::string s(buf);
+        p->SetRow(line,s);
+    }
+
+
+    for (int i=1;i<2000;i++)
+    {
+        filein.read(buf,1);
+        char ch=buf[0];
+        switch (ch)
+        {
+        case 0x15: std::cout << "<0>";break;
+        case 0x02: std::cout << "<1>";break;
+        case 0x49: std::cout << "<2>";break;
+        case 0x5e: std::cout << "<3>";break;
+        case 0x64: std::cout << "<4>";break;
+        case 0x73: std::cout << "<5>";break;
+        case 0x38: std::cout << "<6>";break;
+        case 0x2f: std::cout << "<7>";break;
+        case 0xd0: std::cout << "<8>";break;
+        case 0xc7: std::cout << "<9>";break;
+        case 0x8c: std::cout << "<a>";break;
+        case 0x9b: std::cout << "<b>";break;
+        case 0xa1: std::cout << "<c>";break;
+        case 0xb6: std::cout << "<d>";break;
+        case 0xfd: std::cout << "<e>";break;
+        case 0xea: std::cout << "<f>";break;
+        default:
+            std::cout << (char)(buf[0] & 0x7f);
+        }
+    }
+    std::cout << std::endl;
+    return true;
+    if ((buf[0]!=(char)0xFE) || (buf[1]!=(char)0x01) || (buf[2]!=(char)0x09))
+    {
+        filein.close();
+        return false;
+    }
+    SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+    // Next we load 24 lines  of 40 characters
+    for (int i=0;i<24;i++)
+    {
+        filein.read(buf,40); // TODO: Check for a failed read and abandon
+        buf[40]=0;
+        std::string s(buf);
+        p->SetRow(i,s);
+    }
+    p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+    // With a pair of zeros at the end we can skip
+    filein.close(); // Not sure that we need to close it
+    p->Setm_SubPage(NULL);
+    TTXPage::pageChanged=false;
+    return true;
 }
 
 bool TTXPage::m_LoadEP1(std::string filename)
@@ -347,7 +442,12 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
     m_Init();
     SetSourcePage(filename);
     SetShortFilename(shortFilename);
-    // Try all the possible formats. EP1 first
+    // Try all the possible formats.
+
+    if (!loaded)
+        if (m_LoadVTX(filename))
+            loaded=true;
+
     if (m_LoadEP1(filename))
         loaded=true;
 
@@ -358,6 +458,7 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
     if (!loaded)
         if (m_LoadTTI(filename))
             loaded=true;
+
 
     TTXPage::pageChanged=false;
     std::cout << "Finished reading page. Loaded=" << loaded << std::endl;
@@ -516,10 +617,12 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_F5: ch=ttxCodeAlphaMagenta;break;  // Shift-F5 magenta
             case WXK_F6: ch=ttxCodeAlphaCyan;break;     // Shift-F6 cyan
             case WXK_F7: ch=ttxCodeAlphaWhite;break;    // Shift-F7 white
-            default: ch=0;
+            case WXK_F8: ch=0x7f;break;                 // Shift-F8 black SPECIAL CASE!
+            default: ch=0; // not a valid shift code.
         }
         if (ch>0)
         {
+            if (ch==0x7f) ch=ttxCodeAlphaBlack; // Alpha black shenanigans
             char oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
@@ -540,6 +643,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_F5: ch=ttxCodeGraphicsMagenta;break;
             case WXK_F6: ch=ttxCodeGraphicsCyan;break;
             case WXK_F7: ch=ttxCodeGraphicsWhite;break;
+            case WXK_F8: ch=ttxCodeGraphicsBlack;break;
             // Special codes
             case WXK_CONTROL_H: ch=ttxCodeFlash;break;          // Ctrl-H: flash
             case WXK_CONTROL_I: ch=ttxCodeSteady;break;         // Ctrl-I: steady

@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan (http://www.teastop.co.uk)
  * License:
  *
- * Copyright (C) 2014-2015, Peter Kwan
+ * Copyright (C) 2014-2016, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -56,7 +56,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.18")
+#define VERSION_STRING   wxT("1.19")
 
 // ftp
 #include <wininet.h>

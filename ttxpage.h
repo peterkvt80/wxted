@@ -20,7 +20,7 @@
 
 #include "ttxcodes.h"
 #include "ttxline.h"
-
+#include "hamm-tables.h"
 #include "tedevent.h"
 
 #define FIRSTPAGE 0x1ff00
@@ -132,7 +132,8 @@ class TTXPage
          */
          void SetRow(unsigned int rownumber, std::string line);
 
-        /** Set a character at a particular location
+        /** Set a character at a part#ifndef _HAMM_TABLES_H_
+icular location
          * \param code : The keyboard code
          * \param cursorLoc : The cursor location as a wxWidgets point. This returns with the updated location.
          * \param cursorSubLoc : The grapihics cursor sub position as a wxWidgets point. This returns with the updated sub character location.
@@ -145,6 +146,12 @@ class TTXPage
          * \return true if the page was loaded
          */
         bool m_LoadEP1(std::string filename);
+
+        /** Load a VTX page
+         * \param filename : The source file
+         * \return true if the page was loaded
+         */
+        bool m_LoadVTX(std::string filename);
 
         /** Load a TTX page (Cebra)
          * \param filename : The source file

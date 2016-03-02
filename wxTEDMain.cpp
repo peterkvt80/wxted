@@ -354,6 +354,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     std::cout << "[OnPaint]PAINT! " << count++ << std::endl;
     // std::cout << "P" << count++ << std::endl;
     */
+    if (this->IsIconized()) return; // If Iconized we shouldn't draw anything
+
     wxAutoBufferedPaintDC paintDC(this);
 //    wxAutoBufferedPaintDC paintDC(Panel1);
 
@@ -612,7 +614,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaYellow :
                     fg=wxYELLOW;
                     concealed=false;
-                    graphics=false;http://www.mrsmasseysdeliciousdiner.com/
+                    graphics=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -926,7 +928,7 @@ void wxTEDFrame::m_SetStatus()
         ch=line->GetLine()[c.x] & 0x7f;
         switch (ch)
         {
-            case ttxCodeAlphaBlack:    code<<"Alpha black";break;
+            case ttxCodeAlphaBlack:    code<<"Alpha black=Shift F8";break;
             case ttxCodeAlphaRed:      code<<"Alpha Red=Shift F1";break;
             case ttxCodeAlphaGreen:    code<<"Alpha Green=Shift F2";break;
             case ttxCodeAlphaYellow:   code<<"Alpha Yellow=Shift F3";break;
@@ -1107,7 +1109,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     StatusBar1->SetFieldsCount(1,__wxStatusBarWidths_1);
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
-    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTX files (*.vtx)|*.vtx|All files|*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
