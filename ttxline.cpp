@@ -143,6 +143,14 @@ bool TTXLine::IsDoubleHeight()
     return false;
 }
 
+bool TTXLine::IsBlank()
+{
+    for (unsigned int i=0;i<40;i++)
+        if (m_textline[i]!=' ')
+            return false;
+    return true; // Yes, the line is blank
+}
+
 char TTXLine::SetCharAt(int x,int code)
 {
     char c=m_textline[x];

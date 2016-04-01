@@ -97,7 +97,7 @@ bool TTXPage::m_LoadVTX(std::string filename)
     filein.read(buf,9);
     for (int i=0;i<9;i++)
     {
-        char ch=buf[i];
+        uint8_t ch=buf[i];
         switch (ch)
         {
         case 0x15: break;
@@ -134,7 +134,7 @@ bool TTXPage::m_LoadVTX(std::string filename)
     for (int i=1;i<2000;i++)
     {
         filein.read(buf,1);
-        char ch=buf[0];
+        uint8_t ch=buf[0];
         switch (ch)
         {
         case 0x15: std::cout << "<0>";break;
@@ -888,12 +888,12 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
         ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << p->m_subcode << "\n";   // Subcode for these lines
     for (int i=0;i<25;i++)
     {
-        if (p->m_pLine[i]!=NULL) // Skip empty lines
+        if (p->m_pLine[i]!=NULL && !p->m_pLine[i]->IsBlank()) // Skip empty lines
         {
             // This one for Andreas
-            std::string s=p->m_pLine[i]->GetMappedline(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+//             std::string s=p->m_pLine[i]->GetMappedline(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
             // This one for Droidfax compatibility
-//            std::string s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+            std::string s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
             ttxfile << "OL," << std::dec << i << "," << s << "\n";
         }
     }

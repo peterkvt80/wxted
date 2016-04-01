@@ -267,7 +267,7 @@ icular location
         int m_region;               // RE
         // Private functions
         void m_Init();
-        void m_OutputLines(std::ofstream& ttxfile, TTXPage* p);
+        void m_OutputLines(std::ofstream& ttxfile, TTXPage* p); /// Send ttx lines to an output stream
         int instance;
 
         /* Undo/Redo */
