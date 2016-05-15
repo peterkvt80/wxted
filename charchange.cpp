@@ -1,6 +1,6 @@
 #include "charchange.h"
 
-CharChange::CharChange() : m_CursorLoc(wxPoint(0,0)), m_OldChar(' '), m_NewChar(' '), next(0)
+CharChange::CharChange() : next(0), m_OldChar(' '), m_NewChar(' '), m_CursorLoc(wxPoint(0,0))
 {
     //ctor
 }

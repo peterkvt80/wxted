@@ -222,7 +222,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
     // File must start with CEBRA
     if ((buf[0]!='C') || (buf[1]!='E') || (buf[2]!='B') || (buf[3]!='R') || (buf[4]!='A'))
     {
-        char buf2[1100];
+        //char buf2[1100];
         // Not a CEBRA file. Could be a raw 1000 byte file?
         // get length of file:
         filein.seekg (0, filein.end);
@@ -866,12 +866,12 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             // Also want to delete!
             if (cursorLoc.x>0) cursorLoc.x--;   // Move left if possible
             oldChar=line->SetCharAt(cursorLoc.x,' ');   // And clear the character that we land on
-            std::cout << "TODO: Implement AddChange" << std::endl;
+            std::cout << "TODO: Implement AddChange " << oldChar<< std::endl;
             break;
         case WXK_RETURN : // Double height
             oldChar=line->SetCharAt(cursorLoc.x,'\r');   // Insert a double height
             if (cursorLoc.x<39) cursorLoc.x++;   // Move right if possible
-            std::cout << "TODO: Implement AddChange" << std::endl;
+            std::cout << "TODO: Implement AddChange " << oldChar << std::endl;
         default:
             std::cout << "This key code is not implemented: " << code << std::endl;
         }

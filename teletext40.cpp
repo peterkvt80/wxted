@@ -32,8 +32,6 @@
 
      // Initialise before the loop
      uint8_t currentCode=0;
-     uint8_t r=0;
-     uint8_t c=0;
      uint8_t outBit=0x40;
      uint8_t outCol=0;
      uint8_t outRow=0; // Teletext40 uses the header row
@@ -125,7 +123,6 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[24][40])
 	// Encode bit-for-bit.
 	uint8_t sz=strlen(encoding);
 	char base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-	char ch;
 	for ( uint16_t i = 0; i < 1120; i++ )
     {
 		encoding[i+sz] = base64[((int)b64[i]) ];

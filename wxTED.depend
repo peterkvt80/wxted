@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1420392984 source:e:\dev\wxted-github\wxted\charchange.cpp
+1463305282 source:e:\dev\wxted-github\wxted\charchange.cpp
 	"charchange.h"
 
 1420392995 e:\dev\wxted-github\wxted\charchange.h
@@ -2244,7 +2244,7 @@
 	<iostream>
 	"charchange.h"
 
-1447268454 source:e:\dev\wxted-github\wxted\teletext40.cpp
+1463305856 source:e:\dev\wxted-github\wxted\teletext40.cpp
 	"teletext40.h"
 
 1430430413 e:\dev\wxted-github\wxted\teletext40.h
@@ -2280,7 +2280,7 @@
 1459548997 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1459549127 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1463305977 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1420392995 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2380,7 +2380,7 @@
 1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1456953544 e:\dev\wxted-github\wxted\wxtedmain.h
+1463305024 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -3313,5 +3313,5 @@
 1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1456783115 e:\dev\wxted-github\wxted\hamm-tables.h
+1463305750 e:\dev\wxted-github\wxted\hamm-tables.h
 
