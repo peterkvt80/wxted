@@ -320,14 +320,19 @@ void wxTEDFrame::m_resize(wxSize clientSize)
 {
     wxSize ttxSize;
     // What is the target client size?
-    // std::cout << "Current window size " << clientSize.GetWidth() << std::endl;
+    //std::cout << "Current window size " << std::dec << clientSize.GetWidth() << " " << clientSize.GetHeight() << std::endl;
     // What is the current font size?
     wxFont wf=GetFont();
     // Iterate for best fit
     int i;
     for (i=8;i<100;i++)
     {
+    //std::cout << "Current font size " << std::dec << m_fontSize[i].GetWidth() << " " << m_fontSize[i].GetHeight() << std::endl;
+        // Fit widtj
         if (clientSize.GetWidth()<m_fontSize[i].GetWidth()+10) // allow 10 pixels, I think the border is included
+            break;
+        // or fit height
+        if (clientSize.GetHeight()<m_fontSize[i].GetHeight()*26+40)
             break;
     }
     // Don't make it too small

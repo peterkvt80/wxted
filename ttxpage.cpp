@@ -39,13 +39,13 @@ void TTXPage::m_Init()
     m_region=0;
     SetPageNumber(FIRSTPAGE); // Valid but unlikely page
     Setm_SubPage(NULL); // Pointer to the next sub page
-    for (int i=0;i<25;i++)
+    for (int i=0;i<=MAXROW;i++)
     {
         m_pLine[i]=NULL;
     }
     for (int i=0;i<6;i++)
     {
-        SetFastextLink(i,0x100);
+        SetFastextLink(i,0x8ff);
     }
     // Member variables
     m_destination="inserter";
@@ -67,7 +67,7 @@ TTXPage::~TTXPage()
     static int j=0;
     j++;
     // std::cout << "[~TTXPage]" << std::endl;
-    for (int i=0;i<25;i++)
+    for (int i=0;i<=MAXROW;i++)
     {
         // std::cout << "Deleting line " << i << std::endl;
         if (m_pLine[i]!=NULL)
@@ -388,7 +388,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     std::getline(filein, line, ',');
                     lineNumber=atoi(line.c_str());
                     std::getline(filein, line);
-                    if (lineNumber>24) break;
+                    if (lineNumber>MAXROW) break;
                     // std::cout << "reading " << lineNumber << std::endl;
                     p->m_pLine[lineNumber]=new TTXLine(line);
                     // TODO: Change this implementation to use SetRow
@@ -511,7 +511,7 @@ void TTXPage::Undo(wxPoint& cursorloc)
 TTXLine* TTXPage::GetRow(unsigned int row)
 {
     // std::cout << "[TTXPage::GetRow] getting row " << row << std::endl;
-    if (row>=25 || row<0)
+    if (row>MAXROW || row<0)
     {
         std::cout << "[TTXPage::GetRow]Invalid row requested: " << row << std::endl;
         return NULL;
@@ -525,6 +525,7 @@ TTXLine* TTXPage::GetRow(unsigned int row)
 
 void TTXPage::SetRow(unsigned int rownumber, std::string line)
 {
+    if (rownumber>MAXROW || rownumber<0) return;
     if (m_pLine[rownumber]==NULL)
         m_pLine[rownumber]=new TTXLine(line); // Didn't exist before
     else
@@ -886,7 +887,7 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
         ttxfile << "SC,0000" << "\n";
     else
         ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << p->m_subcode << "\n";   // Subcode for these lines
-    for (int i=0;i<25;i++)
+    for (int i=0;i<=MAXROW;i++)
     {
         if (p->m_pLine[i]!=NULL && !p->m_pLine[i]->IsBlank()) // Skip empty lines
         {
@@ -951,13 +952,17 @@ bool TTXPage::SavePage(std::string filename)
         // My spidey instincts tell me that this code could be factorised
         m_OutputLines(ttxfile, this);
         ttxfile << std::hex;
-        ttxfile << "FL,"
-        << m_fastextlinks[0] << ","
-        << m_fastextlinks[1] << ","
-        << m_fastextlinks[2] << ","
-        << m_fastextlinks[3] << ","
-        << m_fastextlinks[4] << ","
-        << m_fastextlinks[5] << std::endl;
+        // Don't output null links
+        if (m_fastextlinks[0]!=0x8ff)
+        {
+            ttxfile << "FL,"
+            << m_fastextlinks[0] << ","
+            << m_fastextlinks[1] << ","
+            << m_fastextlinks[2] << ","
+            << m_fastextlinks[3] << ","
+            << m_fastextlinks[4] << ","
+            << m_fastextlinks[5] << std::endl;
+        }
         ttxfile << std::dec;
         // Now also have to traverse the rest of the page tree
         if (Getm_SubPage()!=NULL)
@@ -969,16 +974,19 @@ bool TTXPage::SavePage(std::string filename)
                 {
                     m_OutputLines(ttxfile, p);
                     // Subpages now have an identical copy of the main fastext links
-                    ttxfile << std::hex;
-                    ttxfile << "FL,"
-                    << m_fastextlinks[1] << ","
-                    << m_fastextlinks[1] << ","
-                    << m_fastextlinks[2] << ","
-                    << m_fastextlinks[3] << ","
-                    << m_fastextlinks[4] << ","
-                    << m_fastextlinks[5] << std::endl;
-                    ttxfile << std::dec;
-
+                    // Don't output null links
+                    if (m_fastextlinks[0]!=0x8ff)
+                    {
+                        ttxfile << std::hex;
+                        ttxfile << "FL,"
+                        << m_fastextlinks[0] << ","
+                        << m_fastextlinks[1] << ","
+                        << m_fastextlinks[2] << ","
+                        << m_fastextlinks[3] << ","
+                        << m_fastextlinks[4] << ","
+                        << m_fastextlinks[5] << std::endl;
+                        ttxfile << std::dec;
+                    }
                 }
 
             }
@@ -1077,7 +1085,10 @@ int TTXPage::GetFastextLink(int link)
 void TTXPage::SetFastextLink(int link, int value)
 {
     if (link<0 || link>5 || value>0x8ff)
+    {
+        m_fastextlinks[link]=0x8ff; // When no particular page is specified
         return;
+    }
     m_fastextlinks[link]=value;
 }
 
