@@ -212,7 +212,7 @@ bool TTXPage::m_LoadEP1(std::string filename)
 
 bool TTXPage::m_LoadTTX(std::string filename)
 {
-    char buf[1100];
+    char buf[100000]; // allow for a hundred pages. @todo Allocate buffer according to the file length
     TTXPage* p=this;
     std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
     // First 0x61 chars are some sort of header. TODO: Find out what the format is to get metadata out
@@ -229,7 +229,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
         int length = filein.tellg();
         filein.seekg (0, filein.beg);
         std::cout << "length=" << length << std::endl;
-        if (length==1000) // Raw file? Yes!
+        if (length==1000) // Raw file? Yes! // @todo Multipage
         {
             SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
             // Next we load 24 lines of 40 characters
@@ -245,11 +245,27 @@ bool TTXPage::m_LoadTTX(std::string filename)
             TTXPage::pageChanged=false;
             return true;
         }
-        else
+        if (length>1000) // Multiple raw page from teletext.co.uk
         {
+            /// @todo Open a new window with each page that we decode.
+            SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+            // Next we load 24 lines of 40 characters
+            for (int i=0;i<25;i++)
+            {
+                filein.read(buf,40);
+                for (int j=0;j<40;j++) if (buf[j]=='\0') buf[j]=ttxCodeAlphaBlue; // Should be Alpha black! But tricky!
+                p->SetRow(i,buf);
+            }
+
             filein.close();
-            return false;
+            p->Setm_SubPage(NULL);
+            TTXPage::pageChanged=false;
+            return true;
+
         }
+        // File failed to load
+        filein.close();
+        return false;
     }
     // Cebra file follows....
     SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original

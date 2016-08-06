@@ -2280,7 +2280,7 @@
 1459548997 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1469358141 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1470448019 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1420392995 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2380,7 +2380,7 @@
 1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1469358284 e:\dev\wxted-github\wxted\wxtedmain.h
+1470485584 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>

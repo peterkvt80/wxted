@@ -77,6 +77,7 @@ const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idExportTTX40 = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
+const long wxTEDFrame::idNewWindow = wxNewId();
 const long wxTEDFrame::idUndo = wxNewId();
 const long wxTEDFrame::idCut = wxNewId();
 const long wxTEDFrame::idCopy = wxNewId();
@@ -1007,7 +1008,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     wxMenuItem* MenuItemQuit;
     wxMenuBar* MenuBar1;
 
-    Create(parent, wxID_ANY, _("wxTED 1.15"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("wxTED 1.22"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     wxFont thisFont(10,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
     Notebook1 = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxSize(400,24), 0, _T("ID_NOTEBOOK1"));
@@ -1031,10 +1032,13 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Menu1->Append(MenuItemPublish);
     MenuItemPublishSettings = new wxMenuItem(Menu1, idPublishSettings, _("Publish settings..."), _("Choose publish method"), wxITEM_NORMAL);
     Menu1->Append(MenuItemPublishSettings);
-    MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export Teletext40"), _("Open page on Teletext40 website"), wxITEM_NORMAL);
+    MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export edit.tf"), _("Open page on edit.tf website"), wxITEM_NORMAL);
     Menu1->Append(MenuItemExportTTX40);
     MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
     Menu1->Append(MenuItemQuit);
+    Menu1->AppendSeparator();
+    MenuItem4 = new wxMenuItem(Menu1, idNewWindow, _("New Window"), wxEmptyString, wxITEM_NORMAL);
+    Menu1->Append(MenuItem4);
     MenuBar1->Append(Menu1, _("&File"));
     Menu3 = new wxMenu();
     MenuItemUndo = new wxMenuItem(Menu3, idUndo, _("Undo\tCTRL-Z"), wxEmptyString, wxITEM_NORMAL);
@@ -1125,6 +1129,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
+    Connect(idNewWindow,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemNewWindow);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
     Connect(idCut,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
     Connect(idCopy,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemCopySelected);
@@ -1645,7 +1650,6 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 	}
 	std::cout << "Connecting with ftp=" << _(ftp) << " user=" << _(user) << " pass=" << _(pass) << std::endl;
 	hFtpSession = InternetConnect(hInternet,(LPTSTR)ftp , INTERNET_DEFAULT_FTP_PORT, (LPTSTR)user, (LPTSTR)pass, INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE, 0);
-	// hFtpSession = InternetConnect(hInternet,L"ftp.plus.net" , INTERNET_DEFAULT_FTP_PORT,L"teastop", L"passkey6", INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE, 0);
 	if(hFtpSession==NULL)
 	{
 	    std::cout << "[send] InternetConnect Failed" << std::endl;
@@ -2122,4 +2126,11 @@ void wxTEDFrame::OnKeyUp(wxKeyEvent& event)
         m_Released=true;
     }
     event.Skip(true);
+}
+
+void wxTEDFrame::OnMenuItemNewWindow(wxCommandEvent& event)
+{
+	wxTEDFrame * win = new wxTEDFrame(0);
+	win->OnMenuNew(event);
+	win->Show(true);
 }

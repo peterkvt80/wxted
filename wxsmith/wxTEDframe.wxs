@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
 	<object class="wxFrame" name="wxTEDFrame">
-		<title>wxTED 1.15</title>
+		<title>wxTED 1.22</title>
 		<font>
 			<size>10</size>
 			<style>normal</style>
@@ -67,8 +67,8 @@
 					<handler function="OnMenuItemPublishSettings" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="idExportTTX40" variable="MenuItemExportTTX40" member="yes">
-					<label>Export Teletext40</label>
-					<help>Open page on Teletext40 website</help>
+					<label>Export edit.tf</label>
+					<help>Open page on edit.tf website</help>
 					<handler function="OnMenuItemExportTTX40Selected" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="idMenuQuit" variable="MenuItemQuit" member="no">

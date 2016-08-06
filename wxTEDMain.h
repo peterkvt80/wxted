@@ -56,7 +56,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.21")
+#define VERSION_STRING   wxT("1.22")
 
 // ftp
 #include <wininet.h>
@@ -165,6 +165,8 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemExportTTX40Selected(wxCommandEvent& event);
         void OnKeyDown(wxKeyEvent& event);
         void OnKeyUp(wxKeyEvent& event);
+        void OnPanel1Paint(wxPaintEvent& event);
+        void OnMenuItemNewWindow(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -198,6 +200,7 @@ class wxTEDFrame: public wxFrame
         static const long idPublishSettings;
         static const long idExportTTX40;
         static const long idMenuQuit;
+        static const long idNewWindow;
         static const long idUndo;
         static const long idCut;
         static const long idCopy;
@@ -248,6 +251,7 @@ class wxTEDFrame: public wxFrame
         wxMenu* Menu3;
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;
+        wxMenuItem* MenuItem4;
         wxMenuItem* MenuItem11;
         wxMenuItem* MenuItemDeletePage;
         wxMenuItem* MenuItemRegion6;
