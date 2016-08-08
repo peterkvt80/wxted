@@ -77,6 +77,11 @@
 					<help>Quit the application</help>
 					<handler function="OnQuit" entry="EVT_MENU" />
 				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idNewWindow" variable="MenuItem4" member="yes">
+					<label>New Window</label>
+					<handler function="OnMenuItemNewWindow" entry="EVT_MENU" />
+				</object>
 			</object>
 			<object class="wxMenu" variable="Menu3" member="yes">
 				<label>Edit</label>

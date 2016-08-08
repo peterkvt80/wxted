@@ -212,7 +212,7 @@ bool TTXPage::m_LoadEP1(std::string filename)
 
 bool TTXPage::m_LoadTTX(std::string filename)
 {
-    char buf[100000]; // allow for a hundred pages. @todo Allocate buffer according to the file length
+    char buf[1100]; // Don't think we need this much buffer. Just a line will do
     TTXPage* p=this;
     std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
     // First 0x61 chars are some sort of header. TODO: Find out what the format is to get metadata out
@@ -236,6 +236,11 @@ bool TTXPage::m_LoadTTX(std::string filename)
             for (int i=0;i<25;i++)
             {
                 filein.read(buf,40);
+                if (i==0)
+                {
+                    findPageNumber(buf);
+                }
+
                 for (int j=0;j<40;j++) if (buf[j]=='\0') buf[j]=ttxCodeAlphaBlue; // Should be Alpha black! But tricky!
                 p->SetRow(i,buf);
             }
@@ -245,7 +250,8 @@ bool TTXPage::m_LoadTTX(std::string filename)
             TTXPage::pageChanged=false;
             return true;
         }
-        if (length>1000) // Multiple raw page from teletext.co.uk
+        /// @todo teletext.org.uk ttx grabs
+        if (length>1000 && false) // Multiple raw page from teletext.co.uk
         {
             /// @todo Open a new window with each page that we decode.
             SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
@@ -253,6 +259,10 @@ bool TTXPage::m_LoadTTX(std::string filename)
             for (int i=0;i<25;i++)
             {
                 filein.read(buf,40);
+                if (i==0)
+                {
+                    findPageNumber(buf); // @todo Take the number of this page and put it in the meta data
+                }
                 for (int j=0;j<40;j++) if (buf[j]=='\0') buf[j]=ttxCodeAlphaBlue; // Should be Alpha black! But tricky!
                 p->SetRow(i,buf);
             }
@@ -284,6 +294,69 @@ bool TTXPage::m_LoadTTX(std::string filename)
     p->Setm_SubPage(NULL);
     TTXPage::pageChanged=false;
     return true;
+}
+
+int TTXPage::findPageNumber(char* buf)
+{
+    int result=0;
+    int state=0;
+    char* p=buf;
+    for (int i=0;i<40;i++)
+    {
+        switch (state)
+        {
+            // Looking for 1..8 magazine
+        case 0: if (*p>='1' && *p<='8')
+            {
+                result=(*p-'0') << 4;
+                state++;
+            }
+            break;
+        case 1: if (*p>='0' && *p<='9')
+            {
+                result=(result+*p-'0') << 4;
+                state++;
+                break;
+            }
+            if (*p>='A' && *p<='F')
+            {
+                result=(result+*p-'A'+10) << 4;
+                state++;
+                break;
+            }
+            if (*p>='a' && *p<='f')
+            {
+                result=(result+*p-'0'+10) << 4;
+                state++;
+                break;
+            }
+            state=0;
+            break;
+        case 2:
+            if (*p>='0' && *p<='9')
+            {
+                result=result+*p-'0';
+            }
+            else
+            if (*p>='A' && *p<='F')
+            {
+                result=result+*p-'A'+10;
+            }
+            else
+            if (*p>='a' && *p<='f')
+            {
+                result=result+*p-'0'+10;
+            }
+            else
+            {
+                state=0;
+                break;
+            }
+            return result;
+        }
+        p++;
+    }
+    return -1;
 }
 
 bool TTXPage::m_LoadTTI(std::string filename)

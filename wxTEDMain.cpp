@@ -202,19 +202,21 @@ void wxTEDFrame::OnTimer(wxTimerEvent& event)
     Refresh();
 }
 
-/* mpp page number
- * dd date
- * uu month
- * yy year
- * DAY day
- * MTH month
- * hh hour
- * nn minute
- * ss second
+/* new--old description. Don't use old codes. They no longer work in VBIT.
+ * %%#  mpp page number
+ *  %d   dd date, two digits
+ *  %e      date without leading 0
+ *  %m   uu month
+ *  %y   yy year
+ * %%a  DAY day
+ * %%b  MTH month
+ *  %H   hh hour
+ *  %M   nn minute
+ *  %S   ss second
  *
  * Example ARD. "mpp<cyan>ARDtext<white>Mo dd.uu.yy hh:nn:ss"
  * @todo We do not yet implement two character day codes
- * as is possible in German ddso you have to edit it every day!
+ * as is possible in German dd so you have to edit it every day!
  */
 void wxTEDFrame::GenerateHeader(TTXLine* line)
 {
@@ -240,13 +242,17 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
     str[0]='P';
     str.replace(1,3,val.str()); // Replace the first 4 characters with the page number
 
+    // Magazine and page number
     i=str.find("mpp");
+    if (i<=0) i=str.find("%%#");
     if (i>0)
     {
         str.replace(i,3,val.str());
     }
 
+    // two digit date with leading 0
     i=str.find("dd");
+    if (i<=0) i=str.find("%d");
     if (i>0)
     {
         val.str("");
@@ -254,7 +260,9 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
         str.replace(i,2,val.str());
     }
 
+    // Three character day name
     i=str.find("DAY");
+    if (i<=0) i=str.find("%%a");
     if (i>0)
     {
         char day[10];
@@ -263,7 +271,9 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
         str.replace(i,3,p);
     }
 
+    // Three character month name
     i=str.find("MTH");
+    if (i<=0) i=str.find("%%b");
     if (i>0)
     {
         char month[10];
@@ -272,7 +282,9 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
         str.replace(i,3,p);
     }
 
+    // Hours - two digits 24 hour
     i=str.find("hh");
+    if (i<=0) i=str.find("%H");
     if (i>31) // Clock hours
     {
         val.str("");
@@ -280,14 +292,19 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
         str.replace(i,2,val.str());
     }
 
+    // Minutes - two digits
     i=str.find("nn");
+    if (i<=0) i=str.find("%M");
     if (i>31) // Clock minutes
     {
         val.str("");
         val << std::dec << std::setw(2) << std::setfill('0') << timeinfo->tm_min;
         str.replace(i,2,val.str());
     }
+
+    // Month - two digits
     i=str.find("uu");
+    if (i<=0) i=str.find("%m");
     if (i>8) // uu Month (two digits)
     {
         val.str("");
@@ -295,7 +312,9 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
         str.replace(i,2,val.str());
     }
 
+    // Seconds - two digits
     i=str.find("ss");
+    if (i<=0) i=str.find("%S");
     if (i>31) // Clock seconds
     {
         val.str("");
@@ -303,8 +322,9 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
         str.replace(i,2,val.str());
     }
 
-
+    // Year - two digits
     i=str.find("yy");
+    if (i<=0) i=str.find("%Y");
     if (i>0)
     {
         val.str("");

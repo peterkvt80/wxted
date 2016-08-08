@@ -277,6 +277,7 @@ icular location
         void AddEvent(EventType evt, wxPoint wxc, char oldchar, char newchar); // Add an event to the undo list
 
         std::string m_FormatPageNumber(TTXPage* p); /// \return the page number ready to write to file
+        int findPageNumber(char* buf);
 
 };
 
