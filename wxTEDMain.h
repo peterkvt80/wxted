@@ -74,6 +74,7 @@ class wxTEDFrame: public wxFrame
 
         wxTEDFrame(wxWindow* parent,wxWindowID id = -1);
         virtual ~wxTEDFrame();
+        inline TTXPage* Page(){return m_rootPage;};
 
     private:
 

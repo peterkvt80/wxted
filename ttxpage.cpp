@@ -251,17 +251,24 @@ bool TTXPage::m_LoadTTX(std::string filename)
             return true;
         }
         /// @todo teletext.org.uk ttx grabs
-        if (length>1000 && false) // Multiple raw page from teletext.co.uk
+        if (length>1000) // Multiple raw page from teletext.co.uk
         {
+            //wxTEDFrame * win = new wxTEDFrame(0);
+            //win->OnMenuNew(event);
+            //win->Show(true);
             /// @todo Open a new window with each page that we decode.
-            SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+            //win->Page()->SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
             // Next we load 24 lines of 40 characters
             for (int i=0;i<25;i++)
             {
                 filein.read(buf,40);
+                int pageNum;
                 if (i==0)
                 {
-                    findPageNumber(buf); // @todo Take the number of this page and put it in the meta data
+                    pageNum=findPageNumber(buf); // @todo Take the number of this page and put it in the meta data
+                    if (pageNum>0x100) {
+                        p->SetPageNumber(pageNum);
+                    }
                 }
                 for (int j=0;j<40;j++) if (buf[j]=='\0') buf[j]=ttxCodeAlphaBlue; // Should be Alpha black! But tricky!
                 p->SetRow(i,buf);
@@ -515,7 +522,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
     p->Setm_SubPage(NULL);
     std::cout << "Finished reading TTI page. Line count=" << lines << std::endl;
     TTXPage::pageChanged=false;
-    return true;
+    return (lines>0);
 }
 
 /* TODO: move the body of this out into a LoadPage function */
@@ -534,6 +541,10 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
     // Try all the possible formats.
 
     if (!loaded)
+        if (m_LoadTTI(filename))
+            loaded=true;
+
+    if (!loaded)
         if (m_LoadVTX(filename))
             loaded=true;
 
@@ -543,11 +554,6 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
     if (!loaded)
         if (m_LoadTTX(filename))
             loaded=true;
-
-    if (!loaded)
-        if (m_LoadTTI(filename))
-            loaded=true;
-
 
     TTXPage::pageChanged=false;
     std::cout << "Finished reading page. Loaded=" << loaded << std::endl;
@@ -976,6 +982,10 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
         ttxfile << "SC,0000" << "\n";
     else
         ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << p->m_subcode << "\n";   // Subcode for these lines
+    ttxfile << "PS," << std::setw(4) << std::setfill('X') << std::hex << p->m_pagestatus << std::endl;
+    ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
+
+
     for (int i=0;i<=MAXROW;i++)
     {
         if (p->m_pLine[i]!=NULL && !p->m_pLine[i]->IsBlank()) // Skip empty lines
@@ -1036,8 +1046,6 @@ bool TTXPage::SavePage(std::string filename)
         ttxfile << "DS," << m_destination << std::dec << std::endl;
         ttxfile << "SP," << GetSourcePage() << std::endl; // SP is set every time there is a save
         ttxfile << "CT," << m_cycletimeseconds << "," << m_cycletimetype << std::dec << std::endl;
-        ttxfile << "PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
-        ttxfile << "RE," << std::setw(1) << std::hex << m_region << std::endl;
         // My spidey instincts tell me that this code could be factorised
         m_OutputLines(ttxfile, this);
         ttxfile << std::hex;

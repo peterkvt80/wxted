@@ -22,7 +22,7 @@
 #include "ttxline.h"
 #include "hamm-tables.h"
 #include "tedevent.h"
-
+//#include "wxTEDMain.h"
 #define FIRSTPAGE 0x1ff00
 
 // MiniTED Page Status word

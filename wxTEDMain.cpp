@@ -538,6 +538,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     ch=str[col] & 0x7f;
                     ch2=str[col];
                     ch2=mapTextChar(ch2);
+                    // holdchar records the last mosaic character sent out
                     if ((ch>0x20 && ch<0x40) || ch>=0x60) holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
                 }
 
@@ -549,8 +550,6 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 }
                 if (graphics && ((ch>=0x20 && ch<0x40) || ch>=0x60) ) // Graphics (but not capital A..Z)
                 {
-                    if (hold)
-                        ch=holdChar;
                     int j=0x01;
                     for (int i=0;i<6;i++) // for each of the six pixels in this character
                     {
@@ -825,6 +824,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     }
                     break;
                 case ttxCodeBlackBackground : // Background black
+
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
@@ -865,7 +865,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                         //paintDC.DrawText('g',wxPoint(col*m_ttxW,row*m_ttxH)); // (r)elease
 
                     }
-                }
+                }//case
+
             } // each character on this row
             if (skipnextrow) row++; // Don't use next row if there was any double height
 
@@ -935,7 +936,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
 wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
 {
-    return MapChar(ch,m_rootPage->GetLanguage(),m_rootPage->GetRegion());
+    return MapChar(ch,m_currentPage->GetLanguage(),m_currentPage->GetRegion());
 }
 
 void wxTEDFrame::m_SetStatus()
@@ -1208,7 +1209,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_resize(GetSize()); // Adjust the font to fit the available space
 
     /* Initial page */
-    m_rootPage = new TTXPage("BBC100.tti","");
+    m_currentPage=m_rootPage = new TTXPage("BBC100.tti","");
     m_setLanguage();
 
     iPageCount=m_rootPage->GetPageCount();
@@ -1217,7 +1218,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     SetTitle(_("wxTED ")+VERSION_STRING);
 
     m_rootPage->SetSourcePage(""); // Prevent an accidental Save
-    m_currentPage=m_rootPage;
+
 
     SetBackgroundStyle(wxBG_STYLE_PAINT);
 
@@ -1238,7 +1239,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
     m_publish_ftp_password=m_config->Read("/wxted/FTP/Password");
     m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
-    SetRegionMenu(m_rootPage->GetRegion()); // Region language
+    SetRegionMenu(m_currentPage->GetRegion()); // Region language
 
 
 // wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
@@ -1294,7 +1295,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     iPage=0;
     m_currentPage=m_rootPage;
 
-    SetRegionMenu(m_rootPage->GetRegion()); // Region language
+    SetRegionMenu(m_currentPage->GetRegion()); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
     OnPaint(Pevent);    // Refresh with the new page
@@ -1423,7 +1424,7 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     // Create a new page
     p=new TTXPage();
     m_setLanguage();
-    SetRegionMenu(m_rootPage->GetRegion()); // Region language
+    SetRegionMenu(m_currentPage->GetRegion()); // Region language
     iPage++;
     // Save the child page pointer
     childPage=m_currentPage->Getm_SubPage();
@@ -1489,7 +1490,7 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
         std::cout << "Trace2 p=" << (int)p << "  p->Next=" << (int)p->Getm_SubPage() << std::endl;
         // Make the parent the current page
         m_currentPage=p;
-        std::cout << "Trace3 mCurrentPage=" << (int) m_currentPage << std::endl;
+        std::cout << "Trace3 m_currentPage=" << (int) m_currentPage << std::endl;
         // Repair the page chain by relinking the next subpage.
         p->Setm_SubPage(nextSub);
         std::cout << "Trace4" << std::endl;
@@ -1505,14 +1506,14 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
 void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
 {
     int language=event.GetId()-(MenuItemEnglish->GetId() & 0x07);
-    m_rootPage->SetLanguage(language);
-    std::cout << "Language handler " << m_rootPage->GetLanguage() << std::endl;
+    m_currentPage->SetLanguage(language);
+    std::cout << "Language handler " << m_currentPage->GetLanguage() << std::endl;
 }
 
 void wxTEDFrame::m_setLanguage()
 {
 //    std::cout << "m_setLanguage " << m_rootPage->GetLanguage() << std::endl;
-    int language=m_rootPage->GetLanguage();
+    int language=m_currentPage->GetLanguage();
     // idLanguageEnglish
     /*
     MenuItemEnglish->Check(true);break;
