@@ -183,6 +183,11 @@ class wxTEDFrame: public wxFrame
         /* Set the language menu radio option */
         void m_setLanguage();
 
+        /**
+         * \return true if the character is in the range of mosaics, not including A-Z.
+         */
+        bool isMosaic(char ch);
+
 
         unsigned int m_ttxW; /// Font width
         unsigned int m_ttxH; /// Font height

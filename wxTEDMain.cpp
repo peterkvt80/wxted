@@ -141,7 +141,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 {
     int code=event.GetKeyCode();
     int modifiers=event.GetModifiers();
-    std::cout << "Key event..." << code << std::endl;
+    // std::cout << "Key event..." << code << std::endl;
     // We look at a few codes which apply to a page set rather than just a single page
     TEDEvent* tev;
     switch (code)
@@ -166,13 +166,13 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
         m_reveal=!m_reveal;
         break;
     case WXK_CONTROL_Y:
-        std::cout << "CTRL-Y test" << std::endl; // Testing
+        // std::cout << "CTRL-Y test" << std::endl; // Testing
         tev=m_currentPage->GetUndo();
         if (tev!=NULL)
             tev->dump();
         break;
     case WXK_CONTROL_Z:
-        std::cout << "CTRL-Z undo" << std::endl;
+        // std::cout << "CTRL-Z undo" << std::endl;
         // tev=m_currentPage->GetUndo();
         m_currentPage->Undo(m_cursorPoint);
         break;
@@ -200,6 +200,12 @@ void wxTEDFrame::OnTimer(wxTimerEvent& event)
     if (m_currentPage)
     // Paint it
     Refresh();
+}
+
+bool wxTEDFrame::isMosaic(char ch)
+{
+    ch&=0x7f;
+    return (ch>=0x20 && ch<0x40) || ch>=0x60;
 }
 
 /* new--old description. Don't use old codes. They no longer work in VBIT.
@@ -432,7 +438,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     for (unsigned int row=firstRow;row<25;row++)
 //    for (int row=24;row>=firstRow;row--)
     {
-        bool graphics=false;
+        bool graphicsMode=false;
         bool separated=false;
         bool doubleheight=false;
         bool skipnextrow=false;
@@ -539,18 +545,28 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     ch2=str[col];
                     ch2=mapTextChar(ch2);
                     // holdchar records the last mosaic character sent out
-                    if ((ch>0x20 && ch<0x40) || ch>=0x60) holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
+                    if (isMosaic(ch))
+                    {
+                        holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
+                    }
                 }
 
                 if (concealed && !m_reveal) // Replace text with spaces
                 {
                     ch=' ';
-                    holdChar=' ';
+                    holdChar=' '; /// @todo restore to space
                     ch2=' ';
                 }
-                if (graphics && ((ch>=0x20 && ch<0x40) || ch>=0x60) ) // Graphics (but not capital A..Z)
+                if (graphicsMode && (isMosaic(ch) || hold) ) // Draw graphics. Either mosaic (but not capital A..Z) or in hold mode
                 {
                     int j=0x01;
+                    // Not sure if this is a rule. If we send a new mosaic code while in hold, it replaces the current mosaic.
+                    // This fixes the Oracle P689 christmas bug
+                    if (hold)
+                    {
+                        ch=holdChar;  // Carry on hold
+                    }
+
                     for (int i=0;i<6;i++) // for each of the six pixels in this character
                     {
                         if (ch & j)
@@ -614,12 +630,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaBlack :
                     fg=wxBLACK;
                     concealed=false;    // Side effect of colour. It cancels a conceal.
-                    graphics=false;
+                    graphicsMode=false;
                     break;
                 case ttxCodeAlphaRed :
                     fg=wxRED;
                     concealed=false;
-                    graphics=false;
+                    graphicsMode=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -629,7 +645,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaGreen :
                     fg=wxGREEN;
                     concealed=false;
-                    graphics=false;
+                    graphicsMode=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -639,7 +655,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaYellow :
                     fg=wxYELLOW;
                     concealed=false;
-                    graphics=false;
+                    graphicsMode=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -649,7 +665,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaBlue :
                     fg=wxBLUE;
                     concealed=false;
-                    graphics=false;
+                    graphicsMode=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -659,17 +675,17 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaMagenta :
                     fg=magenta; // wxMAGENTA
                     concealed=false;
-                    graphics=false;
+                    graphicsMode=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphiHoldc sample
                     }
                     break;
                 case ttxCodeAlphaCyan :
                     fg=wxCYAN;
                     concealed=false;
-                    graphics=false;
+                    graphicsMode=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -679,7 +695,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaWhite :
                     fg=wxWHITE;
                     concealed=false;
-                    graphics=false;
+                    graphicsMode=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
@@ -728,13 +744,13 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                    break;
                 case ttxCodeGraphicsBlack : // Graphics black
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=wxBLACK;
                     if (m_ShowMarkup) paintDC.DrawText(_('¬'),wxPoint(col*m_ttxW,row*m_ttxH)); // hmm
                     break;
                 case ttxCodeGraphicsRed : // Graphics red
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=wxRED;
                     if (m_ShowMarkup)
                     {
@@ -744,7 +760,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
                 case ttxCodeGraphicsGreen : // Graphics green
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=wxGREEN;
                     if (m_ShowMarkup)
                     {
@@ -754,7 +770,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
                 case ttxCodeGraphicsYellow : // Graphics yellow
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=wxYELLOW;
                     if (m_ShowMarkup)
                     {
@@ -764,7 +780,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
                 case ttxCodeGraphicsBlue : // Graphics blue
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=wxBLUE;
                     if (m_ShowMarkup)
                     {
@@ -774,7 +790,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
                 case ttxCodeGraphicsMagenta : // Graphics magenta
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=magenta;
                     if (m_ShowMarkup)
                     {
@@ -784,7 +800,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
                 case ttxCodeGraphicsCyan : // Graphics cyan
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=wxCYAN;
                     if (m_ShowMarkup)
                     {
@@ -794,7 +810,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
                 case ttxCodeGraphicsWhite : // Graphics white
                     concealed=false;
-                    graphics=true;
+                    graphicsMode=true;
                     fg=wxWHITE;
                     if (m_ShowMarkup)
                     {
@@ -857,7 +873,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
                 default:;
                     // If this is a graphics cell, draw the cell outline
-                    if (graphics && m_ShowMarkup)
+                    if (graphicsMode && m_ShowMarkup)
                     {
                         paintDC.SetPen(*wxGREY_PEN);
                         paintDC.DrawLine(col*m_ttxW,row*m_ttxH,(col+1)*m_ttxW,(row+1)*m_ttxH);
@@ -1253,7 +1269,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_
 
     helpFrame=new HelpFrame(this->GetDefaultItem(),1,wxP,wxS);
 
-    std::cout << "Finished starting frame" << std::endl;
+    // std::cout << "Finished starting frame" << std::endl;
 }
 
 wxTEDFrame::~wxTEDFrame()
@@ -1283,8 +1299,8 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     str=LoadPageFileDialog->GetPath().ToStdString();
 
     wxString filename=LoadPageFileDialog->GetFilename();
-    std::cout << "the filename was " << filename << std::endl;
-    std::cout << "Loading a teletext page " << str << std::endl;
+    // std::cout << "the filename was " << filename << std::endl;
+    // std::cout << "Loading a teletext page " << str << std::endl;
     m_rootPage = new TTXPage(str,filename.ToStdString());
     MenuItemSave->Enable(true);
 
@@ -1321,7 +1337,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
     if (FileDialogSaveAs->ShowModal() == wxID_CANCEL)
         return;     // the user bottled out
     std::string str=FileDialogSaveAs->GetPath().ToStdString();
-    std::cout << "Saving page to " << str << std::endl;
+    // std::cout << "Saving page to " << str << std::endl;
     bool result=m_rootPage->SavePage(str);
     if (!result)
     {
@@ -1347,7 +1363,7 @@ void wxTEDFrame::OnAbout(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 {
-    std::cout << "New page" << std::endl;
+    // std::cout << "New page" << std::endl;
     delete m_rootPage;
     m_rootPage=new TTXPage();
     SetTitle("");
@@ -1383,7 +1399,7 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
 
     // And do the send
     int result=send(m_publish_ftp_server,m_publish_ftp_username,m_publish_ftp_password,source,destination);
-    std::cout << "result of publish=" << result << std::endl;
+    // std::cout << "result of publish=" << result << std::endl;
     if (result)
     {
         wxString msg="Publish failed";
@@ -1392,7 +1408,7 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
     else
     {
         StatusBar1->SetLabel("FTP Finished OK"); // This doesn't work!
-        std::cout << "Publish OK. source=" << _(source) << " destination=" << _(destination ) << std::endl;
+        //std::cout << "Publish OK. source=" << _(source) << " destination=" << _(destination ) << std::endl;
     }
 }
 
@@ -1404,21 +1420,21 @@ void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
 
 void wxTEDFrame::OnKillFocus(wxFocusEvent& event)
 {
-    std::cout << "Lost focus" << std::endl;
+    //std::cout << "Lost focus" << std::endl;
     m_focused=false;
     event.Skip(true); // allow default handling
 }
 
 void wxTEDFrame::OnSetFocus(wxFocusEvent& event)
 {
-    std::cout << "Got focus" << std::endl;;
+    //std::cout << "Got focus" << std::endl;;
     m_focused=true;
     event.Skip(true); // allow default handling
 }
 
 void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 {
-    std::cout << "Insert page after #" << iPage << std::endl;
+    //std::cout << "Insert page after #" << iPage << std::endl;
     TTXPage* p;
     TTXPage* childPage;
     // Create a new page
@@ -1437,7 +1453,7 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 
     // Recalculate the subcode sequence.
     iPageCount=m_rootPage->GetPageCount();
-    std::cout << "Suspect that we are in trouble AFTER this" << std::endl;
+    //std::cout << "Suspect that we are in trouble AFTER this" << std::endl;
 
     // Put up a welcome message
     std::ostringstream str;
@@ -1483,20 +1499,20 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
         }
         // Before we delete the page, save the pointer to the next sub page
         TTXPage* nextSub=m_currentPage->Getm_SubPage();
-        std::cout << "Trace1 nextSub=" << (int)nextSub << std::endl;
+        //std::cout << "Trace1 nextSub=" << (int)nextSub << std::endl;
         // Delete the page.
         m_currentPage->Setm_SubPage(NULL); // Break the link before delete, or the rest of the chain vanishes!
         delete m_currentPage;
-        std::cout << "Trace2 p=" << (int)p << "  p->Next=" << (int)p->Getm_SubPage() << std::endl;
+        //std::cout << "Trace2 p=" << (int)p << "  p->Next=" << (int)p->Getm_SubPage() << std::endl;
         // Make the parent the current page
         m_currentPage=p;
-        std::cout << "Trace3 m_currentPage=" << (int) m_currentPage << std::endl;
+        //std::cout << "Trace3 m_currentPage=" << (int) m_currentPage << std::endl;
         // Repair the page chain by relinking the next subpage.
         p->Setm_SubPage(nextSub);
-        std::cout << "Trace4" << std::endl;
+        //std::cout << "Trace4" << std::endl;
         // Fix the counters
         if (iPage>0) iPage--;
-        std::cout << "Trace5" << std::endl;
+        //std::cout << "Trace5" << std::endl;
     }
     // Recalculate the subcode sequence.
     iPageCount=m_rootPage->GetPageCount();
@@ -1507,7 +1523,7 @@ void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
 {
     int language=event.GetId()-(MenuItemEnglish->GetId() & 0x07);
     m_currentPage->SetLanguage(language);
-    std::cout << "Language handler " << m_currentPage->GetLanguage() << std::endl;
+    //std::cout << "Language handler " << m_currentPage->GetLanguage() << std::endl;
 }
 
 void wxTEDFrame::m_setLanguage()
@@ -1613,7 +1629,7 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
         int pageNum;
         pageNum=std::strtol(m_propertiesDlg->TextCtrlPageNumber->GetValue().ToStdString().c_str(), &ptr, 16);
         m_rootPage->SetPageNumber(pageNum);
-        std::cout << "Page number=" << std::hex << pageNum << std::endl;
+        //std::cout << "Page number=" << std::hex << pageNum << std::endl;
 
         // Page Status
         b=m_propertiesDlg->CheckBoxC4ErasePage     ->GetValue();    if (b) ps|=PAGESTATUS_C4_ERASEPAGE;
@@ -1624,7 +1640,7 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
         b=m_propertiesDlg->CheckBoxTransmitPage    ->GetValue();    if (b) ps|=PAGESTATUS_TRANSMITPAGE;
 
         m_rootPage->SetPageStatus(ps); // Put ps back into the object
-        std::cout << "Page status=" << std::hex << ps << std::endl;
+        //std::cout << "Page status=" << std::hex << ps << std::endl;
 
         // Description
         m_rootPage->SetDescription(m_propertiesDlg->TextCtrlDescription->GetValue().ToStdString()); // Description
