@@ -639,7 +639,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeAlphaGreen :
@@ -649,7 +649,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeAlphaYellow :
@@ -659,7 +659,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeAlphaBlue :
@@ -669,7 +669,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeAlphaMagenta :
@@ -679,7 +679,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphiHoldc sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphiHoldc sample
                     }
                     break;
                 case ttxCodeAlphaCyan :
@@ -689,7 +689,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeAlphaWhite :
@@ -699,7 +699,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\x03\xB1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeFlash :
@@ -707,7 +707,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)'\xEF\xC6'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic f
+                        paintDC.DrawText(_((wxChar)L'\xEFC6'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic f
                     }
                     break;
                 case ttxCodeEndBox :
@@ -715,7 +715,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)'\xEF\x57'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
+                        paintDC.DrawText(_((wxChar)L'\xEF57'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
                     }
                     break;
                 case ttxCodeStartBox :
@@ -723,14 +723,14 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)'\xEF\x56'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
+                        paintDC.DrawText(_((wxChar)L'\xEF56'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
                     }
                     break;
                 case ttxCodeNormalHeight : // Normal height
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)'\xEF\x5E'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
+                        paintDC.DrawText(_((wxChar)L'\xEF5E'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
                     }
                     break;
                 case ttxCodeDoubleHeight : // Double height
@@ -739,7 +739,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)'\xEF\x5D'),wxPoint(col*m_ttxW,row*m_ttxH)); // up arrow
+                        paintDC.DrawText(_((wxChar)L'\xEF5D'),wxPoint(col*m_ttxW,row*m_ttxH)); // up arrow
                     }
                    break;
                 case ttxCodeGraphicsBlack : // Graphics black
@@ -755,7 +755,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\xE6\xF6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
                     }
                     break;
                 case ttxCodeGraphicsGreen : // Graphics green
@@ -765,7 +765,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\xE6\xF6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
                     }
                     break;
                 case ttxCodeGraphicsYellow : // Graphics yellow
@@ -775,7 +775,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\xE6\xF6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
                     }
                     break;
                 case ttxCodeGraphicsBlue : // Graphics blue
@@ -785,7 +785,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\xE6\xF6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
                     }
                     break;
                 case ttxCodeGraphicsMagenta : // Graphics magenta
@@ -795,7 +795,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\xE6\xF6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
                     }
                     break;
                 case ttxCodeGraphicsCyan : // Graphics cyan
@@ -805,7 +805,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\xE6\xF6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
                     }
                     break;
                 case ttxCodeGraphicsWhite : // Graphics white
@@ -815,7 +815,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)'\xE6\xF6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
                     }
                     break;
                 case ttxCodeConcealDisplay : // Conceal display
@@ -1021,8 +1021,8 @@ void wxTEDFrame::m_SetStatus()
     StatusBar1->SetLabelText(str.str());
 }
 
-wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_currentPage(NULL), m_ttxW(15), m_ttxH(20), m_cursorIsAlpha(true), m_subPixelPoint(wxPoint(0,0))
- , m_dragging(false), m_MarqueeStart(wxPoint(0,0))
+wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
+ , m_dragging(false), m_MarqueeStart(wxPoint(0,0)), m_currentPage(NULL)
 {
     // std::cout << "[wxTEDFrame] Entered" << std::endl;
     m_parentWindow=parent;
@@ -1939,7 +1939,7 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
        int x=m_cursorPoint.x;
        int y=m_cursorPoint.y;
        TTXLine* line=m_currentPage->GetRow(y++);
-       for (int i=0;i<wxs.Length();i++)
+       for (uint16_t i=0;i<wxs.Length();i++)
        {
             ch=wxs[i];
             if (ch==0xff)

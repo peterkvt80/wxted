@@ -928,7 +928,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                         // If space was pressed in graphics mode then toggle the current pixel colour
                         if (code==WXK_SPACE)
                         {
-                            char bit;
+                            char bit=0x00;
                             std::cout << "Toggle a graphics pixel" << std::endl;
                             switch (cursorSubLoc.x+cursorSubLoc.y*2)
                             {

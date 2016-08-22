@@ -56,7 +56,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.22")
+#define VERSION_STRING   wxT("1.23")
 
 // ftp
 #include <wininet.h>
@@ -83,6 +83,9 @@ class wxTEDFrame: public wxFrame
 
         // Language menu
         void SetRegionMenu(int region);
+
+        unsigned int m_ttxW; /// Font width
+        unsigned int m_ttxH; /// Font height
 
         // Cursor
         wxPoint m_cursorPoint; /// Cursor location (in character coordinates)
@@ -189,8 +192,6 @@ class wxTEDFrame: public wxFrame
         bool isMosaic(char ch);
 
 
-        unsigned int m_ttxW; /// Font width
-        unsigned int m_ttxH; /// Font height
         wxSize m_fontSize[100];
 
         wxWindow* m_parentWindow;

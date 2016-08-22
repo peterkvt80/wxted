@@ -1,11 +1,11 @@
 #include "tedevent.h"
 
-TEDEvent::TEDEvent(EventType evt) : nextEvent(0), lastEvent(0), eventType(EventNone)
+TEDEvent::TEDEvent(EventType evt) : eventType(EventNone), nextEvent(0), lastEvent(0), charList(NULL)
 {
     SeteventType(evt);
 }
 
-TEDEvent::TEDEvent() : eventType(EventNone), nextEvent(0), lastEvent(0)
+TEDEvent::TEDEvent() : eventType(EventNone), nextEvent(0), lastEvent(0), charList(NULL)
 {
     //ctor
 }
@@ -49,7 +49,6 @@ void TEDEvent::print()
 void TEDEvent::dump()
 {
     TEDEvent* p;
-    CharChange* c;
     EventType evt;
     for (p=this;p!=0;p=p->GetlastEvent())
     {

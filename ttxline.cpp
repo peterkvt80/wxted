@@ -160,7 +160,7 @@ char TTXLine::SetCharAt(int x,int code)
 
 char TTXLine::GetCharAt(int xLoc)
 {
-    if (m_textline.length()<xLoc)
+    if (m_textline.length()<(uint16_t)xLoc)
     {
         // extend the line to 40 characters
         std::cout << "[TTXLine::SetCharAt] oops, need to extend this line" << std::endl;
