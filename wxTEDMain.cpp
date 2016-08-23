@@ -2142,6 +2142,12 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
     save_to_hash(1, page,cc);
     CopyTextToClipboard(page);
     // Launch a browser with the URL
+    // Widen the URL
+    std::wstring w;
+    std::copy(page,page+strlen(page),back_inserter(w));
+    const wchar_t *wstr = w.c_str();
+
+    ShellExecute (NULL, L"open", wstr, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
