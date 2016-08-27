@@ -496,6 +496,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaCyan :
                 case ttxCodeAlphaWhite :
                 case ttxCodeFlash :
+                    hold=false;
                     break;
                 case ttxCodeSteady :
                     flashing=false;
