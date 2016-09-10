@@ -10,7 +10,7 @@ Build->Select Target
 
 4) Run wxTED. It should show the new version string in the window title bar.
 
-5) Commit the changes to Github Master and then remote.
+5) Commit the changes to Github Master and then sync to remote.
 
 6) Run Inno Script Studio using the configuration that is in the Release folder and load winpackage.iss.
    Set the myAppVersion to the new version number.

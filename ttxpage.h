@@ -278,6 +278,8 @@ icular location
 
         std::string m_FormatPageNumber(TTXPage* p); /// \return the page number ready to write to file
         int findPageNumber(char* buf);
+				
+				bool m_loaded;
 
 };
 

@@ -534,29 +534,28 @@ bool TTXPage::m_LoadTTI(std::string filename)
 TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NULL), m_current(NULL)
 {
     //std::cout << "[TTXPage] file constructor" << std::endl;
-    bool loaded=false;
     m_Init();
     SetSourcePage(filename);
     SetShortFilename(shortFilename);
     // Try all the possible formats.
 
-    if (!loaded)
+    if (!m_loaded)
         if (m_LoadTTI(filename))
-            loaded=true;
+            m_loaded=true;
 
-    if (!loaded)
+    if (!m_loaded)
         if (m_LoadVTX(filename))
-            loaded=true;
+            m_loaded=true;
 
     if (m_LoadEP1(filename))
-        loaded=true;
+        m_loaded=true;
 
-    if (!loaded)
+    if (!m_loaded)
         if (m_LoadTTX(filename))
-            loaded=true;
+            m_loaded=true;
 
     TTXPage::pageChanged=false;
-    std::cout << "Finished reading page. Loaded=" << loaded << std::endl;
+    std::cout << "Finished reading page. Loaded=" << m_loaded << std::endl;
 }
 
 
@@ -606,7 +605,7 @@ void TTXPage::Undo(wxPoint& cursorloc)
 TTXLine* TTXPage::GetRow(unsigned int row)
 {
     // std::cout << "[TTXPage::GetRow] getting row " << row << std::endl;
-    if (row>MAXROW || row<0)
+    if (row>MAXROW)
     {
         std::cout << "[TTXPage::GetRow]Invalid row requested: " << row << std::endl;
         return NULL;

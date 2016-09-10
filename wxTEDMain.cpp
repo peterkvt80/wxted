@@ -495,8 +495,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaMagenta :
                 case ttxCodeAlphaCyan :
                 case ttxCodeAlphaWhite :
-                case ttxCodeFlash :
                     hold=false;
+                case ttxCodeFlash :
                     break;
                 case ttxCodeSteady :
                     flashing=false;
@@ -532,10 +532,10 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeNewBackground : // New background
                     bg=fg;
                     break;
-                case ttxCodeHoldGraphics : // Hold gfx
+                case ttxCodeHoldGraphics : // Hold gfx (set at)
                     hold=true;
                     break;
-                case ttxCodeReleaseGraphics : // Separated gfx
+                case ttxCodeReleaseGraphics : // Release gfx (set after)
                     break;
                 case 14:; // Ignore shift in/shift out and avoid them falling into default
                 case 15:;
@@ -680,7 +680,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphiHoldc sample
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
                     }
                     break;
                 case ttxCodeAlphaCyan :
@@ -857,7 +857,6 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
 
                 case ttxCodeHoldGraphics : // Hold gfx
-                    hold=true;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
@@ -865,6 +864,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     }
                     break;
                 case ttxCodeReleaseGraphics : // Separated gfx
+                    hold=false;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
