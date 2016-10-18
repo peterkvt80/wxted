@@ -381,28 +381,15 @@ void wxTEDFrame::m_resize(wxSize clientSize)
 
 void wxTEDFrame::OnPaint(wxPaintEvent& event)
 {
-    /*
-    static uint32_t count=0;
-    std::cout << "[OnPaint]PAINT! " << count++ << std::endl;
-    // std::cout << "P" << count++ << std::endl;
-    */
     if (this->IsIconized()) return; // If Iconized we shouldn't draw anything
 
     wxAutoBufferedPaintDC paintDC(this);
-//    wxAutoBufferedPaintDC paintDC(Panel1);
-
-//    paintDC.SetColour(wxColour(255,255,255));
-   // paintDC.DrawText(_("blah"),wxPoint(50,50));
 
     // redraw the whole teletext page
-    // std::cout << "Trace 1" << std::endl;
-
-
 
     /* colours */
     const wxColour* fg=wxWHITE;
     const wxColour* bg=wxBLACK;
-
 
     wxBitmap doubleHeightBitmap(m_ttxW*40,m_ttxH*2);    // The image buffer for double height. (Sized for a single height plus generous fudge factor)
 
@@ -429,18 +416,16 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     wxColour* magenta=new wxColour(255,0,255); // remember to delete this
     /* page */
-    TTXPage* p=m_currentPage; // Load the root page, but soon we really want to implement for subpages
-    // std::cout << "Trace 2" << std::endl;
+    TTXPage* p=m_currentPage; // Load the page. Current page could be a subpages
     int firstRow=1;
     if (MenuItemShowHeader->IsChecked())
         firstRow=0;
     TTXLine row0;
     for (unsigned int row=firstRow;row<25;row++)
-//    for (int row=24;row>=firstRow;row--)
     {
         bool graphicsMode=false;
         bool separated=false;
-        bool doubleheight=false;
+        bool doubleHeight=false;
         bool skipnextrow=false;
         bool flashing=false;
         bool hold=false;
@@ -453,12 +438,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         doubleHeightDC.SetBackground(*wxBLACK_BRUSH); //  wxBLACK_BRUSH. Change this to GREY to track down bugs
         doubleHeightDC.Clear();
 
-        // std::cout << "Trace 3. Row=" << row << std::endl;
-
         // TTXPage* p=page.GetPage(0);
         TTXLine* line=p->GetRow(row);
 
-        // TODO: Replace this with a call to the header
         if (m_cursorPoint.y>0 && row==0) // If we are actually in the header, then edit the raw header
         {
 
@@ -505,7 +487,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeStartBox :
                     break;
                 case ttxCodeNormalHeight :
-                    doubleheight=false;
+                    doubleHeight=false;
                     break;
                 case ttxCodeDoubleHeight : // Double height
                 case ttxCodeGraphicsBlack : // Graphics black (level 2.5+)
@@ -558,10 +540,11 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     holdChar=' '; /// @todo restore to space
                     ch2=' ';
                 }
+
                 if (graphicsMode && (isMosaic(ch) || hold) ) // Draw graphics. Either mosaic (but not capital A..Z) or in hold mode
                 {
                     int j=0x01;
-                    // Not sure if this is a rule. If we send a new mosaic code while in hold, it replaces the current mosaic.
+                    // If we send a new mosaic code while in hold, it replaces the current mosaic.
                     // This fixes the Oracle P689 christmas bug
                     if (hold)
                     {
@@ -594,7 +577,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                         paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
                                                       row*m_ttxH+(i/2)*m_ttxH/3),
                                               wxSize(k+m_ttxW/2,k+m_ttxH/3));
-                        if (doubleheight)
+                        if (doubleHeight)
                             doubleHeightDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
                                                                  (i/2)*m_ttxH/3),
                                               wxSize(k+m_ttxW/2,k+m_ttxH/3));
@@ -603,23 +586,33 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 } // Graphic block
                 else
                 {
+                    // Foreground colour
                     if (m_blinkToggle || !flashing)
-                        paintDC.SetTextForeground(*fg); // Normal
-                    else
-                        paintDC.SetTextForeground(*bg); // Blink off
-                    paintDC.SetTextBackground(*bg);
-                    paintDC.DrawText(_(ch2),wxPoint(col*m_ttxW,row*m_ttxH));
-                    if (doubleheight)
                     {
-                        if (m_blinkToggle || !flashing)
-                            doubleHeightDC.SetTextForeground(*fg); // Normal
-                        else
-                            doubleHeightDC.SetTextForeground(*bg); // blink off
-                        doubleHeightDC.SetTextBackground(*bg);
+                        paintDC.SetTextForeground(*fg); // Normal
+                        doubleHeightDC.SetTextForeground(*fg); // Normal
+                    }
+                    else
+                    {
+                        paintDC.SetTextForeground(*bg); // Blink off
+                        doubleHeightDC.SetTextForeground(*bg); // blink off
+                    }
+                    // Background colour
+                    doubleHeightDC.SetTextBackground(*bg);
+                    paintDC.SetTextBackground(*bg);
+
+                    if (doubleHeight)
+                    {
                         doubleHeightDC.DrawText(_(ch2),wxPoint(col*m_ttxW,0));
                     }
+                    else // Single height
+                    {
+                        paintDC.DrawText(_(ch2),wxPoint(col*m_ttxW,row*m_ttxH));
+                        if (row<23)
+                            paintDC.DrawText(_(' '),wxPoint(col*m_ttxW,(row+1)*m_ttxH)); // Draw background in case this row contains a double height
+                    }
                 }
-                if (doubleheight)
+                if (doubleHeight)
                     paintDC.StretchBlit(wxPoint(col*m_ttxW,row*m_ttxH),wxSize(m_ttxW,m_ttxH*2), // dest
                                     &doubleHeightDC,
                                     wxPoint(col*m_ttxW,0),wxSize(m_ttxW,m_ttxH)); //src
@@ -735,7 +728,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     }
                     break;
                 case ttxCodeDoubleHeight : // Double height
-                    doubleheight=true;
+                    doubleHeight=true;
                     skipnextrow=true;   // ETSI: Don't use content from next row
                     if (m_ShowMarkup)
                     {

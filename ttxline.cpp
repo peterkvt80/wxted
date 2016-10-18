@@ -2,7 +2,7 @@
  * Description       : Class for a single teletext line
  * Compiler          : C++
  *
- * Copyright (C) 2014, Peter Kwan
+ * Copyright (C) 2014,2016 Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby

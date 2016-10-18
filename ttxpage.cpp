@@ -382,8 +382,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
     char m;
     for (std::string line; std::getline(filein, line, ','); )
     {
-        // This shows the command code:
-        std::cout << line << std::endl;
+        // std::cout << line << std::endl; // Shows the command code
         bool found=false;
         for (int i=0;i<cmdCount && !found; i++)
         {
@@ -985,8 +984,15 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
     ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
 
 
-    for (int i=0;i<=MAXROW;i++)
+    // The order is weird.
+    // First output row 0
+    // Then the enhancement packets
+    // Then the normal text rowa
+    std::string s=p->m_pLine[0]->GetMappedline7bit();
+    ttxfile << "OL," << std::dec << 0 << "," << s << "\n";
+    for (int j=0;j<MAXROW;j++)
     {
+        int i=1+((24+j) % MAXROW); // Ensure that enhancement packets go out first. It helps with vbit
         if (p->m_pLine[i]!=NULL && !p->m_pLine[i]->IsBlank()) // Skip empty lines
         {
             // This one for Andreas
