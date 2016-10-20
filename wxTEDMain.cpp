@@ -1015,7 +1015,8 @@ void wxTEDFrame::m_SetStatus()
     StatusBar1->SetLabelText(str.str());
 }
 
-wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
+wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
+    : m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
  , m_dragging(false), m_MarqueeStart(wxPoint(0,0)), m_currentPage(NULL)
 {
     // std::cout << "[wxTEDFrame] Entered" << std::endl;
@@ -1219,7 +1220,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id) : m_ttxW(15), m_ttxH(20),
     m_resize(GetSize()); // Adjust the font to fit the available space
 
     /* Initial page */
-    m_currentPage=m_rootPage = new TTXPage("BBC100.tti","");
+    m_currentPage=m_rootPage = new TTXPage(initialPage.ToStdString(),"");
     m_setLanguage();
 
     iPageCount=m_rootPage->GetPageCount();

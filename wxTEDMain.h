@@ -56,7 +56,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.23")
+#define VERSION_STRING   wxT("1.24")
 
 // ftp
 #include <wininet.h>
@@ -72,7 +72,7 @@ class wxTEDFrame: public wxFrame
 {
     public:
 
-        wxTEDFrame(wxWindow* parent,wxWindowID id = -1);
+        wxTEDFrame(wxWindow* parent,wxWindowID id = -1, wxString initialPage="BBC100.tti");
         virtual ~wxTEDFrame();
         inline TTXPage* Page(){return m_rootPage;};
 
