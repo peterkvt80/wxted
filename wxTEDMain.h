@@ -56,7 +56,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.24")
+#define VERSION_STRING   wxT("1.25")
 
 // ftp
 #include <wininet.h>

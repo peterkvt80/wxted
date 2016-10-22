@@ -404,8 +404,13 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     /* Fill the background */
     paintDC.SetPen(*wxTRANSPARENT_PEN);
-    paintDC.SetBrush(wxBrush(*wxBLACK_BRUSH));
     doubleHeightDC.SetPen(*wxTRANSPARENT_PEN);
+    if (m_ShowMarkup)
+    {
+        doubleHeightDC.SetPen(*wxGREY_PEN);
+        paintDC.SetPen(*wxGREY_PEN);
+    }
+    paintDC.SetBrush(wxBrush(*wxBLACK_BRUSH));
     doubleHeightDC.SetBrush(wxBrush(*wxBLACK_BRUSH));
     int w,h;
     paintDC.GetSize(&w, &h);
@@ -416,13 +421,14 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     paintDC.SetBackgroundMode(wxSOLID); // Otherwise the background colour is transparent!
     doubleHeightDC.SetBackgroundMode(wxSOLID); // Otherwise the background colour is transparent!
 
-    wxColour* magenta=new wxColour(255,0,255); // remember to delete this
+    wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
     /* page */
     TTXPage* p=m_currentPage; // Load the page. Current page could be a subpages
     int firstRow=1;
     if (MenuItemShowHeader->IsChecked())
         firstRow=0;
     TTXLine row0;
+
     for (unsigned int row=firstRow;row<25;row++)
     {
         bool graphicsMode=false;
@@ -547,7 +553,6 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 {
                     int j=0x01;
                     // If we send a new mosaic code while in hold, it replaces the current mosaic.
-                    // This fixes the Oracle P689 christmas bug
                     if (hold)
                     {
                         ch=holdChar;  // Carry on hold
@@ -669,7 +674,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     }
                     break;
                 case ttxCodeAlphaMagenta :
-                    fg=magenta; // wxMAGENTA
+                    fg=magenta;
                     concealed=false;
                     graphicsMode=false;
                     if (m_ShowMarkup)
@@ -868,16 +873,18 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     break;
 
                 default:;
+
+#if 0
                     // If this is a graphics cell, draw the cell outline
                     if (graphicsMode && m_ShowMarkup)
                     {
                         paintDC.SetPen(*wxGREY_PEN);
-#if 0
+                        paintDC.SetPen(*wxBLUE_PEN);
                         paintDC.DrawLine(col*m_ttxW,row*m_ttxH,(col+1)*m_ttxW,(row+1)*m_ttxH);
-#endif
                         //paintDC.DrawText('g',wxPoint(col*m_ttxW,row*m_ttxH)); // (r)elease
 
                     }
+#endif
                 }//case
 
             } // each character on this row
@@ -886,9 +893,10 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         } // row not null?
         /* else
             std::cout << "row is null " << row << std::endl; */
-    }
+    } // For each text row
     delete magenta;
     // cursor
+
     if (m_blinkToggle==true)
     {
         paintDC.SetPen(*wxBLACK_PEN); // outline on
@@ -896,13 +904,13 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
             // In the current page, get the line that the cursor is on, and test if it is double height
         bool doubleHeight;
         doubleHeight=m_currentPage->GetRow(m_cursorPoint.y)->IsDoubleHeight(); // @todo Extend to deal with double height transitions.
-        if (m_cursorIsAlpha)
+        if (m_cursorIsAlpha) // Alpha cursor
         {
             paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH),wxSize(m_ttxW,m_ttxH));
             if (doubleHeight)
                 paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH),wxSize(m_ttxW,m_ttxH*2));
         }
-        else
+        else // Graphics cursor
         {
             int halfw=m_ttxW/2;
             int thirdh=m_ttxH/3;
@@ -920,7 +928,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
         }
         paintDC.SetPen(*wxTRANSPARENT_PEN);
-    }
+    } // cursor
+
     m_SetStatus();
 
     // Marquee.
@@ -1044,7 +1053,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     wxMenuBar* MenuBar1;
 
     Create(parent, wxID_ANY, _("wxTED 1.22"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
-    wxFont thisFont(10,wxSWISS,wxFONTSTYLE_NORMAL,wxNORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
+    wxFont thisFont(10,wxFONTFAMILY_SWISS,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
     Notebook1 = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxSize(400,24), 0, _T("ID_NOTEBOOK1"));
     Notebook1->Disable();
