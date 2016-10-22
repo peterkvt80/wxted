@@ -176,6 +176,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
         // tev=m_currentPage->GetUndo();
         m_currentPage->Undo(m_cursorPoint);
         break;
+    case WXK_CONTROL:
+        break;
     default:
         m_currentPage->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
     }
@@ -870,8 +872,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     if (graphicsMode && m_ShowMarkup)
                     {
                         paintDC.SetPen(*wxGREY_PEN);
+#if 0
                         paintDC.DrawLine(col*m_ttxW,row*m_ttxH,(col+1)*m_ttxW,(row+1)*m_ttxH);
-
+#endif
                         //paintDC.DrawText('g',wxPoint(col*m_ttxW,row*m_ttxH)); // (r)elease
 
                     }
@@ -1912,7 +1915,8 @@ wxString wxTEDFrame::GetTextFromClipboard()
 
 /** Paste
  * One sneaky trick, is if the URL starts
- * http://editor.teletext40.com
+ * http://editor.teletext40.com (obsolete)
+ * http://edit.tf (current)
  * then we assume that the clipboard contains a URL from the teletext40 editor and should be decoded as such.
  */
 void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)

@@ -625,8 +625,10 @@ void TTXPage::SetRow(unsigned int rownumber, std::string line)
         m_pLine[rownumber]->Setm_textline(line);
 }
 
-void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldchar, char newchar)
+void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldChar, char newChar)
 {
+    if (oldChar==newChar) // No change?
+        return;
     TEDEvent* tev=new TEDEvent(evt);
     CharChange* cc=NULL;
     if (undoList==NULL) // First time we need to set the root
@@ -644,13 +646,13 @@ void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldchar, char newchar)
     {
     case EventNone:
         break;
-    case EventSave :    // Save to file
+    case EventSave :    // Save to file (@todo)
         break;
     case EventKey :     // Keyboard press
         cc=new CharChange(); // A bit redundant. This is always executed
         tev->SetCharList(cc);
         // tev->SetCharList(cc); // not correct. Need to add to the end of the list NOT the root
-        cc->AddChange(wxc,oldchar,newchar);
+        cc->AddChange(wxc,oldChar,newChar);
         break;
     case EventLanguage :     // No idea
         break;
@@ -753,6 +755,29 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_CONTROL_B: ch=ttxCodeNewBackground;break;      // Ctrl-B:
             case WXK_CONTROL_W: ch=ttxCodeHoldGraphics;break;       // Ctrl-W:
             case WXK_CONTROL_X: ch=ttxCodeReleaseGraphics;break;    // Ctrl-X:
+                        // Also want to delete!
+
+            case WXK_DELETE:
+                // Delete the whole row
+                for (cursorLoc.x=0;cursorLoc.x<40;cursorLoc.x++)
+                {
+                    AddEvent(EventKey,cursorLoc,line->GetCharAt(cursorLoc.x),' ');
+                }
+                cursorLoc.x=0;
+                line->ClearLine();
+                std::cout << "TODO: [1] Implement AddChange " << std::endl;
+                ch=0;
+                break;
+            // Would like to implement CTRL-ENTER, but no dice ;-(
+
+/*            case WXK_RETURN:
+                // Move to start of next row
+                cursorLoc.x=0;
+                if (cursorLoc<23)
+                    cursorLoc.y++;
+                ch=0;
+                break;
+                */
             default: ch=0;
         }
         if (ch>0)
@@ -923,10 +948,13 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                     }
                     else
                     {
+                        char bit=0;
+                        char ch1=' ';
                         // If space was pressed in graphics mode then toggle the current pixel colour
-                        if (code==WXK_SPACE)
+                        switch (code)
                         {
-                            char bit=0x00;
+                        case WXK_SPACE: // Toggle a graphics pixel
+                            bit=0x00;
                             std::cout << "Toggle a graphics pixel" << std::endl;
                             switch (cursorSubLoc.x+cursorSubLoc.y*2)
                             {
@@ -937,11 +965,21 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                             case 4: bit=0x10;break;
                             case 5: bit=0x40;break;
                             }
-                            char ch1;
+                            break;
+                        // qwaszx editing keys, one for each pixel in graphics mode
+                        case 'q': bit=0x01;break;
+                        case 'w': bit=0x02;break;
+                        case 'a': bit=0x04;break;
+                        case 's': bit=0x08;break;
+                        case 'z': bit=0x10;break;
+                        case 'x': bit=0x40;break;
+                        default:bit=0;
+                        }
+                        if (bit>0) // If it was a graphic change, record it
+                        {
                             char oldChar=line->SetCharAt(cursorLoc.x,ch1=line->GetLine()[cursorLoc.x]^bit);
                             AddEvent(EventKey,cursorLoc,oldChar,ch1);
                         }
-                        else std::cout << "Key ignored" << std::endl;
                     }
                 }
             }
@@ -954,18 +992,18 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
         // Deal with control codes that we might get sent
         // Backspace, line feed, carriage return. A lot of stuff to trap
         char oldChar;
+        std::cout << "[TTXPage::SetCharAt]TRACE 1" << std::endl;
         switch (code)
         {
         case WXK_BACK : // backspace 8
-            // Also want to delete!
             if (cursorLoc.x>0) cursorLoc.x--;   // Move left if possible
             oldChar=line->SetCharAt(cursorLoc.x,' ');   // And clear the character that we land on
-            std::cout << "TODO: Implement AddChange " << oldChar<< std::endl;
+            AddEvent(EventKey,cursorLoc,oldChar,' ');
             break;
         case WXK_RETURN : // Double height
             oldChar=line->SetCharAt(cursorLoc.x,'\r');   // Insert a double height
             if (cursorLoc.x<39) cursorLoc.x++;   // Move right if possible
-            std::cout << "TODO: Implement AddChange " << oldChar << std::endl;
+            AddEvent(EventKey,cursorLoc,oldChar,'\r');
         default:
             std::cout << "This key code is not implemented: " << code << std::endl;
         }

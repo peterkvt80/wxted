@@ -3,7 +3,7 @@
  * Purpose:   Defines Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
- * Copyright: Peter Kwan (http://www.teastop.co.uk)
+ * Copyright: Peter Kwan (http://www.teastop.co.uk) 2014-2016
  * License:
  *
  * Copyright (C) 2014-2016, Peter Kwan

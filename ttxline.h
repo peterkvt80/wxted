@@ -69,6 +69,10 @@ class TTXLine
          */
         bool IsAlphaMode(int loc);
 
+        /** Clear the current line. (Used by CTRL-DEL)
+         */
+        void ClearLine(){m_textline="                                        ";};
+
     protected:
     private:
         unsigned int m_Counter; //!< Member variable "m_Counter"
