@@ -1238,10 +1238,19 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     iPageCount=m_rootPage->GetPageCount();
     iPage=0;
 
-    SetTitle(_("wxTED ")+VERSION_STRING);
+    std::cerr  << "[wxTEDFrame::wxTEDFrame]initialPage=" << initialPage << std::endl;
 
-    m_rootPage->SetSourcePage(""); // Prevent an accidental Save
-
+    if (initialPage=="BBC100.tti") // Started with default page
+    {
+      SetTitle(_("wxTED ")+VERSION_STRING);
+      m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
+    }
+    else // Started with a page argument
+    {
+      // Typically when a page file is double clicked.
+      MenuItemSave->Enable(true);
+      SetTitle(initialPage.ToStdString());
+    }
 
     SetBackgroundStyle(wxBG_STYLE_PAINT);
 
@@ -1364,7 +1373,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg="Cross platform teletext editor\n(c) 2014-2015, Peter Kwan.\nteastop.co.uk/teletext/wxted";
+    wxString msg="Cross platform teletext editor\n(c) 2014-2016, Peter Kwan.\nteastop.co.uk/teletext/wxted";
     wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 
@@ -1434,9 +1443,9 @@ void wxTEDFrame::OnKillFocus(wxFocusEvent& event)
 
 void wxTEDFrame::OnSetFocus(wxFocusEvent& event)
 {
-    //std::cout << "Got focus" << std::endl;;
-    m_focused=true;
-    event.Skip(true); // allow default handling
+  //std::cout << "Got focus" << std::endl;;
+  m_focused=true;
+  event.Skip(true); // allow default handling
 }
 
 void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
