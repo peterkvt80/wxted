@@ -24,4 +24,8 @@ Edit index.html to reflect the new file.
 Upload the changed files to the home page for wxTED at
 http://teastop.co.uk/teletext/wxted/
 
+Attention
+=========
+Each year update the copyright year.
+
 

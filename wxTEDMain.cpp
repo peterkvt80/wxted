@@ -1318,7 +1318,8 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     // std::cout << "the filename was " << filename << std::endl;
     // std::cout << "Loading a teletext page " << str << std::endl;
     m_rootPage = new TTXPage(str,filename.ToStdString());
-    MenuItemSave->Enable(true);
+
+    MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
 
     iPageCount=m_rootPage->GetPageCount();
 
@@ -1942,7 +1943,7 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
    wxString wxs;
    wxs=GetTextFromClipboard();
    /// @todo Make this more general to identify a valid hash string
-   if ((wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) ||  // Paste a teletext40 URL?
+   if ((wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) ||  // Paste obsolete teletext40 URL?
     (wxs.Find("www.uniquecodeanddata.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a uniquecodeandadata URL?
     (wxs.Find("edit.tf")!=wxNOT_FOUND))     // Paste edit.tf URL?
    {

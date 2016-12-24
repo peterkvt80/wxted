@@ -38,7 +38,7 @@
      char line[40];
      char* pos;
     // for (int i=0;i<40;i++)line[i]=0;
-     for (uint16_t i=0; i<1120; i++)
+     for (uint16_t i=0; i<1167; i++)
      {
         char ch=*hashstring ;
         hashstring++;
@@ -123,7 +123,7 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[24][40])
 	// Encode bit-for-bit.
 	uint8_t sz=strlen(encoding);
 	char base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-	for ( uint16_t i = 0; i < 1120; i++ )
+	for ( uint16_t i = 0; i < 1167; i++ )
     {
 		encoding[i+sz] = base64[((int)b64[i]) ];
 	}

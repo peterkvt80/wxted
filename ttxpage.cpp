@@ -532,29 +532,50 @@ bool TTXPage::m_LoadTTI(std::string filename)
  */
 TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NULL), m_current(NULL)
 {
-    //std::cout << "[TTXPage] file constructor" << std::endl;
-    m_Init();
-    SetSourcePage(filename);
-    SetShortFilename(shortFilename);
-    // Try all the possible formats.
+  //std::cout << "[TTXPage] file constructor" << std::endl;
+  m_Init();
+  SetSourcePage(filename);
+  SetShortFilename(shortFilename);
+  // Try all the possible formats.
 
-    if (!m_loaded)
-        if (m_LoadTTI(filename))
-            m_loaded=true;
+  int type=1;
+  SetRow(3,shortFilename);
 
-    if (!m_loaded)
-        if (m_LoadVTX(filename))
-            m_loaded=true;
+  if (!m_loaded)
+      if (m_LoadTTI(filename))
+          m_loaded=true;
 
+  if (!m_loaded)
+  {
+    if (m_LoadVTX(filename))
+      m_loaded=true;
+    type++;
+  }
+
+  if (!m_loaded)
+  {
     if (m_LoadEP1(filename))
+      m_loaded=true;
+    type++;
+  }
+
+  if (!m_loaded)
+  {
+    if (m_LoadTTX(filename))
         m_loaded=true;
+    type++;
+  }
 
-    if (!m_loaded)
-        if (m_LoadTTX(filename))
-            m_loaded=true;
+  if (!m_loaded)
+  {
+    SetRow(1,"Unable to load file");
+    SetRow(3,shortFilename);
+    SetSourcePage("Unable to load page");
+    SetShortFilename("no page");
+  }
 
-    TTXPage::pageChanged=false;
-    std::cout << "Finished reading page. Loaded=" << m_loaded << std::endl;
+  TTXPage::pageChanged=false;
+  std::cout << "Finished reading page. Loaded=" << m_loaded << " type=" << std::endl;
 }
 
 
@@ -1036,7 +1057,7 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
             // This one for Andreas
 //             std::string s=p->m_pLine[i]->GetMappedline(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
             // This one for Droidfax compatibility
-            std::string s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+            s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
             ttxfile << "OL," << std::dec << i << "," << s << "\n";
         }
     }

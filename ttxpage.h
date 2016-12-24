@@ -57,6 +57,11 @@ class TTXPage
          */
         TTXPage(const TTXPage& other);
 
+        /**
+         * \return true if the page has been loaded
+         */
+        bool IsLoaded(){return m_loaded;};
+
         /** Assignment operator
          *  \param other Object to assign from
          *  \return A reference to this
@@ -245,8 +250,8 @@ icular location
 
         /** @brief Should check this before closing a page
          */
-        inline bool PageChanged(){return pageChanged;};
-        static bool pageChanged;         // / True if we have done some edits
+        bool PageChanged(){return pageChanged;};
+        static bool pageChanged;         // / True if we have done some edits (on any subpage)
 
     protected:
     private:
