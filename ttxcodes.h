@@ -31,7 +31,7 @@ enum ttxCodes {
     ttxCodeGraphicsCyan = 22,       // Ctrl-F6
     ttxCodeGraphicsWhite = 23,      // Ctrl-F7
     ttxCodeConcealDisplay = 24,     // Ctrl-R
-    ttxCodeContiguousGraphics = 25, // Ctrl-Y
+    ttxCodeContiguousGraphics = 25, // Ctrl-D (was Ctrl-Y)
     ttxCodeSeparatedGraphics = 26,  // Ctrl-T
     ttxCodeSwitch = 27,              // ESC Toggles between the first and second G0 sets defined by packets X/28/0 Format 1, X/28/4, M/29/0 or M/29/4.
     ttxCodeBlackBackground = 28,    // Ctrl-U

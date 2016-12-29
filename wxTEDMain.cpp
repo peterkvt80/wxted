@@ -711,6 +711,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                         paintDC.DrawText(_((wxChar)L'\xEFC6'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic f
                     }
                     break;
+                case ttxCodeSteady :
+                    if (m_ShowMarkup)
+                    {
+                        paintDC.SetTextForeground(*wxWHITE);
+                        paintDC.DrawText(_((wxChar)L'\xEFC9'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic i
+                    }
                 case ttxCodeEndBox :
                     std::cout << "End Box not implemented" << std::endl;
                     if (m_ShowMarkup)

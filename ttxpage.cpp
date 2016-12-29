@@ -762,15 +762,16 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_F7: ch=ttxCodeGraphicsWhite;break;
             case WXK_F8: ch=ttxCodeGraphicsBlack;break;
             // Special codes
+            // A=select all
             case WXK_CONTROL_H: ch=ttxCodeFlash;break;          // Ctrl-H: flash
             case WXK_CONTROL_I: ch=ttxCodeSteady;break;         // Ctrl-I: steady
             case WXK_CONTROL_J: ch=ttxCodeEndBox;break;         // Ctrl-J: end box
-            case WXK_CONTROL_K: ch=ttxCodeStartBox;break;       // Ctrl-K: stsrt box
+            case WXK_CONTROL_K: ch=ttxCodeStartBox;break;       // Ctrl-K: start box
             case WXK_CONTROL_L: ch=ttxCodeNormalHeight;break;   // Ctrl-L: normal height // :-(
             case WXK_CONTROL_M: ch=ttxCodeDoubleHeight;break;   // Ctrl-M: double height
 
             case WXK_CONTROL_R: ch=ttxCodeConcealDisplay;break;     // Ctrl-R: conceal display
-            case WXK_CONTROL_Y: ch=ttxCodeContiguousGraphics;break; // Ctrl-Y:
+            case WXK_CONTROL_D: ch=ttxCodeContiguousGraphics;break; // Ctrl-D: (was CTRL-Y)
             case WXK_CONTROL_T: ch=ttxCodeSeparatedGraphics;break;  // Ctrl-T:
             case WXK_CONTROL_U: ch=ttxCodeBlackBackground;break;    // Ctrl-U:
             case WXK_CONTROL_B: ch=ttxCodeNewBackground;break;      // Ctrl-B:
