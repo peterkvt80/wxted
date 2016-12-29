@@ -165,7 +165,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     case WXK_F11: // Reveal concealed text
         m_reveal=!m_reveal;
         break;
-    case WXK_CONTROL_Y:
+    case WXK_CONTROL_Y: // Ah. This is why we can't use CTRL-Y as a special key. This was for debugging undo.
         // std::cout << "CTRL-Y test" << std::endl; // Testing
         tev=m_currentPage->GetUndo();
         if (tev!=NULL)
@@ -551,6 +551,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
                 if (graphicsMode && (isMosaic(ch) || hold) ) // Draw graphics. Either mosaic (but not capital A..Z) or in hold mode
                 {
+
                     int j=0x01;
                     // If we send a new mosaic code while in hold, it replaces the current mosaic.
                     if (hold)
@@ -578,6 +579,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                             paintDC.SetBrush(wxBrush(*bg));
                             doubleHeightDC.SetBrush(*bg); // off
                         }
+
                         j<<=1;
                         if (j==0x20) j<<=1; // Skip the alphabet exception
                         int k=separated?-2:1; // Add or subtract a line
@@ -909,7 +911,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         paintDC.SetBrush(wxBrush(*wxWHITE));
             // In the current page, get the line that the cursor is on, and test if it is double height
         bool doubleHeight;
-        doubleHeight=m_currentPage->GetRow(m_cursorPoint.y)->IsDoubleHeight(); // @todo Extend to deal with double height transitions.
+        doubleHeight=m_currentPage->GetRow(m_cursorPoint.y)->IsDoubleHeight(m_cursorPoint.x); // @todo Extend to deal with double height transitions.
         if (m_cursorIsAlpha) // Alpha cursor
         {
             paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH),wxSize(m_ttxW,m_ttxH));
@@ -918,6 +920,15 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         }
         else // Graphics cursor
         {
+            // Outline the whole character location, but 2 lines bigger.
+            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,m_cursorPoint.y*m_ttxH-2), // left
+                                      wxSize(2,m_ttxH+4));
+            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,m_cursorPoint.y*m_ttxH-2), // top
+                                      wxSize(m_ttxW+4,2));
+            paintDC.DrawRectangle(wxPoint((m_cursorPoint.x+1)*m_ttxW,m_cursorPoint.y*m_ttxH-2), // right
+                                      wxSize(2,m_ttxH+4));
+            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,(m_cursorPoint.y+1)*m_ttxH), // bottom
+                                      wxSize(m_ttxW+4,2));
             int halfw=m_ttxW/2;
             int thirdh=m_ttxH/3;
             if (doubleHeight)

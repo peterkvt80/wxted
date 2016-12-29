@@ -33,8 +33,9 @@ class TTXLine
 
         /** True if the line is double height
          * @todo This is not good enough. Need to know the state at a particular point on a line. Add a character position parameter.
+         * @param xLoc Location of the character we want to know if it is double height. (default 39)
          */
-        bool IsDoubleHeight();
+        bool IsDoubleHeight(int xLoc);
 
         /**
          * @brief Check if the line is blank so that we don't bother to write it to the file.

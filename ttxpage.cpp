@@ -872,6 +872,14 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             {
                 if (cursorLoc.y>yMin) // 1 (no header) or 0 (header)
                 {
+                    // If we would move into the lower row of a double height, we need to decrement twice.
+                    if (cursorLoc.y>2)
+                    {
+                      if (GetRow(cursorLoc.y-2)->IsDoubleHeight(cursorLoc.x))
+                      {
+                        cursorLoc.y--;
+                      }
+                    }
                     cursorLoc.y--;
                     cursorSubLoc.y=2;
                     if (cursorLoc.x<8 && cursorLoc.y==0) cursorLoc.x=8; // Don't stumble into forbidden header area
@@ -879,6 +887,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             }
             else
             {
+              // @todo Implement up arrow across double height graphics. (was anyone daft enough to use this?)
                 switch (cursorSubLoc.y)
                 {
                 case 0:
@@ -902,12 +911,18 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             {
                 if (cursorLoc.y<24)
                 {
+                    // If the last location was the top of a double height, we need to increment twice.
+                    if (GetRow(cursorLoc.y)->IsDoubleHeight(cursorLoc.x) && cursorLoc.y<23)
+                    {
+                      cursorLoc.y++;
+                    }
                     cursorLoc.y++;
                     cursorSubLoc.y=0;
                 }
             }
             else
             {
+                // @todo Implement up/down over graphic areas.
                 switch (cursorSubLoc.y)
                 {
                 case 0:;
