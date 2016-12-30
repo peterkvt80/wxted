@@ -73,6 +73,7 @@
             }
         }
      }
+     // @todo At this point, if the first row contains a page number in the right place, use it as an initial value
  }
 
 // Similarly, we want to save the page to the hash. This simply
@@ -81,7 +82,7 @@
 /**
  * \param cset A character set 0-Eng 1-Ger 2-Swe 3-Ita 4-Bel 5-ASCII 6=Heb 7=Cyr
  */
-void save_to_hash(int cset, char* encoding, uint8_t cc[24][40])
+void save_to_hash(int cset, char* encoding, uint8_t cc[25][40])
 {
 
 	// Construct the metadata as described above.
@@ -93,28 +94,26 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[24][40])
 
 	// Construct a base-64 array by iterating over each character
 	// in the frame.
-	uint8_t b64[1200];
-	for (uint16_t i=0;i<1200;i++) b64[i]=0;
+	uint8_t b64[1300];
+	for (uint16_t i=0;i<1300;i++) b64[i]=0;
 	uint16_t framebit=0;
-	for ( uint8_t r=0; r<24; r++ )
+	for (uint8_t r=0; r<25; r++) // Now include fastext
 	{
-		for ( uint8_t c=0; c<40; c++ )
+		for (uint8_t c=0; c<40; c++)
 		{
-            char ch=cc[r][c];
-			for ( uint8_t b=0; b<7; b++ ) // 7 bits per teletext character
-            {
-
-
+      char ch=cc[r][c];
+			for (uint8_t b=0; b<7; b++) // 7 bits per teletext character
+      {
 				// Read a bit and write a bit.
 				uint8_t bitval = ch & ( 1 << ( 6 - b ));
 				if (bitval)
-                {
-                    // Work out the position of the character in the
-                    // base-64 encoding and the bit in that position.
-                    uint16_t b64bitoffset = framebit % 6;
-                    uint16_t b64charoffset = ( framebit - b64bitoffset ) / 6;
-                    b64[b64charoffset] |= 1 << ( 5 - b64bitoffset );
-                }
+        {
+          // Work out the position of the character in the
+          // base-64 encoding and the bit in that position.
+          uint16_t b64bitoffset = framebit % 6;
+          uint16_t b64charoffset = ( framebit - b64bitoffset ) / 6;
+          b64[b64charoffset] |= 1 << ( 5 - b64bitoffset );
+        }
 				framebit++;
 			}
 		}
@@ -123,10 +122,10 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[24][40])
 	// Encode bit-for-bit.
 	uint8_t sz=strlen(encoding);
 	char base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-	for ( uint16_t i = 0; i < 1167; i++ )
-    {
+	for (uint16_t i = 0; i < 1167; i++)
+  {
 		encoding[i+sz] = base64[((int)b64[i]) ];
 	}
-	encoding[1120+sz]=0;
+	encoding[1167+sz]=0;
 }
 

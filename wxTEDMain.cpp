@@ -2160,29 +2160,45 @@ void wxTEDFrame::OnMenuSpecialKeys(wxCommandEvent& event)
 void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
 {
 
-    // Extract a character array
-    uint8_t cc[24][40];
-    for (uint8_t y=0;y<24;y++)
+  // Extract a character array
+  uint8_t cc[25][40];
+  for (uint8_t y=0;y<25;y++)
+  {
+    TTXLine* line=m_currentPage->GetRow(y);
+    for (uint8_t x=0;x<40;x++)
     {
-        TTXLine* line=m_currentPage->GetRow(y);
-        for (uint8_t x=0;x<40;x++)
-        {
-            uint8_t c=line->GetCharAt(x) & 0x7f;
-            cc[y][x]=c;
-        }
+        uint8_t c=line->GetCharAt(x) & 0x7f;
+        cc[y][x]=c;
     }
-    // Convert to a teletext 40 URL
-    // TODO: Implement character set
-    char page[1200];
-    save_to_hash(1, page,cc);
-    CopyTextToClipboard(page);
-    // Launch a browser with the URL
-    // Widen the URL
-    std::wstring w;
-    std::copy(page,page+strlen(page),back_inserter(w));
-    const wchar_t *wstr = w.c_str();
+    //@todo Implement page number substitution for row 0 header
+    if (y==0)
+    {
+      for (int i=0;i<8;i++) // First 8 characters are not taken from the header
+          cc[y][i]=' ';
+      int k=m_rootPage->GetPageNumber()/0x100;
+      if (k<0x100 && k>0x8ff)
+          k=0x100;
+      std::ostringstream val;
+      val << std::hex << k;
+      cc[y][0]='P';
+      cc[y][1]=val.str()[0];
+      cc[y][2]=val.str()[1];
+      cc[y][3]=val.str()[2];
+      //str.replace(1,3,val.str()); // Replace the first 4 characters with the page number
+    }
+  }
+  // Convert to a teletext 40 URL
+  // TODO: Implement character set
+  char page[1300];
+  save_to_hash(1, page,cc);
+  CopyTextToClipboard(page);
+  // Launch a browser with the URL
+  // Widen the URL
+  std::wstring w;
+  std::copy(page,page+strlen(page),back_inserter(w));
+  const wchar_t *wstr = w.c_str();
 
-    ShellExecute (NULL, L"open", wstr, NULL, NULL, SW_SHOWNORMAL);
+  ShellExecute (NULL, L"open", wstr, NULL, NULL, SW_SHOWNORMAL);
 }
 
 void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
