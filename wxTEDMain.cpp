@@ -2184,7 +2184,6 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
       cc[y][1]=val.str()[0];
       cc[y][2]=val.str()[1];
       cc[y][3]=val.str()[2];
-      //str.replace(1,3,val.str()); // Replace the first 4 characters with the page number
     }
   }
   // Convert to a teletext 40 URL
