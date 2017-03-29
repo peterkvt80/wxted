@@ -138,10 +138,12 @@ std::string TTXLine::GetMappedline7bit()
 bool TTXLine::IsDoubleHeight(int xLoc=39)
 {
   bool doubleHeight=false;
+  unsigned int x=xLoc;
   // If the line we are testing isn't long enough, just check the last character.
-  if (m_textline.length()<xLoc)
-    xLoc=m_textline.length()-1;
-  for (unsigned int i=0;i<=xLoc;i++)
+  // std::cout << m_textline << std::endl;
+  if (m_textline.length()<x)
+    x=m_textline.length()-1;
+  for (unsigned int i=0;i<=x;i++)
   {
     if (m_textline[i]=='\r' || m_textline[i]==0x10)
         doubleHeight=true;

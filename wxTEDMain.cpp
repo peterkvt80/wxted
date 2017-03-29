@@ -148,6 +148,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     {
     case WXK_PAGEUP:
         // std::cout << "Page up will get next page of a multiple page carousel" << std::endl;
+        if ( m_cursorPoint.y<1) // @todo Temporary hack to stop crash, when going up one page while on row 0.
+           m_cursorPoint.y=1;
         iPageCount=m_rootPage->GetPageCount();
         iPage++;
         if (iPage>=iPageCount) iPage=iPageCount-1;
@@ -253,6 +255,7 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
     // Magazine and page number
     i=str.find("mpp");
     if (i<=0) i=str.find("%%#");
+    if (i<=0) i=str.find("%%£");
     if (i>0)
     {
         str.replace(i,3,val.str());
@@ -454,7 +457,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
             if (line==NULL)
             {
-                p->SetRow(row,"XXXXXXXXTEDFAX mpp DAY dd MTH \x3 hh:nn.ss"); // Could put in a sample header here
+                p->SetRow(row,"XXXXXXXXTEEFAX mpp DAY dd MTH \x3 hh:nn.ss"); // Could put in a sample header here
                 //             aaaaaaaaaabbbbbbbbbbccccccccccd  ddddddddd
                 line=p->GetRow(row);
             }
@@ -463,7 +466,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
             GenerateHeader(line);
         }
 
-        // std::cout << "Trace 4" << std::endl;
+        //std::cout << "Trace 4" << std::endl;
         if (line!=NULL)
         {
             std::string str=line->GetLine();
