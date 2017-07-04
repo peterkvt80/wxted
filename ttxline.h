@@ -76,9 +76,9 @@ class TTXLine
 
     protected:
     private:
+        std::string validate(std::string const& test);
         unsigned int m_Counter; //!< Member variable "m_Counter"
         std::string m_textline;
-        std::string validate(std::string const& test);
 
 };
 

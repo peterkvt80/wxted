@@ -634,6 +634,8 @@ TTXLine* TTXPage::GetRow(unsigned int row)
     // Don't create row 0, as that is special.
     if (line==NULL && row>0)
         line=m_pLine[row]=new TTXLine("                                        ");
+    if (line==NULL)
+      std::cout << "[TTXPage::GetRow] returning NULL " << std::endl;
     return line;
 }
 

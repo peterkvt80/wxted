@@ -22,58 +22,64 @@
  void load_from_hash(TTXPage* page, char* str)
  {
      const char base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+     char* hashstring=strchr(str,'#'); // Find the start of hash string
      // @todo Get the metadata
-     // Find the start of data
-     char* hashstring=strrchr(str,':');
-     // Is it valid length?
-     hashstring++;
-     uint16_t len=strlen(hashstring);
-     if (len<1120) return;
 
-     // Initialise before the loop
-     uint8_t currentCode=0;
-     uint8_t outBit=0x40;
-     uint8_t outCol=0;
-     uint8_t outRow=0; // Teletext40 uses the header row
-     char line[40];
-     char* pos;
-    // for (int i=0;i<40;i++)line[i]=0;
-     for (uint16_t i=0; i<1167; i++)
-     {
-        char ch=*hashstring ;
-        hashstring++;
-        pos=strchr(base64,ch);
-        if (pos==NULL)
-        {
-            std::cout << "can not find character " << ch << std::endl;
-        }
-        uint32_t code=(pos-base64) &0xff;
+     if (hashstring){
+         hashstring=strchr(hashstring,':');// move past metadata
+         if (hashstring){
+             // Is it valid length?
+             hashstring++;
+             uint16_t len=strlen(hashstring);
+             if (len<1120) return;
 
-        for (uint8_t b=0x20;b>0;b>>=1) // Source bit mask
-        {
-            if ((b&code)>0)
-            {
-                currentCode|=outBit;
-            }
-            outBit>>=1; // next output bit
-            if (outBit==0) // Character done?
-            {
-                assert(currentCode<0x80);
-                line[outCol]=currentCode; // Save the character
-                currentCode=0;
-                outBit=0x40;
-                assert(outCol<40);
-                outCol++;   // next column
-                if (outCol>=40)
+             // Initialise before the loop
+             uint8_t currentCode=0;
+             uint8_t outBit=0x40;
+             uint8_t outCol=0;
+             uint8_t outRow=0; // Teletext40 uses the header row
+             char line[40];
+             char* pos;
+            // for (int i=0;i<40;i++)line[i]=0;
+             for (uint16_t i=0; i<1167; i++)
+             {
+                char ch=*hashstring ;
+                hashstring++;
+                pos=strchr(base64,ch);
+                if (pos==NULL)
                 {
-                    page->SetRow(outRow,std::string(line));
-                    outCol=0;
-                    outRow++;
+                    std::cout << "can not find character " << ch << std::endl;
                 }
-            }
-        }
+                uint32_t code=(pos-base64) &0xff;
+
+
+                for (uint8_t b=0x20;b>0;b>>=1) // Source bit mask
+                {
+                    if ((b&code)>0)
+                    {
+                        currentCode|=outBit;
+                    }
+                    outBit>>=1; // next output bit
+                    if (outBit==0) // Character done?
+                    {
+                        assert(currentCode<0x80);
+                        line[outCol]=currentCode; // Save the character
+                        currentCode=0;
+                        outBit=0x40;
+                        assert(outCol<40);
+                        outCol++;   // next column
+                        if (outCol>=40)
+                        {
+                            page->SetRow(outRow,std::string(line));
+                            outCol=0;
+                            outRow++;
+                        }
+                    }
+                }
+             }
+             // @todo At this point, if the first row contains a page number in the right place, use it as an initial value
+         }
      }
-     // @todo At this point, if the first row contains a page number in the right place, use it as an initial value
  }
 
 // Similarly, we want to save the page to the hash. This simply

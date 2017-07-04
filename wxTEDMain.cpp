@@ -1394,7 +1394,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg="Cross platform teletext editor\n(c) 2014-2016, Peter Kwan.\nteastop.co.uk/teletext/wxted";
+    wxString msg="Teletext editor\n(c) 2014-2017, Peter Kwan.\nteastop.co.uk/teletext/wxted";
     wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 
@@ -1965,6 +1965,7 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
    /// @todo Make this more general to identify a valid hash string
    if ((wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) ||  // Paste obsolete teletext40 URL?
     (wxs.Find("www.uniquecodeanddata.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a uniquecodeandadata URL?
+    (wxs.Find("zxnet.co.uk/teletext/editor")!=wxNOT_FOUND) ||     // Paste a zxnet.co.uk URL?
     (wxs.Find("edit.tf")!=wxNOT_FOUND))     // Paste edit.tf URL?
    {
        load_from_hash(m_currentPage,wxs.char_str());

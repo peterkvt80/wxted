@@ -2244,7 +2244,7 @@
 	<iostream>
 	"charchange.h"
 
-1483064739 source:e:\dev\wxted-github\wxted\teletext40.cpp
+1499162445 source:e:\dev\wxted-github\wxted\teletext40.cpp
 	"teletext40.h"
 
 1430430413 e:\dev\wxted-github\wxted\teletext40.h
@@ -2272,17 +2272,17 @@
 
 1483015912 e:\dev\wxted-github\wxted\ttxcodes.h
 
-1483053869 e:\dev\wxted-github\wxted\ttxline.h
+1490914597 e:\dev\wxted-github\wxted\ttxline.h
 	<iostream>
 	<string>
 	"ttxcodes.h"
 
 1463305750 e:\dev\wxted-github\wxted\hamm-tables.h
 
-1490744951 source:e:\dev\wxted-github\wxted\ttxline.cpp
+1490915829 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1483056450 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1490915145 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1476983748 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2794,7 +2794,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1490823730 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1499162604 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
