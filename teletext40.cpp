@@ -1,4 +1,6 @@
 /** This code adapted from Simon Rawles
+ *  by Peter Kwan
+ *  with contributions from Alistair Cree.
  *
 // Copyright (C) 2015  Simon Rawles
 //
@@ -75,11 +77,33 @@
                             outRow++;
                         }
                     }
-                }
-             }
+                } // bit mask
+             } // For each encoded source char
              // @todo At this point, if the first row contains a page number in the right place, use it as an initial value
-         }
-     }
+             // parse the rest of the string
+             printf("hashstring=%s\n",hashstring);
+             char * pair = strtok(hashstring,":");
+             while (pair) {
+                char * eq=strchr(pair,'=');
+                if (!eq) return;
+                char * key=pair;
+                *eq=0;
+                eq++;
+                char * value=eq;
+                printf("key=%s, value=%s\n",key,value);
+                if (strcmp,"PN",key) {
+                  printf("PN\n");
+                }
+                if (strcmp,"SC",key) {
+                  printf("SC\n");
+                }
+                if (strcmp,"PN",key) {
+                  printf("PS\n");
+                }
+                value=strtok(NULL,":");
+             }
+         } // if hashstring metadata
+     } // if hashstring
  }
 
 // Similarly, we want to save the page to the hash. This simply
@@ -87,8 +111,9 @@
 // puts it there.
 /**
  * \param cset A character set 0-Eng 1-Ger 2-Swe 3-Ita 4-Bel 5-ASCII 6=Heb 7=Cyr
+ * \param website The website prefix eg. "http://edit.tf"
  */
-void save_to_hash(int cset, char* encoding, uint8_t cc[25][40])
+void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], char* website, TTXPage* page)
 {
 
 	// Construct the metadata as described above.
@@ -96,7 +121,7 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[25][40])
 	// if ( blackfg != 0 ) { metadata += 8; } // wxTED says NO
 	//encoding += metadata.toString(16);
 	//encoding += ":";
-	sprintf(encoding,"http://edit.tf/#%d:",metadata);
+	sprintf(encoding,"%s/#%d:",website,metadata);
 
 	// Construct a base-64 array by iterating over each character
 	// in the frame.
@@ -132,6 +157,13 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[25][40])
   {
 		encoding[i+sz] = base64[((int)b64[i]) ];
 	}
-	encoding[1167+sz]=0;
+	{
+	  char *p = &encoding[1167+sz];
+	  int pagenumber=page->GetPageNumber();
+	  int subcode=page->GetSubCode();
+	  int status=page->GetPageStatus();
+	  sprintf(p,":PN=%03x:SC=%04x:PS=%04X",pagenumber >> 8, subcode, status);
+	}
+	// encoding[1167+sz]=0;
 }
 

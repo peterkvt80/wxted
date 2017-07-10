@@ -188,6 +188,7 @@ icular location
          * \return nothing yet
          */
          void SetSubCode(int subcode) {m_subcode=subcode;}
+         int GetSubCode() {return m_subcode;}
 
         /** Is this location in Alpha mode
          * \param loc : Character coordinate (0..39,1..24)

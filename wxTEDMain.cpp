@@ -76,6 +76,7 @@ const long wxTEDFrame::isSavePageAs = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idExportTTX40 = wxNewId();
+const long wxTEDFrame::idExportZXNet = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
 const long wxTEDFrame::idNewWindow = wxNewId();
 const long wxTEDFrame::idUndo = wxNewId();
@@ -1098,6 +1099,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu1->Append(MenuItemPublishSettings);
     MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export edit.tf"), _("Open page on edit.tf website"), wxITEM_NORMAL);
     Menu1->Append(MenuItemExportTTX40);
+    MenuItemZXNet = new wxMenuItem(Menu1, idExportZXNet, _("Export ZXNet"), _("Open page on zxnet website"), wxITEM_NORMAL);
+    Menu1->Append(MenuItemZXNet);
     MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
     Menu1->Append(MenuItemQuit);
     Menu1->AppendSeparator();
@@ -1192,6 +1195,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
+    Connect(idExportZXNet,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemZXNetSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
     Connect(idNewWindow,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemNewWindow);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
@@ -1965,7 +1969,7 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
    /// @todo Make this more general to identify a valid hash string
    if ((wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) ||  // Paste obsolete teletext40 URL?
     (wxs.Find("www.uniquecodeanddata.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a uniquecodeandadata URL?
-    (wxs.Find("zxnet.co.uk/teletext/editor")!=wxNOT_FOUND) ||     // Paste a zxnet.co.uk URL?
+    (wxs.Find("zxnet.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a zxnet.co.uk URL?
     (wxs.Find("edit.tf")!=wxNOT_FOUND))     // Paste edit.tf URL?
    {
        load_from_hash(m_currentPage,wxs.char_str());
@@ -2193,7 +2197,7 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
   // Convert to a teletext 40 URL
   // TODO: Implement character set
   char page[1300];
-  save_to_hash(1, page,cc);
+  save_to_hash(1, page,cc, "http://edit.tf", m_currentPage);
   CopyTextToClipboard(page);
   // Launch a browser with the URL
   // Widen the URL
@@ -2230,4 +2234,46 @@ void wxTEDFrame::OnMenuItemNewWindow(wxCommandEvent& event)
 	wxTEDFrame * win = new wxTEDFrame(0);
 	win->OnMenuNew(event);
 	win->Show(true);
+}
+
+void wxTEDFrame::OnMenuItemZXNetSelected(wxCommandEvent& event)
+{
+  // Extract a character array
+  uint8_t cc[25][40];
+  for (uint8_t y=0;y<25;y++)
+  {
+    TTXLine* line=m_currentPage->GetRow(y);
+    for (uint8_t x=0;x<40;x++)
+    {
+        uint8_t c=line->GetCharAt(x) & 0x7f;
+        cc[y][x]=c;
+    }
+    //@todo Implement page number substitution for row 0 header
+    if (y==0)
+    {
+      for (int i=0;i<8;i++) // First 8 characters are not taken from the header
+          cc[y][i]=' ';
+      int k=m_rootPage->GetPageNumber()/0x100;
+      if (k<0x100 && k>0x8ff)
+          k=0x100;
+      std::ostringstream val;
+      val << std::hex << k;
+      cc[y][0]='P';
+      cc[y][1]=val.str()[0];
+      cc[y][2]=val.str()[1];
+      cc[y][3]=val.str()[2];
+    }
+  }
+  // Convert to a teletext 40 URL
+  // TODO: Implement character set
+  char page[1300];
+  save_to_hash(1, page,cc, "http://temp.zxnet.co.uk/editor", m_currentPage);
+  CopyTextToClipboard(page);
+  // Launch a browser with the URL
+  // Widen the URL
+  std::wstring w;
+  std::copy(page,page+strlen(page),back_inserter(w));
+  const wchar_t *wstr = w.c_str();
+
+  ShellExecute (NULL, L"open", wstr, NULL, NULL, SW_SHOWNORMAL);
 }

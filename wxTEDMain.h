@@ -171,6 +171,7 @@ class wxTEDFrame: public wxFrame
         void OnKeyUp(wxKeyEvent& event);
         void OnPanel1Paint(wxPaintEvent& event);
         void OnMenuItemNewWindow(wxCommandEvent& event);
+        void OnMenuItemZXNetSelected(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -206,6 +207,7 @@ class wxTEDFrame: public wxFrame
         static const long idPublish;
         static const long idPublishSettings;
         static const long idExportTTX40;
+        static const long idExportZXNet;
         static const long idMenuQuit;
         static const long idNewWindow;
         static const long idUndo;
@@ -272,6 +274,7 @@ class wxTEDFrame: public wxFrame
         wxStatusBar* StatusBar1;
         wxMenuItem* MenuItemSelectAll;
         wxMenuItem* MenuItemSwedish;
+        wxMenuItem* MenuItemZXNet;
         wxFileDialog* LoadPageFileDialog;
         wxMenuItem* MenuItemCopy;
         wxMenuItem* MenuItemRegion1;
