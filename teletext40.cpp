@@ -80,25 +80,28 @@
                 } // bit mask
              } // For each encoded source char
              // @todo At this point, if the first row contains a page number in the right place, use it as an initial value
-             // parse the rest of the string
+             // parse the rest of the string which is a set of :key=value pairs eg.
+             // :PN=550:PS=400c:SC=2
              printf("hashstring=%s\n",hashstring);
              char * pair = strtok(hashstring,":");
              while (pair) {
                 char * eq=strchr(pair,'=');
-                if (!eq) return;
+                if (!eq) return; // oops!
                 char * key=pair;
                 *eq=0;
                 eq++;
                 char * value=eq;
-                printf("key=%s, value=%s\n",key,value);
                 if (strcmp,"PN",key) {
-                  printf("PN\n");
+                  int page_num=std::strtol(value,NULL,16);
+                  page->SetPageNumber(page_num*0x100);
                 }
                 if (strcmp,"SC",key) {
-                  printf("SC\n");
+                  int subcode_num=std::strtol(value,NULL,16); // @todo Is this hex? Can't remember
+                  page->SetSubCode(subcode_num);
                 }
-                if (strcmp,"PN",key) {
-                  printf("PS\n");
+                if (strcmp,"PS",key) {
+                  int status_num=std::strtol(value,NULL,16);
+                  page->SetPageStatus(status_num);
                 }
                 value=strtok(NULL,":");
              }
