@@ -2244,7 +2244,7 @@
 	<iostream>
 	"charchange.h"
 
-1499728902 source:e:\dev\wxted-github\wxted\teletext40.cpp
+1499899317 source:e:\dev\wxted-github\wxted\teletext40.cpp
 	"teletext40.h"
 
 1499725003 e:\dev\wxted-github\wxted\teletext40.h
@@ -2382,7 +2382,7 @@
 1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1499712457 e:\dev\wxted-github\wxted\wxtedmain.h
+1499766572 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>

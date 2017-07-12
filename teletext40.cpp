@@ -3,6 +3,7 @@
  *  with contributions from Alistair Cree.
  *
 // Copyright (C) 2015  Simon Rawles
+// Reference: https://github.com/rawles/edit-tf/wiki/Teletext-page-hashstring-format
 //
 // The JavaScript code in this page is free software: you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -89,21 +90,31 @@
                 if (!eq) return; // oops!
                 char * key=pair;
                 *eq=0;
-                eq++;
                 char * value=eq;
-                if (strcmp,"PN",key) {
+                value++;
+                if (!strcmp("PN",key)) { // Page Number - 3 hex digits
                   int page_num=std::strtol(value,NULL,16);
                   page->SetPageNumber(page_num*0x100);
                 }
-                if (strcmp,"SC",key) {
-                  int subcode_num=std::strtol(value,NULL,16); // @todo Is this hex? Can't remember
+                if (!strcmp("SC",key)) { // Subcode - 4 hex digits
+                  int subcode_num=std::strtol(value,NULL,16);
                   page->SetSubCode(subcode_num);
                 }
-                if (strcmp,"PS",key) {
+                if (!strcmp("PS",key)) { // Page Status - 4 hex digits
                   int status_num=std::strtol(value,NULL,16);
                   page->SetPageStatus(status_num);
                 }
-                value=strtok(NULL,":");
+                if (!strcmp("X270",key)) { // X/27/0 fastext. 6 x MPPSSSSS
+                    for (int i=0;i<6;i++) {
+                      int link;
+                      sscanf(&value[i*7],"%3x",&link);
+                      page->SetFastextLink(i,link);
+                    }
+                }
+                if (!strcmp("X280",key)) { // X/28/0 format 1 enhancement data
+                }
+                *eq=' '; // Hack it so tokens still work
+                pair=strtok(NULL,":");
              }
          } // if hashstring metadata
      } // if hashstring
@@ -160,12 +171,19 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], char* website, T
   {
 		encoding[i+sz] = base64[((int)b64[i]) ];
 	}
-	{
+	{ // metadata
 	  char *p = &encoding[1167+sz];
 	  int pagenumber=page->GetPageNumber();
 	  int subcode=page->GetSubCode();
 	  int status=page->GetPageStatus();
-	  sprintf(p,":PN=%03x:SC=%04x:PS=%04X",pagenumber >> 8, subcode, status);
+	  sprintf(p,":PN=%03x:SC=%04x:PS=%04X:X270=%03X%04X%03X%04X%03X%04X%03X%04X%03X%04X%03X%04X",pagenumber >> 8, subcode, status,
+           page->GetFastextLink(0),0, // The six Fastext links
+           page->GetFastextLink(1),0,
+           page->GetFastextLink(2),0,
+           page->GetFastextLink(3),0,
+           page->GetFastextLink(4),0,
+           page->GetFastextLink(5),0
+           );
 	}
 	// encoding[1167+sz]=0;
 }

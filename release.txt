@@ -13,7 +13,7 @@ Build->Select Target
 5) Commit the changes to Github Master and then sync to remote.
 
 6) Run Inno Script Studio using the configuration that is in the Release folder and load winpackage.iss.
-   Set the myAppVersion to the new version number.
+   Set the myAppVersion and VersionInfoVersion to the new version number.
    Select Project->Compile.
    This creates a setup.exe in the same folder.
    Rename setup.exe to include the version number like setup_1_14.exe.

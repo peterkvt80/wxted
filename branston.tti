@@ -1,32 +1,33 @@
-DE,Description goes here
+DE,Sandwich
 DS,inserter
-SP,C:\dev\zwintest\wxTED\branston.tti
+SP,E:\dev\wxTED-GitHub\wxted\branston.tti
 CT,8,T
-PS,8000
-PN,1ff00
+PN,22000
 SC,0000
-OL,1,ÉçIs there no one left in Britain who   
-OL,2,ç                                       
-OL,3,Éçcan make a sandwich?                  
-OL,4,                                        
-OL,5,ó                                       
-OL,6,ó                 ùît+ëî?a~ú       
-OL,7,ó                 ùî//-"ëî!,//ú       
-OL,8,ó                 ùëú       
-OL,9,ó                 ùî||<`ëî0,||ú       
-OL,10,ó                 ùî'p|ëî}r+ú       
-OL,11,ó                  j                    
-OL,12,ó              ì   j                    
-OL,13,ó               `llnlllllllllllllll$    
-OL,14,ó              8999999999999999yy-%x    
-OL,15,ó            `ffffffffffffffffv~íh#3!   
-OL,16,ó           8999999999999999y{ípjc~%    
-OL,17,ó         `ffffffffffffffffv~íx!x?!     
-OL,18,ó        8999999999999999k7í <e~'       
-OL,19,ó      `vvvvvvvvvvvvvvvv~/ìí'y?!        
-OL,20,ì      "'h&í~'          
-OL,21,í     (/ë*/#íx|'x?!           
-OL,22,í       (o'#),p>#-t<lx'/b~'             
-OL,23,ì       ?!              
-OL,24,ó                                       
-FL,100,100,100,100,100,100
+PS,8000
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,CMIs there no one left in Britain who   
+OL,2,M                                       
+OL,3,CMcan make a sandwich?                  
+OL,5,W                                       
+OL,6,W                 ]Tt+QT?a~\       
+OL,7,W                 ]T//-"QT!,//\       
+OL,8,W                 ]Q\       
+OL,9,W                 ]T||<`QT0,||\       
+OL,10,W                 ]T'p|QT}r+\       
+OL,11,W                  j                    
+OL,12,W              S   j                    
+OL,13,W               `llnlllllllllllllll$    
+OL,14,W              8999999999999999yy-%x    
+OL,15,W            `ffffffffffffffffv~Rh#3!   
+OL,16,W           8999999999999999y{Rpjc~%    
+OL,17,W         `ffffffffffffffffv~Rx!x?!     
+OL,18,W        8999999999999999k7R <e~'       
+OL,19,W      `vvvvvvvvvvvvvvvv~/SR'y?!        
+OL,20,S      "'h&R~'          
+OL,21,R     (/Q*/#Rx|'x?!           
+OL,22,R       (o'#),p>#-t<lx'/b~'             
+OL,23,S       ?!              
+OL,24,W                                       
+FL,221,200,230,300,100,100
