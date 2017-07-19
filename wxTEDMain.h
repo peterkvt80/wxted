@@ -75,6 +75,7 @@ class wxTEDFrame: public wxFrame
         inline TTXPage* Page(){return m_rootPage;};
 
     private:
+        bool m_inhibitStatus; // Inhibit the status bar while menus are up
 
         bool m_ShowMarkup; // If true, we show ttx markup
         bool m_Released;   // If true, m_ShowMarkup can be toggled
@@ -182,6 +183,9 @@ class wxTEDFrame: public wxFrame
         void OnOpen(wxCommandEvent& event);
         void OnSave(wxCommandEvent& event);
 
+        void OnMenuOpen(wxMenuEvent& event); // On opening the menu
+        void OnMenuClose(wxMenuEvent& event); // On closing the menu
+
         /* Set the language menu radio option */
         void m_setLanguage();
 
@@ -205,7 +209,6 @@ class wxTEDFrame: public wxFrame
         static const long idPublish;
         static const long idPublishSettings;
         static const long idExportTTX40;
-        static const long idExportZXNet;
         static const long idMenuQuit;
         static const long idNewWindow;
         static const long idUndo;
@@ -240,6 +243,8 @@ class wxTEDFrame: public wxFrame
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_TIMER1;
+        static const long idMenuOpen;
+        static const long idMenuClose;
         //*)
 
         //(*Declarations(wxTEDFrame)
@@ -272,7 +277,6 @@ class wxTEDFrame: public wxFrame
         wxStatusBar* StatusBar1;
         wxMenuItem* MenuItemSelectAll;
         wxMenuItem* MenuItemSwedish;
-        wxMenuItem* MenuItemZXNet;
         wxFileDialog* LoadPageFileDialog;
         wxMenuItem* MenuItemCopy;
         wxMenuItem* MenuItemRegion1;

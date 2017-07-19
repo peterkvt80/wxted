@@ -76,7 +76,6 @@ const long wxTEDFrame::isSavePageAs = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idExportTTX40 = wxNewId();
-const long wxTEDFrame::idExportZXNet = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
 const long wxTEDFrame::idNewWindow = wxNewId();
 const long wxTEDFrame::idUndo = wxNewId();
@@ -111,6 +110,8 @@ const long wxTEDFrame::idSpecialKeys = wxNewId();
 const long wxTEDFrame::idMenuAbout = wxNewId();
 const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
 const long wxTEDFrame::ID_TIMER1 = wxNewId();
+const long wxTEDFrame::idMenuOpen = wxNewId();
+const long wxTEDFrame::idMenuClose = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(wxTEDFrame,wxFrame)
@@ -124,6 +125,8 @@ BEGIN_EVENT_TABLE(wxTEDFrame,wxFrame)
     EVT_KEY_UP(wxTEDFrame::OnKeyUp)
     EVT_TIMER(ID_TIMER1 ,wxTEDFrame::OnTimer)
     EVT_ERASE_BACKGROUND(wxTEDFrame::OnEraseBackground)
+    EVT_MENU_OPEN(wxTEDFrame::OnMenuOpen)
+    EVT_MENU_CLOSE(wxTEDFrame::OnMenuClose)
 END_EVENT_TABLE()
 
 void wxTEDFrame::OnEraseBackground(wxEraseEvent& event)
@@ -991,7 +994,15 @@ void wxTEDFrame::m_SetStatus()
     wchar_t ch;
     wxPoint c=m_cursorPoint;
     wxPoint d=m_subPixelPoint;
+
+    if (m_inhibitStatus)
+    {
+      return;
+    }
+
     TTXLine* line=m_currentPage->GetRow(c.y);
+    if (m_rootPage->GetPageChanged())
+      str << "* ";
     str << "P" << iPage+1 << "/" << iPageCount << ", ";
     if (line!=NULL)
     {
@@ -1047,9 +1058,8 @@ void wxTEDFrame::m_SetStatus()
         str << "(" << c.x << "." << d.x << "," << c.y << "." << d.y <<") " << code.str(); // Graphics
     StatusBar1->SetLabelText(str.str());
 }
-
 wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
-    : m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
+    : m_inhibitStatus(false), m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
  , m_dragging(false), m_MarqueeStart(wxPoint(0,0)), m_currentPage(NULL)
 {
     // std::cout << "[wxTEDFrame] Entered" << std::endl;
@@ -1099,8 +1109,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu1->Append(MenuItemPublishSettings);
     MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export edit.tf"), _("Open page on edit.tf website"), wxITEM_NORMAL);
     Menu1->Append(MenuItemExportTTX40);
-    MenuItemZXNet = new wxMenuItem(Menu1, idExportZXNet, _("Export ZXNet"), _("Open page on zxnet website"), wxITEM_NORMAL);
-    Menu1->Append(MenuItemZXNet);
     MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
     Menu1->Append(MenuItemQuit);
     Menu1->AppendSeparator();
@@ -1195,7 +1203,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
-    Connect(idExportZXNet,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemZXNetSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
     Connect(idNewWindow,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemNewWindow);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
@@ -1237,6 +1244,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 
     Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnOpen);
     Connect(idSavePage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnSave);
+
+    Connect(idMenuOpen,wxEVT_MENU_OPEN,(wxObjectEventFunction)&wxTEDFrame::OnMenuOpen);
+    Connect(idMenuClose,wxEVT_MENU_CLOSE,(wxObjectEventFunction)&wxTEDFrame::OnMenuClose);
 
     // Precompute the Font metrics
     wxFont wf=GetFont();
@@ -1308,6 +1318,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 
 
     helpFrame=new HelpFrame(this->GetDefaultItem(),1,wxP,wxS);
+
+    m_rootPage->SetPageChanged(false);
 
     // std::cout << "Finished starting frame" << std::endl;
 }
@@ -1473,6 +1485,22 @@ void wxTEDFrame::OnSetFocus(wxFocusEvent& event)
   event.Skip(true); // allow default handling
 }
 
+void wxTEDFrame::OnMenuOpen(wxMenuEvent& event)
+{
+  std::cout << "Menu open" << std::endl;
+  // @todo Add something to show the menu hint for a reasonable time
+  m_inhibitStatus=true;
+}
+
+void wxTEDFrame::OnMenuClose(wxMenuEvent& event)
+{
+  std::cout << "Menu close" << std::endl;
+  // @todo Add something to show the menu hint for a reasonable time
+  m_inhibitStatus=false;
+}
+
+        void OnMenuOpen(wxPaintEvent& event); // On opening the menu
+
 void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 {
     //std::cout << "Insert page after #" << iPage << std::endl;
@@ -1503,6 +1531,8 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     //std::cout << "Trace2" << std::endl;
     m_currentPage->SetRow(1,str.str());
     //std::cout << "Trace3" << std::endl;
+    // m_rootPage->pageChanged=true;
+    m_rootPage->SetPageChanged(true);
 }
 
 void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
@@ -1655,7 +1685,7 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
     }
 
 
-    // Now extract the parameters from the dialog and put them back in the loaded page
+    // Extract the parameters from the dialog and put them back in the loaded page
 
     if (result==wxID_OK)
     {
@@ -1784,7 +1814,7 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 
 void wxTEDFrame::OnClose(wxCloseEvent& event)
 {
-    if ( event.CanVeto() && TTXPage::pageChanged )
+    if ( event.CanVeto() && m_rootPage->GetPageChanged() )
     {
         if ( wxMessageBox("The file has not been saved... continue closing?",
                           "Please confirm",

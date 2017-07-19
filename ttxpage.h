@@ -92,34 +92,34 @@ class TTXPage
          /** Setter/Getter for m_pageStatus
           */
          int GetPageStatus() {return m_pagestatus;}
-         void SetPageStatus(int ps){m_pagestatus=ps;}
+         void SetPageStatus(int ps){if(m_pagestatus!=ps)SetPageChanged(true);m_pagestatus=ps; }
 
          /** Setter/Getter for m_description
           */
          std::string GetDescription() {return m_description;}
-         void SetDescription(std::string desc){m_description=desc;}
+         void SetDescription(std::string desc){if(m_description!=desc)SetPageChanged(true);m_description=desc;}
 
          /** Setter/Getter for cycle counter/timer seconds
           */
          int GetCycleTime() {return m_cycletimeseconds;}
-         void SetCycleTime(int time){m_cycletimeseconds=time;}
+         void SetCycleTime(int time){if(m_cycletimeseconds!=time)SetPageChanged(true);m_cycletimeseconds=time;}
 
          /** Setter/Getter for cycle counter/timer seconds
           */
          char GetCycleTimeMode() {return m_cycletimetype;}
-         void SetCycleTimeMode(char mode){m_cycletimetype=mode;}
+         void SetCycleTimeMode(char mode){if(m_cycletimetype!=mode)SetPageChanged(true);m_cycletimetype=mode;}
 
          /** Setter/Getter for m_sourcepage
           *  This is the filename that was used to load the page
           */
          std::string GetSourcePage() {return m_sourcepage;}
-         void SetSourcePage(std::string fname){m_sourcepage=fname;}
+         void SetSourcePage(std::string fname){if(m_sourcepage!=fname)SetPageChanged(true);m_sourcepage=fname;}
 
          /** Setter/Getter for m_shortFilename
           *  The short filename doesn't have a path
           */
          std::string GetShortFilename() {return m_shortFilename;}
-         void SetShortFilename(std::string fname){m_shortFilename=fname;}
+         void SetShortFilename(std::string fname){if(m_shortFilename!=fname)SetPageChanged(true);m_shortFilename=fname;}
 
          /** Get the page count
          *  It also replaces the subcode sequence. (Is this a good idea?)
@@ -138,8 +138,7 @@ class TTXPage
          */
          void SetRow(unsigned int rownumber, std::string line);
 
-        /** Set a character at a part#ifndef _HAMM_TABLES_H_
-icular location
+        /** Set a character at a particular location
          * \param code : The keyboard code
          * \param cursorLoc : The cursor location as a wxWidgets point. This returns with the updated location.
          * \param cursorSubLoc : The grapihics cursor sub position as a wxWidgets point. This returns with the updated sub character location.
@@ -251,11 +250,12 @@ icular location
 
         /** @brief Should check this before closing a page
          */
-        bool PageChanged(){return pageChanged;};
-        static bool pageChanged;         // / True if we have done some edits (on any subpage)
+        bool GetPageChanged(){return pageChanged;};
+        void SetPageChanged(bool change){pageChanged=change;};
 
     protected:
     private:
+        static bool pageChanged;         // / True if we have done some edits (on any subpage)
         // Private variables
         int m_PageNumber;  // PN
         // Private objects
