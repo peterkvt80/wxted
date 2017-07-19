@@ -58,7 +58,6 @@ void TTXPage::m_Init()
     m_pagestatus=0x8000;
     instance=instanceCount++;
     // std::cout << "[TTXPage::TTXPage()] instance=" << instance << std::endl;
-    // TTXPage::pageChanged=false;
     SetPageChanged(false);
 
 }
@@ -178,7 +177,6 @@ bool TTXPage::m_LoadVTX(std::string filename)
     // With a pair of zeros at the end we can skip
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(NULL);
-    // TTXPage::pageChanged=false;
     SetPageChanged(false);
     return true;
 }
@@ -208,7 +206,6 @@ bool TTXPage::m_LoadEP1(std::string filename)
     // With a pair of zeros at the end we can skip
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(NULL);
-    // TTXPage::pageChanged=false;
     SetPageChanged(false);
     return true;
 }
@@ -250,7 +247,6 @@ bool TTXPage::m_LoadTTX(std::string filename)
 
             filein.close();
             p->Setm_SubPage(NULL);
-            // TTXPage::pageChanged=false;
             SetPageChanged(false);
             return true;
         }
@@ -280,7 +276,6 @@ bool TTXPage::m_LoadTTX(std::string filename)
 
             filein.close();
             p->Setm_SubPage(NULL);
-            // TTXPage::pageChanged=false;
             SetPageChanged(false);
             return true;
 
@@ -304,7 +299,6 @@ bool TTXPage::m_LoadTTX(std::string filename)
 
     filein.close();
     p->Setm_SubPage(NULL);
-    // TTXPage::pageChanged=false;
     SetPageChanged(false);
     return true;
 }
@@ -526,7 +520,6 @@ bool TTXPage::m_LoadTTI(std::string filename)
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(NULL);
     std::cout << "Finished reading TTI page. Line count=" << lines << std::endl;
-    // TTXPage::pageChanged=false;
     SetPageChanged(false);
     return (lines>0);
 }
@@ -581,7 +574,6 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
     SetShortFilename("no page");
   }
 
-  // TTXPage::pageChanged=false;
   SetPageChanged(false);
   std::cout << "Finished reading page. Loaded=" << m_loaded << " type=" << type << std::endl;
 }
@@ -754,7 +746,6 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             char oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
-            // TTXPage::pageChanged=true;
             SetPageChanged(true);
             return;
         }
@@ -821,7 +812,6 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
-            // TTXPage::pageChanged=true;
             SetPageChanged(true);
             return;
         }
@@ -988,7 +978,6 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                 // By now we should only have teletext codes. If the new code is NOT a graphic then treat it as a character
                 if (code<0x80) // Only want basic ASCII codes
                 {
-                    // TTXPage::pageChanged=true;
                     SetPageChanged(true);
 
                     if (AlphaMode || (code>='@' && code<=0x5f) || code<' ')
@@ -1263,11 +1252,13 @@ void TTXPage::SetPageNumber(int page)
     }
     if (page<0x10000) page=0x10000;
     if (page>0x8ff99) page=0x8ff99;
-    m_PageNumber=page;
+
     if (m_PageNumber!=page)
     {
       SetPageChanged(true);
     }
+
+    m_PageNumber=page;
 }
 
 int TTXPage::GetFastextLink(int link)

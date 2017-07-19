@@ -110,9 +110,10 @@ const long wxTEDFrame::idSpecialKeys = wxNewId();
 const long wxTEDFrame::idMenuAbout = wxNewId();
 const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
 const long wxTEDFrame::ID_TIMER1 = wxNewId();
+//*)
+
 const long wxTEDFrame::idMenuOpen = wxNewId();
 const long wxTEDFrame::idMenuClose = wxNewId();
-//*)
 
 BEGIN_EVENT_TABLE(wxTEDFrame,wxFrame)
     //(*EventTable(wxTEDFrame)
@@ -1059,7 +1060,7 @@ void wxTEDFrame::m_SetStatus()
     StatusBar1->SetLabelText(str.str());
 }
 wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
-    : m_inhibitStatus(false), m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
+    : m_menuCount(0), m_inhibitStatus(false), m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
  , m_dragging(false), m_MarqueeStart(wxPoint(0,0)), m_currentPage(NULL)
 {
     // std::cout << "[wxTEDFrame] Entered" << std::endl;
@@ -1116,7 +1117,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu1->Append(MenuItem4);
     MenuBar1->Append(Menu1, _("&File"));
     Menu3 = new wxMenu();
-    MenuItemUndo = new wxMenuItem(Menu3, idUndo, _("Undo\tCTRL-Z"), wxEmptyString, wxITEM_NORMAL);
+    MenuItemUndo = new wxMenuItem(Menu3, idUndo, _("Undo\tCTRL-Z"), _("Undo the last edit"), wxITEM_NORMAL);
     Menu3->Append(MenuItemUndo);
     Menu3->AppendSeparator();
     MenuItem11 = new wxMenuItem(Menu3, idCut, _("Cut"), _("Cut the selected area"), wxITEM_NORMAL);
@@ -1131,7 +1132,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu3->AppendSeparator();
     MenuItemInsertSubpage = new wxMenuItem(Menu3, idInsertPage, _("Insert subpage after this one"), _("Add a subpage after this page"), wxITEM_NORMAL);
     Menu3->Append(MenuItemInsertSubpage);
-    MenuItemDeletePage = new wxMenuItem(Menu3, idDeleteSubPage, _("Delete this subpage"), wxEmptyString, wxITEM_NORMAL);
+    MenuItemDeletePage = new wxMenuItem(Menu3, idDeleteSubPage, _("Delete this subpage"), _("Delete subpage from this carousel"), wxITEM_NORMAL);
     Menu3->Append(MenuItemDeletePage);
     MenuBar1->Append(Menu3, _("Edit"));
     MenuPresentation = new wxMenu();
@@ -1155,29 +1156,29 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemUnused->Enable(false);
     MenuPresentation->Append(ID_MENUITEM1, _("Language"), MenuItemLanguage, wxEmptyString);
     MenuItem2 = new wxMenu();
-    MenuItemRegion0 = new wxMenuItem(MenuItem2, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion0 = new wxMenuItem(MenuItem2, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion0);
-    MenuItemRegion1 = new wxMenuItem(MenuItem2, ID_REGION1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion1 = new wxMenuItem(MenuItem2, ID_REGION1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion1);
-    MenuItemRegion2 = new wxMenuItem(MenuItem2, ID_REGION2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion2 = new wxMenuItem(MenuItem2, ID_REGION2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion2);
-    MenuItemRegion3 = new wxMenuItem(MenuItem2, ID_REGION3, _("3: Ser/Cro/Slovenian/Romanian"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion3 = new wxMenuItem(MenuItem2, ID_REGION3, _("3: Ser/Cro/Slovenian/Romanian"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion3);
-    MenuItemRegion4 = new wxMenuItem(MenuItem2, ID_REGION4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion4 = new wxMenuItem(MenuItem2, ID_REGION4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion4);
-    MenuItemRegion6 = new wxMenuItem(MenuItem2, ID_REGION6, _("6: Tur/Gre"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion6 = new wxMenuItem(MenuItem2, ID_REGION6, _("6: Tur/Gre"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion6);
-    MenuItemRegion8 = new wxMenuItem(MenuItem2, ID_REGION8, _("8: Eng/Fre/Arabic"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion8 = new wxMenuItem(MenuItem2, ID_REGION8, _("8: Eng/Fre/Arabic"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion8);
-    MenuItemRegion10 = new wxMenuItem(MenuItem2, ID_REGION10, _("10: Hebrew/Arabic"), wxEmptyString, wxITEM_RADIO);
+    MenuItemRegion10 = new wxMenuItem(MenuItem2, ID_REGION10, _("10: Hebrew/Arabic"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion10);
     MenuPresentation->Append(ID_REGION, _("Region"), MenuItem2, wxEmptyString);
     MenuItemPageNumber = new wxMenuItem(MenuPresentation, idPageNumber, _("Properties..."), _("Set the page number for transmission"), wxITEM_NORMAL);
     MenuPresentation->Append(MenuItemPageNumber);
-    MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), wxEmptyString, wxITEM_CHECK);
+    MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), _("Show/hide header row"), wxITEM_CHECK);
     MenuPresentation->Append(MenuItemShowHeader);
     MenuItemShowHeader->Check(true);
-    MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), wxEmptyString, wxITEM_NORMAL);
+    MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), _("Conceal/show hidden text"), wxITEM_NORMAL);
     MenuPresentation->Append(MenuItemConcealToggle);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
     MenuHelp = new wxMenu();
@@ -1489,14 +1490,19 @@ void wxTEDFrame::OnMenuOpen(wxMenuEvent& event)
 {
   std::cout << "Menu open" << std::endl;
   // @todo Add something to show the menu hint for a reasonable time
+  m_menuCount++;
   m_inhibitStatus=true;
 }
 
 void wxTEDFrame::OnMenuClose(wxMenuEvent& event)
 {
   std::cout << "Menu close" << std::endl;
-  // @todo Add something to show the menu hint for a reasonable time
-  m_inhibitStatus=false;
+  // Don't enable status again until all menus are closed.
+  m_menuCount--;
+  if (!m_menuCount)
+  {
+    m_inhibitStatus=false;
+  }
 }
 
         void OnMenuOpen(wxPaintEvent& event); // On opening the menu

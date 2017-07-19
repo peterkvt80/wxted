@@ -88,6 +88,7 @@
 				<object class="wxMenuItem" name="idUndo" variable="MenuItemUndo" member="yes">
 					<label>Undo</label>
 					<accel>CTRL-Z</accel>
+					<help>Undo the last edit</help>
 					<handler function="OnMenuItemUndo" entry="EVT_MENU" />
 				</object>
 				<object class="separator" />
@@ -123,6 +124,7 @@
 				</object>
 				<object class="wxMenuItem" name="idDeleteSubPage" variable="MenuItemDeletePage" member="yes">
 					<label>Delete this subpage</label>
+					<help>Delete subpage from this carousel</help>
 					<handler function="OnMenuItemDeletePage" entry="EVT_MENU" />
 				</object>
 			</object>
@@ -176,41 +178,49 @@
 					<label>Region</label>
 					<object class="wxMenuItem" name="ID_REGION0" variable="MenuItemRegion0" member="yes">
 						<label>0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION1" variable="MenuItemRegion1" member="yes">
 						<label>1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION2" variable="MenuItemRegion2" member="yes">
 						<label>2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION3" variable="MenuItemRegion3" member="yes">
 						<label>3: Ser/Cro/Slovenian/Romanian</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION4" variable="MenuItemRegion4" member="yes">
 						<label>4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION6" variable="MenuItemRegion6" member="yes">
 						<label>6: Tur/Gre</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION8" variable="MenuItemRegion8" member="yes">
 						<label>8: Eng/Fre/Arabic</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
 					<object class="wxMenuItem" name="ID_REGION10" variable="MenuItemRegion10" member="yes">
 						<label>10: Hebrew/Arabic</label>
+						<help>Language group</help>
 						<handler function="OnMenuItemRegionSelected" entry="EVT_MENU" />
 						<radio>1</radio>
 					</object>
@@ -222,11 +232,13 @@
 				</object>
 				<object class="wxMenuItem" name="ID_MENUITEMSHOWHEADER" variable="MenuItemShowHeader" member="yes">
 					<label>Show header</label>
+					<help>Show/hide header row</help>
 					<checked>1</checked>
 					<checkable>1</checkable>
 				</object>
 				<object class="wxMenuItem" name="ID_HIDECONCEAL" variable="MenuItemConcealToggle" member="yes">
 					<label>Toggle Conceal</label>
+					<help>Conceal/show hidden text</help>
 					<handler function="OnMenuItemConcealToggle" entry="EVT_MENU" />
 				</object>
 			</object>

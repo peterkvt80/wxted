@@ -54,7 +54,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.29")
+#define VERSION_STRING   wxT("1.30")
 
 // ftp
 #include <wininet.h>
@@ -75,6 +75,7 @@ class wxTEDFrame: public wxFrame
         inline TTXPage* Page(){return m_rootPage;};
 
     private:
+        int m_menuCount;      // How many menus are open
         bool m_inhibitStatus; // Inhibit the status bar while menus are up
 
         bool m_ShowMarkup; // If true, we show ttx markup
@@ -243,9 +244,10 @@ class wxTEDFrame: public wxFrame
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_TIMER1;
+        //*)
+
         static const long idMenuOpen;
         static const long idMenuClose;
-        //*)
 
         //(*Declarations(wxTEDFrame)
         wxMenu* MenuPresentation;
