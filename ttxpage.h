@@ -158,6 +158,12 @@ class TTXPage
          */
         bool m_LoadVTX(std::string filename);
 
+        /** Load a VTP page
+         * \param filename : The source file
+         * \return true if the page was loaded
+         */
+        bool m_LoadVTP(std::string filename);
+
         /** Load a TTX page (Cebra)
          * \param filename : The source file
          * \return true if the page was loaded

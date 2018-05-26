@@ -210,6 +210,44 @@ bool TTXPage::m_LoadEP1(std::string filename)
     return true;
 }
 
+bool TTXPage::m_LoadVTP(std::string filename)
+{
+    char buf[0x100];
+    TTXPage* p=this;
+    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+    // First 6 chars should be 56 64 60 (VTP)
+    filein.read(buf,3);
+    if ((buf[0]!=(char)0x56) || (buf[1]!=(char)0x54) || (buf[2]!=(char)0x50))
+    {
+        filein.close();
+        return false;
+    }
+    // Next 4 chars are <?> <pp> <m> <ss> in hex
+    filein.read(buf,4);
+    SetPageNumber(buf[2]*0x10000+buf[1]*0x100+buf[3]);
+
+    // Don't know what this stuff is. It is mostly 0
+    // Possibly some fastext links
+    filein.read(buf,0x6F);
+
+
+    SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+    // Next we load 24 lines of 40 characters
+    for (int i=0;i<24;i++)
+    {
+        filein.read(buf,40); // TODO: Check for a failed read and abandon
+        buf[40]=0;
+        std::string s(buf);
+        p->SetRow(i,s);
+    }
+    //p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+    // With a pair of zeros at the end we can skip
+    filein.close(); // Not sure that we need to close it
+    p->Setm_SubPage(NULL);
+    SetPageChanged(false);
+    return true;
+}
+
 bool TTXPage::m_LoadTTX(std::string filename)
 {
     char buf[1100]; // Don't think we need this much buffer. Just a line will do
@@ -548,6 +586,13 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
   if (!m_loaded)
   {
     if (m_LoadVTX(filename))
+      m_loaded=true;
+    type++;
+  }
+
+  if (!m_loaded)
+  {
+    if (m_LoadVTP(filename))
       m_loaded=true;
     type++;
   }

@@ -264,7 +264,7 @@
 		</object>
 		<object class="wxFileDialog" variable="LoadPageFileDialog" member="yes">
 			<message>Select teletext file</message>
-			<wildcard>TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTX files (*.vtx)|*.vtx|All files|*.*</wildcard>
+			<wildcard>TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTP files (*.vtp)|*.vtp|VTX files (*.vtx)|*.vtx|All files|*.*</wildcard>
 			<style>wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
 		</object>
 		<object class="wxTimer" name="ID_TIMER1" variable="m_Timer1" member="yes">
