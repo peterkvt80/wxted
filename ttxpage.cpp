@@ -214,6 +214,7 @@ bool TTXPage::m_LoadVTP(std::string filename)
 {
     char buf[0x100];
     TTXPage* p=this;
+    int subPageCount=0;
     std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
     // First 6 chars should be 56 64 60 (VTP)
     filein.read(buf,3);
@@ -222,25 +223,56 @@ bool TTXPage::m_LoadVTP(std::string filename)
         filein.close();
         return false;
     }
-    // Next 4 chars are <?> <pp> <m> <ss> in hex
+    // Next 4 chars are <?> <pp> <m> <number of subpages> in hex
     filein.read(buf,4);
-    SetPageNumber(buf[2]*0x10000+buf[1]*0x100+buf[3]);
+    SetPageNumber(buf[2]*0x10000+buf[1]*0x100);
+
+    subPageCount=buf[3];
+    if (subPageCount<1)
+    {
+      return false;
+    }
 
     // Don't know what this stuff is. It is mostly 0
     // Possibly some fastext links
     filein.read(buf,0x6F);
 
+    SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original file
 
-    SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
-    // Next we load 24 lines of 40 characters
-    for (int i=0;i<24;i++)
+    for (bool more=true;more && subPageCount>0;subPageCount--)
     {
-        filein.read(buf,40); // TODO: Check for a failed read and abandon
-        buf[40]=0;
-        std::string s(buf);
-        p->SetRow(i,s);
+      // Next we load 24 lines of 40 characters
+      for (int i=0;i<24;i++)
+      {
+          filein.read(buf,40); // TODO: Check for a failed read and abandon
+          if (filein.eof())
+          {
+            break;
+          }
+          buf[40]=0;
+          std::string s(buf);
+          p->SetRow(i,s);
+      }
+      filein.read(buf,10);
+      // third byte of this group is the subcode
+      p->SetSubCode(buf[2]);
+
+      std::cout << std::hex << std::setw(2);
+      for (int i=0;i<10;i++){std::cout << ((int)buf[i]) << " ";}
+      std::cout << std::dec << std::endl;
+
+      if (filein.eof())
+      {
+        more=false;
+      }
+      // Is there another subpage?
+      if (more && subPageCount>1)
+      {
+        TTXPage* newSubPage=new TTXPage();  // Create a new instance for the subpage
+        p->Setm_SubPage(newSubPage);        // Put in a link to it
+        p=newSubPage;                       // And jump to the next subpage ready to populate
+      }
     }
-    //p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
     // With a pair of zeros at the end we can skip
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(NULL);

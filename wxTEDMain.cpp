@@ -728,7 +728,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                         paintDC.DrawText(_((wxChar)L'\xEFC9'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic i
                     }
                 case ttxCodeEndBox :
-                    std::cout << "End Box not implemented" << std::endl;
+                    // std::cout << "End Box not implemented" << std::endl;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
@@ -736,7 +736,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     }
                     break;
                 case ttxCodeStartBox :
-                    std::cout << "Start box not implemented" << std::endl;
+                    // std::cout << "Start box not implemented" << std::endl;
                     if (m_ShowMarkup)
                     {
                         paintDC.SetTextForeground(*wxWHITE);
@@ -1411,7 +1411,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg="Teletext editor\n(c) 2014-2017, Peter Kwan.\nteastop.co.uk/teletext/wxted";
+    wxString msg="Teletext editor\n(c) 2014-2018, Peter Kwan.\nteastop.co.uk/teletext/wxted";
     wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 

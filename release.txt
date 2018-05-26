@@ -26,6 +26,6 @@ http://teastop.co.uk/teletext/wxted/
 
 Attention
 =========
-Each year update the copyright year.
+Each year update the copyright year in wxTEDMain.cpp.
 
 
