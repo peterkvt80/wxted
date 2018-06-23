@@ -66,6 +66,10 @@
                     if (outBit==0) // Character done?
                     {
                         assert(currentCode<0x80);
+                        if (currentCode<' ') // Control codes. Only null and CR cause problems.
+                        {
+                          currentCode|=0x80;
+                        }
                         line[outCol]=currentCode; // Save the character
                         currentCode=0;
                         outBit=0x40;
