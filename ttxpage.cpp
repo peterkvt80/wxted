@@ -917,10 +917,44 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
         switch (code)
         {
         case WXK_HOME : // Move to start of line
-            cursorLoc.x=0;
+            if (cursorLoc.x>0)
+            {
+              cursorLoc.x=0;
+            }
+            else // If already at the start of a line, find the start of text
+            {
+              for (cursorLoc.x=0;cursorLoc.x<40;cursorLoc.x++)
+              {
+                if (line->GetCharAt(cursorLoc.x)>' ')
+                {
+                  break;
+                }
+              }
+              if (cursorLoc.x==40) // Reached the end of the line?
+              {
+                cursorLoc.x=0;                // reset to the beginning
+              }
+            }
             break;
-        case WXK_END : // Move to end of line. (TODO: Only move to the last non space character on the line)
-            cursorLoc.x=39;
+        case WXK_END : // Move to end of line. (or if already there, the last printable character)
+            if (cursorLoc.x<39)
+            {
+              cursorLoc.x=39;
+            }
+            else // If already at the end of a line, find the last text
+            {
+              for (cursorLoc.x=39;cursorLoc.x>0;cursorLoc.x--)
+              {
+                if (line->GetCharAt(cursorLoc.x)>' ')
+                {
+                  break;
+                }
+              }
+              if (cursorLoc.x==0) // Reached the start of the line?
+              {
+                cursorLoc.x=39;    // reset to the end
+              }
+            }
             break;
         case WXK_LEFT : // left 314
             if (cursorLoc.x>8 || (cursorLoc.x>0 && cursorLoc.y>0)) // First 8 chars of header are off limits
