@@ -2,7 +2,7 @@
  * Description       : Class for a teletext page
  * Compiler          : C++
  *
- * Copyright (C) 2014-2016, Peter Kwan
+ * Copyright (C) 2014-2018, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -13,7 +13,7 @@
  * advertising or publicity pertaining to distribution of the
  * software without specific, written prior permission.
  *
- * The author disclaim all warranties with regard to this
+ * The author disclaims all warranties with regard to this
  * software, including all implied warranties of merchantability
  * and fitness.  In no event shall the author be liable for any
  * special, indirect or consequential damages or any damages
@@ -22,163 +22,161 @@
  * arising out of or in connection with the use or performance of
  * this software.
  *************************************************************************** **/
- #include "ttxpage.h"
-
+#include "ttxpage.h"
 
 bool TTXPage::pageChanged=false;
 
 TTXPage::TTXPage() : undoList(0), m_current(0)    //ctor
 {
-    m_Init();
+  m_Init();
 }
 
 static int instanceCount=0;
 
 void TTXPage::m_Init()
 {
-    m_region=0;
-    SetPageNumber(FIRSTPAGE); // Valid but unlikely page
-    Setm_SubPage(NULL); // Pointer to the next sub page
-    for (int i=0;i<=MAXROW;i++)
-    {
-        m_pLine[i]=NULL;
-    }
-    for (int i=0;i<6;i++)
-    {
-        SetFastextLink(i,0x8ff);
-    }
-    // Member variables
-    m_destination="inserter";
-    m_description="Description goes here";
-    SetSourcePage("");
-    SetShortFilename("");
-    m_cycletimeseconds=8;
-    m_cycletimetype='T';
-    m_subcode=-1;
-    m_pagestatus=0x8000;
-    instance=instanceCount++;
-    // std::cout << "[TTXPage::TTXPage()] instance=" << instance << std::endl;
-    SetPageChanged(false);
-
+  m_region=0;
+  SetPageNumber(FIRSTPAGE); // Valid but unlikely page
+  Setm_SubPage(nullptr); // Pointer to the next sub page
+  for (int i=0;i<=MAXROW;i++)
+  {
+    m_pLine[i]=nullptr;
+  }
+  for (int i=0;i<6;i++)
+  {
+    SetFastextLink(i,0x8ff);
+  }
+  // Member variables
+  m_destination="inserter";
+  m_description="Description goes here";
+  SetSourcePage("");
+  SetShortFilename("");
+  m_cycletimeseconds=8;
+  m_cycletimetype='T';
+  m_subcode=-1;
+  m_pagestatus=0x8000;
+  instance=instanceCount++;
+  // std::cout << "[TTXPage::TTXPage()] instance=" << instance << std::endl;
+  SetPageChanged(false);
 }
 
 TTXPage::~TTXPage()
 {
-    static int j=0;
-    j++;
-    // std::cout << "[~TTXPage]" << std::endl;
-    for (int i=0;i<=MAXROW;i++)
+  static int j=0;
+  j++;
+  // std::cout << "[~TTXPage]" << std::endl;
+  for (int i=0;i<=MAXROW;i++)
+  {
+    // std::cout << "Deleting line " << i << std::endl;
+    if (m_pLine[i]!=nullptr)
     {
-        // std::cout << "Deleting line " << i << std::endl;
-        if (m_pLine[i]!=NULL)
-        {
-            delete m_pLine[i];
-            m_pLine[i]=NULL;
-        }
+      delete m_pLine[i];
+      m_pLine[i]=nullptr;
     }
-    /* Does this leave sub pages leaking memory?
-       No. The destructor will cascade through the whole chain */
-    if (Getm_SubPage()!=NULL)
-    {
-        //std::cout << "~[TTXPage]: " << j << std::endl;
-        delete m_SubPage;
-        m_SubPage=NULL;
-    }
+  }
+  /* Does this leave sub pages leaking memory?
+     No. The destructor will cascade through the whole chain */
+  if (Getm_SubPage()!=nullptr)
+  {
+    //std::cout << "~[TTXPage]: " << j << std::endl;
+    delete m_SubPage;
+    m_SubPage=nullptr;
+  }
 }
 
 // See http://rtlalphanet.asp.tss.nl/RTL4/100s01 for examples
 bool TTXPage::m_LoadVTX(std::string filename)
 {
-    std::cout << "Trying VTX" << std::endl;
-    char buf[500];
-    TTXPage* p=this;
-    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
-    // First 10 chars should be ham encoded. No error correction allowed
-    filein.read(buf,9);
-    for (int i=0;i<9;i++)
+  std::cout << "Trying VTX" << std::endl;
+  char buf[500];
+  TTXPage* p=this;
+  std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+  // First 10 chars should be ham encoded. No error correction allowed
+  filein.read(buf,9);
+  for (int i=0;i<9;i++)
+  {
+    uint8_t ch=buf[i];
+    switch (ch)
     {
-        uint8_t ch=buf[i];
-        switch (ch)
-        {
-        case 0x15: break;
-        case 0x02: break;
-        case 0x49: break;
-        case 0x5e: break;
-        case 0x64: break;
-        case 0x73: break;
-        case 0x38: break;
-        case 0x2f: break;
-        case 0xd0: break;
-        case 0xc7: break;
-        case 0x8c: break;
-        case 0x9b: break;
-        case 0xa1: break;
-        case 0xb6: break;
-        case 0xfd: break;
-        case 0xea: break;
-        default:
-            return false; // Not a VTX if not HAM
-        }
+    case 0x15: break;
+    case 0x02: break;
+    case 0x49: break;
+    case 0x5e: break;
+    case 0x64: break;
+    case 0x73: break;
+    case 0x38: break;
+    case 0x2f: break;
+    case 0xd0: break;
+    case 0xc7: break;
+    case 0x8c: break;
+    case 0x9b: break;
+    case 0xa1: break;
+    case 0xb6: break;
+    case 0xfd: break;
+    case 0xea: break;
+    default:
+        return false; // Not a VTX if not HAM
     }
-    std::cout << std::endl;
-    filein.read(buf,119); // This contains headery stuff to be decoded
+  }
+  std::cout << std::endl;
+  filein.read(buf,119); // This contains headery stuff to be decoded
 
-    for (int line=1;line<25;line++)
-    {
-        filein.read(buf,42); // TODO: Check for a failed read and abandon
-        std::string s(buf);
-        p->SetRow(line,s);
-    }
+  for (int line=1;line<25;line++)
+  {
+    filein.read(buf,42); // TODO: Check for a failed read and abandon
+    std::string s(buf);
+    p->SetRow(line,s);
+  }
 
 
-    for (int i=1;i<2000;i++)
+  for (int i=1;i<2000;i++)
+  {
+    filein.read(buf,1);
+    uint8_t ch=buf[0];
+    switch (ch)
     {
-        filein.read(buf,1);
-        uint8_t ch=buf[0];
-        switch (ch)
-        {
-        case 0x15: std::cout << "<0>";break;
-        case 0x02: std::cout << "<1>";break;
-        case 0x49: std::cout << "<2>";break;
-        case 0x5e: std::cout << "<3>";break;
-        case 0x64: std::cout << "<4>";break;
-        case 0x73: std::cout << "<5>";break;
-        case 0x38: std::cout << "<6>";break;
-        case 0x2f: std::cout << "<7>";break;
-        case 0xd0: std::cout << "<8>";break;
-        case 0xc7: std::cout << "<9>";break;
-        case 0x8c: std::cout << "<a>";break;
-        case 0x9b: std::cout << "<b>";break;
-        case 0xa1: std::cout << "<c>";break;
-        case 0xb6: std::cout << "<d>";break;
-        case 0xfd: std::cout << "<e>";break;
-        case 0xea: std::cout << "<f>";break;
-        default:
-            std::cout << (char)(buf[0] & 0x7f);
-        }
+    case 0x15: std::cout << "<0>";break;
+    case 0x02: std::cout << "<1>";break;
+    case 0x49: std::cout << "<2>";break;
+    case 0x5e: std::cout << "<3>";break;
+    case 0x64: std::cout << "<4>";break;
+    case 0x73: std::cout << "<5>";break;
+    case 0x38: std::cout << "<6>";break;
+    case 0x2f: std::cout << "<7>";break;
+    case 0xd0: std::cout << "<8>";break;
+    case 0xc7: std::cout << "<9>";break;
+    case 0x8c: std::cout << "<a>";break;
+    case 0x9b: std::cout << "<b>";break;
+    case 0xa1: std::cout << "<c>";break;
+    case 0xb6: std::cout << "<d>";break;
+    case 0xfd: std::cout << "<e>";break;
+    case 0xea: std::cout << "<f>";break;
+    default:
+        std::cout << (char)(buf[0] & 0x7f);
     }
-    std::cout << std::endl;
-    return true;
-    if ((buf[0]!=(char)0xFE) || (buf[1]!=(char)0x01) || (buf[2]!=(char)0x09))
-    {
-        filein.close();
-        return false;
-    }
-    SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
-    // Next we load 24 lines  of 40 characters
-    for (int i=0;i<24;i++)
-    {
-        filein.read(buf,40); // TODO: Check for a failed read and abandon
-        buf[40]=0;
-        std::string s(buf);
-        p->SetRow(i,s);
-    }
-    p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
-    // With a pair of zeros at the end we can skip
-    filein.close(); // Not sure that we need to close it
-    p->Setm_SubPage(NULL);
-    SetPageChanged(false);
-    return true;
+  }
+  std::cout << std::endl;
+  return true;
+  if ((buf[0]!=(char)0xFE) || (buf[1]!=(char)0x01) || (buf[2]!=(char)0x09))
+  {
+    filein.close();
+    return false;
+  }
+  SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
+  // Next we load 24 lines  of 40 characters
+  for (int i=0;i<24;i++)
+  {
+    filein.read(buf,40); // TODO: Check for a failed read and abandon
+    buf[40]=0;
+    std::string s(buf);
+    p->SetRow(i,s);
+  }
+  p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+  // With a pair of zeros at the end we can skip
+  filein.close(); // Not sure that we need to close it
+  p->Setm_SubPage(nullptr);
+  SetPageChanged(false);
+  return true;
 }
 
 bool TTXPage::m_LoadEP1(std::string filename)
@@ -205,7 +203,7 @@ bool TTXPage::m_LoadEP1(std::string filename)
     p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
     // With a pair of zeros at the end we can skip
     filein.close(); // Not sure that we need to close it
-    p->Setm_SubPage(NULL);
+    p->Setm_SubPage(nullptr);
     SetPageChanged(false);
     return true;
 }
@@ -275,7 +273,7 @@ bool TTXPage::m_LoadVTP(std::string filename)
     }
     // With a pair of zeros at the end we can skip
     filein.close(); // Not sure that we need to close it
-    p->Setm_SubPage(NULL);
+    p->Setm_SubPage(nullptr);
     SetPageChanged(false);
     return true;
 }
@@ -316,7 +314,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
             }
 
             filein.close();
-            p->Setm_SubPage(NULL);
+            p->Setm_SubPage(nullptr);
             SetPageChanged(false);
             return true;
         }
@@ -345,7 +343,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
             }
 
             filein.close();
-            p->Setm_SubPage(NULL);
+            p->Setm_SubPage(nullptr);
             SetPageChanged(false);
             return true;
 
@@ -368,7 +366,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
     p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
 
     filein.close();
-    p->Setm_SubPage(NULL);
+    p->Setm_SubPage(nullptr);
     SetPageChanged(false);
     return true;
 }
@@ -482,13 +480,13 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     //std::cout << "DE not implemented\n";
                     std::getline(filein, m_description);
                     break;
-                case 3 : // "CT" - Cycle time (seconds)
+                case 3 : // "CT" - Cycle time (seconds). This is a per subpage function
                     // CT,8,T
                     // std::cout << "CT not implemented\n";
                     std::getline(filein, line, ',');
-                    m_cycletimeseconds=atoi(line.c_str());
+                    p->m_cycletimeseconds=atoi(line.c_str());
                     std::getline(filein, line);
-                    m_cycletimetype=line[0]=='T'?'T':'C';
+                    p->m_cycletimetype=line[0]=='T'?'T':'C';
                     // TODO: CT is not decoded correctly
                     break;
                 case 4 : // "PN" - Page Number mppss
@@ -512,7 +510,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     {
                         subpage=line.substr(3,2);
                         std::cout << "Subpage=" << subpage << std::endl;
-                        pageNumber=(pageNumber & 0xfff00) + std::strtol(subpage.c_str(),NULL,10);
+                        pageNumber=(pageNumber & 0xfff00) + std::strtol(subpage.c_str(),nullptr,10);
                     }
                     std::cout << "PN enters with m_PageNumber=" << std::hex << m_PageNumber << " pageNumber=" << std::hex << pageNumber << std::endl;
                     if (p->m_PageNumber!=FIRSTPAGE) // // Subsequent pages need new page instances
@@ -588,7 +586,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
         if (!found) std::getline(filein, line);
     }
     filein.close(); // Not sure that we need to close it
-    p->Setm_SubPage(NULL);
+    p->Setm_SubPage(nullptr);
     std::cout << "Finished reading TTI page. Line count=" << lines << std::endl;
     SetPageChanged(false);
     return (lines>0);
@@ -600,7 +598,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
  * \param filename : Name of teletext file to load
  * \param shortFilename : Filename without path
  */
-TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NULL), m_current(NULL)
+TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(nullptr), m_current(nullptr)
 {
   //std::cout << "[TTXPage] file constructor" << std::endl;
   m_Init();
@@ -656,108 +654,124 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(NUL
 }
 
 
-TTXPage::TTXPage(const TTXPage& other) : undoList(0), m_current(NULL)
+TTXPage::TTXPage(const TTXPage& other) : undoList(0), m_current(nullptr)
 {
-    //copy ctor.
-    std::cout << "Would be a great idea to implement the copy constructor" << std::endl;
+  //copy ctor.
+  std::cout << "Would be a great idea to implement the copy constructor" << std::endl;
 }
 
 TTXPage& TTXPage::operator=(const TTXPage& rhs)
 {
-    if (this == &rhs) return *this; // handle self assignment
-    //assignment operator
-    return *this;
+  if (this == &rhs) return *this; // handle self assignment
+  //assignment operator
+  return *this;
 }
 
 TTXPage* TTXPage::GetPage(unsigned int pageNumber)
 {
-    //std::cout << "[TTXPage::GetPage]" << std::endl;
-    TTXPage* p=this;
-    for (;pageNumber>0 && p->m_SubPage!=NULL;p=p->m_SubPage, pageNumber--);
-    // Iterate down the page list to find the required page object
-    return p;
+  //std::cout << "[TTXPage::GetPage]" << std::endl;
+  TTXPage* p=this;
+  for (;pageNumber>0 && p->m_SubPage!=nullptr;p=p->m_SubPage, pageNumber--);
+  // Iterate down the page list to find the required page object
+  return p;
 }
 
 void TTXPage::Undo(wxPoint& cursorloc)
 {
-    TEDEvent* tev=m_current; // This is the event we are going to undo
-    if (m_current==NULL) // Nothing to undo?
-        return;
-    // TODO: Check the event type
-    char oldChar=tev->GetCharList()->GetOldChar();   // What character
-    wxPoint loc=tev->GetCharList()->GetLoc();    // and where are we putting it?
-    // Write to the edit window
-    TTXLine* line=m_pLine[loc.y];
-    line->SetCharAt(loc.x,oldChar);
-    // Dump the Undo (or do we?) No, just move the m_current pointer. Keep it in case we want to do a Redo
-    // Step back to the previous event
-    TEDEvent* last=tev->GetlastEvent();
-    if (last!=0)
-        m_current=last;
-    else
-        SetPageChanged(false);
-        // TTXPage::pageChanged=false; // No more UNDO? Clear the changed flag. (actually can never happen!)
-    cursorloc=loc;
+  TEDEvent* tev=m_current; // This is the event we are going to undo
+  if (!m_current) // Nothing to undo?
+  {
+    return;
+  }
+  // TODO: Check the event type
+  char oldChar=tev->GetCharList()->GetOldChar();   // What character
+  wxPoint loc=tev->GetCharList()->GetLoc();    // and where are we putting it?
+  // Write to the edit window
+  TTXLine* line=m_pLine[loc.y];
+  line->SetCharAt(loc.x,oldChar);
+  // Dump the Undo (or do we?) No, just move the m_current pointer. Keep it in case we want to do a Redo
+  // Step back to the previous event
+  TEDEvent* last=tev->GetlastEvent();
+  if (last!=0)
+  {
+    m_current=last;
+  }
+  else
+  {
+    SetPageChanged(false);
+  }
+      // TTXPage::pageChanged=false; // No more UNDO? Clear the changed flag. (actually can never happen!)
+  cursorloc=loc;
 }
 
 TTXLine* TTXPage::GetRow(unsigned int row)
 {
-    // std::cout << "[TTXPage::GetRow] getting row " << row << std::endl;
-    if (row>MAXROW)
-    {
-        std::cout << "[TTXPage::GetRow]Invalid row requested: " << row << std::endl;
-        return NULL;
-    }
-    TTXLine* line=m_pLine[row];
-    // Don't create row 0, as that is special.
-    if (line==NULL && row>0)
-        line=m_pLine[row]=new TTXLine("                                        ");
-    if (line==NULL)
-      std::cout << "[TTXPage::GetRow] returning NULL " << std::endl;
-    return line;
+  // std::cout << "[TTXPage::GetRow] getting row " << row << std::endl;
+  if (row>MAXROW)
+  {
+    std::cout << "[TTXPage::GetRow]Invalid row requested: " << row << std::endl;
+    return nullptr;
+  }
+  TTXLine* line=m_pLine[row];
+  // Don't create row 0, as that is special.
+  if (line==nullptr && row>0)
+  {
+    line=m_pLine[row]=new TTXLine("                                        ");
+  }
+  if (!line)
+  {
+    std::cout << "[TTXPage::GetRow] returning NULL " << std::endl;
+  }
+  return line;
 }
 
 void TTXPage::SetRow(unsigned int rownumber, std::string line)
 {
-    if (rownumber>MAXROW || rownumber<0) return;
-    if (m_pLine[rownumber]==NULL)
-        m_pLine[rownumber]=new TTXLine(line); // Didn't exist before
-    else
-        m_pLine[rownumber]->Setm_textline(line);
+  if (rownumber>MAXROW || rownumber<0) return;
+  if (!m_pLine[rownumber])
+  {
+    m_pLine[rownumber]=new TTXLine(line); // Didn't exist before
+  }
+  else
+  {
+    m_pLine[rownumber]->Setm_textline(line);
+  }
 }
 
 void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldChar, char newChar)
 {
-    if (oldChar==newChar) // No change?
-        return;
-    TEDEvent* tev=new TEDEvent(evt);
-    CharChange* cc=NULL;
-    if (undoList==NULL) // First time we need to set the root
-    {
-        undoList=tev;
-        m_current=undoList;
-    }
-    else    // Subsequently we add to the list and move the current pointer to the end of the list
-    {
-        m_current->SetnextEvent(tev);
-        tev->SetlastEvent(m_current);
-        m_current=tev;
-    }
-    switch (evt)
-    {
-    case EventNone:
-        break;
-    case EventSave :    // Save to file (@todo)
-        break;
-    case EventKey :     // Keyboard press
-        cc=new CharChange(); // A bit redundant. This is always executed
-        tev->SetCharList(cc);
-        // tev->SetCharList(cc); // not correct. Need to add to the end of the list NOT the root
-        cc->AddChange(wxc,oldChar,newChar);
-        break;
-    case EventLanguage :     // No idea
-        break;
-    }
+  if (oldChar==newChar) // No change?
+  {
+    return;
+  }
+  TEDEvent* tev=new TEDEvent(evt);
+  CharChange* cc=nullptr;
+  if (!undoList) // First time we need to set the root
+  {
+    undoList=tev;
+    m_current=undoList;
+  }
+  else    // Subsequently we add to the list and move the current pointer to the end of the list
+  {
+    m_current->SetnextEvent(tev);
+    tev->SetlastEvent(m_current);
+    m_current=tev;
+  }
+  switch (evt)
+  {
+  case EventNone:
+    break;
+  case EventSave :    // Save to file (@todo)
+    break;
+  case EventKey :     // Keyboard press
+    cc=new CharChange(); // A bit redundant. This is always executed
+    tev->SetCharList(cc);
+    // tev->SetCharList(cc); // not correct. Need to add to the end of the list NOT the root
+    cc->AddChange(wxc,oldChar,newChar);
+    break;
+  case EventLanguage :     // No idea
+    break;
+  }
 }
 
 TEDEvent* TTXPage::GetUndo()
@@ -787,7 +801,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     TTXLine* line=m_pLine[cursorLoc.y];
 
     // Is the line NULL? If so we had better make the line!
-    if (line==NULL)
+    if (!line)
     {
         // Create a line if it is null
         line=m_pLine[cursorLoc.y]=new TTXLine("                                        ");
@@ -1084,7 +1098,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             break;
         default :
             // std::cout << "Default branch taken in SetCharAt " << (int)code << "i=" << instance << std::endl;
-            if (line!=NULL)
+            if (line)
             {
                 // By now we should only have teletext codes. If the new code is NOT a graphic then treat it as a character
                 if (code<0x80) // Only want basic ASCII codes
@@ -1160,93 +1174,123 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             std::cout << "This key code is not implemented: " << code << std::endl;
         }
     }
-
 }
 
 void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
 {
-    ttxfile << "PN," << m_FormatPageNumber(p) << "\n";
-    if (p->m_subcode<0)
-        ttxfile << "SC,0000" << "\n";
-    else
-        ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << p->m_subcode << "\n";   // Subcode for these lines
-    ttxfile << "PS," << std::setw(4) << std::setfill('X') << std::hex << p->m_pagestatus << std::endl;
-    ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
+  ttxfile << "PN," << m_FormatPageNumber(p) << "\n";
+  if (p->m_subcode<0)
+  {
+    ttxfile << "SC,0000" << "\n";
+  }
+  else
+  {
+    ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << p->m_subcode << "\n";   // Subcode for these lines
+  }
+  ttxfile << "PS," << std::setw(4) << std::setfill('X') << std::hex << p->m_pagestatus << std::endl;
+
+  // that we can have individual timings and properties per page.
+  ttxfile << "CT," << p->m_cycletimeseconds << "," << p->m_cycletimetype << std::dec << std::endl;
+
+  ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
+  // @todo Add support for individual CT timers here.
 
 
-    // The order is weird.
-    // First output row 0
-    // Then the enhancement packets
-    // Then the normal text rowa
-    std::string s=p->m_pLine[0]->GetMappedline7bit();
-    ttxfile << "OL," << std::dec << 0 << "," << s << "\n";
-    for (int j=0;j<MAXROW;j++)
+  // The order is weird.
+  // First output row 0
+  // Then the enhancement packets
+  // Then the normal text rowa
+  std::string s=p->m_pLine[0]->GetMappedline7bit();
+  ttxfile << "OL," << std::dec << 0 << "," << s << "\n";
+  for (int j=0;j<MAXROW;j++)
+  {
+    int i=1+((24+j) % MAXROW); // Ensure that enhancement packets go out first. It helps with vbit
+    if (p->m_pLine[i]!=nullptr && !p->m_pLine[i]->IsBlank()) // Skip empty lines
     {
-        int i=1+((24+j) % MAXROW); // Ensure that enhancement packets go out first. It helps with vbit
-        if (p->m_pLine[i]!=NULL && !p->m_pLine[i]->IsBlank()) // Skip empty lines
-        {
-            // This one for Andreas
+        // This one for Andreas
 //             std::string s=p->m_pLine[i]->GetMappedline(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
-            // This one for Droidfax compatibility
-            s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
-            ttxfile << "OL," << std::dec << i << "," << s << "\n";
-        }
-    }
-    std::cout << "sent a subpage" << "\n";
+        // This one for Droidfax compatibility
+      s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+      ttxfile << "OL," << std::dec << i << "," << s << "\n";
+  }
+  }
+  std::cout << "sent a subpage" << "\n";
 }
 
 std::string TTXPage::m_FormatPageNumber(TTXPage* p)
 {
-    std::ostringstream PN;
-    int page=p->m_PageNumber;
-    // Split the page number mppss
-    int mpp=page >> 8; // This bit is hex
-    int ss=page & 0xff; // But this bit is decimal
-    PN << std::hex << std::setw(3) << mpp << std::setfill('0') << std::dec << std::setw(2) << ss;
-    return PN.str();
+  std::ostringstream PN;
+  int page=p->m_PageNumber;
+  // Split the page number mppss
+  int mpp=page >> 8; // This bit is hex
+  int ss=page & 0xff; // But this bit is decimal
+  PN << std::hex << std::setw(3) << mpp << std::setfill('0') << std::dec << std::setw(2) << ss;
+  return PN.str();
 }
 
 bool TTXPage::SavePageDefault()
 {
-    return SavePage(GetSourcePage());
+  return SavePage(GetSourcePage());
 }
 
 
 /* 8 bit save */
 bool TTXPage::SavePage(std::string filename)
 {
-    std::ofstream ttxfile(filename.c_str()); // TODO: Save and Save as
-    SetSourcePage(filename);
+  std::ofstream ttxfile(filename.c_str()); // TODO: Save and Save as
+  SetSourcePage(filename);
+  // Fix up subcodes.
+  // Subcodes need to be ascending starting from 1
+  if (Getm_SubPage())
+  {
     // Fix up subcodes.
     // Subcodes need to be ascending starting from 1
-    if (Getm_SubPage()!=NULL)
+    int sc=1;
+    int pageNum=this->GetPageNumber() & 0xfff00; // Mask off the original subcode
+    for (TTXPage* p=this;p!=nullptr;p=p->m_SubPage)
     {
-        // Fix up subcodes.
-        // Subcodes need to be ascending starting from 1
-        int sc=1;
-        int pageNum=this->GetPageNumber() & 0xfff00; // Mask off the original subcode
-        for (TTXPage* p=this;p!=NULL;p=p->m_SubPage)
-        {
-            p->SetSubCode(sc);            // Monotonic subcode
-            p->SetPageNumber(pageNum + (sc & 0xff)); // Fix the page number too. (@todo: sc needs to be decimal, not hex)
-            sc++;
-        }
+      p->SetSubCode(sc);            // Monotonic subcode
+      p->SetPageNumber(pageNum + (sc & 0xff)); // Fix the page number too. (@todo: sc needs to be decimal, not hex)
+      sc++;
     }
-    if (ttxfile.is_open())
+  }
+  if (ttxfile.is_open())
+  {
+    ttxfile << std::dec ;
+    std::cout << "[TTXPage::SavePage] filename=" << filename << std::endl;
+    ttxfile << "DE," << m_description << std::endl;
+    //ttxfile << "PN," << std::hex << std::setprecision(5) << m_PageNumber << std::endl;
+    ttxfile << "DS," << m_destination << std::dec << std::endl;
+    ttxfile << "SP," << GetSourcePage() << std::endl; // SP is set every time there is a save
+    // My spidey instincts tell me that this code could be factorised
+    m_OutputLines(ttxfile, this);
+    ttxfile << std::hex;
+    // Don't output null links
+    if (m_fastextlinks[0]!=0x8ff)
     {
-        ttxfile << std::dec ;
-        std::cout << "[TTXPage::SavePage] filename=" << filename << std::endl;
-        ttxfile << "DE," << m_description << std::endl;
-        //ttxfile << "PN," << std::hex << std::setprecision(5) << m_PageNumber << std::endl;
-        ttxfile << "DS," << m_destination << std::dec << std::endl;
-        ttxfile << "SP," << GetSourcePage() << std::endl; // SP is set every time there is a save
-        ttxfile << "CT," << m_cycletimeseconds << "," << m_cycletimetype << std::dec << std::endl;
-        // My spidey instincts tell me that this code could be factorised
-        m_OutputLines(ttxfile, this);
-        ttxfile << std::hex;
-        // Don't output null links
-        if (m_fastextlinks[0]!=0x8ff)
+      ttxfile << "FL,"
+      << m_fastextlinks[0] << ","
+      << m_fastextlinks[1] << ","
+      << m_fastextlinks[2] << ","
+      << m_fastextlinks[3] << ","
+      << m_fastextlinks[4] << ","
+      << m_fastextlinks[5] << std::endl;
+    }
+    ttxfile << std::dec;
+    // Now also have to traverse the rest of the page tree
+    if (Getm_SubPage())
+    {
+      if (Getm_SubPage()->m_subcode>=0) // Shouldn't have to test this!
+      {
+        std::cout << "m_SubPage=" << std::hex << Getm_SubPage() << std::endl;
+        for (TTXPage* p=this->m_SubPage;p!=nullptr;p=p->m_SubPage)
         {
+          m_OutputLines(ttxfile, p);
+          // Subpages now have an identical copy of the main fastext links
+          // Don't output null links
+          if (m_fastextlinks[0]!=0x8ff)
+          {
+            ttxfile << std::hex;
             ttxfile << "FL,"
             << m_fastextlinks[0] << ","
             << m_fastextlinks[1] << ","
@@ -1254,143 +1298,117 @@ bool TTXPage::SavePage(std::string filename)
             << m_fastextlinks[3] << ","
             << m_fastextlinks[4] << ","
             << m_fastextlinks[5] << std::endl;
+            ttxfile << std::dec;
+          }
         }
-        ttxfile << std::dec;
-        // Now also have to traverse the rest of the page tree
-        if (Getm_SubPage()!=NULL)
-        {
-            if (Getm_SubPage()->m_subcode>=0) // Shouldn't have to test this!
-            {
-                std::cout << "m_SubPage=" << std::hex << Getm_SubPage() << std::endl;
-                for (TTXPage* p=this->m_SubPage;p!=NULL;p=p->m_SubPage)
-                {
-                    m_OutputLines(ttxfile, p);
-                    // Subpages now have an identical copy of the main fastext links
-                    // Don't output null links
-                    if (m_fastextlinks[0]!=0x8ff)
-                    {
-                        ttxfile << std::hex;
-                        ttxfile << "FL,"
-                        << m_fastextlinks[0] << ","
-                        << m_fastextlinks[1] << ","
-                        << m_fastextlinks[2] << ","
-                        << m_fastextlinks[3] << ","
-                        << m_fastextlinks[4] << ","
-                        << m_fastextlinks[5] << std::endl;
-                        ttxfile << std::dec;
-                    }
-                }
-
-            }
-        }
-
+      }
     }
-    else
-        return false; // fail
-    SetPageChanged(false);
-    return true; // success
+  }
+  else
+  {
+    return false; // fail
+  }
+  SetPageChanged(false);
+  return true; // success
 }
 
 bool TTXPage::IsAlphaMode(wxPoint loc)
 {
-    bool result=true;
-    // Check that the parameter is valid
-    if (loc.x<0 || loc.x>39 || loc.y<1 || loc.y>24) return result;
-    // Get pointer to the relevant line
-    TTXLine* line=m_pLine[loc.y];
-    if (line==NULL) return true;    // Empty line by definition is alpha
-
+  bool result=true;
+  // Check that the parameter is valid
+  if (loc.x<0 || loc.x>39 || loc.y<1 || loc.y>24) return result;
+  // Get pointer to the relevant line
+  TTXLine* line=m_pLine[loc.y];
+  if (line)
+  {
     result=line->IsAlphaMode(loc.x);
-    //if (result)
-    //    std::cout << "Character is Alpha" << std::endl;
-    //else
-    //    std::cout << "Character is Graphics" << std::endl;
-    return result;
+  }
+  return result;
 }
 
 int TTXPage::GetPageCount()
 {
-    int count=0;
-    int subcode=0;
-    for (TTXPage* p=this;p!=NULL;p=p->m_SubPage)
-    {
-       // std::cout <<"Get page count happens here, subcode=" << subcode << " " << (int)p << std::endl;
-       if (p!=NULL)
-            p->SetSubCode(subcode++);   // Always redo the subcodes
-        count++;
-    }
-    //std::cout << "GetPageCount returns " << count << std::endl;
-    return count;
+  int count=0;
+  int subcode=0;
+  for (TTXPage* p=this;p!=nullptr;p=p->m_SubPage)
+  {
+     // std::cout <<"Get page count happens here, subcode=" << subcode << " " << (int)p << std::endl;
+     if (p)
+     {
+        p->SetSubCode(subcode++);   // Always redo the subcodes
+     }
+      count++;
+  }
+  //std::cout << "GetPageCount returns " << count << std::endl;
+  return count;
 }
 
 void TTXPage::CopyMetaData(TTXPage* page)
 {
-    m_PageNumber=page->m_PageNumber;
-    for (int i=0;i<6;i++)
-        SetFastextLink(i,page->GetFastextLink(i));
+  m_PageNumber=page->m_PageNumber;
+  for (int i=0;i<6;i++)
+  {
+    SetFastextLink(i,page->GetFastextLink(i));
+  }
 
-    m_destination=page->m_destination;  // DS
-    SetSourcePage(page->GetSourcePage());// SP
-    m_description=page->m_description;  // DE
-    m_cycletimeseconds=page->m_cycletimeseconds;     // CT
-    m_cycletimetype=page->m_cycletimetype;       // CT
-    m_subcode=page->m_subcode;              // SC
-    m_pagestatus=page->m_pagestatus;           // PS
-    m_region=page->m_region;            // RE
+  m_destination=page->m_destination;  // DS
+  SetSourcePage(page->GetSourcePage());// SP
+  m_description=page->m_description;  // DE
+  m_cycletimeseconds=page->m_cycletimeseconds;     // CT
+  m_cycletimetype=page->m_cycletimetype;       // CT
+  m_subcode=page->m_subcode;              // SC
+  m_pagestatus=page->m_pagestatus;           // PS
+  m_region=page->m_region;            // RE
 }
 
 void TTXPage::SetLanguage(int language)
 {
-    language=language & 0x07;   // Limit language 0..7
-    m_pagestatus=m_pagestatus & ~0x0380; // Clear the old language bits
-    m_pagestatus=m_pagestatus | (language << 7);   // Shift the language bits into the right place and OR them in
-    // std::cout << "Set Language: PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
+  language=language & 0x07;   // Limit language 0..7
+  m_pagestatus=m_pagestatus & ~0x0380; // Clear the old language bits
+  m_pagestatus=m_pagestatus | (language << 7);   // Shift the language bits into the right place and OR them in
+  // std::cout << "Set Language: PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
 }
 
 int TTXPage::GetLanguage()
 {
-    int language;
-    language=(m_pagestatus >> 7) & 0x07;
-    // std::cout << "Get Language PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
-    return language;
+  int language;
+  language=(m_pagestatus >> 7) & 0x07;
+  // std::cout << "Get Language PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
+  return language;
 }
 
 void TTXPage::SetPageNumber(int page)
 {
-    if ((page<0x10000) || (page>0x8ff99))
-    {
-        std::cout << "Page number is out of range: " << page << std::endl;
-    }
-    if (page<0x10000) page=0x10000;
-    if (page>0x8ff99) page=0x8ff99;
+  if ((page<0x10000) || (page>0x8ff99))
+  {
+    std::cout << "Page number is out of range: " << page << std::endl;
+  }
+  if (page<0x10000) page=0x10000;
+  if (page>0x8ff99) page=0x8ff99;
 
-    if (m_PageNumber!=page)
-    {
-      SetPageChanged(true);
-    }
-
-    m_PageNumber=page;
+  if (m_PageNumber!=page)
+  {
+    SetPageChanged(true);
+  }
+  m_PageNumber=page;
 }
 
 int TTXPage::GetFastextLink(int link)
 {
-    if (link<0 || link>5)
-        return 0;
-    return m_fastextlinks[link];
+  if (link<0 || link>5)
+  {
+    return 0;
+  }
+  return m_fastextlinks[link];
 }
 
 void TTXPage::SetFastextLink(int link, int value)
 {
-    if (link<0 || link>5 || value>0x8ff)
-    {
-        m_fastextlinks[link]=0x8ff; // When no particular page is specified
-        return;
-    }
-    m_fastextlinks[link]=value;
+  if (link<0 || link>5 || value>0x8ff)
+  {
+    m_fastextlinks[link]=0x8ff; // When no particular page is specified
+    return;
+  }
+  m_fastextlinks[link]=value;
 }
-
-
-
-
-
 

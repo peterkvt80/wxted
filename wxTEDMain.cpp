@@ -1652,6 +1652,7 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
     m_propertiesDlg->CheckBoxTransmitPage->SetValue((ps & PAGESTATUS_TRANSMITPAGE)  >0);
     // Counter/Timer
     value.str("");
+    // @todo Don't use m_rootPage, use the current subpage so we can get timings per page
     value << std::dec << m_rootPage->GetCycleTime();    // The cycle count / time (seconds)
     s=value.str();
     m_propertiesDlg->TextCtrlCycleTime->SetValue(_(s)); // And put it in the dialog
@@ -1996,6 +1997,7 @@ wxString wxTEDFrame::GetTextFromClipboard()
  * One sneaky trick, is if the URL starts
  * http://editor.teletext40.com (obsolete)
  * http://edit.tf (current)
+ * http://zxnet.co.uk/teletext/editor
  * then we assume that the clipboard contains a URL from the teletext40 editor and should be decoded as such.
  */
 void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
@@ -2005,7 +2007,7 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
    /// @todo Make this more general to identify a valid hash string
    if ((wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) ||  // Paste obsolete teletext40 URL?
     (wxs.Find("www.uniquecodeanddata.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a uniquecodeandadata URL?
-    (wxs.Find("zxnet.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a zxnet.co.uk URL?
+    (wxs.Find("zxnet.co.uk/teletext/editor")!=wxNOT_FOUND) ||     // Paste a zxnet.co.uk URL?
     (wxs.Find("edit.tf")!=wxNOT_FOUND))     // Paste edit.tf URL?
    {
        load_from_hash(m_currentPage,wxs.char_str());

@@ -1785,7 +1785,7 @@
 	<iostream>
 	<wx/string.h>
 
-1420392984 source:e:\dev\wxted-github\wxted\pagesettingsdialog.cpp
+1533079531 source:e:\dev\wxted-github\wxted\pagesettingsdialog.cpp
 	"PageSettingsDialog.h"
 	<wx/intl.h>
 	<wx/string.h>
@@ -2254,7 +2254,7 @@
 	"string.h"
 	"ttxpage.h"
 
-1527290282 e:\dev\wxted-github\wxted\ttxpage.h
+1533161397 e:\dev\wxted-github\wxted\ttxpage.h
 	<stdlib.h>
 	"string.h"
 	<iostream>
@@ -2282,7 +2282,7 @@
 1490915829 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1527353820 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1530568691 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1476983748 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2794,7 +2794,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1527352587 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1533080703 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
