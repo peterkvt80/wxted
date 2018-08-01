@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan (http://www.teastop.co.uk)
  * License:
   *
- * Copyright (C) 2014, Peter Kwan
+ * Copyright (C) 2014=2018, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -1652,8 +1652,9 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
     m_propertiesDlg->CheckBoxTransmitPage->SetValue((ps & PAGESTATUS_TRANSMITPAGE)  >0);
     // Counter/Timer
     value.str("");
-    // @todo Don't use m_rootPage, use the current subpage so we can get timings per page
-    value << std::dec << m_rootPage->GetCycleTime();    // The cycle count / time (seconds)
+
+    // NOTE: Don't use m_rootPage, use m_currentPage so we can get timings per page
+    value << std::dec << m_currentPage->GetCycleTime();    // The cycle count / time (seconds)
     s=value.str();
     m_propertiesDlg->TextCtrlCycleTime->SetValue(_(s)); // And put it in the dialog
 
@@ -1723,9 +1724,9 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
         // Description
         m_rootPage->SetDescription(m_propertiesDlg->TextCtrlDescription->GetValue().ToStdString()); // Description
 
-        // Counter/Timer
+        // Counter/Timer. NOTE: This is a per subpage property
         std::string str=m_propertiesDlg->TextCtrlCycleTime->GetValue().ToStdString(); // Read the time from the dialog
-        m_rootPage->SetCycleTime(atoi(str.c_str()));    // The cycle count / time (seconds)
+        m_currentPage->SetCycleTime(atoi(str.c_str()));    // The cycle count / time (seconds)
 
         char ctmode=(m_propertiesDlg->RadioBoxCycleMode->GetSelection())==0?'C':'T';
         m_rootPage->SetCycleTimeMode(ctmode);
