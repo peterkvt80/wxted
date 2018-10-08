@@ -71,6 +71,11 @@
 					<help>Open page on edit.tf website</help>
 					<handler function="OnMenuItemExportTTX40Selected" entry="EVT_MENU" />
 				</object>
+				<object class="wxMenuItem" name="isExportZxnet" variable="MenuExportZxnet" member="yes">
+					<label>Export ZxNet</label>
+					<help>Edit page in ZxNet</help>
+					<handler function="OnMenuItemZXNetSelected" entry="EVT_MENU" />
+				</object>
 				<object class="wxMenuItem" name="idMenuQuit" variable="MenuItemQuit" member="no">
 					<label>Quit</label>
 					<accel>Alt-F4</accel>

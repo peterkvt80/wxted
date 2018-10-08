@@ -54,7 +54,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.34")
+#define VERSION_STRING   wxT("1.35")
 
 // ftp
 #include <wininet.h>
@@ -210,6 +210,7 @@ class wxTEDFrame: public wxFrame
         static const long idPublish;
         static const long idPublishSettings;
         static const long idExportTTX40;
+        static const long isExportZxnet;
         static const long idMenuQuit;
         static const long idNewWindow;
         static const long idUndo;
@@ -291,6 +292,7 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemShowHeader;
         wxMenuItem* MenuItemUnused;
         wxMenuItem* MenuItemPaste;
+        wxMenuItem* MenuExportZxnet;
         wxTimer m_Timer1;
         wxMenuItem* MenuItemEnglish;
         wxMenuItem* MenuItemUndo;

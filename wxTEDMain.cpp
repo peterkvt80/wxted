@@ -3,7 +3,7 @@
  * Purpose:   Teletext editor Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
- * Copyright: Peter Kwan (http://www.teastop.co.uk)
+ * Copyright: Peter Kwan
  * License:
   *
  * Copyright (C) 2014=2018, Peter Kwan
@@ -76,6 +76,7 @@ const long wxTEDFrame::isSavePageAs = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idExportTTX40 = wxNewId();
+const long wxTEDFrame::isExportZxnet = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
 const long wxTEDFrame::idNewWindow = wxNewId();
 const long wxTEDFrame::idUndo = wxNewId();
@@ -1110,6 +1111,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu1->Append(MenuItemPublishSettings);
     MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export edit.tf"), _("Open page on edit.tf website"), wxITEM_NORMAL);
     Menu1->Append(MenuItemExportTTX40);
+    MenuExportZxnet = new wxMenuItem(Menu1, isExportZxnet, _("Export ZxNet"), _("Edit page in ZxNet"), wxITEM_NORMAL);
+    Menu1->Append(MenuExportZxnet);
     MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
     Menu1->Append(MenuItemQuit);
     Menu1->AppendSeparator();
@@ -1204,6 +1207,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
+    Connect(isExportZxnet,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemZXNetSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
     Connect(idNewWindow,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemNewWindow);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
@@ -2306,7 +2310,7 @@ void wxTEDFrame::OnMenuItemZXNetSelected(wxCommandEvent& event)
   // Convert to a teletext 40 URL
   // TODO: Implement character set
   char page[1300];
-  save_to_hash(1, page,cc, "http://temp.zxnet.co.uk/editor", m_currentPage);
+  save_to_hash(1, page,cc, "http://zxnet.co.uk/teletext/editor", m_currentPage);
   CopyTextToClipboard(page);
   // Launch a browser with the URL
   // Widen the URL
