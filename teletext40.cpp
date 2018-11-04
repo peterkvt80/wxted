@@ -180,13 +180,13 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], const char* webs
 	  int pagenumber=page->GetPageNumber();
 	  int subcode=page->GetSubCode();
 	  int status=page->GetPageStatus();
-	  sprintf(p,":PN=%03x:SC=%04x:PS=%04X:X270=%03X%04X%03X%04X%03X%04X%03X%04X%03X%04X%03X%04X",pagenumber >> 8, subcode, status,
-           page->GetFastextLink(0),0, // The six Fastext links
-           page->GetFastextLink(1),0,
-           page->GetFastextLink(2),0,
-           page->GetFastextLink(3),0,
-           page->GetFastextLink(4),0,
-           page->GetFastextLink(5),0
+	  sprintf(p,":PN=%03x:SC=%04x:PS=%04X:X270=%03X%04X%03X%04X%03X%04X%03X%04X%03X%04X%03X%04XF",pagenumber >> 8, subcode, status,
+           page->GetFastextLink(0),0x3f7f, // The six Fastext links
+           page->GetFastextLink(1),0x3f7f,
+           page->GetFastextLink(2),0x3f7f,
+           page->GetFastextLink(3),0x3f7f,
+           page->GetFastextLink(4),0x3f7f,
+           page->GetFastextLink(5),0x3f7f
            );
 	}
 	// encoding[1167+sz]=0;
