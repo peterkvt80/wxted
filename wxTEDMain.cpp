@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan
  * License:
   *
- * Copyright (C) 2014=2018, Peter Kwan
+ * Copyright (C) 2014=2019, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -570,35 +570,44 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
                     for (int i=0;i<6;i++) // for each of the six pixels in this character
                     {
-                        if (ch & j)
-                        {
-                            if (m_blinkToggle || !flashing)
-                            {
-                                paintDC.SetBrush(wxBrush(*fg)); // Normal
-                                doubleHeightDC.SetBrush(*fg); // Normal
-                            }
-                            else
-                            {
-                                paintDC.SetBrush(wxBrush(*bg)); // Blinked off
-                                doubleHeightDC.SetBrush(*bg); // blink off
-                            }
-                        }
-                        else // Pixel is not set
-                        {
-                            paintDC.SetBrush(wxBrush(*bg));
-                            doubleHeightDC.SetBrush(*bg); // off
-                        }
+                        bool pixelSet=(ch & j) && (m_blinkToggle || !flashing);
 
                         j<<=1;
                         if (j==0x20) j<<=1; // Skip the alphabet exception
-                        int k=separated?-2:1; // Add or subtract a line
-                        paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                                      row*m_ttxH+(i/2)*m_ttxH/3),
-                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
+
+                        // Draw the full sized pixel in background colour
+                        paintDC.SetBrush(wxBrush(*bg));
+                        int k=1; // Full size pixel
                         if (doubleHeight)
-                            doubleHeightDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                        {
+                            paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
                                                                  (i/2)*m_ttxH/3),
                                               wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                        }
+                        else
+                        {
+                            paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                        row*m_ttxH+(i/2)*m_ttxH/3),
+                                        wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                        }
+                        // Now draw the actual pixel
+                        if (pixelSet)
+                        {
+                            paintDC.SetBrush(wxBrush(*fg));
+                            if (separated) k=-2; // Thin border around the pixel
+                            if (doubleHeight)
+                            {
+                                paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                                     (i/2)*m_ttxH/3),
+                                                  wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                            }
+                            else
+                            {
+                                paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                              row*m_ttxH+(i/2)*m_ttxH/3),
+                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                            }
+                        }
                     }
 
                 } // Graphic block
