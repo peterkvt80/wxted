@@ -495,6 +495,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                 case ttxCodeAlphaCyan :
                 case ttxCodeAlphaWhite :
                     hold=false;
+                    break;
                 case ttxCodeFlash :
                     break;
                 case ttxCodeSteady :
@@ -737,6 +738,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                         paintDC.SetTextForeground(*wxWHITE);
                         paintDC.DrawText(_((wxChar)L'\xEFC9'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic i
                     }
+                    break;
                 case ttxCodeEndBox :
                     // std::cout << "End Box not implemented" << std::endl;
                     if (m_ShowMarkup)
