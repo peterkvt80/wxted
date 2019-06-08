@@ -645,6 +645,7 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) : undoList(nul
   {
     SetRow(1,"Unable to load file");
     SetRow(3,shortFilename);
+    SetRow(4,"?");
     SetSourcePage("Unable to load page");
     SetShortFilename("no page");
   }

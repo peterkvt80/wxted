@@ -1,16 +1,34 @@
+<!DOCTYPE html>
 <html>
+<header>
+<meta charset="UTF-8">
+</header>
 
 <style>
 body {
-  font-family: Helvetica, Arial, Sans-Serif;
+  font-family: Teletext2, Helvetica, Arial, Sans-Serif;
+  background-color: black;
+  color: white;
+}
+.black {color:black;background-color:white;}
+.red {color:red;background-color:white}
+.green {color:#00ff00;}
+.yellow {color:yellow;}
+.blue {color:blue;background-color:white;}
+.magenta {color:magenta;}
+.cyan {color:cyan;}
+.white {color:white;}
+.panel {
+  display: inline-block;
+  background-color:#666666"
 }
 
 </style>
 
 <body>
-<div style="border:2px black solid; display: inline-block;">
-	<span style="display: inline-block; background-color:#FFFFBB">
-		<b>Special keys</b><br/>
+<div>
+	<span class="panel" >
+		<b style="color:yellow;">SPECIAL KEYS</b><br/>
 		Page Up - Show next page of carousel<br/>
 		Page Down - Show previous page of carousel<br/>
 		F11 - Hide/Reveal<br/>
@@ -18,31 +36,34 @@ body {
 		Alt-Gr - Show control codes<br/>
 	</span>
 </div>
-<div style="border:2px black solid; display: inline-block;">
-	<b>Text colours</b><br/>
-	<span style="display: inline-block;">
-		Shift-F1 - Red text<br/>
-		Shift-F2 - Green text<br/>
-		Shift-F3 - Yellow text<br/>
-		Shift-F4 - Blue text<br/>
-		Shift-F5 - Magenta text<br/>
-		Shift-F6 - Cyan text<br/>
-		Shift-F7 - White text<br/>
-	</span>
-	<b>Graphic colours</b>	When the small graphics cursor is displayed then pressing space will toggle the pixel on and off.<br/>
-	<span style="display: inline-block; background-color:#BBBBBB">
-		Ctrl-F1 - Graphics red<br/>
-		Ctrl-F2 - Graphics green<br/>
-		Ctrl-F3 - Graphics yellow<br/>
-		Ctrl-F4 - Graphics blue<br/>
-		Ctrl-F5 - Graphics magenta<br/>
-		Ctrl-F6 - Graphics cyan<br/>
-		Ctrl-F7 - Graphics white<br/>
+<div>
+	<b style="color:yellow;">TEXT COLOURS</b><br/>
+	<span class="panel">
+		<span style="background-color:white;color:red;">A</span> Shift-F1 - Red text<br/>
+		<span class="green">A</span> Shift-F2 - Green text<br/>
+		<span class="yellow">A</span> Shift-F3 - Yellow text<br/>
+		<span class="blue">A</span> Shift-F4 - Blue text<br/>
+		<span class="magenta">A</span> Shift-F5 - Magenta text<br/>
+		<span class="cyan">A</span> Shift-F6 - Cyan text<br/>
+		<span class="white">A</span> Shift-F7 - White text<br/>
+		<span class="black">A</span> Shift-F8 - Black text<br/>
+	</span><br/>
+	<b style="color:yellow;">GRAPHIC COLOURS</b><br/>
+	When the small graphics cursor is displayed then pressing space will toggle the pixel on and off.<br/>
+	<span class="panel" >
+		<span class="red">&#xe69b;</span> Ctrl-F1 - Graphics red<br/>
+		<span class="green">&#xe69b;</span> Ctrl-F2 - Graphics green<br/>
+		<span class="yellow">&#xe69b;</span> Ctrl-F3 - Graphics yellow<br/>
+		<span class="blue">&#xe69b;</span> Ctrl-F4 - Graphics blue<br/>
+		<span class="magenta">&#xe69b;</span> Ctrl-F5 - Graphics magenta<br/>
+		<span class="cyan">&#xe69b;</span> Ctrl-F6 - Graphics cyan<br/>
+		<span class="white">&#xe69b;</span> Ctrl-F7 - Graphics white<br/>
+		<span class="black">&#xe69b;</span> Ctrl-F8 - Graphics black<br/>
 	</span>
 </div>
-<div style="border:2px black solid; display: inline-block;">
-	<b>Effects</b><br/>
-	<span style="display: inline-block; background-color:#BBBBBB">
+<div class="panel">
+	<b style="color:yellow;">EFFECTS</b><br/>
+	<span>
 		CTRL-H - Flash<br/>
 		CTRL-I - Steady<br/>
 		CTRL-J - End Box<br/>

@@ -653,6 +653,11 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     fg=wxBLACK;
                     concealed=false;    // Side effect of colour. It cancels a conceal.
                     graphicsMode=false;
+                    if (m_ShowMarkup)
+                    {
+                        paintDC.SetTextForeground(*fg);
+                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
+                    }
                     break;
                 case ttxCodeAlphaRed :
                     fg=wxRED;
@@ -775,7 +780,11 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                     concealed=false;
                     graphicsMode=true;
                     fg=wxBLACK;
-                    if (m_ShowMarkup) paintDC.DrawText(_('¬'),wxPoint(col*m_ttxW,row*m_ttxH)); // hmm
+                    if (m_ShowMarkup)
+                    {
+                      paintDC.SetTextForeground(*fg);
+                      paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
+                    }
                     break;
                 case ttxCodeGraphicsRed : // Graphics red
                     concealed=false;
@@ -1043,6 +1052,7 @@ void wxTEDFrame::m_SetStatus()
             case ttxCodeGraphicsMagenta: code<<"Graphics Magenta=Ctrl-F5";break;
             case ttxCodeGraphicsCyan:  code<<"Graphics Cyan=Ctrl-F6";break;
             case ttxCodeGraphicsWhite: code<<"Graphics White=Ctrl-F7";break;
+            case ttxCodeGraphicsBlack: code<<"Graphics White=Ctrl-F8";break;
             case ttxCodeConcealDisplay: code<<"Conceal=Shift W (F11 toggle)";break;
             case ttxCodeContiguousGraphics: code<<"Contiguous graphics";break;
             case ttxCodeSeparatedGraphics: code<<"Separated graphics=Ctrl-T";break;
@@ -2216,6 +2226,7 @@ void wxTEDFrame::SetRegionMenu(int region)
 
 void wxTEDFrame::OnMenuSpecialKeys(wxCommandEvent& event)
 {
+    helpFrame->SetFont(GetFont()); // [fail to!] Use teletext font for help
     helpFrame->Show(true);
 }
 

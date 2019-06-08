@@ -142,17 +142,25 @@ bool TTXLine::IsDoubleHeight(int xLoc=39)
   // If the line we are testing isn't long enough, just check the last character.
   // std::cout << m_textline << std::endl;
   if (m_textline.empty())
+  {
     return false;
+  }
   if (m_textline.length()<x)
+  {
     x=m_textline.length()-1;
+  }
   for (unsigned int i=0;i<=x;i++)
   {
-    if (m_textline[i]=='\r' || m_textline[i]==0x10)
-        doubleHeight=true;
+    if (m_textline[i]=='\r') //  || m_textline[i]==0x10) // Probably mean to write 10 (LF) 0x10=GfxBlack
+    {
+      doubleHeight=true;
+    }
     if (m_textline[i]=='\x12')
-        doubleHeight=false;
+    {
+      doubleHeight=false;
+    }
   }
-    return doubleHeight;
+  return doubleHeight;
 }
 
 bool TTXLine::IsBlank()
@@ -200,6 +208,7 @@ bool TTXLine::IsAlphaMode(int loc)
         case ttxCodeAlphaWhite:;
             result=true;
             break;
+        case ttxCodeGraphicsBlack:;
         case ttxCodeGraphicsRed:;
         case ttxCodeGraphicsGreen:;
         case ttxCodeGraphicsYellow:;

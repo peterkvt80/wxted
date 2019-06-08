@@ -511,7 +511,7 @@
 	<float.h>
 	<ieeefp.h>
 
-1483016264 source:e:\dev\wxted-github\wxted\helpframe.cpp
+1554069364 source:e:\dev\wxted-github\wxted\helpframe.cpp
 	"HelpFrame.h"
 	<wx/intl.h>
 	<wx/string.h>
@@ -2279,10 +2279,10 @@
 
 1463305750 e:\dev\wxted-github\wxted\hamm-tables.h
 
-1490915829 source:e:\dev\wxted-github\wxted\ttxline.cpp
+1560039184 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1533164006 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1560035059 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1476983748 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2382,7 +2382,7 @@
 1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1552346582 e:\dev\wxted-github\wxted\wxtedmain.h
+1560039461 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -2794,7 +2794,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1539037952 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1560036925 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -2804,7 +2804,7 @@
 	<wx/string.h>
 	<wx/dcbuffer.h>
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msgdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msgdlg.h
 	"wx/defs.h"
 	"wx/dialog.h"
 	"wx/stockitem.h"
@@ -2816,29 +2816,29 @@
 	"wx/osx/msgdlg.h"
 	"wx/os2/msgdlg.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\stockitem.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\stockitem.h
 	"wx/defs.h"
 	"wx/chartype.h"
 	"wx/string.h"
 	"wx/accel.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\generic\msgdlgg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\generic\msgdlgg.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\msgdlg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\msgdlg.h
 	"wx/msgdlg.h"
 	"wx/generic/msgdlgg.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\msgdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\msgdlg.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\msgdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\msgdlg.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\msgdlg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\msgdlg.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\msgdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\msgdlg.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\msgdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\msgdlg.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\wx.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\wx.h
 	"wx/defs.h"
 	"wx/object.h"
 	"wx/dynarray.h"
@@ -2919,15 +2919,15 @@
 	"wx/validate.h"
 	"wx/valtext.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\dcprint.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\dcprint.h
 	"wx/defs.h"
 	"wx/dc.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\dcscreen.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\dcscreen.h
 	"wx/defs.h"
 	"wx/dc.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\bmpbuttn.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\bmpbuttn.h
 	"wx/defs.h"
 	"wx/button.h"
 	"wx/univ/bmpbuttn.h"
@@ -2939,35 +2939,35 @@
 	"wx/cocoa/bmpbuttn.h"
 	"wx/os2/bmpbuttn.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\bmpbuttn.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\bmpbuttn.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\bmpbuttn.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\bmpbuttn.h
 	"wx/button.h"
 	"wx/bitmap.h"
 	"wx/brush.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\bmpbuttn.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\bmpbuttn.h
 	"wx/motif/bmpmotif.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\bmpmotif.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\bmpmotif.h
 	"wx/defs.h"
 	"wx/bitmap.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\bmpbuttn.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\bmpbuttn.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\bmpbuttn.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\bmpbuttn.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\bmpbuttn.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\bmpbuttn.h
 	"wx/button.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\bmpbuttn.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\bmpbuttn.h
 	"wx/cocoa/NSButton.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\bmpbuttn.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\bmpbuttn.h
 	"wx/button.h"
 	"wx/dcclient.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\checklst.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\checklst.h
 	"wx/defs.h"
 	"wx/listbox.h"
 	"wx/univ/checklst.h"
@@ -2980,7 +2980,7 @@
 	"wx/cocoa/checklst.h"
 	"wx/os2/checklst.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\listbox.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\listbox.h
 	"wx/defs.h"
 	"wx/ctrlsub.h"
 	"wx/univ/listbox.h"
@@ -2992,60 +2992,60 @@
 	"wx/os2/listbox.h"
 	"wx/cocoa/listbox.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\listbox.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\listbox.h
 	"wx/scrolwin.h"
 	"wx/dynarray.h"
 	"wx/arrstr.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\listbox.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\listbox.h
 	"wx/dynarray.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\listbox.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\listbox.h
 	"wx/ctrlsub.h"
 	"wx/clntdata.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\listbox.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\listbox.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\listbox.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\listbox.h
 	"wx/list.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\listbox.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\listbox.h
 	"wx/dynarray.h"
 	"wx/arrstr.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\listbox.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\listbox.h
 	"wx/dynarray.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\listbox.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\listbox.h
 	"wx/cocoa/NSTableView.h"
 	"wx/dynarray.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\nstableview.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\nstableview.h
 	"wx/hashmap.h"
 	"wx/cocoa/ObjcAssociate.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\checklst.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\checklst.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\wince\checklst.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\wince\checklst.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\checklst.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\checklst.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\checklst.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\checklst.h
 	"wx/listbox.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\checklst.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\checklst.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\checklst.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\checklst.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\checklst.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\checklst.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\checklst.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\checklst.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\checklst.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\checklst.h
 	<stddef.h>
 	"wx/defs.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\scrolbar.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\scrolbar.h
 	"wx/defs.h"
 	"wx/control.h"
 	"wx/univ/scrolbar.h"
@@ -3057,35 +3057,35 @@
 	"wx/cocoa/scrolbar.h"
 	"wx/os2/scrolbar.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\scrolbar.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\scrolbar.h
 	"wx/univ/scrarrow.h"
 	"wx/renderer.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\scrarrow.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\scrarrow.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\scrolbar.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\scrolbar.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\scrolbar.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\scrolbar.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\scrolbar.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\scrolbar.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\scrolbar.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\scrolbar.h
 	"wx/defs.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\scrolbar.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\scrolbar.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\scrolbar.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\scrolbar.h
 	"wx/cocoa/NSScroller.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\nsscroller.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\nsscroller.h
 	"wx/hashmap.h"
 	"wx/cocoa/ObjcAssociate.h"
 	"wx/cocoa/ObjcRef.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\scrolbar.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\scrolbar.h
 	"wx/scrolbar.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\statbmp.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\statbmp.h
 	"wx/defs.h"
 	"wx/control.h"
 	"wx/bitmap.h"
@@ -3099,41 +3099,41 @@
 	"wx/cocoa/statbmp.h"
 	"wx/os2/statbmp.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\statbmp.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\statbmp.h
 	"wx/bitmap.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\statbmp.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\statbmp.h
 	"wx/control.h"
 	"wx/icon.h"
 	"wx/bitmap.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\statbmp.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\statbmp.h
 	"wx/motif/bmpmotif.h"
 	"wx/icon.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\statbmp.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\statbmp.h
 	"wx/icon.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\statbmp.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\statbmp.h
 	"wx/icon.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\statbmp.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\statbmp.h
 	"wx/osx/carbon/statbmp.h"
 	"wx/generic/statbmpg.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\carbon\statbmp.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\carbon\statbmp.h
 	"wx/icon.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\generic\statbmpg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\generic\statbmpg.h
 	"wx/statbmp.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\statbmp.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\statbmp.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\statbmp.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\statbmp.h
 	"wx/control.h"
 	"wx/icon.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\radiobut.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\radiobut.h
 	"wx/defs.h"
 	"wx/control.h"
 	"wx/univ/radiobut.h"
@@ -3145,26 +3145,26 @@
 	"wx/cocoa/radiobut.h"
 	"wx/os2/radiobut.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\radiobut.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\radiobut.h
 	"wx/checkbox.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\radiobut.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\radiobut.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\radiobut.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\radiobut.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\radiobut.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\radiobut.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\radiobut.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\radiobut.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\radiobut.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\radiobut.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\radiobut.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\radiobut.h
 	"wx/cocoa/NSButton.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\radiobut.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\radiobut.h
 	"wx/control.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\slider.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\slider.h
 	"wx/defs.h"
 	"wx/control.h"
 	"wx/univ/slider.h"
@@ -3176,38 +3176,38 @@
 	"wx/cocoa/slider.h"
 	"wx/os2/slider.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\slider.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\slider.h
 	"wx/univ/scrthumb.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\scrthumb.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\scrthumb.h
 	"wx/timer.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\slider.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\slider.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\slider.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\slider.h
 	"wx/control.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\slider.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\slider.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\slider.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\slider.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\slider.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\slider.h
 	"wx/control.h"
 	"wx/slider.h"
 	"wx/stattext.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\slider.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\slider.h
 	"wx/cocoa/NSSlider.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\nsslider.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\nsslider.h
 	"wx/hashmap.h"
 	"wx/cocoa/ObjcAssociate.h"
 	"wx/cocoa/ObjcRef.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\slider.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\slider.h
 	"wx/control.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gauge.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gauge.h
 	"wx/defs.h"
 	"wx/control.h"
 	"wx/univ/gauge.h"
@@ -3219,24 +3219,24 @@
 	"wx/cocoa/gauge.h"
 	"wx/os2/gauge.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\gauge.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\gauge.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\gauge.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\gauge.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\motif\gauge.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\motif\gauge.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\gauge.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\gauge.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\gauge.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\gauge.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\gauge.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\gauge.h
 	"wx/control.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\gauge.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\gauge.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\gauge.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\os2\gauge.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\dirdlg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\dirdlg.h
 	"wx/dialog.h"
 	"wx/generic/dirdlgg.h"
 	"wx/generic/dirdlgg.h"
@@ -3248,46 +3248,46 @@
 	"wx/cocoa/dirdlg.h"
 	"wx/generic/dirdlgg.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\generic\dirdlgg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\generic\dirdlgg.h
 	"wx/dialog.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\dirdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\dirdlg.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\dirdlg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\dirdlg.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\dirdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\dirdlg.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\dirdlg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\dirdlg.h
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\layout.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\layout.h
 	"wx/object.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\sizer.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\sizer.h
 	"wx/defs.h"
 	"wx/window.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\choicdlg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\choicdlg.h
 	"wx/defs.h"
 	"wx/generic/choicdgg.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\generic\choicdgg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\generic\choicdgg.h
 	"wx/dynarray.h"
 	"wx/dialog.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\textdlg.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\textdlg.h
 	"wx/generic/textdlgg.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\generic\textdlgg.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\generic\textdlgg.h
 	"wx/defs.h"
 	"wx/dialog.h"
 	"wx/valtext.h"
 	"wx/textctrl.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\valtext.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\valtext.h
 	"wx/defs.h"
 	"wx/validate.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\mdi.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\mdi.h
 	"wx/defs.h"
 	"wx/frame.h"
 	"wx/menu.h"
@@ -3298,20 +3298,20 @@
 	"wx/osx/mdi.h"
 	"wx/cocoa/mdi.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\generic\mdig.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\generic\mdig.h
 	"wx/panel.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\mdi.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\msw\mdi.h
 	"wx/frame.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk\mdi.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk\mdi.h
 	"wx/frame.h"
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\gtk1\mdi.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\gtk1\mdi.h
 	"wx/frame.h"
 
-1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\mdi.h
+1412634843 e:\dev\downloads\wxwidgets302\include\wx\osx\mdi.h
 
-1412631242 e:\dev\downloads\wxwidgets302\include\wx\cocoa\mdi.h
+1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
