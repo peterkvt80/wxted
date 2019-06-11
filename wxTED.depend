@@ -2254,7 +2254,7 @@
 	"string.h"
 	"ttxpage.h"
 
-1533161397 e:\dev\wxted-github\wxted\ttxpage.h
+1560294115 e:\dev\wxted-github\wxted\ttxpage.h
 	<stdlib.h>
 	"string.h"
 	<iostream>
@@ -2282,7 +2282,7 @@
 1560039184 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1560035059 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1560290145 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1476983748 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
