@@ -603,8 +603,7 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
   m_SubPage(nullptr),
   undoList(nullptr),
   m_current(nullptr),
-  m_loaded(false),
-  m_escapeMode(false)
+  m_loaded(false)
 {
   //std::cout << "[TTXPage] file constructor" << std::endl;
   m_Init();
@@ -810,33 +809,6 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
 
     // Do not allow DoubleHeight on row 23 or 24
     if (cursorLoc.y>22 && code==WXK_CONTROL_M) return;
-
-    // If the last key pressed was escape, we are doing an edit.tf style escape
-    if (m_escapeMode)
-    {
-      m_escapeMode=false;
-      // Find the key that was pressed, and map it to a native keycode
-      switch (code)
-      {
-      case 'r': modifiers=wxMOD_SHIFT;   code=WXK_F1;break; // alpha red
-      case 'R': modifiers=wxMOD_CONTROL; code=WXK_F1;break; // mosaic red
-      case 'g': modifiers=wxMOD_SHIFT;   code=WXK_F2;break; // alpha green
-      case 'G': modifiers=wxMOD_CONTROL; code=WXK_F2;break; // mosaic green
-      case 'y': modifiers=wxMOD_SHIFT;   code=WXK_F3;break; // alpha yellow
-      case 'Y': modifiers=wxMOD_CONTROL; code=WXK_F3;break; // mosaic yellow
-      case 'b': modifiers=wxMOD_SHIFT;   code=WXK_F4;break; // alpha blue
-      case 'B': modifiers=wxMOD_CONTROL; code=WXK_F4;break; // mosaic blue
-      case 'm': modifiers=wxMOD_SHIFT;   code=WXK_F5;break; // alpha magenta
-      case 'M': modifiers=wxMOD_CONTROL; code=WXK_F5;break; // mosaic magenta
-      case 'c': modifiers=wxMOD_SHIFT;   code=WXK_F6;break; // alpha cyan
-      case 'C': modifiers=wxMOD_CONTROL; code=WXK_F6;break; // mosaic cyan
-      case 'w': modifiers=wxMOD_SHIFT;   code=WXK_F7;break; // alpha white
-      case 'W': modifiers=wxMOD_CONTROL; code=WXK_F7;break; // mosaic white
-      case 'k': modifiers=wxMOD_SHIFT;   code=WXK_F8;break; // alpha black
-      case 'K': modifiers=wxMOD_CONTROL; code=WXK_F8;break; // mosaic black
-      // @todo Lots more codes
-      }
-    } // edit.tf escape mode
 
     TTXLine* line=m_pLine[cursorLoc.y];
 
@@ -1210,10 +1182,6 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             oldChar=line->SetCharAt(cursorLoc.x,'\r');   // Insert a double height
             if (cursorLoc.x<39) cursorLoc.x++;   // Move right if possible
             AddEvent(EventKey,cursorLoc,oldChar,'\r');
-        case WXK_ESCAPE : // Escape - Start edit.tf code
-            // @todo Work out how Undo will work.
-            m_escapeMode=true; // Record that this we are in escape mode.
-            break;
         default:
             std::cout << "This key code is not implemented: " << code << std::endl;
         }

@@ -75,6 +75,7 @@ class wxTEDFrame: public wxFrame
         inline TTXPage* Page(){return m_rootPage;};
 
     private:
+				bool m_escapeMode; /// True if the last key pressed was Escape
         int m_menuCount;      // How many menus are open
         bool m_inhibitStatus; // Inhibit the status bar while menus are up
 

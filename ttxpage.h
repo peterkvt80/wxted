@@ -292,7 +292,6 @@ class TTXPage
         int findPageNumber(char* buf);
 
 				bool m_loaded;
-				bool m_escapeMode; /// True if the last key pressed was Escape
 
 };
 

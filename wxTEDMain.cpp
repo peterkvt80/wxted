@@ -145,56 +145,110 @@ void wxTEDFrame::OnSize(wxSizeEvent& event)
 
 void wxTEDFrame::OnChar(wxKeyEvent& event)
 {
-    int code=event.GetKeyCode();
-    int modifiers=event.GetModifiers();
-    // std::cout << "Key event..." << code << std::endl;
-    // We look at a few codes which apply to a page set rather than just a single page
-    TEDEvent* tev;
-    switch (code)
+  int code=event.GetKeyCode();
+  int modifiers=event.GetModifiers();
+  // std::cout << "Key event..." << code << std::endl;
+  // We look at a few codes which apply to a page set rather than just a single page
+  // If none of these codes apply, we send the character to the page
+  TEDEvent* tev;
+  // Toggle invisible control codes?
+  if (m_escapeMode)
+  {
+    if (code=='Q' || code=='X') // Codes and Grid are combined in wxTED
     {
-    case WXK_PAGEUP:
-        // std::cout << "Page up will get next page of a multiple page carousel" << std::endl;
-        if ( m_cursorPoint.y<1) // @todo Temporary hack to stop crash, when going up one page while on row 0.
-           m_cursorPoint.y=1;
-        iPageCount=m_rootPage->GetPageCount();
-        iPage++;
-        if (iPage>=iPageCount) iPage=iPageCount-1;
-        m_currentPage=m_rootPage->GetPage(iPage);
-        //std::cout << "iPage= " << iPage << std::endl;
-        break;
-    case WXK_PAGEDOWN:
-        // std::cout << "Page down will get previous page of a multiple page carousel" << std::endl;
-        iPageCount=m_rootPage->GetPageCount();
-        iPage--;
-        if (iPage<0) iPage=0;
-        m_currentPage=m_rootPage->GetPage(iPage);
-        //std::cout << "iPage= " << iPage << std::endl;
-        break;
-    case WXK_F11: // Reveal concealed text
-        m_reveal=!m_reveal;
-        break;
-    case WXK_CONTROL_Y: // Ah. This is why we can't use CTRL-Y as a special key. This was for debugging undo.
-        // std::cout << "CTRL-Y test" << std::endl; // Testing
-        tev=m_currentPage->GetUndo();
-        if (tev!=NULL)
-            tev->dump();
-        break;
-    case WXK_CONTROL_Z:
-        // std::cout << "CTRL-Z undo" << std::endl;
-        // tev=m_currentPage->GetUndo();
-        m_currentPage->Undo(m_cursorPoint);
-        break;
-    case WXK_CONTROL:
-        break;
-    default:
-        m_currentPage->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
+      m_ShowMarkup=!m_ShowMarkup;
+      code=WXK_ESCAPE;
     }
+  }
+  switch (code)
+  {
+  case WXK_ESCAPE:
+    m_escapeMode=!m_escapeMode;
+    break;
+  case WXK_PAGEUP:
+    // std::cout << "Page up will get next page of a multiple page carousel" << std::endl;
+    if ( m_cursorPoint.y<1) // @todo Temporary hack to stop crash, when going up one page while on row 0.
+       m_cursorPoint.y=1;
+    iPageCount=m_rootPage->GetPageCount();
+    iPage++;
+    if (iPage>=iPageCount) iPage=iPageCount-1;
+    m_currentPage=m_rootPage->GetPage(iPage);
+    //std::cout << "iPage= " << iPage << std::endl;
+    break;
+  case WXK_PAGEDOWN:
+    // std::cout << "Page down will get previous page of a multiple page carousel" << std::endl;
+    iPageCount=m_rootPage->GetPageCount();
+    iPage--;
+    if (iPage<0) iPage=0;
+    m_currentPage=m_rootPage->GetPage(iPage);
+    //std::cout << "iPage= " << iPage << std::endl;
+    break;
+  case WXK_F11: // Reveal concealed text
+    m_reveal=!m_reveal;
+    break;
+  case WXK_CONTROL_Y: // Ah. This is why we can't use CTRL-Y as a special key. This was for debugging undo.
+    // std::cout << "CTRL-Y test" << std::endl; // Testing
+    tev=m_currentPage->GetUndo();
+    if (tev!=NULL)
+    {
+      tev->dump();
+    }
+    break;
+  case WXK_CONTROL_Z:
+    // std::cout << "CTRL-Z undo" << std::endl;
+    // tev=m_currentPage->GetUndo();
+    m_currentPage->Undo(m_cursorPoint);
+    break;
+  case WXK_CONTROL:
+    break;
+  case WXK_TAB: // This will insert a space
+    std::cout << "Insert a space TBA" << std::endl;
+    break;
+  default:
+    // If the last key pressed was escape, we are doing an edit.tf style escape
+    if (m_escapeMode)
+    {
+      m_escapeMode=false;
+      // Find the key that was pressed, and map it to a native keycode
+      switch (code)
+      {
+      case 'r': modifiers=wxMOD_SHIFT;   code=WXK_F1;break; // alpha red
+      case 'R': modifiers=wxMOD_CONTROL; code=WXK_F1;break; // mosaic red
+      case 'g': modifiers=wxMOD_SHIFT;   code=WXK_F2;break; // alpha green
+      case 'G': modifiers=wxMOD_CONTROL; code=WXK_F2;break; // mosaic green
+      case 'y': modifiers=wxMOD_SHIFT;   code=WXK_F3;break; // alpha yellow
+      case 'Y': modifiers=wxMOD_CONTROL; code=WXK_F3;break; // mosaic yellow
+      case 'b': modifiers=wxMOD_SHIFT;   code=WXK_F4;break; // alpha blue
+      case 'B': modifiers=wxMOD_CONTROL; code=WXK_F4;break; // mosaic blue
+      case 'm': modifiers=wxMOD_SHIFT;   code=WXK_F5;break; // alpha magenta
+      case 'M': modifiers=wxMOD_CONTROL; code=WXK_F5;break; // mosaic magenta
+      case 'c': modifiers=wxMOD_SHIFT;   code=WXK_F6;break; // alpha cyan
+      case 'C': modifiers=wxMOD_CONTROL; code=WXK_F6;break; // mosaic cyan
+      case 'w': modifiers=wxMOD_SHIFT;   code=WXK_F7;break; // alpha white
+      case 'W': modifiers=wxMOD_CONTROL; code=WXK_F7;break; // mosaic white
+      case 'k': modifiers=wxMOD_SHIFT;   code=WXK_F8;break; // alpha black
+      case 'K': modifiers=wxMOD_CONTROL; code=WXK_F8;break; // mosaic black
+      case 'N': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_B;   break; // new background
+      case 'n': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_U;   break; // black background
+      case 'f': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_I;   break; // steady
+      case 'F': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_H;   break; // flash
+      case 'h': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_X;   break; // release
+      case 'H': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_W;   break; // hold
+      case 'd': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_L;   break; // normal height
+      case 'D': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_M;   break; // double height
+      case 'O': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_R;   break; // conceal
+      case 'J': modifiers=wxMOD_NONE;    code=172;   break; // hook maps to text block
+      // @todo Lots more codes
+      }
+    } // edit.tf escape mode
+    m_currentPage->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
+  }
 
-    //std::cout << "Cursor = " << m_cursorPoint.x << "." << m_subPixelPoint.x << ", "
-    //     << m_cursorPoint.y << "." << m_subPixelPoint.y << ", "  << std::endl;
-    m_cursorIsAlpha=m_currentPage->IsAlphaMode(m_cursorPoint);
-    m_blinkToggle=true; // HCI: Make cursor moves immediately visible
-    Refresh();
+  //std::cout << "Cursor = " << m_cursorPoint.x << "." << m_subPixelPoint.x << ", "
+  //     << m_cursorPoint.y << "." << m_subPixelPoint.y << ", "  << std::endl;
+  m_cursorIsAlpha=m_currentPage->IsAlphaMode(m_cursorPoint);
+  m_blinkToggle=true; // HCI: Make cursor moves immediately visible
+  Refresh();
 }
 
 void wxTEDFrame::OnTimer(wxTimerEvent& event)
@@ -1082,8 +1136,16 @@ void wxTEDFrame::m_SetStatus()
     StatusBar1->SetLabelText(str.str());
 }
 wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
-    : m_menuCount(0), m_inhibitStatus(false), m_ttxW(15), m_ttxH(20), m_subPixelPoint(wxPoint(0,0)), m_cursorIsAlpha(true)
- , m_dragging(false), m_MarqueeStart(wxPoint(0,0)), m_currentPage(NULL)
+    : m_escapeMode(false)
+    , m_menuCount(0)
+    , m_inhibitStatus(false)
+    , m_ttxW(15)
+    , m_ttxH(20)
+    , m_subPixelPoint(wxPoint(0,0))
+    , m_cursorIsAlpha(true)
+    , m_dragging(false)
+    , m_MarqueeStart(wxPoint(0,0))
+    , m_currentPage(NULL)
 {
     // std::cout << "[wxTEDFrame] Entered" << std::endl;
     m_parentWindow=parent;
