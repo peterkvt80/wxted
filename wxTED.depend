@@ -2282,7 +2282,7 @@
 1560039184 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1560374868 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1560556379 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1476983748 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2794,7 +2794,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1560036925 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1560382316 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

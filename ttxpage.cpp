@@ -886,7 +886,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                         // Also want to delete!
 
             case WXK_DELETE:
-                // Delete the whole row
+                // Delete the whole row. Don't think this gets used!
                 for (cursorLoc.x=0;cursorLoc.x<40;cursorLoc.x++)
                 {
                     AddEvent(EventKey,cursorLoc,line->GetCharAt(cursorLoc.x),' ');
@@ -895,6 +895,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                 line->ClearLine();
                 std::cout << "TODO: [1] Implement AddChange " << std::endl;
                 ch=0;
+                code=0;
                 break;
             // Would like to implement CTRL-ENTER, but no dice ;-(
 
@@ -942,6 +943,27 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     {
         switch (code)
         {
+        case WXK_DELETE : // all characters to the right shift one to the left
+          {
+            auto loc=cursorLoc;
+            for (;loc.x<39;loc.x++)
+            {
+              char ch=line->GetCharAt(loc.x+1);
+              AddEvent(EventKey,loc,line->GetCharAt(loc.x),ch);
+              line->SetCharAt(loc.x,ch);
+            }
+            // Last character is stuffed with a space
+            char ch=line->GetCharAt(39);
+            AddEvent(EventKey,loc,ch,' ');
+            line->SetCharAt(39,' ');
+          }
+          break;
+        case WXK_TAB : // Insert a space at the current location and shift right everything on the right
+          // Shift everything to the right, one space.@todo
+          // Insert a space
+          std::cout << "PRESSED TAB" << std::endl;
+          line->SetCharAt(cursorLoc.x,' ?'); //
+          break;
         case WXK_HOME : // Move to start of line
             if (cursorLoc.x>0)
             {

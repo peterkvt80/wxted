@@ -201,9 +201,10 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_CONTROL:
     break;
-  case WXK_TAB: // This will insert a space
-    std::cout << "Insert a space TBA" << std::endl;
-    break;
+    // Moved this to ttxpage as it acts on the page
+  //case WXK_TAB: // This will insert a space
+//    std::cout << "Insert a space TBA" << std::endl;
+    //break;
   default:
     // If the last key pressed was escape, we are doing an edit.tf style escape
     if (m_escapeMode)
