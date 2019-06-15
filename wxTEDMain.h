@@ -3,7 +3,7 @@
  * Purpose:   Defines Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
- * Copyright: Peter Kwan (http://www.teastop.co.uk) 2014-2018
+ * Copyright: Peter Kwan (c) 2014-2019
  * License:
  *
  * Permission to use, copy, modify, and distribute this software
@@ -54,7 +54,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.37")
+#define VERSION_STRING   wxT("1.38")
 
 // ftp
 #include <wininet.h>

@@ -958,12 +958,6 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             line->SetCharAt(39,' ');
           }
           break;
-        case WXK_TAB : // Insert a space at the current location and shift right everything on the right
-          // Shift everything to the right, one space.@todo
-          // Insert a space
-          std::cout << "PRESSED TAB" << std::endl;
-          line->SetCharAt(cursorLoc.x,' ?'); //
-          break;
         case WXK_HOME : // Move to start of line
             if (cursorLoc.x>0)
             {
@@ -1204,6 +1198,21 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             oldChar=line->SetCharAt(cursorLoc.x,'\r');   // Insert a double height
             if (cursorLoc.x<39) cursorLoc.x++;   // Move right if possible
             AddEvent(EventKey,cursorLoc,oldChar,'\r');
+        case WXK_TAB : // Insert space
+          {
+            auto loc=cursorLoc;
+            for (loc.x=39;loc.x>cursorLoc.x;loc.x--)
+            {
+              char oldch=line->GetCharAt(loc.x);
+              char newch=line->GetCharAt(loc.x-1);
+              AddEvent(EventKey, loc, oldch, newch);
+              line->SetCharAt(loc.x,newch);
+            }
+            // Last character is stuffed with a space
+            AddEvent(EventKey, loc, line->GetCharAt(cursorLoc.x), ' ');
+            line->SetCharAt(cursorLoc.x, ' '); // The current location is now a space
+          }
+          break;
         default:
             std::cout << "This key code is not implemented: " << code << std::endl;
         }
