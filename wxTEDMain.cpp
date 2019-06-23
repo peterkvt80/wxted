@@ -238,6 +238,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       case 'd': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_L;   break; // normal height
       case 'D': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_M;   break; // double height
       case 'O': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_R;   break; // conceal
+      case 'S': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_T;   break; // separate graphics
+      case 's': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_D;   break; // contiguous
       case 'J': modifiers=wxMOD_NONE;    code=172;   break; // hook maps to text block
       // @todo Lots more codes
       }
@@ -421,11 +423,11 @@ void wxTEDFrame::m_resize(wxSize clientSize)
     for (i=8;i<100;i++)
     {
     //std::cout << "Current font size " << std::dec << m_fontSize[i].GetWidth() << " " << m_fontSize[i].GetHeight() << std::endl;
-        // Fit widtj
+        // Fit width
         if (clientSize.GetWidth()<m_fontSize[i].GetWidth()+10) // allow 10 pixels, I think the border is included
             break;
         // or fit height
-        if (clientSize.GetHeight()<m_fontSize[i].GetHeight()*26+40)
+        if (clientSize.GetHeight()<m_fontSize[i].GetHeight()*27+40)
             break;
     }
     // Don't make it too small
@@ -438,8 +440,12 @@ void wxTEDFrame::m_resize(wxSize clientSize)
     m_ttxW=ttxSize.GetWidth()/40;
     m_ttxH=ttxSize.GetHeight(); // 18;
 
-
-
+    // An idea to put multiple pages up if the aspect is long enough
+    // More generally than this, we should be able to show subpages as lists or tiled.
+    if (clientSize.GetWidth()>ttxSize.GetWidth()*3/2)
+    {
+      std::cout << "We, we can do that" << std::endl;
+    }
 
     Refresh();
     // std::cout << "New font size (pts) " << GetFont().GetPointSize() << std::endl;
@@ -448,6 +454,8 @@ void wxTEDFrame::m_resize(wxSize clientSize)
 void wxTEDFrame::OnPaint(wxPaintEvent& event)
 {
     if (this->IsIconized()) return; // If Iconized we shouldn't draw anything
+
+    wxPoint offset(0,0);
 
     wxAutoBufferedPaintDC paintDC(this);
 
@@ -488,504 +496,511 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
     /* page */
     TTXPage* p=m_currentPage; // Load the page. Current page could be a subpages
-    int firstRow=1;
-    if (MenuItemShowHeader->IsChecked())
-        firstRow=0;
-    TTXLine row0;
 
-    for (unsigned int row=firstRow;row<25;row++)
+    // Assume horizontal subpages for now
+    for(TTXPage* p=m_currentPage;p!=nullptr;p=p->Getm_SubPage()) // Just do two pages to prove concept
     {
-        bool graphicsMode=false;
-        bool separated=false;
-        bool doubleHeight=false;
-        bool skipnextrow=false;
-        bool flashing=false;
-        bool hold=false;
-        char holdChar=' ';
-        bool concealed=false;
+      TTXLine row0;
+      int firstRow=1;
+      if (MenuItemShowHeader->IsChecked())
+      {
+        firstRow=0;
+      }
+      for (unsigned int row=firstRow;row<25;row++)
+      {
+          bool graphicsMode=false;
+          bool separated=false;
+          bool doubleHeight=false;
+          bool skipnextrow=false;
+          bool flashing=false;
+          bool hold=false;
+          char holdChar=' ';
+          bool concealed=false;
 
-        fg=wxWHITE;
-        bg=wxBLACK;
+          fg=wxWHITE;
+          bg=wxBLACK;
 
-        doubleHeightDC.SetBackground(*wxBLACK_BRUSH); //  wxBLACK_BRUSH. Change this to GREY to track down bugs
-        doubleHeightDC.Clear();
+          doubleHeightDC.SetBackground(*wxBLACK_BRUSH); //  wxBLACK_BRUSH. Change this to GREY to track down bugs
+          doubleHeightDC.Clear();
 
-        // TTXPage* p=page.GetPage(0);
-        TTXLine* line=p->GetRow(row);
+          // TTXPage* p=page.GetPage(0);
+          TTXLine* line=p->GetRow(row);
 
-        if (m_cursorPoint.y>0 && row==0) // If we are actually in the header, then edit the raw header
-        {
+          if (m_cursorPoint.y>0 && row==0) // If we are actually in the header, then edit the raw header
+          {
 
-            if (line==NULL)
-            {
-                p->SetRow(row,"XXXXXXXXTEEFAX mpp DAY dd MTH \x3 hh:nn.ss"); // Could put in a sample header here
-                //             aaaaaaaaaabbbbbbbbbbccccccccccd  ddddddddd
-                line=p->GetRow(row);
-            }
-            row0=*line; // Copy the contents of line to row
-            line=&row0;   // Now point line to row so we don't erase the original line
-            GenerateHeader(line);
-        }
+              if (line==NULL)
+              {
+                  p->SetRow(row,"XXXXXXXXTEEFAX mpp DAY dd MTH \x3 hh:nn.ss"); // Could put in a sample header here
+                  //             aaaaaaaaaabbbbbbbbbbccccccccccd  ddddddddd
+                  line=p->GetRow(row);
+              }
+              row0=*line; // Copy the contents of line to row
+              line=&row0;   // Now point line to row so we don't erase the original line
+              GenerateHeader(line);
+          }
 
-        //std::cout << "Trace 4" << std::endl;
-        if (line!=NULL)
-        {
-            std::string str=line->GetLine();
-            str=str.substr(0,40);
-            for (int col=0;col<40;col++) // Look at each character on the line
-            {
-                // std::cout << "Trace 5" << std::endl;
-                char ch=' ';
-                wchar_t ch2=ch;
-                // Check the Set-before code
-                switch (str[col])
-                {
-                // If a case is ignored, you'll find it in the set-after section
-                case ttxCodeAlphaBlack :
-                case ttxCodeAlphaRed :
-                case ttxCodeAlphaGreen :
-                case ttxCodeAlphaYellow :
-                case ttxCodeAlphaBlue :
-                case ttxCodeAlphaMagenta :
-                case ttxCodeAlphaCyan :
-                case ttxCodeAlphaWhite :
-                    hold=false;
-                    break;
-                case ttxCodeFlash :
-                    break;
-                case ttxCodeSteady :
-                    flashing=false;
-                    break;
-                case ttxCodeEndBox :
-                case ttxCodeStartBox :
-                    break;
-                case ttxCodeNormalHeight :
-                    doubleHeight=false;
-                    break;
-                case ttxCodeDoubleHeight : // Double height
-                case ttxCodeGraphicsBlack : // Graphics black (level 2.5+)
-                case ttxCodeGraphicsRed : // Graphics red
-                case ttxCodeGraphicsGreen : // Graphics green
-                case ttxCodeGraphicsYellow : // Graphics yellow
-                case ttxCodeGraphicsBlue : // Graphics blue
-                case ttxCodeGraphicsMagenta : // Graphics magenta
-                case ttxCodeGraphicsCyan : // Graphics cyan
-                case ttxCodeGraphicsWhite : // Graphics white
-                    break;
-                case ttxCodeConcealDisplay : // Conceal display
-                    concealed=true;
-                    break;
-                case ttxCodeContiguousGraphics : // Contiguous graphics
-                    separated=false;
-                    break;
-                case ttxCodeSeparatedGraphics : // Separated gfx
-                    separated=true;
-                    break;
-                case ttxCodeBlackBackground : // Background black
-                    bg=wxBLACK;
-                    break;
-                case ttxCodeNewBackground : // New background
-                    bg=fg;
-                    break;
-                case ttxCodeHoldGraphics : // Hold gfx (set at)
-                    hold=true;
-                    break;
-                case ttxCodeReleaseGraphics : // Release gfx (set after)
-                    break;
-                case 14:; // Ignore shift in/shift out and avoid them falling into default
-                case 15:;
-                    break;
-                default :
-                    // std::cout << "Trace OL:ordinary character " << ch << std::endl;
-                    ch=str[col] & 0x7f;
-                    ch2=str[col];
-                    ch2=mapTextChar(ch2);
-                    // holdchar records the last mosaic character sent out
-                    if (isMosaic(ch))
-                    {
-                        holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
-                    }
-                }
+          //std::cout << "Trace 4" << std::endl;
+          if (line!=NULL)
+          {
+              std::string str=line->GetLine();
+              str=str.substr(0,40);
+              for (int col=0;col<40;col++) // Look at each character on the line
+              {
+                  // std::cout << "Trace 5" << std::endl;
+                  char ch=' ';
+                  wchar_t ch2=ch;
+                  // Check the Set-before code
+                  switch (str[col])
+                  {
+                  // If a case is ignored, you'll find it in the set-after section
+                  case ttxCodeAlphaBlack :
+                  case ttxCodeAlphaRed :
+                  case ttxCodeAlphaGreen :
+                  case ttxCodeAlphaYellow :
+                  case ttxCodeAlphaBlue :
+                  case ttxCodeAlphaMagenta :
+                  case ttxCodeAlphaCyan :
+                  case ttxCodeAlphaWhite :
+                      hold=false;
+                      break;
+                  case ttxCodeFlash :
+                      break;
+                  case ttxCodeSteady :
+                      flashing=false;
+                      break;
+                  case ttxCodeEndBox :
+                  case ttxCodeStartBox :
+                      break;
+                  case ttxCodeNormalHeight :
+                      doubleHeight=false;
+                      break;
+                  case ttxCodeDoubleHeight : // Double height
+                  case ttxCodeGraphicsBlack : // Graphics black (level 2.5+)
+                  case ttxCodeGraphicsRed : // Graphics red
+                  case ttxCodeGraphicsGreen : // Graphics green
+                  case ttxCodeGraphicsYellow : // Graphics yellow
+                  case ttxCodeGraphicsBlue : // Graphics blue
+                  case ttxCodeGraphicsMagenta : // Graphics magenta
+                  case ttxCodeGraphicsCyan : // Graphics cyan
+                  case ttxCodeGraphicsWhite : // Graphics white
+                      break;
+                  case ttxCodeConcealDisplay : // Conceal display
+                      concealed=true;
+                      break;
+                  case ttxCodeContiguousGraphics : // Contiguous graphics
+                      separated=false;
+                      break;
+                  case ttxCodeSeparatedGraphics : // Separated gfx
+                      separated=true;
+                      break;
+                  case ttxCodeBlackBackground : // Background black
+                      bg=wxBLACK;
+                      break;
+                  case ttxCodeNewBackground : // New background
+                      bg=fg;
+                      break;
+                  case ttxCodeHoldGraphics : // Hold gfx (set at)
+                      hold=true;
+                      break;
+                  case ttxCodeReleaseGraphics : // Release gfx (set after)
+                      break;
+                  case 14:; // Ignore shift in/shift out and avoid them falling into default
+                  case 15:;
+                      break;
+                  default :
+                      // std::cout << "Trace OL:ordinary character " << ch << std::endl;
+                      ch=str[col] & 0x7f;
+                      ch2=str[col];
+                      ch2=mapTextChar(ch2);
+                      // holdchar records the last mosaic character sent out
+                      if (isMosaic(ch))
+                      {
+                          holdChar=ch;  // In case we encounter hold mosaics (Space doesn't count as a mosaic)
+                      }
+                  }
 
-                if (concealed && !m_reveal) // Replace text with spaces
-                {
-                    ch=' ';
-                    holdChar=' '; /// @todo restore to space
-                    ch2=' ';
-                }
+                  if (concealed && !m_reveal) // Replace text with spaces
+                  {
+                      ch=' ';
+                      holdChar=' '; /// @todo restore to space
+                      ch2=' ';
+                  }
 
-                if (graphicsMode && (isMosaic(ch) || hold) ) // Draw graphics. Either mosaic (but not capital A..Z) or in hold mode
-                {
+                  if (graphicsMode && (isMosaic(ch) || hold) ) // Draw graphics. Either mosaic (but not capital A..Z) or in hold mode
+                  {
 
-                    int j=0x01;
-                    // If we send a new mosaic code while in hold, it replaces the current mosaic.
-                    if (hold)
-                    {
-                        ch=holdChar;  // Carry on hold
-                    }
+                      int j=0x01;
+                      // If we send a new mosaic code while in hold, it replaces the current mosaic.
+                      if (hold)
+                      {
+                          ch=holdChar;  // Carry on hold
+                      }
 
-                    for (int i=0;i<6;i++) // for each of the six pixels in this character
-                    {
-                        bool pixelSet=(ch & j) && (m_blinkToggle || !flashing);
+                      for (int i=0;i<6;i++) // for each of the six pixels in this character
+                      {
+                          bool pixelSet=(ch & j) && (m_blinkToggle || !flashing);
 
-                        j<<=1;
-                        if (j==0x20) j<<=1; // Skip the alphabet exception
+                          j<<=1;
+                          if (j==0x20) j<<=1; // Skip the alphabet exception
 
-                        // Draw the full sized pixel in background colour
-                        paintDC.SetBrush(wxBrush(*bg));
-                        int k=1; // Full size pixel
-                        if (doubleHeight)
-                        {
-                            paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                                                 (i/2)*m_ttxH/3),
-                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
-                        }
-                        else
-                        {
-                            paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                        row*m_ttxH+(i/2)*m_ttxH/3),
-                                        wxSize(k+m_ttxW/2,k+m_ttxH/3));
-                        }
-                        // Now draw the actual pixel
-                        if (pixelSet)
-                        {
-                            paintDC.SetBrush(wxBrush(*fg));
-                            if (separated) k=-2; // Thin border around the pixel
-                            if (doubleHeight)
-                            {
-                                paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                                                     (i/2)*m_ttxH/3),
-                                                  wxSize(k+m_ttxW/2,k+m_ttxH/3));
-                            }
-                            else
-                            {
-                                paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                              row*m_ttxH+(i/2)*m_ttxH/3),
-                                              wxSize(k+m_ttxW/2,k+m_ttxH/3));
-                            }
-                        }
-                    }
+                          // Draw the full sized pixel in background colour
+                          paintDC.SetBrush(wxBrush(*bg));
+                          int k=1; // Full size pixel
+                          if (doubleHeight)
+                          {
+                              paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                                   (i/2)*m_ttxH/3)+offset,
+                                                wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                          }
+                          else
+                          {
+                              paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                          row*m_ttxH+(i/2)*m_ttxH/3)+offset,
+                                          wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                          }
+                          // Now draw the actual pixel
+                          if (pixelSet)
+                          {
+                              paintDC.SetBrush(wxBrush(*fg));
+                              if (separated) k=-2; // Thin border around the pixel
+                              if (doubleHeight)
+                              {
+                                  paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                                       (i/2)*m_ttxH/3)+offset,
+                                                    wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                              }
+                              else
+                              {
+                                  paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                row*m_ttxH+(i/2)*m_ttxH/3)+offset,
+                                                wxSize(k+m_ttxW/2,k+m_ttxH/3));
+                              }
+                          }
+                      }
 
-                } // Graphic block
-                else
-                {
-                    // Foreground colour
-                    if (m_blinkToggle || !flashing)
-                    {
-                        paintDC.SetTextForeground(*fg); // Normal
-                        doubleHeightDC.SetTextForeground(*fg); // Normal
-                    }
-                    else
-                    {
-                        paintDC.SetTextForeground(*bg); // Blink off
-                        doubleHeightDC.SetTextForeground(*bg); // blink off
-                    }
-                    // Background colour
-                    doubleHeightDC.SetTextBackground(*bg);
-                    paintDC.SetTextBackground(*bg);
+                  } // Graphic block
+                  else
+                  {
+                      // Foreground colour
+                      if (m_blinkToggle || !flashing)
+                      {
+                          paintDC.SetTextForeground(*fg); // Normal
+                          doubleHeightDC.SetTextForeground(*fg); // Normal
+                      }
+                      else
+                      {
+                          paintDC.SetTextForeground(*bg); // Blink off
+                          doubleHeightDC.SetTextForeground(*bg); // blink off
+                      }
+                      // Background colour
+                      doubleHeightDC.SetTextBackground(*bg);
+                      paintDC.SetTextBackground(*bg);
 
-                    if (doubleHeight)
-                    {
-                        doubleHeightDC.DrawText(_(ch2),wxPoint(col*m_ttxW,0));
-                    }
-                    else // Single height
-                    {
-                        paintDC.DrawText(_(ch2),wxPoint(col*m_ttxW,row*m_ttxH));
-                        if (row<23)
-                            paintDC.DrawText(_(' '),wxPoint(col*m_ttxW,(row+1)*m_ttxH)); // Draw background in case this row contains a double height
-                    }
-                }
-                if (doubleHeight)
-                    paintDC.StretchBlit(wxPoint(col*m_ttxW,row*m_ttxH),wxSize(m_ttxW,m_ttxH*2), // dest
-                                    &doubleHeightDC,
-                                    wxPoint(col*m_ttxW,0),wxSize(m_ttxW,m_ttxH)); //src
-                // Set-after codes implemented here, also the show markup
-                paintDC.SetTextForeground(*wxWHITE);
-                paintDC.SetTextBackground(*wxLIGHT_GREY);
-                switch (str[col])
-                {
-                case ttxCodeAlphaBlack :
-                    fg=wxBLACK;
-                    concealed=false;    // Side effect of colour. It cancels a conceal.
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
+                      if (doubleHeight)
+                      {
+                          doubleHeightDC.DrawText(_(ch2),wxPoint(col*m_ttxW,0)+offset);
+                      }
+                      else // Single height
+                      {
+                          paintDC.DrawText(_(ch2),wxPoint(col*m_ttxW,row*m_ttxH)+offset);
+                          if (row<23)
+                              paintDC.DrawText(_(' '),wxPoint(col*m_ttxW,(row+1)*m_ttxH)+offset); // Draw background in case this row contains a double height
+                      }
+                  }
+                  if (doubleHeight)
+                      paintDC.StretchBlit(wxPoint(col*m_ttxW,row*m_ttxH)+offset,wxSize(m_ttxW,m_ttxH*2), // dest
+                                      &doubleHeightDC,
+                                      wxPoint(col*m_ttxW,0)+offset,wxSize(m_ttxW,m_ttxH)); //src
+                  // Set-after codes implemented here, also the show markup
+                  paintDC.SetTextForeground(*wxWHITE);
+                  paintDC.SetTextBackground(*wxLIGHT_GREY);
+                  switch (str[col])
+                  {
+                  case ttxCodeAlphaBlack :
+                      fg=wxBLACK;
+                      concealed=false;    // Side effect of colour. It cancels a conceal.
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeAlphaRed :
+                      fg=wxRED;
+                      concealed=false;
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeAlphaGreen :
+                      fg=wxGREEN;
+                      concealed=false;
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeAlphaYellow :
+                      fg=wxYELLOW;
+                      concealed=false;
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeAlphaBlue :
+                      fg=wxBLUE;
+                      concealed=false;
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeAlphaMagenta :
+                      fg=magenta;
+                      concealed=false;
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeAlphaCyan :
+                      fg=wxCYAN;
+                      concealed=false;
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeAlphaWhite :
+                      fg=wxWHITE;
+                      concealed=false;
+                      graphicsMode=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
+                      }
+                      break;
+                  case ttxCodeFlash :
+                      flashing=true;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText(_((wxChar)L'\xEFC6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // italic f
+                      }
+                      break;
+                  case ttxCodeSteady :
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText(_((wxChar)L'\xEFC9'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // italic i
+                      }
+                      break;
+                  case ttxCodeEndBox :
+                      // std::cout << "End Box not implemented" << std::endl;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText(_((wxChar)L'\xEF57'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // down arrow
+                      }
+                      break;
+                  case ttxCodeStartBox :
+                      // std::cout << "Start box not implemented" << std::endl;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText(_((wxChar)L'\xEF56'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // down arrow
+                      }
+                      break;
+                  case ttxCodeNormalHeight : // Normal height
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText(_((wxChar)L'\xEF5E'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // down arrow
+                      }
+                      break;
+                  case ttxCodeDoubleHeight : // Double height
+                      doubleHeight=true;
+                      skipnextrow=true;   // ETSI: Don't use content from next row
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText(_((wxChar)L'\xEF5D'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // up arrow
+                      }
+                     break;
+                  case ttxCodeGraphicsBlack : // Graphics black
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=wxBLACK;
+                      if (m_ShowMarkup)
+                      {
                         paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeAlphaRed :
-                    fg=wxRED;
-                    concealed=false;
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeAlphaGreen :
-                    fg=wxGREEN;
-                    concealed=false;
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeAlphaYellow :
-                    fg=wxYELLOW;
-                    concealed=false;
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeAlphaBlue :
-                    fg=wxBLUE;
-                    concealed=false;
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeAlphaMagenta :
-                    fg=magenta;
-                    concealed=false;
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeAlphaCyan :
-                    fg=wxCYAN;
-                    concealed=false;
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeAlphaWhite :
-                    fg=wxWHITE;
-                    concealed=false;
-                    graphicsMode=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)); // graphic sample
-                    }
-                    break;
-                case ttxCodeFlash :
-                    flashing=true;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)L'\xEFC6'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic f
-                    }
-                    break;
-                case ttxCodeSteady :
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)L'\xEFC9'),wxPoint(col*m_ttxW,row*m_ttxH)); // italic i
-                    }
-                    break;
-                case ttxCodeEndBox :
-                    // std::cout << "End Box not implemented" << std::endl;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)L'\xEF57'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
-                    }
-                    break;
-                case ttxCodeStartBox :
-                    // std::cout << "Start box not implemented" << std::endl;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)L'\xEF56'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
-                    }
-                    break;
-                case ttxCodeNormalHeight : // Normal height
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)L'\xEF5E'),wxPoint(col*m_ttxW,row*m_ttxH)); // down arrow
-                    }
-                    break;
-                case ttxCodeDoubleHeight : // Double height
-                    doubleHeight=true;
-                    skipnextrow=true;   // ETSI: Don't use content from next row
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText(_((wxChar)L'\xEF5D'),wxPoint(col*m_ttxW,row*m_ttxH)); // up arrow
-                    }
-                   break;
-                case ttxCodeGraphicsBlack : // Graphics black
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=wxBLACK;
-                    if (m_ShowMarkup)
-                    {
-                      paintDC.SetTextForeground(*fg);
-                      paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeGraphicsRed : // Graphics red
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=wxRED;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeGraphicsGreen : // Graphics green
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=wxGREEN;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeGraphicsYellow : // Graphics yellow
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=wxYELLOW;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeGraphicsBlue : // Graphics blue
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=wxBLUE;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeGraphicsMagenta : // Graphics magenta
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=magenta;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeGraphicsCyan : // Graphics cyan
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=wxCYAN;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeGraphicsWhite : // Graphics white
-                    concealed=false;
-                    graphicsMode=true;
-                    fg=wxWHITE;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*fg);
-                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)); // Show a blob where a control code is
-                    }
-                    break;
-                case ttxCodeConcealDisplay : // Conceal display
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText('?',wxPoint(col*m_ttxW,row*m_ttxH)); // question mark
-                    }
-                    break;
-                case ttxCodeContiguousGraphics : // Contiguous graphics
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText('c',wxPoint(col*m_ttxW,row*m_ttxH)); // (c)ontiguous
-                    }
-                    break;
-                case ttxCodeSeparatedGraphics : // Separated gfx
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText('s',wxPoint(col*m_ttxW,row*m_ttxH)); // (s)eparate
-                    }
-                    break;
-                case ttxCodeBlackBackground : // Background black
+                        paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeGraphicsRed : // Graphics red
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=wxRED;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeGraphicsGreen : // Graphics green
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=wxGREEN;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeGraphicsYellow : // Graphics yellow
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=wxYELLOW;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeGraphicsBlue : // Graphics blue
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=wxBLUE;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeGraphicsMagenta : // Graphics magenta
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=magenta;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeGraphicsCyan : // Graphics cyan
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=wxCYAN;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeGraphicsWhite : // Graphics white
+                      concealed=false;
+                      graphicsMode=true;
+                      fg=wxWHITE;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*fg);
+                          paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
+                      }
+                      break;
+                  case ttxCodeConcealDisplay : // Conceal display
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText('?',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // question mark
+                      }
+                      break;
+                  case ttxCodeContiguousGraphics : // Contiguous graphics
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText('c',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // (c)ontiguous
+                      }
+                      break;
+                  case ttxCodeSeparatedGraphics : // Separated gfx
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText('s',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // (s)eparate
+                      }
+                      break;
+                  case ttxCodeBlackBackground : // Background black
 
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText('b',wxPoint(col*m_ttxW,row*m_ttxH)); // b for black background
-                    }
-                    break;
-                case ttxCodeNewBackground : // New background
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText('n',wxPoint(col*m_ttxW,row*m_ttxH)); // n for new background
-                    }
-                    break;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText('b',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // b for black background
+                      }
+                      break;
+                  case ttxCodeNewBackground : // New background
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText('n',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // n for new background
+                      }
+                      break;
 
-                case ttxCodeHoldGraphics : // Hold gfx
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText('h',wxPoint(col*m_ttxW,row*m_ttxH)); // (h)old
-                    }
-                    break;
-                case ttxCodeReleaseGraphics : // Separated gfx
-                    hold=false;
-                    if (m_ShowMarkup)
-                    {
-                        paintDC.SetTextForeground(*wxWHITE);
-                        paintDC.DrawText('r',wxPoint(col*m_ttxW,row*m_ttxH)); // (r)elease
-                    }
-                    break;
+                  case ttxCodeHoldGraphics : // Hold gfx
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText('h',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // (h)old
+                      }
+                      break;
+                  case ttxCodeReleaseGraphics : // Separated gfx
+                      hold=false;
+                      if (m_ShowMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText('r',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // (r)elease
+                      }
+                      break;
 
-                default:;
+                  default:;
 
-#if 0
-                    // If this is a graphics cell, draw the cell outline
-                    if (graphicsMode && m_ShowMarkup)
-                    {
-                        paintDC.SetPen(*wxGREY_PEN);
-                        paintDC.SetPen(*wxBLUE_PEN);
-                        paintDC.DrawLine(col*m_ttxW,row*m_ttxH,(col+1)*m_ttxW,(row+1)*m_ttxH);
-                        //paintDC.DrawText('g',wxPoint(col*m_ttxW,row*m_ttxH)); // (r)elease
+  #if 0
+                      // If this is a graphics cell, draw the cell outline
+                      if (graphicsMode && m_ShowMarkup)
+                      {
+                          paintDC.SetPen(*wxGREY_PEN);
+                          paintDC.SetPen(*wxBLUE_PEN);
+                          paintDC.DrawLine(col*m_ttxW,row*m_ttxH,(col+1)*m_ttxW,(row+1)*m_ttxH);
+                          //paintDC.DrawText('g',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // (r)elease
 
-                    }
-#endif
-                }//case
+                      }
+  #endif
+                  }//case
 
-            } // each character on this row
-            if (skipnextrow) row++; // Don't use next row if there was any double height
+              } // each character on this row
+              if (skipnextrow) row++; // Don't use next row if there was any double height
 
-        } // row not null?
-        /* else
-            std::cout << "row is null " << row << std::endl; */
-    } // For each text row
+          } // row not null?
+          /* else
+              std::cout << "row is null " << row << std::endl; */
+      } // For each text row
+      offset.x+=m_ttxW*41; // The next subpage is drawn with a one character gap
+    } // for each page that we can show
     delete magenta;
     // cursor
 

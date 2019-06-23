@@ -1167,6 +1167,10 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                         case 's': bit=0x08;break;
                         case 'z': bit=0x10;break;
                         case 'x': bit=0x40;break;
+                        // whole sixel operations
+                        case 'r': bit=0x5f;break; // reverse
+                        case 'f': bit=~line->GetLine()[cursorLoc.x] & 0x5f;break; // fill all
+                        case 'c': bit= line->GetLine()[cursorLoc.x] & 0x5f;break; // clear all
                         default:bit=0;
                         }
                         if (bit>0) // If it was a graphic change, record it
