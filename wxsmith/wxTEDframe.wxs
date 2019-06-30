@@ -17,6 +17,7 @@
 		<handler function="OnSetFocus" entry="EVT_SET_FOCUS" />
 		<handler function="OnKillFocus" entry="EVT_KILL_FOCUS" />
 		<handler function="OnLeftUp" entry="EVT_LEFT_UP" />
+		<handler function="OnRightDown" entry="EVT_RIGHT_DOWN" />
 		<handler function="OnMouseMove" entry="EVT_MOTION" />
 		<handler function="OnMouseWheel" entry="EVT_MOUSEWHEEL" />
 		<object class="wxNotebook" name="ID_NOTEBOOK1" variable="Notebook1" member="yes">
@@ -26,6 +27,12 @@
 			<object class="notebookpage">
 				<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
 					<size>392,332</size>
+					<object class="wxScrollBar" name="ID_SCROLLBAR1" variable="ScrollBar1" member="yes">
+						<thumbsize>1</thumbsize>
+						<range>10</range>
+						<pagesize>1</pagesize>
+						<size>384,33</size>
+					</object>
 				</object>
 				<label>P1</label>
 			</object>

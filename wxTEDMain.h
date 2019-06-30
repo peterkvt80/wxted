@@ -33,6 +33,7 @@
 #include <wx/menu.h>
 #include <wx/panel.h>
 #include <wx/filedlg.h>
+#include <wx/scrolbar.h>
 #include <wx/frame.h>
 #include <wx/timer.h>
 #include <wx/statusbr.h>
@@ -114,6 +115,10 @@ class wxTEDFrame: public wxFrame
 
         int iPageCount;     // How many pages in this set?
         int iPage;          // Which page are we looking at?
+        wxPoint m_offset;   // The offset of the current page
+
+        wxPoint m_slideOrigin;  // Origin of a slide
+        bool m_slidePages;      // True if we are sliding the page with the right mouse key
 
         // Frame
         bool m_focused;
@@ -173,6 +178,8 @@ class wxTEDFrame: public wxFrame
         void OnPanel1Paint(wxPaintEvent& event);
         void OnMenuItemNewWindow(wxCommandEvent& event);
         void OnMenuItemZXNetSelected(wxCommandEvent& event);
+        void OnRightDown(wxMouseEvent& event);
+        void OnRightUp(wxMouseEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -202,6 +209,7 @@ class wxTEDFrame: public wxFrame
         wxWindow* m_parentWindow;
 
         //(*Identifiers(wxTEDFrame)
+        static const long ID_SCROLLBAR1;
         static const long ID_PANEL1;
         static const long ID_NOTEBOOK1;
         static const long idNewPage;
@@ -268,6 +276,7 @@ class wxTEDFrame: public wxFrame
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;
         wxMenuItem* MenuItem4;
+        wxScrollBar* ScrollBar1;
         wxMenuItem* MenuItem11;
         wxMenuItem* MenuItemDeletePage;
         wxMenuItem* MenuItemRegion6;

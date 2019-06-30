@@ -2382,11 +2382,12 @@
 1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1560612284 e:\dev\wxted-github\wxted\wxtedmain.h
+1561918983 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
 	<wx/filedlg.h>
+	<wx/scrolbar.h>
 	<wx/frame.h>
 	<wx/timer.h>
 	<wx/statusbr.h>
@@ -2794,7 +2795,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1561331761 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1561587375 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

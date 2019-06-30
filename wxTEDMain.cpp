@@ -67,6 +67,7 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 }
 
 //(*IdInit(wxTEDFrame)
+const long wxTEDFrame::ID_SCROLLBAR1 = wxNewId();
 const long wxTEDFrame::ID_PANEL1 = wxNewId();
 const long wxTEDFrame::ID_NOTEBOOK1 = wxNewId();
 const long wxTEDFrame::idNewPage = wxNewId();
@@ -431,7 +432,7 @@ void wxTEDFrame::m_resize(wxSize clientSize)
             break;
     }
     // Don't make it too small
-    if (i>8) i--;
+    if (i>6) i--;
     // Set it as the system font
     wf.SetPointSize(i);
     SetFont(wf);
@@ -439,13 +440,6 @@ void wxTEDFrame::m_resize(wxSize clientSize)
     ttxSize=GetTextExtent("AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDD");
     m_ttxW=ttxSize.GetWidth()/40;
     m_ttxH=ttxSize.GetHeight(); // 18;
-
-    // An idea to put multiple pages up if the aspect is long enough
-    // More generally than this, we should be able to show subpages as lists or tiled.
-    if (clientSize.GetWidth()>ttxSize.GetWidth()*3/2)
-    {
-      std::cout << "We, we can do that" << std::endl;
-    }
 
     Refresh();
     // std::cout << "New font size (pts) " << GetFont().GetPointSize() << std::endl;
@@ -455,7 +449,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 {
     if (this->IsIconized()) return; // If Iconized we shouldn't draw anything
 
-    wxPoint offset(0,0);
+    wxPoint offset=m_offset;
 
     wxAutoBufferedPaintDC paintDC(this);
 
@@ -495,10 +489,17 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
     /* page */
-    TTXPage* p=m_currentPage; // Load the page. Current page could be a subpages
+    // TTXPage* p=m_currentPage; // Load the page. Current page could be a subpages
+
+    //TTXPage* p=m_rootPage; // Load the root page
+
+    // @todo Do not draw frames that are completely on the left of the window
+    // (Traverse p until we are in frame)
 
     // Assume horizontal subpages for now
-    for(TTXPage* p=m_currentPage;p!=nullptr;p=p->Getm_SubPage()) // Just do two pages to prove concept
+    for(TTXPage* p=m_rootPage;
+        p!=nullptr && (offset.x < this->GetClientSize().GetWidth()); // Don't bother to render pages outside of the window
+        p=p->Getm_SubPage()) // Just do two pages to prove concept
     {
       TTXLine row0;
       int firstRow=1;
@@ -699,7 +700,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
                       if (doubleHeight)
                       {
-                          doubleHeightDC.DrawText(_(ch2),wxPoint(col*m_ttxW,0)+offset);
+                          doubleHeightDC.DrawText(_(ch2),wxPoint(col*m_ttxW,0)); // No offset! The device context is not the main screen
                       }
                       else // Single height
                       {
@@ -711,7 +712,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                   if (doubleHeight)
                       paintDC.StretchBlit(wxPoint(col*m_ttxW,row*m_ttxH)+offset,wxSize(m_ttxW,m_ttxH*2), // dest
                                       &doubleHeightDC,
-                                      wxPoint(col*m_ttxW,0)+offset,wxSize(m_ttxW,m_ttxH)); //src
+                                      wxPoint(col*m_ttxW,0),wxSize(m_ttxW,m_ttxH)); //src
                   // Set-after codes implemented here, also the show markup
                   paintDC.SetTextForeground(*wxWHITE);
                   paintDC.SetTextBackground(*wxLIGHT_GREY);
@@ -1006,6 +1007,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     if (m_blinkToggle==true)
     {
+        wxPoint dx(m_ttxW*41*iPage,0); // The page offset
+        dx+=m_offset; // Add the slide offset
+
         paintDC.SetPen(*wxBLACK_PEN); // outline on
         paintDC.SetBrush(wxBrush(*wxWHITE));
             // In the current page, get the line that the cursor is on, and test if it is double height
@@ -1013,20 +1017,20 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         doubleHeight=m_currentPage->GetRow(m_cursorPoint.y)->IsDoubleHeight(m_cursorPoint.x); // @todo Extend to deal with double height transitions.
         if (m_cursorIsAlpha) // Alpha cursor
         {
-            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH),wxSize(m_ttxW,m_ttxH));
+            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH)+dx,wxSize(m_ttxW,m_ttxH));
             if (doubleHeight)
-                paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH),wxSize(m_ttxW,m_ttxH*2));
+                paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH)+dx,wxSize(m_ttxW,m_ttxH*2));
         }
         else // Graphics cursor
         {
             // Outline the whole character location, but 2 lines bigger.
-            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,m_cursorPoint.y*m_ttxH-2), // left
+            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,m_cursorPoint.y*m_ttxH-2)+dx, // left
                                       wxSize(2,m_ttxH+4));
-            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,m_cursorPoint.y*m_ttxH-2), // top
+            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,m_cursorPoint.y*m_ttxH-2)+dx, // top
                                       wxSize(m_ttxW+4,2));
-            paintDC.DrawRectangle(wxPoint((m_cursorPoint.x+1)*m_ttxW,m_cursorPoint.y*m_ttxH-2), // right
+            paintDC.DrawRectangle(wxPoint((m_cursorPoint.x+1)*m_ttxW,m_cursorPoint.y*m_ttxH-2)+dx, // right
                                       wxSize(2,m_ttxH+4));
-            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,(m_cursorPoint.y+1)*m_ttxH), // bottom
+            paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW-2,(m_cursorPoint.y+1)*m_ttxH)+dx, // bottom
                                       wxSize(m_ttxW+4,2));
             int halfw=m_ttxW/2;
             int thirdh=m_ttxH/3;
@@ -1034,12 +1038,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
             {
                 thirdh*=2;
                 paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW+m_subPixelPoint.x*halfw,
-                                              m_cursorPoint.y*m_ttxH+m_subPixelPoint.y*thirdh),
+                                              m_cursorPoint.y*m_ttxH+m_subPixelPoint.y*thirdh)+dx,
                                       wxSize(halfw,thirdh));
             }
             else
                 paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW+m_subPixelPoint.x*halfw,
-                                              m_cursorPoint.y*m_ttxH+m_subPixelPoint.y*thirdh),
+                                              m_cursorPoint.y*m_ttxH+m_subPixelPoint.y*thirdh)+dx,
                                       wxSize(halfw,thirdh));
 
         }
@@ -1067,10 +1071,14 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     paintDC.DrawLine(x2,y1,x2,y2); // Right
     paintDC.DrawLine(x1,y2,x2,y2); // Bottom
 
-
-
+    // Outline the current frame around the current page
+    paintDC.SetBrush(*wxTRANSPARENT_BRUSH); // no fill
+    paintDC.SetPen(*wxWHITE_PEN); // outline on
+    wxSize sz(static_cast<int>(m_ttxW*40.5), m_ttxH*25);
+    wxPoint loc(m_offset.x+iPage*m_ttxW*41,0);
+    paintDC.DrawRectangle(loc,sz);
     // std::cout << "[OnPaint] exits " << std::endl;
-}
+} // OnPaint
 
 wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
 {
@@ -1162,6 +1170,12 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     , m_dragging(false)
     , m_MarqueeStart(wxPoint(0,0))
     , m_currentPage(NULL)
+
+    , iPageCount(0)
+    , iPage(0)
+    , m_offset(wxPoint(0,0))
+    , m_slideOrigin(wxPoint(0,0))
+    , m_slidePages(false)
 {
     // std::cout << "[wxTEDFrame] Entered" << std::endl;
     m_parentWindow=parent;
@@ -1191,6 +1205,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Notebook1->Disable();
     Notebook1->Hide();
     Panel1 = new wxPanel(Notebook1, ID_PANEL1, wxDefaultPosition, wxSize(392,332), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+    ScrollBar1 = new wxScrollBar(Panel1, ID_SCROLLBAR1, wxDefaultPosition, wxSize(384,33), 0, wxDefaultValidator, _T("ID_SCROLLBAR1"));
+    ScrollBar1->SetScrollbar(0, 1, 10, 1);
     Notebook1->AddPage(Panel1, _("P1"), false);
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
@@ -1342,6 +1358,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
     Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus);
     Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp);
+    Connect(wxEVT_RIGHT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnRightDown);
+    Connect(wxEVT_RIGHT_UP,(wxObjectEventFunction)&wxTEDFrame::OnRightUp);
     Connect(wxEVT_MOTION,(wxObjectEventFunction)&wxTEDFrame::OnMouseMove);
     Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
@@ -1983,7 +2001,9 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
     // TODO: Extend this to highlight links on rollover
     // TODO: When left button moves, continue drag.
     if (!event.LeftIsDown()) // OnLeftUp only fires if you are over the frame.
-        m_dragging=false;
+    {
+      m_dragging=false;
+    }
     if (m_dragging)
     {
         wxPoint p=event.GetPosition();
@@ -1995,6 +2015,23 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
         // std::cout << "continue drag at " << p.x << ", " << p.y << std::endl;
     }
 
+    // Page slide with right mouse button
+    if (!event.RightIsDown())
+    {
+      m_slidePages=false;
+    }
+    if (m_slidePages)
+    {
+        wxPoint p=event.GetPosition();
+        m_offset.x=p.x-m_slideOrigin.x;
+        //p.x/=m_ttxW;
+        //p.y/=m_ttxH;
+        //if (p.x>40) p.x=40;
+        //if (p.y>=25) p.y=25;
+        //m_MarqueeEnd=p; // Marquee end
+        //std::cout << "continue slide at " << p.x << ", " << p.y << " m_offset.x=" << m_offset.x << std::dec << std::endl;
+    }
+
 }
 
 void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
@@ -2004,9 +2041,22 @@ void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 //    std::cout << "Left button pressed..." << std::endl;
     wxPoint save=m_cursorPoint;
     m_cursorPoint=event.GetPosition();
+    // Adjust to slide offset
+    m_cursorPoint.x-=m_offset.x;
+
     // Adjust to character location
     m_cursorPoint.x/=m_ttxW;
     m_cursorPoint.y/=m_ttxH;
+    // Need to think about the page number (each page 40 characters + one space)
+    auto page=m_cursorPoint.x/41; // 40 Characters + 1 space
+    std::cout << "Page " << page << std::endl;
+    iPage=page; // Set the page index
+    m_currentPage=m_rootPage->GetPage(iPage); // and set the pointer as the new current page
+
+
+    // Now we know the page, where in the page did we click?
+    m_cursorPoint.x%=41;
+
     // Revert if clicked outside the page
     if (m_cursorPoint.x<0 || m_cursorPoint.x>39 || m_cursorPoint.y<0 || m_cursorPoint.y>24)
         m_cursorPoint=save;
@@ -2419,4 +2469,18 @@ void wxTEDFrame::OnMenuItemZXNetSelected(wxCommandEvent& event)
   const wchar_t *wstr = w.c_str();
 
   ShellExecute (NULL, L"open", wstr, NULL, NULL, SW_SHOWNORMAL);
+}
+
+void wxTEDFrame::OnRightDown(wxMouseEvent& event)
+{
+  wxPoint wxp=event.GetPosition();
+  std::cout << "x=" << wxp.x << " y=" << wxp.y << std::endl;
+  m_slideOrigin=event.GetPosition()-m_offset;
+  m_slidePages=true;
+}
+
+void wxTEDFrame::OnRightUp(wxMouseEvent& event)
+{
+  // drag ended - Move the offset to match the drag
+  m_slidePages=false;
 }
