@@ -489,18 +489,20 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
     /* page */
-    // TTXPage* p=m_currentPage; // Load the page. Current page could be a subpages
-
-    //TTXPage* p=m_rootPage; // Load the root page
-
-    // @todo Do not draw frames that are completely on the left of the window
-    // (Traverse p until we are in frame)
 
     // Assume horizontal subpages for now
     for(TTXPage* p=m_rootPage;
         p!=nullptr && (offset.x < this->GetClientSize().GetWidth()); // Don't bother to render pages outside of the window
-        p=p->Getm_SubPage()) // Just do two pages to prove concept
+        p=p->Getm_SubPage())
     {
+      // Skip frames that are completely on the left of the window
+      if (offset.x+(static_cast<int>(m_ttxW)*41)<0)
+      {
+        //std::cout << "Skipped drawing frame Xo=" << std::dec << offset.x << " " << m_ttxW*41 << std::endl;
+        offset.x+=m_ttxW*41;
+        continue;
+      }
+
       TTXLine row0;
       int firstRow=1;
       if (MenuItemShowHeader->IsChecked())

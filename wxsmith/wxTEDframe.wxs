@@ -18,6 +18,7 @@
 		<handler function="OnKillFocus" entry="EVT_KILL_FOCUS" />
 		<handler function="OnLeftUp" entry="EVT_LEFT_UP" />
 		<handler function="OnRightDown" entry="EVT_RIGHT_DOWN" />
+		<handler function="OnRightUp" entry="EVT_RIGHT_UP" />
 		<handler function="OnMouseMove" entry="EVT_MOTION" />
 		<handler function="OnMouseWheel" entry="EVT_MOUSEWHEEL" />
 		<object class="wxNotebook" name="ID_NOTEBOOK1" variable="Notebook1" member="yes">
