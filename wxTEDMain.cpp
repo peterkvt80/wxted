@@ -169,12 +169,24 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
   case WXK_PAGEUP:
     // std::cout << "Page up will get next page of a multiple page carousel" << std::endl;
     if ( m_cursorPoint.y<1) // @todo Temporary hack to stop crash, when going up one page while on row 0.
-       m_cursorPoint.y=1;
+    {
+      m_cursorPoint.y=1;
+    }
     iPageCount=m_rootPage->GetPageCount();
     iPage++;
-    if (iPage>=iPageCount) iPage=iPageCount-1;
+    if (iPage>=iPageCount) iPage=iPageCount-1; // Check we don't go past the last page
     m_currentPage=m_rootPage->GetPage(iPage);
-    //std::cout << "iPage= " << iPage << std::endl;
+
+    // If the page is now off screen, scroll left to bring the right edge aligned with the window
+    {
+      auto rightEdge=(iPage+1)*m_ttxW*41; // Distance from first page to end of current page
+      auto mappedEdge=rightEdge-m_ttxW+m_offset.x; // Edge that we want mapped to the right hand side of the client frame space
+      auto clientWidth=GetClientSize().GetWidth();
+      if (mappedEdge>clientWidth)
+      {
+        m_offset.x=clientWidth-rightEdge-m_ttxW; // Scroll left to bring the right side into frame
+      }
+    }
     break;
   case WXK_PAGEDOWN:
     // std::cout << "Page down will get previous page of a multiple page carousel" << std::endl;
@@ -183,6 +195,17 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     if (iPage<0) iPage=0;
     m_currentPage=m_rootPage->GetPage(iPage);
     //std::cout << "iPage= " << iPage << std::endl;
+
+    // If the page is now off screen, scroll left to bring the right edge aligned with the window
+    {
+      auto leftEdge=iPage*m_ttxW*41; // Distance from first page to left edge of current page
+      int mappedEdge=leftEdge-m_ttxW+m_offset.x; // Edge that we want mapped to client frame space
+      std::cout << std::dec << "Leftedge=" << leftEdge << " mappedEdge=" << mappedEdge << std::endl;
+      if (mappedEdge<0)
+      {
+        m_offset.x=leftEdge; // Scroll left to bring the right side into frame
+      }
+    }
     break;
   case WXK_F11: // Reveal concealed text
     m_reveal=!m_reveal;
@@ -1486,6 +1509,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
     iPage=0;
+    m_offset.x=0;
     m_currentPage=m_rootPage;
 
     SetRegionMenu(m_currentPage->GetRegion()); // Region language
