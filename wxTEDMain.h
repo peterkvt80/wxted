@@ -180,6 +180,7 @@ class wxTEDFrame: public wxFrame
         void OnMenuItemZXNetSelected(wxCommandEvent& event);
         void OnRightDown(wxMouseEvent& event);
         void OnRightUp(wxMouseEvent& event);
+        void OnPanel1MouseMove(wxMouseEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);

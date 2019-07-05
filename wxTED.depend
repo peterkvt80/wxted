@@ -511,7 +511,7 @@
 	<float.h>
 	<ieeefp.h>
 
-1554069364 source:e:\dev\wxted-github\wxted\helpframe.cpp
+1562362983 source:e:\dev\wxted-github\wxted\helpframe.cpp
 	"HelpFrame.h"
 	<wx/intl.h>
 	<wx/string.h>
@@ -2382,7 +2382,7 @@
 1412634843 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1561918983 e:\dev\wxted-github\wxted\wxtedmain.h
+1562362696 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>

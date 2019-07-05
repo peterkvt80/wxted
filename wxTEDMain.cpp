@@ -194,16 +194,15 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     iPage--;
     if (iPage<0) iPage=0;
     m_currentPage=m_rootPage->GetPage(iPage);
-    //std::cout << "iPage= " << iPage << std::endl;
 
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
-      auto leftEdge=iPage*m_ttxW*41; // Distance from first page to left edge of current page
+      int leftEdge=iPage*m_ttxW*41; // Distance from first page to left edge of current page
       int mappedEdge=leftEdge-m_ttxW+m_offset.x; // Edge that we want mapped to client frame space
-      std::cout << std::dec << "Leftedge=" << leftEdge << " mappedEdge=" << mappedEdge << std::endl;
+      std::cout << std::dec << "iPage= " << iPage << " mappedEdge=" << mappedEdge << " leftEdge=" << leftEdge << std::endl;
       if (mappedEdge<0)
       {
-        m_offset.x=leftEdge; // Scroll left to bring the right side into frame
+        m_offset.x=-leftEdge; // Scroll left to bring the right side into frame
       }
     }
     break;
@@ -2024,6 +2023,21 @@ void wxTEDFrame::OnLeftUp(wxMouseEvent& event)
 
 void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
 {
+  auto xloc=event.GetPosition().x;
+  std::cout << std::dec <<"Mouse move, yay!" << xloc <<  std::endl;
+  auto leftX=m_offset.x;
+  auto rightX=leftX+m_ttxW*41*iPageCount;
+  if (xloc<leftX || xloc>rightX)
+  {
+    wxSetCursor (wxCursor (wxCURSOR_NO_ENTRY));
+  }
+  else
+  {
+    wxSetCursor (wxCursor (wxCURSOR_DEFAULT));
+  }
+  // Is the cursor over a valid page?
+  // Set the cursor accordingly
+
     // TODO: Extend this to highlight links on rollover
     // TODO: When left button moves, continue drag.
     if (!event.LeftIsDown()) // OnLeftUp only fires if you are over the frame.
@@ -2510,3 +2524,4 @@ void wxTEDFrame::OnRightUp(wxMouseEvent& event)
   // drag ended - Move the offset to match the drag
   m_slidePages=false;
 }
+
