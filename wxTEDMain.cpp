@@ -1079,24 +1079,23 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     // Marquee.
     // TODO: Make the marquee and cursor mutually exclusive
     wxPen pen(*wxWHITE,1,wxSHORT_DASH);
+    paintDC.SetBrush(*wxTRANSPARENT_BRUSH); // no fill
+
     paintDC.SetPen(pen); // outline on
-    wxCoord x1,y1,x2,y2;
-    x1=m_MarqueeStart.x*m_ttxW;
-    x2=m_MarqueeEnd.x  *m_ttxW;
-    y1=m_MarqueeStart.y*m_ttxH;
-    y2=m_MarqueeEnd.y  *m_ttxH;
-    // Backwards?
-    if (x1>x2) x1+=m_ttxW;
-    if (y1>y2) y1+=m_ttxH;
-    // Draw a box
-    // TODO: Marquee crawling ants
-    paintDC.DrawLine(x1,y1,x2,y1); // Top
-    paintDC.DrawLine(x1,y1,x1,y2); // Left
-    paintDC.DrawLine(x2,y1,x2,y2); // Right
-    paintDC.DrawLine(x1,y2,x2,y2); // Bottom
+    {
+      wxPoint loc(m_MarqueeStart);
+      wxSize siz(m_MarqueeEnd.x-loc.x, m_MarqueeEnd.y-loc.y);
+
+      loc.x*=m_ttxW;
+      loc.y*=m_ttxH;
+      siz.x*=m_ttxW;
+      siz.y*=m_ttxH;
+
+      // Draw a box TODO: Marquee crawling ants
+      paintDC.DrawRectangle(m_offset+loc+wxSize(iPage*m_ttxW*41,0), siz);
+    }
 
     // Outline the current frame around the current page
-    paintDC.SetBrush(*wxTRANSPARENT_BRUSH); // no fill
     paintDC.SetPen(*wxWHITE_PEN); // outline on
     wxSize sz(static_cast<int>(m_ttxW*40.5), m_ttxH*25);
     wxPoint loc(m_offset.x+iPage*m_ttxW*41,0);
@@ -1384,8 +1383,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp);
     Connect(wxEVT_RIGHT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnRightDown);
     Connect(wxEVT_RIGHT_UP,(wxObjectEventFunction)&wxTEDFrame::OnRightUp);
-    Connect(wxEVT_MOTION,(wxObjectEventFunction)&wxTEDFrame::OnMouseMove);
     Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
+    Connect(wxEVT_MOTION,(wxObjectEventFunction)&wxTEDFrame::OnMouseMove);
     //*)
 
     Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnOpen);
@@ -2019,8 +2018,6 @@ void wxTEDFrame::OnLeftUp(wxMouseEvent& event)
 
 }
 
-
-
 void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
 {
   auto xloc=event.GetPosition().x;
@@ -2042,17 +2039,18 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
     // TODO: When left button moves, continue drag.
     if (!event.LeftIsDown()) // OnLeftUp only fires if you are over the frame.
     {
-      m_dragging=false;
+      OnLeftUp(event);
     }
     if (m_dragging)
     {
         wxPoint p=event.GetPosition();
+        p.x-=m_offset.x; // Which page are we on? 40 Characters + 1 space.
         p.x/=m_ttxW;
+        p.x-=iPage*41;
         p.y/=m_ttxH;
         if (p.x>40) p.x=40;
         if (p.y>=25) p.y=25;
         m_MarqueeEnd=p; // Marquee end
-        // std::cout << "continue drag at " << p.x << ", " << p.y << std::endl;
     }
 
     // Page slide with right mouse button
@@ -2076,6 +2074,10 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
 
 void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 {
+  // Must be over an actual page or we ignore the click
+  auto x=event.GetPosition().x;
+  if (x>=m_offset.x && x<=m_offset.x+m_ttxW*41*iPageCount)
+  {
     m_dragging=true;
 
 //    std::cout << "Left button pressed..." << std::endl;
@@ -2111,6 +2113,7 @@ void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
     m_MarqueeEnd=m_cursorPoint;
 
     // Skip(); // TODO: Is this needed? Probably is!
+  }
 }
 
 
