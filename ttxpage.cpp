@@ -658,6 +658,7 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
     SetRow(1,"Unable to load file");
     SetRow(3,shortFilename);
     SetRow(4,"?");
+    SetRow(5,filename);
     SetSourcePage("Unable to load page");
     SetShortFilename("no page");
   }

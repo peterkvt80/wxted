@@ -1,0 +1,97 @@
+DE,Description goes here
+DS,inserter
+SP,J:\peter\teletext pages\wxtedsplash.tti
+PN,1ff01
+SC,0001
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,D]S        <l|<l(|,l(|,dQ^9SRVUT
+OL,2,D]Sh4h |h4h4    p4   5Q^fSRVUT
+OL,3,D]Sj555 {w      !   5Q^9SRVUT
+OL,4,D]S -%-%*%*%(/$ (/,.(/,&Q^fSRVUTBLAST
+OL,5,                                     1/4
+OL,6,MCWelcome to wxTED teletext editor      
+OL,8, Quick start instructions               
+OL,10, 1) Help->Special keys                  
+OL,11,F   Show a list of keys that you need   
+OL,13, 2) Open Manual.pdf.FYou'll find this   
+OL,14,F   in the start menu next to wxTED.    
+OL,16, 3) Select File->New.FThis clears the   
+OL,17,   Fpage so you can start to make your  
+OL,18,   Fown design.                         
+OL,20, 4) Use Page Up and Page Down to        
+OL,21,    navigate subpages.                  
+OL,24,                  FPage Up -> Subpages  
+PN,1ff02
+SC,0002
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,D]S        <l|<l(|,l(|,dQ^9SRVUT
+OL,2,D]Sh4h |h4h4    p4   5Q^fSRVUT
+OL,3,D]Sj555 {w      !   5Q^9SRVUT
+OL,4,D]S -%-%*%*%(/$ (/,.(/,&Q^fSRVUTBLAST
+OL,5,                                     2/4
+OL,6,MCManaging subpages                     
+OL,8,FTo create or delete subpages:          
+OL,9, Edit -> Insert or Delete.              
+OL,11,FTo select next or previous subpage:    
+OL,12, Page up or Page down.                  
+OL,14,FTo slide the pages:                    
+OL,15, Right click mouse button and drag.     
+OL,17,FTo edit a subpage:                     
+OL,18, The current page has a thin white      
+OL,19, rectangle around it which means that   
+OL,20, you can edit it. Click on a subpage to 
+OL,21, select it.                             
+OL,24,Quick start <- PgDnFPgUp -> Subpages    
+PN,1ff03
+SC,0003
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,D]S        <l|<l(|,l(|,dQ^9SRVUT
+OL,2,D]Sh4h |h4h4    p4   5Q^fSRVUT
+OL,3,D]Sj555 {w      !   5Q^9SRVUT
+OL,4,D]S -%-%*%*%(/$ (/,.(/,&Q^fSRVUTBLAST
+OL,5,                                     3/4
+OL,6,MCSpecial keys                          
+OL,8, wxTED uses special keys for all of the 
+OL,9, effects. SelectCHelp->Special keysGto  
+OL,10, open a list of these.Fedit.tfGusers can
+OL,11, use most of the escape codes instead.  
+OL,13, To toggle viewing the control codes you
+OL,14, can press Alt-Gr. Codes are on a grey  
+OL,15, background.                            
+OL,17,CAlphaFcolourEisBtheGalpha symbol.      
+OL,18, Graphics uses a mosaic patternS&#?o#)4 
+OL,19,HFlashISteadyXConcealD]Cyellow on blue  
+OL,21, ABCDEFG@QRSTUVWPHIKJLYZ\]^_            
+OL,24,Subpages <- PgDn FPgUp -> Help wanted   
+PN,1ff04
+SC,0004
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,D]S        <l|<l(|,l(|,dQ^9SRVUT
+OL,2,D]Sh4h |h4h4    p4   5Q^fSRVUT
+OL,3,D]Sj555 {w      !   5Q^9SRVUT
+OL,4,D]S -%-%*%*%(/$ (/,.(/,&Q^fSRVUTBLAST
+OL,5,                                     4/4
+OL,6,MCHelp wanted                           
+OL,8, I'm thinking of extending these help   
+OL,9, pages to about 10 or 15 subpages.      
+OL,11, Topics to cover: Basic text, graphics, 
+OL,12, import/export to edit.tf and zxnet.    
+OL,13, Setting parameters for transmission.   
+OL,14, Languages and regions.                 
+OL,15, Teefax specifics. Header formatting.   
+OL,17, If you can design some of these pages  
+OL,18, I'll stick them in a future release    
+OL,19, of wxTED.                              
+OL,21, peterkvt80@gmail.com                   

@@ -55,7 +55,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.38")
+#define VERSION_STRING   wxT("1.39")
 
 // ftp
 #include <wininet.h>
@@ -71,7 +71,7 @@ class wxTEDFrame: public wxFrame
 {
     public:
 
-        wxTEDFrame(wxWindow* parent,wxWindowID id = -1, wxString initialPage="BBC100.tti");
+        wxTEDFrame(wxWindow* parent,wxWindowID id = -1, wxString initialPage="wxtedsplash.tti");
         virtual ~wxTEDFrame();
         inline TTXPage* Page(){return m_rootPage;};
 
@@ -181,6 +181,7 @@ class wxTEDFrame: public wxFrame
         void OnRightDown(wxMouseEvent& event);
         void OnRightUp(wxMouseEvent& event);
         void OnPanel1MouseMove(wxMouseEvent& event);
+        void OnPanel1Paint1(wxPaintEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
