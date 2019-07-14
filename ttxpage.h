@@ -37,8 +37,10 @@
 #define PAGESTATUS_SUBSTITUTEPAGE   0x0800
 #define PAGESTATUS_C11_SERIALMAG    0x0040
 
-#define MAXROW 27
-
+// Rows 25 to 28 are page related enhancemnts for higher levels.
+// 29 is magazine related.
+// Hopefully we will preserve these rows even if we don't process them
+#define MAXROW 29
 
 class TTXPage
 {
