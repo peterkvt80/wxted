@@ -20,7 +20,9 @@
 
 #include "ttxcodes.h"
 #include "ttxline.h"
-#include "hamm-tables.h"
+#include "ttxrow28.h"
+#include "hamm.h"
+// #include "hamm-tables.h"
 #include "tedevent.h"
 //#include "wxTEDMain.h"
 #define FIRSTPAGE 0x1ff00
@@ -268,7 +270,8 @@ class TTXPage
         int m_PageNumber;  // PN
         // Private objects
         TTXPage* m_SubPage; //!< Member variable "m_SubPage"
-        TTXLine* m_pLine[MAXROW+1];   // OL. 26 and 27 can be set manually. Keep whatever people put in there
+        TTXLine* m_pLine[MAXROW+1];   // OL. 26,27,28,29 might be set by other apps. Keep whatever people put in there
+        TTXRow28* m_row28;
         int m_fastextlinks[6];      // FL
 
         std::string m_destination;  // DS

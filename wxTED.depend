@@ -2254,7 +2254,7 @@
 	"string.h"
 	"ttxpage.h"
 
-1563102014 e:\dev\wxted-github\wxted\ttxpage.h
+1563232341 e:\dev\wxted-github\wxted\ttxpage.h
 	<stdlib.h>
 	"string.h"
 	<iostream>
@@ -2267,14 +2267,16 @@
 	<wx/defs.h>
 	"ttxcodes.h"
 	"ttxline.h"
-	"hamm-tables.h"
+	"ttxrow28.h"
+	"hamm.h"
 	"tedevent.h"
 
 1483015912 e:\dev\wxted-github\wxted\ttxcodes.h
 
-1490914597 e:\dev\wxted-github\wxted\ttxline.h
+1563225563 e:\dev\wxted-github\wxted\ttxline.h
 	<iostream>
 	<string>
+	<iomanip>
 	"ttxcodes.h"
 
 1463305750 e:\dev\wxted-github\wxted\hamm-tables.h
@@ -2282,7 +2284,7 @@
 1560039184 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1562539336 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1563146664 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1562539072 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2795,7 +2797,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1562539072 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1563149046 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -3315,4 +3317,23 @@
 
 1412634842 e:\dev\downloads\wxwidgets302\include\wx\cocoa\mdi.h
 	"wx/frame.h"
+
+1563229661 e:\dev\wxted-github\wxted\ttxrow28.h
+	"ttxline.h"
+	"hamm.h"
+
+1563230843 e:\dev\wxted-github\wxted\hamm.h
+	<inttypes.h>
+	"macros.h"
+
+1563230261 e:\dev\wxted-github\wxted\macros.h
+
+1563232341 source:e:\dev\wxted-github\wxted\hamm.c
+	"config.h"
+	<limits.h>
+	"hamm.h"
+	"hamm-tables.h"
+
+1563232620 source:e:\dev\wxted-github\wxted\ttxrow28.cpp
+	"ttxrow28.h"
 

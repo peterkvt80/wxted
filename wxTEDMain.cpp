@@ -2035,7 +2035,7 @@ void wxTEDFrame::OnLeftUp(wxMouseEvent& event)
 void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
 {
   auto xloc=event.GetPosition().x;
-  std::cout << std::dec <<"Mouse move, yay!" << xloc <<  std::endl;
+  // std::cout << std::dec <<"Mouse move, yay!" << xloc <<  std::endl;
   auto leftX=m_offset.x;
   auto rightX=leftX+m_ttxW*41*iPageCount;
   if (xloc<leftX || xloc>rightX)

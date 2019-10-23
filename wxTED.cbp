@@ -81,6 +81,11 @@
 		<Unit filename="PublishSetupDialog.h" />
 		<Unit filename="charchange.cpp" />
 		<Unit filename="charchange.h" />
+		<Unit filename="hamm-tables.h" />
+		<Unit filename="hamm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="hamm.h" />
 		<Unit filename="mapchar.cpp" />
 		<Unit filename="mapchar.h" />
 		<Unit filename="resource.rc">
@@ -96,6 +101,8 @@
 		<Unit filename="ttxline.h" />
 		<Unit filename="ttxpage.cpp" />
 		<Unit filename="ttxpage.h" />
+		<Unit filename="ttxrow28.cpp" />
+		<Unit filename="ttxrow28.h" />
 		<Unit filename="wxTEDApp.cpp" />
 		<Unit filename="wxTEDApp.h" />
 		<Unit filename="wxTEDMain.cpp" />

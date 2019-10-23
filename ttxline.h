@@ -2,6 +2,7 @@
 #define TTXLINE_H
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 #include "ttxcodes.h"
 
@@ -75,8 +76,9 @@ class TTXLine
         void ClearLine(){m_textline="                                        ";};
 
     protected:
-    private:
         std::string validate(std::string const& test);
+
+    private:
         unsigned int m_Counter; //!< Member variable "m_Counter"
         std::string m_textline;
 

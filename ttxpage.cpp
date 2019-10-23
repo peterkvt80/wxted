@@ -556,6 +556,10 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     p->m_pLine[lineNumber]=new TTXLine(line);
                     // TODO: Change this implementation to use SetRow
                     // std::cout << lineNumber << ": OL partly implemented. " << line << std::endl;
+                    if (lineNumber==28)
+                    {
+                      p->m_row28=new TTXRow28(line);
+                    }
                     lines++;
                     break;
                 case 9 : // "FL"; - Fastext links
@@ -1238,7 +1242,7 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
   ttxfile << "PS," << std::setw(4) << std::setfill('X') << std::hex << p->m_pagestatus << std::endl;
 
   // that we can have individual timings and properties per page.
-  ttxfile << "CT," << p->m_cycletimeseconds << "," << p->m_cycletimetype << std::dec << std::endl;
+  ttxfile << "CT," << std::dec << p->m_cycletimeseconds << "," << p->m_cycletimetype << std::endl;
 
   ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
   // @todo Add support for individual CT timers here.
