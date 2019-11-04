@@ -1,0 +1,33 @@
+DE,Cyan graphics mode template
+DS,inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\graphicscyan.tti
+PN,1ff00
+SC,0000
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,V                                       
+OL,2,V                                       
+OL,3,V      CYAN GRAPHICS                    
+OL,4,V                                       
+OL,5,V                                       
+OL,6,V      x~}t                            
+OL,7,V      /|/|/                            
+OL,8,V      .!#"-                            
+OL,9,V                                       
+OL,10,V                                       
+OL,11,V                                       
+OL,12,V                                       
+OL,13,V                                       
+OL,14,V        5                              
+OL,15,V        !                              
+OL,16,V                                       
+OL,17,V                                       
+OL,18,V                                       
+OL,19,V                                       
+OL,20,V                                       
+OL,21,V   x?=y0                              
+OL,22,V   7 "}5                              
+OL,23,V   /%  /%                              
+OL,24,A  Link1   BLink2   CLink4  FLink4      

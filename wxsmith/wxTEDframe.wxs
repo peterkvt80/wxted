@@ -47,6 +47,11 @@
 					<help>Create a new page</help>
 					<handler function="OnMenuNew" entry="EVT_MENU" />
 				</object>
+				<object class="wxMenuItem" name="idNewFromTemplate" variable="MenuItemTemplate" member="yes">
+					<label>New from template</label>
+					<help>New page set up for graphics</help>
+					<handler function="OnMenuNewGraphics" entry="EVT_MENU" />
+				</object>
 				<object class="wxMenuItem" name="idOpenPage" variable="MenuItem3" member="yes">
 					<label>Open</label>
 					<accel>CTRL-O</accel>

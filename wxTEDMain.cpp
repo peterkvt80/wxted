@@ -39,6 +39,9 @@
 //*)
 #include <wx/dcbuffer.h>
 
+// include <wx/filename.h>
+#include <wx/stdpaths.h>
+
 
 //helper functions
 enum wxbuildinfoformat {
@@ -71,6 +74,7 @@ const long wxTEDFrame::ID_SCROLLBAR1 = wxNewId();
 const long wxTEDFrame::ID_PANEL1 = wxNewId();
 const long wxTEDFrame::ID_NOTEBOOK1 = wxNewId();
 const long wxTEDFrame::idNewPage = wxNewId();
+const long wxTEDFrame::idNewFromTemplate = wxNewId();
 const long wxTEDFrame::idOpenPage = wxNewId();
 const long wxTEDFrame::idSavePage = wxNewId();
 const long wxTEDFrame::isSavePageAs = wxNewId();
@@ -299,7 +303,7 @@ bool wxTEDFrame::isMosaic(char ch)
 }
 
 /* new--old description. Don't use old codes. They no longer work in VBIT.
- * %%#  mpp page number
+ * %%£  mpp page number
  *  %d   dd date, two digits
  *  %e      date without leading 0
  *  %m   uu month
@@ -1248,6 +1252,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
     Menu1->Append(MenuItem1);
+    MenuItemTemplate = new wxMenuItem(Menu1, idNewFromTemplate, _("New from template"), _("New page set up for graphics"), wxITEM_NORMAL);
+    Menu1->Append(MenuItemTemplate);
     MenuItem3 = new wxMenuItem(Menu1, idOpenPage, _("Open\tCTRL-O"), _("Open a teletext page"), wxITEM_NORMAL);
     Menu1->Append(MenuItem3);
     MenuItemSave = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
@@ -1353,8 +1359,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 
-    Panel1->Connect(wxEVT_PAINT,(wxObjectEventFunction)&wxTEDFrame::OnPanel1Paint1,0,this);
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
+    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
@@ -1504,8 +1510,11 @@ void wxTEDFrame::OnQuit(wxCommandEvent& event)
 void wxTEDFrame::OnOpen(wxCommandEvent& event)
 {
     std::string str;
+    LoadPageFileDialog->SetMessage("Open teletext page");
     if (LoadPageFileDialog->ShowModal() == wxID_CANCEL)
-        return;     // the user bottled out
+    {
+      return;     // the user bottled out
+    }
     if (m_rootPage!=NULL) delete m_rootPage; // Delete the root page. All subpages will go too.
     str=LoadPageFileDialog->GetPath().ToStdString();
 
@@ -2545,4 +2554,54 @@ void wxTEDFrame::OnRightUp(wxMouseEvent& event)
 
 void wxTEDFrame::OnPanel1Paint1(wxPaintEvent& event)
 {
+}
+
+void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
+{
+  // Templates subfolder holds template pages
+  // Get path to our executable
+  wxFileName f(wxStandardPaths::Get().GetExecutablePath());
+  wxString appPath(f.GetPath());
+  // Path to templates
+  appPath+="\\Templates";
+  std::cout << "wxstring=" << appPath;
+
+  auto savepath=LoadPageFileDialog->GetDirectory();
+  LoadPageFileDialog->SetMessage("Open a new teletext page from template");
+  LoadPageFileDialog->SetDirectory(appPath);
+
+  if (LoadPageFileDialog->ShowModal() != wxID_CANCEL)
+  {
+
+    if (m_rootPage!=NULL) delete m_rootPage; // Delete the root page. All subpages will go too.
+    auto pathStr=LoadPageFileDialog->GetPath().ToStdString();
+
+    wxString filename=LoadPageFileDialog->GetFilename();
+    m_rootPage = new TTXPage(pathStr,filename.ToStdString());
+
+    // Change the filename so that we can't overwrite it by mistake.
+    m_rootPage->SetShortFilename("");
+    m_rootPage->SetSourcePage("");
+    m_rootPage->SetPageNumber(0x1ff); // Invalid
+
+    MenuItemSave->Enable(false); // Protect the template, do not enable save
+
+    iPageCount=m_rootPage->GetPageCount();
+
+    wxPaintEvent Pevent(0); // Make a dummy event
+    m_setLanguage();
+    iPage=0;
+    m_offset.x=0;
+    m_currentPage=m_rootPage;
+
+    SetRegionMenu(m_currentPage->GetRegion()); // Region language
+
+    SetTitle(m_rootPage->GetSourcePage());
+    OnPaint(Pevent);    // Refresh with the new page
+
+    // Force an update now
+    Refresh();
+    Update();
+  }
+
 }

@@ -1,0 +1,32 @@
+DE,BBC Sport - Soccer story template
+DS,inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\bbcsoccerstory.tti
+PN,1ff00
+SC,0000
+PS,8000
+CT,99,C
+RE,0
+OL,0,TemplateCEEFAX 1 %%# %%a %d %%bC%H:%M/%S
+OL,1,Wj#3kj#3kj#3kT]R h<h<|h<|(|$|l4|l4| |   
+OL,2,Wj $kj $kj 'kT]R j7juju  {4k500  
+OL,3,W"###"###"###T///-.-,,-,,/,/,,.,-.,.,.//
+OL,4,BSummary of the story in green          
+OL,5,GFirst paragraph introduces the story   
+OL,6,Gin white and this is followed by a     
+OL,7,Gblank line.                            
+OL,9,FSubsequent paragraphs in cyan with a   
+OL,10,Fblank row between each one. You may    
+OL,11,Fhave to adjust the row colours if you  
+OL,12,Fadd or remove lines from the first     
+OL,13,Fparagraph.                             
+OL,14,F                                       
+OL,15,FJust keep on adding paragraphs like    
+OL,16,Fthis with interesting information.     
+OL,17,F                                       
+OL,18,FThe main challenge is to tell the whole
+OL,19,Fstory in a single page. For big stories
+OL,20,Fyou can always add subpages.           
+OL,22,D]CCEEFAX FOOTBALL SECTION PAGE 302     
+OL,23,D]CBBC WEBSITE: bbc.co.uk/football      
+OL,24,ANext page  BTop story CFootball FSport 
+FL,311,303,302,300,f,302

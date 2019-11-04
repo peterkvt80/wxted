@@ -1,0 +1,26 @@
+DE,Header library
+DS,inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\headerlibrary.tti
+PN,1ff00
+SC,0000
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX %%# %%a %d %%b C %H:%M.%S
+OL,1,D]S        <l|<l(|,l(|,dQ^9SRVUT
+OL,2,D]Sh4h |h4h4    p4   5Q^fSRVUT
+OL,3,D]Sj555 {w      !   5Q^9SRVUT
+OL,4,D]S -%-%*%*%(/$ (/,.(/,&Q^fSRVUTBLAST
+OL,6,MCHeader Codes                          
+OL,8,F%%#GPageC 104 F%%aGDayC  Mon           
+OL,9,F%d GDateC 06  F%e GDateC  6            
+OL,10,F%%bGMonthCJul F%%uGMonthC07            
+OL,11,F%H GHourC 17  F%MG Min  C59 F%SGsecC19 
+OL,13,MCHeader Examples                       
+OL,15,  Or copy a template and place in row 0.
+OL,17,C BBC ONE ------------------------------
+OL,18,TemplateCEEFAX 1 %%# %%a %d %%bC%H:%M/%S
+OL,19,C ITV TELETEXT--------------------------
+OL,20,TemplateD]CTeletext G\%%# %%a%dC%H:%M:%S
+OL,21, CITV ORACLE----------------------------
+OL,22,TemplateORACLE %%# %%a%d %%b ITVC%H%M:%S

@@ -1,0 +1,30 @@
+DE,BBC News Template 2000s
+DS,Inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\bbchomenews.tti
+PN,1ff00
+SC,0000
+PS,8040
+CT,15,C
+RE,0
+OL,0,TemplateCEEFAX 1 %%# %%a %d %%bC%H:%M/%S
+OL,1,Wj#3kj#3kj#3kT]S    h4h4|,|h<<|h<$      
+OL,2,Wj $kj $kj 'kT]S    j7k5pj55jw1      
+OL,3,W"###"###"###T//////-.-.,,,-..,-,.//////
+OL,4,CHOME NEWS STORY TEMPLATE. INITIAL      
+OL,5,CSENTENCE YELLOW CAPS, NO ROW GAP AFTER 
+OL,6, First paragraph is in white and        
+OL,7, intoduces the story. Remember to leave 
+OL,8, a gap after all paragraphs. Leave the  
+OL,9, first character in each row blank.     
+OL,11,FThe subsequent paragraphs add more     
+OL,12,Fdetail to the story and are in cyan.   
+OL,13,FLorem ipsum dolor sit amet, has ad     
+OL,14,Fputant legimus omnesque.               
+OL,16,FMel partem percipit pertinax eu, ad    
+OL,17,Fbonorum feugait his. Ei mei fugit      
+OL,18,Fpertinacia. Cu delenit ceteros         
+OL,19,Falienum usu, te dicta volutpat qui.    
+OL,22,D]CHome news digestG141CWorld digestG142
+OL,23,D]CNews IndexG102CFlashG150CRegionalG160
+OL,24,ANext NewsBNews IndxCHeadlinesFMain Menu
+FL,105,102,101,100,f,109

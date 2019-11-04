@@ -1,0 +1,30 @@
+DE,BBC Sport soccer results template
+DS,inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\bbcsoccerresults.tti
+PN,1ff00
+SC,0000
+PS,8000
+CT,99,C
+RE,0
+OL,0,TemplateCEEFAX 1 %%# %%a %d %%bC%H:%M/%S
+OL,1,Wj#3kj#3kj#3kT]R h<h<|h<|(|$|l4|l4| |   
+OL,2,Wj $kj $kj 'kT]R j7juju  {4k500  
+OL,3,W"###"###"###T///-.-,,-,,/,/,,.,-.,.,.//
+OL,4,BPREMIER LEAGUE FINAL SCORES        G1/2
+OL,5,FMANCHESTER CITYG3-0FASTON VILLA        
+OL,6, Sterling 46                            
+OL,7, Silva 65                               
+OL,8, Gundogan 70                            
+OL,9,F                                       
+OL,10,FBRIGHTON      G 3-2FEVERTON            
+OL,11, Gross 15            Webster 20 og      
+OL,12, Maupay 80 pen       Calvert-Lewin 74   
+OL,13, Digne 90, 4 og                         
+OL,14,F                                       
+OL,15,FWATFORD       G 0-0FBOURNEMOUTH        
+OL,17,FWEST HAM      G 1-1FSHEFFIELD UTD.     
+OL,18, Snodgrass 44        Mousset 69         
+OL,22,D]CPREM REPORTSG304CTEAMSG321CTABLEG324 
+OL,23,D]CD1 GOALSG305CD1 REVIEWG306CTABLEG325 
+OL,24,ANext page  BTop story CFootball FSport 
+FL,311,303,302,300,f,302

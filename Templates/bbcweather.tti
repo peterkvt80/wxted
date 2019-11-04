@@ -1,0 +1,65 @@
+DE,BBC Weather Map template
+DS,Inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\bbcweather.tti
+PN,1ff01
+SC,0001
+PS,8000
+CT,15,T
+RE,0
+OL,0,TemplateCEEFAX 1 %%# %%a %d %%bC%H:%M/%S
+OL,1,T]G  This Evening and Tonight 2300      
+OL,2,           ^ZV 4`~|}            G 1/2 
+OL,3,           ZV`?0~G07V        FLight Rain
+OL,4,           VZj**gppp                 
+OL,5,           ^ZV({5                
+OL,6,           ^ZV!'~G 07V!                
+OL,7,           ^ZV ~ow1                 
+OL,8,           ^ZR*y?sp          BCloudy
+OL,9,           ^ZRj)"G 07R}                
+OL,10,       ^ZRp|t RxRg0               
+OL,11,       ZRnG08RtR+"RG07R               
+OL,12,       ZR+R`4R+|0             
+OL,13,        ZR+%*o!R" R *u             
+OL,14,             ^ZR`  R*G 08R}            
+OL,15,             ^ZRk|R            
+OL,16,             ^ZR'oG 08R}zt         
+OL,17,               ZRj^RG 09R         
+OL,18,             ZRx|^G 10R'         
+OL,19,             ^ZR! +/'iRqp0        
+OL,20,             ^ZR  tG 10R/!        
+OL,21,             ZR zG10R^/s/R/?           
+OL,22,            ZR8?' "'    "               
+OL,23,D]G        From the Met Office          
+OL,24,AN.Ire WeathBSportCTrav Head FMain Menu 
+FL,402,300,430,100,0,199
+PN,1ff02
+SC,0002
+PS,8000
+CT,15,T
+RE,0
+OL,0,TemplateCEEFAX 1 %%# %%a %d %%bC%H:%M/%S
+OL,1,T]G          Saturday 0600              
+OL,2,           ^ZV 4`~|}            G 2/2 
+OL,3,           ZV`?0~G01V            FCloudy
+OL,4,           VZj**gppp                 
+OL,5,           ^ZR({5                
+OL,6,           ^ZR!'~G 00R!     BLight Rain
+OL,7,           ^ZR ~ow1                 
+OL,8,           ^ZV*y?sp                 
+OL,9,           ^ZVj)"G 01V}                
+OL,10,       ^ZVp|t VxVg0               
+OL,11,       ZVnG-1VtV+"VG03V               
+OL,12,       ZV+V`4V+|0             
+OL,13,        ZV+%*o!V" V *u             
+OL,14,             ^ZV`  V*G 04V}            
+OL,15,             ^ZVk|U            
+OL,16,             ^ZV'oG 03V}zt   EClear
+OL,17,               ZVj^UG 02V         
+OL,18,             ZVx|^G 04V'         
+OL,19,             ^ZV! +/'iVqp0        
+OL,20,CHeavy Rain  ^ZS  tG 03V/!        
+OL,21,             ZS zG03S^/s/V/?           
+OL,22,            ZS8?' "'    "               
+OL,23,D]G        From the Met Office          
+OL,24,AN.Ire WeathBSportCTrav Head FMain Menu 
+FL,402,300,430,100,0,199

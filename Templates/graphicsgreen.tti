@@ -1,0 +1,33 @@
+DE,Green graphics mode template
+DS,inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\graphicsgreen.tti
+PN,1ff00
+SC,0000
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,R                                       
+OL,2,R                                       
+OL,3,R      GREEN GRAPHICS                   
+OL,4,R                                       
+OL,5,R       0  0                            
+OL,6,R      `>|>t                            
+OL,7,R      7?//75                           
+OL,8,R       "!#                             
+OL,9,R                                       
+OL,10,R                                       
+OL,11,R                                       
+OL,12,R                                       
+OL,13,R                                       
+OL,14,R                                       
+OL,15,R              *                        
+OL,16,R                                       
+OL,17,R                                       
+OL,18,R                                       
+OL,19,R                                       
+OL,20,R            *                          
+OL,21,R                                       
+OL,22,R            `                          
+OL,23,R           ///%                        
+OL,24,A  Link1   BLink2   CLink4  FLink4      

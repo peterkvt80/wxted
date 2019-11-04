@@ -55,7 +55,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.40")
+#define VERSION_STRING   wxT("1.41")
 
 // ftp
 #include <wininet.h>
@@ -182,6 +182,7 @@ class wxTEDFrame: public wxFrame
         void OnRightUp(wxMouseEvent& event);
         void OnPanel1MouseMove(wxMouseEvent& event);
         void OnPanel1Paint1(wxPaintEvent& event);
+        void OnMenuNewFromTemplate(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -215,6 +216,7 @@ class wxTEDFrame: public wxFrame
         static const long ID_PANEL1;
         static const long ID_NOTEBOOK1;
         static const long idNewPage;
+        static const long idNewFromTemplate;
         static const long idOpenPage;
         static const long idSavePage;
         static const long isSavePageAs;
@@ -274,6 +276,7 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemSaveAs;
         wxMenuItem* MenuItemPublishSettings;
         wxMenuItem* MenuItemSpecialKeys;
+        wxMenuItem* MenuItemTemplate;
         wxMenu* Menu3;
         wxMenu* MenuItemLanguage;
         wxMenuItem* MenuItem1;

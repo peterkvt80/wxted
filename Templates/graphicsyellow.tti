@@ -1,0 +1,33 @@
+DE,Yellow graphics template
+DS,inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\graphicsyellow.tti
+PN,1ff00
+SC,0000
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,S                                       
+OL,2,S                                       
+OL,3,S      YELLOW GRAPHICS                  
+OL,4,S                                       
+OL,5,S       0  0                            
+OL,6,S      `>|>t                            
+OL,7,S      7?//75                           
+OL,8,S       "!#                             
+OL,9,S                                       
+OL,10,S                                       
+OL,11,S                                       
+OL,12,S                                       
+OL,13,S                                       
+OL,14,S                                       
+OL,15,S                                       
+OL,16,S                                       
+OL,17,S                                       
+OL,18,S                                       
+OL,19,S                                       
+OL,20,S                                       
+OL,21,S                                       
+OL,22,S                                       
+OL,23,S                                       
+OL,24,A  Link1   BLink2   CLink4  FLink4      

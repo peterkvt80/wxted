@@ -1,0 +1,33 @@
+DE,Red graphics template
+DS,inserter
+SP,E:\dev\wxTED-GitHub\wxted\Templates\graphicsred.tti
+PN,1ff00
+SC,0000
+PS,8000
+CT,8,T
+RE,0
+OL,0,XXXXXXXXTEEFAX mpp DAY dd MTH C hh:nn.ss
+OL,1,Q                                       
+OL,2,Q                                       
+OL,3,Q      RED GRAPHICS                     
+OL,4,Q                   !                   
+OL,5,Q  !                                    
+OL,6,Q      x~}t                     !      
+OL,7,Q      /|/|/                            
+OL,8,Q      .!#"-                            
+OL,9,Q                      !                
+OL,10,Q                                       
+OL,11,Q    !       !                    !     
+OL,12,Q                                       
+OL,13,Q                                       
+OL,14,Q                                       
+OL,15,Q                              !        
+OL,16,Q                   !                   
+OL,17,Q                                       
+OL,18,Q       !                      !     !  
+OL,19,Q           !                           
+OL,20,Q                 !                     
+OL,21,Q                                       
+OL,22,Q                                       
+OL,23,Q                                       
+OL,24,A  Link1   BLink2   CLink4  FLink4      
