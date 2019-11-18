@@ -1585,7 +1585,19 @@ void wxTEDFrame::OnAbout(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 {
+
+    if ( m_rootPage->GetPageChanged() )
+    {
+        if ( wxMessageBox("Wipe everything and start a new page?",
+                          "Please confirm",
+                          wxICON_WARNING | wxCANCEL | wxCANCEL_DEFAULT) == wxCANCEL )
+        {
+            return;
+        }
+    }
+
     // std::cout << "New page" << std::endl;
+    // @todo - If the page has changed and not been saved, trap that here
     delete m_rootPage;
     m_rootPage=new TTXPage();
     SetTitle("");
@@ -1994,7 +2006,7 @@ void wxTEDFrame::OnClose(wxCloseEvent& event)
     {
         if ( wxMessageBox("The file has not been saved... continue closing?",
                           "Please confirm",
-                          wxICON_QUESTION | wxYES_NO) != wxYES )
+                          wxICON_WARNING | wxCANCEL | wxCANCEL_DEFAULT) == wxCANCEL )
         {
             event.Veto();
             return;
@@ -2171,6 +2183,10 @@ void wxTEDFrame::OnMenuItemCopySelected(wxCommandEvent& event)
     for (int y=y1;y<y2;y++)
     {
         TTXLine* line=m_currentPage->GetRow(y);
+        if (!line)
+        {
+          std::cout << "[wxTEDMain::wxTEDFrame] We got a null line, we are about to crash" << std::endl;
+        }
         for (int x=x1;x<x2;x++)
         {
             wxChar wxc=line->GetCharAt(x);
@@ -2227,8 +2243,10 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
    /// @todo Make this more general to identify a valid hash string
    if ((wxs.Find("http://editor.teletext40.com")!=wxNOT_FOUND) ||  // Paste obsolete teletext40 URL?
     (wxs.Find("www.uniquecodeanddata.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a uniquecodeandadata URL?
-    (wxs.Find("zxnet.co.uk/teletext/editor")!=wxNOT_FOUND) ||     // Paste a zxnet.co.uk URL?
-    (wxs.Find("edit.tf")!=wxNOT_FOUND))     // Paste edit.tf URL?
+    (wxs.Find("zxnet.co.uk/editor")!=wxNOT_FOUND) ||     // Paste a zxnet.co.uk URL? Alistair
+    (wxs.Find("edit.tf")!=wxNOT_FOUND) || // Simon
+    (wxs.Find("teletextarchaeologist.org/editor")!=wxNOT_FOUND) // Jason
+       )     // Paste edit.tf URL?
    {
        load_from_hash(m_currentPage,wxs.char_str());
    }
@@ -2249,8 +2267,10 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
                 x=m_cursorPoint.x;
             }
             else
-                if (x<=40 && y<=25) // Clip to frame!
-                    line->SetCharAt(x++,ch);
+                if (x<=40 && y<=25 && line) // Clip to frame!
+                {
+                  line->SetCharAt(x++,ch);
+                }
             if (y>25) break;    // Off the bottom of the page? We are done.
        }
    }

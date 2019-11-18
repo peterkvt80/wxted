@@ -2284,7 +2284,7 @@
 1560035584 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1571852309 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1573168278 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1562535472 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2384,7 +2384,7 @@
 1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1572816514 e:\dev\wxted-github\wxted\wxtedmain.h
+1573167822 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -2797,7 +2797,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1571955636 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1574119468 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
@@ -2806,6 +2806,7 @@
 	<wx/intl.h>
 	<wx/string.h>
 	<wx/dcbuffer.h>
+	<wx/stdpaths.h>
 
 1412631243 e:\dev\downloads\wxwidgets302\include\wx\msgdlg.h
 	"wx/defs.h"
@@ -3336,4 +3337,22 @@
 
 1563229020 source:e:\dev\wxted-github\wxted\ttxrow28.cpp
 	"ttxrow28.h"
+
+1412631243 e:\dev\downloads\wxwidgets302\include\wx\stdpaths.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/msw/stdpaths.h"
+	"wx/osx/core/stdpaths.h"
+	"wx/os2/stdpaths.h"
+	"wx/unix/stdpaths.h"
+
+1412631243 e:\dev\downloads\wxwidgets302\include\wx\msw\stdpaths.h
+
+1412631243 e:\dev\downloads\wxwidgets302\include\wx\osx\core\stdpaths.h
+	"wx/unix/stdpaths.h"
+
+1412631243 e:\dev\downloads\wxwidgets302\include\wx\unix\stdpaths.h
+
+1412631243 e:\dev\downloads\wxwidgets302\include\wx\os2\stdpaths.h
 
