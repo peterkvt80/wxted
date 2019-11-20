@@ -57,14 +57,13 @@ void TTXLine::Setm_textline(std::string const& val)
  */
 std::string TTXLine::validate(std::string const& val)
 {
-    char ch;
     int j=0;
     std::string str="                                       ";
     str.resize(80);
     // std::cout << "Validating length= " << val.length() << std::endl;
     for (unsigned int i=0;i<val.length() && i<80;i++)
     {
-        ch=val[i] & 0x7f;   // Convert to 7 bits
+        char ch=val[i] & 0x7f;   // Convert to 7 bits
         if (ch==0x1b) // escape?
         {
             i++;
@@ -96,14 +95,13 @@ std::string TTXLine::validate(std::string const& val)
  */
 std::string TTXLine::GetMappedline()
 {
-    char ch;
     int j=0;
     std::string str;
     str.resize(40);
 
     for (unsigned int i=0;i<40;i++)
     {
-        ch=m_textline[i] & 0x7f;   // Strip bit 7 just in case
+        char ch=m_textline[i] & 0x7f;   // Strip bit 7 just in case
         if (ch<' ') ch |= 0x80;
         str[j++]=ch;
     }
@@ -115,14 +113,13 @@ std::string TTXLine::GetMappedline()
  */
 std::string TTXLine::GetMappedline7bit()
 {
-    char ch;
     int j=0;
     std::string str;
     str.resize(80);
 
     for (unsigned int i=0;i<40;i++)
     {
-        ch=m_textline[i] & 0x7f;   // Strip bit 7
+        char ch=m_textline[i] & 0x7f;   // Strip bit 7
         if (ch<' ')
         {
             str[j++]=0x1b;  // <ESC>

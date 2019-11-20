@@ -184,8 +184,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
       auto rightEdge=(iPage+1)*m_ttxW*41; // Distance from first page to end of current page
-      auto mappedEdge=rightEdge-m_ttxW+m_offset.x; // Edge that we want mapped to the right hand side of the client frame space
-      auto clientWidth=GetClientSize().GetWidth();
+      uint32_t mappedEdge=rightEdge-m_ttxW+m_offset.x; // Edge that we want mapped to the right hand side of the client frame space
+      uint32_t clientWidth=GetClientSize().GetWidth();
       if (mappedEdge>clientWidth)
       {
         m_offset.x=clientWidth-rightEdge-m_ttxW; // Scroll left to bring the right side into frame
@@ -2058,7 +2058,7 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
   auto xloc=event.GetPosition().x;
   // std::cout << std::dec <<"Mouse move, yay!" << xloc <<  std::endl;
   auto leftX=m_offset.x;
-  auto rightX=leftX+m_ttxW*41*iPageCount;
+  int rightX=leftX+m_ttxW*41*iPageCount;
   if (xloc<leftX || xloc>rightX)
   {
     wxSetCursor (wxCursor (wxCURSOR_NO_ENTRY));
@@ -2110,8 +2110,8 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
 void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 {
   // Must be over an actual page or we ignore the click
-  auto x=event.GetPosition().x;
-  if (x>=m_offset.x && x<=m_offset.x+m_ttxW*41*iPageCount)
+  int x=event.GetPosition().x;
+  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *iPageCount)
   {
     m_dragging=true;
 
