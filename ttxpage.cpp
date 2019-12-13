@@ -620,16 +620,20 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
 
   if (!m_loaded)
   {
-    SetRow(1,"Trying TTI");
+    SetRow(1,"                                        ");
     if (m_LoadTTI(filename))
+    {
       m_loaded=true;
+    }
   }
 
   if (!m_loaded)
   {
     SetRow(1,"Trying VTX");
     if (m_LoadVTX(filename))
+    {
       m_loaded=true;
+    }
     type++;
   }
 
@@ -637,7 +641,9 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
   {
     SetRow(1,"Trying VTP");
     if (m_LoadVTP(filename))
+    {
       m_loaded=true;
+    }
     type++;
   }
 
@@ -645,15 +651,19 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
   {
     SetRow(1,"Trying EP1");
     if (m_LoadEP1(filename))
+    {
       m_loaded=true;
+    }
     type++;
   }
 
   if (!m_loaded)
   {
-    SetRow(1,"Trying TTX");
+    SetRow(1,"                                        ");
     if (m_LoadTTX(filename))
+    {
         m_loaded=true;
+    }
     type++;
   }
 
