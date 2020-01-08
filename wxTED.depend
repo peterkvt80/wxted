@@ -2284,7 +2284,7 @@
 1574286336 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1573168278 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1578520287 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1562535472 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2384,7 +2384,7 @@
 1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1574286860 e:\dev\wxted-github\wxted\wxtedmain.h
+1576262890 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/notebook.h>
 	<wx/menu.h>
 	<wx/panel.h>
@@ -2797,7 +2797,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1574286336 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1578516577 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

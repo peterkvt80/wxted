@@ -2489,8 +2489,7 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
 
 void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
 {
-    int k=event.GetKeyCode();
-    if (k==WXK_ALT && m_Released)
+    if (event.GetModifiers() == wxMOD_ALTGR && m_Released)
     {
         m_ShowMarkup=!m_ShowMarkup;
         m_Released=false;

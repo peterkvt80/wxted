@@ -819,7 +819,9 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
 {
     int yMin=1;     // If we show the header, then enable row 0
     if (ShowHeader)
+    {
         yMin=0;
+    }
     if (cursorLoc.y>24 || cursorLoc.y<yMin) return;       // Out of range. Don't allow row 0 either.
 
     // Do not allow DoubleHeight on row 23 or 24
@@ -930,7 +932,11 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             char oldChar;
             oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
-            if (cursorLoc.x<39) cursorLoc.x++; // right
+            // Advance the cursor
+            if (cursorLoc.x<39)
+            {
+              cursorLoc.x++; // right
+            }
             SetPageChanged(true);
             return;
         }
@@ -974,43 +980,44 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
           }
           break;
         case WXK_HOME : // Move to start of line
-            if (cursorLoc.x>0)
             {
-              cursorLoc.x=0;
-            }
-            else // If already at the start of a line, find the start of text
-            {
+              uint8_t cursorX=cursorLoc.x;
               for (cursorLoc.x=0;cursorLoc.x<40;cursorLoc.x++)
               {
                 if (line->GetCharAt(cursorLoc.x)>' ')
                 {
+                  if (cursorX==cursorLoc.x) // already at the start of text?
+                  {
+                    cursorLoc.x=0;
+                  }
                   break;
                 }
               }
-              if (cursorLoc.x==40) // Reached the end of the line?
-              {
-                cursorLoc.x=0;                // reset to the beginning
-              }
+            }
+            if (cursorLoc.x==40) // Reached the end of the line?
+            {
+              cursorLoc.x=0;                // reset to the beginning
             }
             break;
         case WXK_END : // Move to end of line. (or if already there, the last printable character)
-            if (cursorLoc.x<39)
             {
-              cursorLoc.x=39;
-            }
-            else // If already at the end of a line, find the last text
-            {
+              uint8_t cursorX=cursorLoc.x;
               for (cursorLoc.x=39;cursorLoc.x>0;cursorLoc.x--)
               {
                 if (line->GetCharAt(cursorLoc.x)>' ')
                 {
+                  cursorLoc.x++; // Position at the start of the trailing blank space
+                  if (cursorX==cursorLoc.x) // already at the end of text?
+                  {
+                    cursorLoc.x=39;
+                  }
                   break;
                 }
               }
-              if (cursorLoc.x==0) // Reached the start of the line?
-              {
-                cursorLoc.x=39;    // reset to the end
-              }
+            }
+            if (cursorLoc.x==0) // Reached the start of the line?
+            {
+              cursorLoc.x=39;    // reset to the end
             }
             break;
         case WXK_LEFT : // left 314
@@ -1153,7 +1160,31 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                         // std::cout << "Setting alpha char " << (int)code << std::endl;
                         char oldChar=line->SetCharAt(cursorLoc.x,code);
                         AddEvent(EventKey,cursorLoc,oldChar,code);
-                        if (cursorLoc.x<39) cursorLoc.x++; // right
+                        if (cursorLoc.x<39)
+                        {
+                          cursorLoc.x++; // right
+                        }
+                        else
+                        {
+                          if (cursorLoc.y<24)
+                          {
+                            cursorLoc.y++;
+                            cursorLoc.x=0;
+                            // @todo This is not always what we want
+                            // If we have a border colour set up we would lose it
+                            // so we need to check the first three characters just in case WSFN
+                            TTXLine* line2=m_pLine[cursorLoc.y];
+                            // Allow for up to three control codes on a wrap
+                            std::cout << "char 1 = " << (int) line2->GetCharAt(cursorLoc.x) << std::endl;
+                            std::cout << "char 2 = " << (int) line2->GetCharAt(cursorLoc.x+1) << std::endl;
+                            std::cout << "char 3 = " << (int) line2->GetCharAt(cursorLoc.x+2) << std::endl;
+                            if ((int) line2->GetCharAt(cursorLoc.x)<20) cursorLoc.x++;
+                            if ((int) line2->GetCharAt(cursorLoc.x)<20) cursorLoc.x++;
+                            if ((int) line2->GetCharAt(cursorLoc.x)<20) cursorLoc.x++;
+                          }
+
+                        }
+
                     }
                     else
                     {
