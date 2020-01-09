@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan
  * License:
   *
- * Copyright (C) 2014=2019, Peter Kwan
+ * Copyright (C) 2014-2020, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -89,6 +89,8 @@ const long wxTEDFrame::idCut = wxNewId();
 const long wxTEDFrame::idCopy = wxNewId();
 const long wxTEDFrame::idPaste = wxNewId();
 const long wxTEDFrame::idSelectAll = wxNewId();
+const long wxTEDFrame::isInsertLine = wxNewId();
+const long wxTEDFrame::isDeleteLine = wxNewId();
 const long wxTEDFrame::idInsertPage = wxNewId();
 const long wxTEDFrame::idDeleteSubPage = wxNewId();
 const long wxTEDFrame::idLanguageEnglish = wxNewId();
@@ -1290,6 +1292,11 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemSelectAll = new wxMenuItem(Menu3, idSelectAll, _("Select All\tCTRL-A"), _("Select the entire page"), wxITEM_NORMAL);
     Menu3->Append(MenuItemSelectAll);
     Menu3->AppendSeparator();
+    MenuInsertLine = new wxMenuItem(Menu3, isInsertLine, _("Insert line"), _("Insert a line below"), wxITEM_NORMAL);
+    Menu3->Append(MenuInsertLine);
+    MenuDeleteLine = new wxMenuItem(Menu3, isDeleteLine, _("Delete line"), _("Delete the current line"), wxITEM_NORMAL);
+    Menu3->Append(MenuDeleteLine);
+    Menu3->AppendSeparator();
     MenuItemInsertSubpage = new wxMenuItem(Menu3, idInsertPage, _("Insert subpage after this one"), _("Add a subpage after this page"), wxITEM_NORMAL);
     Menu3->Append(MenuItemInsertSubpage);
     MenuItemDeletePage = new wxMenuItem(Menu3, idDeleteSubPage, _("Delete this subpage"), _("Delete subpage from this carousel"), wxITEM_NORMAL);
@@ -1360,7 +1367,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
-    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
+    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
@@ -1373,6 +1380,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idCopy,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemCopySelected);
     Connect(idPaste,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPasteSelected);
     Connect(idSelectAll,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemSelectAllSelected);
+    Connect(isInsertLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuInsertLineSelected);
+    Connect(isDeleteLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuDeleteLineSelected);
     Connect(idInsertPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemInsertSubpage);
     Connect(idDeleteSubPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemDeletePage);
     Connect(idLanguageEnglish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
@@ -2623,4 +2632,32 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     Update();
   }
 
+}
+
+// Delete the current line, shifting lines below up one
+// Fastext row is NOT included
+// @todo Map this to ESC-I
+void wxTEDFrame::OnMenuDeleteLineSelected(wxCommandEvent& event)
+{
+  int y=m_cursorPoint.y;
+  for (int i=y;i<23;i++)
+  {
+    std::string line=m_currentPage->GetRow(i+1)->GetLine();
+    m_currentPage->SetRow(i, line);
+  }
+  m_currentPage->SetRow(23,"                                        ");
+}
+
+// Scroll lines below down one, and leave current line blank
+// Fastext row is NOT included
+// @todo Map ESC-i onto this
+void wxTEDFrame::OnMenuInsertLineSelected(wxCommandEvent& event)
+{
+  int y=m_cursorPoint.y;
+  for (int i=23;i>y;i--)
+  {
+    std::string line=m_currentPage->GetRow(i-1)->GetLine();
+    m_currentPage->SetRow(i, line);
+  }
+  m_currentPage->SetRow(y,"                                        ");
 }

@@ -1170,14 +1170,10 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                           {
                             cursorLoc.y++;
                             cursorLoc.x=0;
-                            // @todo This is not always what we want
-                            // If we have a border colour set up we would lose it
-                            // so we need to check the first three characters just in case WSFN
+                            // If we have effects set up o n the left edge we would lose it
+                            // so we check the first three characters just in case
                             TTXLine* line2=m_pLine[cursorLoc.y];
                             // Allow for up to three control codes on a wrap
-                            std::cout << "char 1 = " << (int) line2->GetCharAt(cursorLoc.x) << std::endl;
-                            std::cout << "char 2 = " << (int) line2->GetCharAt(cursorLoc.x+1) << std::endl;
-                            std::cout << "char 3 = " << (int) line2->GetCharAt(cursorLoc.x+2) << std::endl;
                             if ((int) line2->GetCharAt(cursorLoc.x)<20) cursorLoc.x++;
                             if ((int) line2->GetCharAt(cursorLoc.x)<20) cursorLoc.x++;
                             if ((int) line2->GetCharAt(cursorLoc.x)<20) cursorLoc.x++;

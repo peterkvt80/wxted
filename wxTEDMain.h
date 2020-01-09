@@ -183,6 +183,8 @@ class wxTEDFrame: public wxFrame
         void OnPanel1MouseMove(wxMouseEvent& event);
         void OnPanel1Paint1(wxPaintEvent& event);
         void OnMenuNewFromTemplate(wxCommandEvent& event);
+        void OnMenuDeleteLineSelected(wxCommandEvent& event);
+        void OnMenuInsertLineSelected(wxCommandEvent& event);
         //*)
         /* Manually added handlers */
         void OnPaint(wxPaintEvent& event);
@@ -231,6 +233,8 @@ class wxTEDFrame: public wxFrame
         static const long idCopy;
         static const long idPaste;
         static const long idSelectAll;
+        static const long isInsertLine;
+        static const long isDeleteLine;
         static const long idInsertPage;
         static const long idDeleteSubPage;
         static const long idLanguageEnglish;
@@ -290,10 +294,12 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemRegion10;
         wxMenuItem* MenuItemPageNumber;
         wxMenuItem* MenuItemRegion2;
+        wxMenuItem* MenuInsertLine;
         wxMenuItem* MenuItem3;
         wxMenuItem* MenuItemConcealToggle;
         wxStatusBar* StatusBar1;
         wxMenuItem* MenuItemSelectAll;
+        wxMenuItem* MenuDeleteLine;
         wxMenuItem* MenuItemSwedish;
         wxFileDialog* LoadPageFileDialog;
         wxMenuItem* MenuItemCopy;

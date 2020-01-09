@@ -135,6 +135,17 @@
 					<handler function="OnMenuItemSelectAllSelected" entry="EVT_MENU" />
 				</object>
 				<object class="separator" />
+				<object class="wxMenuItem" name="isInsertLine" variable="MenuInsertLine" member="yes">
+					<label>Insert line</label>
+					<help>Insert a line below</help>
+					<handler function="OnMenuInsertLineSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="isDeleteLine" variable="MenuDeleteLine" member="yes">
+					<label>Delete line</label>
+					<help>Delete the current line</help>
+					<handler function="OnMenuDeleteLineSelected" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
 				<object class="wxMenuItem" name="idInsertPage" variable="MenuItemInsertSubpage" member="yes">
 					<label>Insert subpage after this one</label>
 					<help>Add a subpage after this page</help>
