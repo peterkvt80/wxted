@@ -690,11 +690,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
                           // Draw the full sized pixel in background colour
                           paintDC.SetBrush(wxBrush(*bg));
+                          doubleHeightDC.SetBrush(wxBrush(*bg));
                           int k=1; // Full size pixel
                           if (doubleHeight)
                           {
-                              paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                                                   (i/2)*m_ttxH/3)+offset,
+                              doubleHeightDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                               (i/2)*m_ttxH/3)+offset,
                                                 wxSize(k+m_ttxW/2,k+m_ttxH/3));
                           }
                           else
@@ -710,8 +711,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                               if (separated) k=-2; // Thin border around the pixel
                               if (doubleHeight)
                               {
-                                  paintDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
-                                                                       (i/2)*m_ttxH/3)+offset,
+                                  doubleHeightDC.SetBrush(wxBrush(*fg));
+                                  doubleHeightDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
+                                                        (i/2)*m_ttxH/3)+offset,
                                                     wxSize(k+m_ttxW/2,k+m_ttxH/3));
                               }
                               else

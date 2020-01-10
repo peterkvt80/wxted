@@ -2797,7 +2797,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1578516577 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1578693289 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
