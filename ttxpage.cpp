@@ -2,7 +2,7 @@
  * Description       : Class for a teletext page
  * Compiler          : C++
  *
- * Copyright (C) 2014-2018, Peter Kwan
+ * Copyright (C) 2014-2020, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -846,7 +846,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
 
     if (modifiers & wxMOD_SHIFT) // Alpha Colours
     {
-        char ch;
+        char ch=0;
         // std::cout << "alpha colour Code=" << code << std::endl;
         switch (code)
         {
@@ -858,6 +858,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_F6: ch=ttxCodeAlphaCyan;break;     // Shift-F6 cyan
             case WXK_F7: ch=ttxCodeAlphaWhite;break;    // Shift-F7 white
             case WXK_F8: ch=0x7f;break;                 // Shift-F8 black SPECIAL CASE!
+            // case WXK_F9: InsertLine(); break; // Oh. We don't have the y location at this point
             default: ch=0; // not a valid shift code.
         }
         if (ch>0)
@@ -1501,3 +1502,27 @@ void TTXPage::SetFastextLink(int link, int value)
   m_fastextlinks[link]=value;
 }
 
+
+// @todo This doesn't support undo/redo
+void TTXPage::InsertLine(wxPoint& cursorLoc)
+{
+  int y=cursorLoc.y;
+  for (int i=23;i>y;i--)
+  {
+    std::string line=GetRow(i-1)->GetLine();
+    SetRow(i, line);
+  }
+  SetRow(y,"                                        ");
+}
+
+// @todo This doesn't support undo/redo
+void TTXPage::DeleteLine(wxPoint& cursorLoc)
+{
+  int y=cursorLoc.y;
+  for (int i=y;i<23;i++)
+  {
+    std::string line=GetRow(i+1)->GetLine();
+    SetRow(i, line);
+  }
+  SetRow(23,"                                        ");
+}

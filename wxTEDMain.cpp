@@ -258,6 +258,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       case 'W': modifiers=wxMOD_CONTROL; code=WXK_F7;break; // mosaic white
       case 'k': modifiers=wxMOD_SHIFT;   code=WXK_F8;break; // alpha black
       case 'K': modifiers=wxMOD_CONTROL; code=WXK_F8;break; // mosaic black
+      case 'i': modifiers=wxMOD_SHIFT;   code=WXK_F9;break; // insert line
+      case 'I': modifiers=wxMOD_CONTROL; code=WXK_F9;break; // delete line
       case 'N': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_B;   break; // new background
       case 'n': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_U;   break; // black background
       case 'f': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_I;   break; // steady
@@ -2641,13 +2643,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 // @todo Map this to ESC-I
 void wxTEDFrame::OnMenuDeleteLineSelected(wxCommandEvent& event)
 {
-  int y=m_cursorPoint.y;
-  for (int i=y;i<23;i++)
-  {
-    std::string line=m_currentPage->GetRow(i+1)->GetLine();
-    m_currentPage->SetRow(i, line);
-  }
-  m_currentPage->SetRow(23,"                                        ");
+  m_currentPage->DeleteLine(m_cursorPoint);
 }
 
 // Scroll lines below down one, and leave current line blank
@@ -2655,11 +2651,5 @@ void wxTEDFrame::OnMenuDeleteLineSelected(wxCommandEvent& event)
 // @todo Map ESC-i onto this
 void wxTEDFrame::OnMenuInsertLineSelected(wxCommandEvent& event)
 {
-  int y=m_cursorPoint.y;
-  for (int i=23;i>y;i--)
-  {
-    std::string line=m_currentPage->GetRow(i-1)->GetLine();
-    m_currentPage->SetRow(i, line);
-  }
-  m_currentPage->SetRow(y,"                                        ");
+  m_currentPage->InsertLine(m_cursorPoint);
 }

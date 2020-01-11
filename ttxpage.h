@@ -263,6 +263,15 @@ class TTXPage
       bool GetPageChanged(){return pageChanged;};
       void SetPageChanged(bool change){pageChanged=change;};
 
+      /** Insert a line below the line number indicated in cursorLoc
+       *  and leave the current row blank
+       */
+      void InsertLine(wxPoint& cursorLoc);
+      /** Delete a line below the current line and shift lower lines up one
+       *  and leave the last row blank
+       */
+      void DeleteLine(wxPoint& cursorLoc);
+
     protected:
     private:
         static bool pageChanged;         // / True if we have done some edits (on any subpage)
