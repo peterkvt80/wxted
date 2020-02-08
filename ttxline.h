@@ -32,11 +32,18 @@ class TTXLine
          */
         std::string GetLine();
 
-        /** True if the line is double height
-         * @todo This is not good enough. Need to know the state at a particular point on a line. Add a character position parameter.
+        /** @brief Find if a particular character on a line is double height
          * @param xLoc Location of the character we want to know if it is double height. (default 39)
+         * @return true if the character at xLoc is double height
          */
         bool IsDoubleHeight(int xLoc);
+
+        /** @brief Find if the line contains double height
+         * This is needed because if a line contains any double height, the next line is skipped,
+         * even if the character location would be single height.
+         * @return true if any part of the line is double height
+         */
+        bool HasDoubleHeight();
 
         /**
          * @brief Check if the line is blank so that we don't bother to write it to the file.

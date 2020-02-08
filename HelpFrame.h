@@ -26,6 +26,7 @@ class HelpFrame: public wxFrame
 	private:
 
 		//(*Handlers(HelpFrame)
+		void OnClose(wxCloseEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

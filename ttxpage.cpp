@@ -64,10 +64,8 @@ TTXPage::~TTXPage()
 {
   static int j=0;
   j++;
-  // std::cout << "[~TTXPage]" << std::endl;
   for (int i=0;i<=MAXROW;i++)
   {
-    // std::cout << "Deleting line " << i << std::endl;
     if (m_pLine[i]!=nullptr)
     {
       delete m_pLine[i];
@@ -817,6 +815,7 @@ Other control codes TBA.
 */
 void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cursorSubLoc, bool ShowHeader)
 {
+
     int yMin=1;     // If we show the header, then enable row 0
     if (ShowHeader)
     {
@@ -835,6 +834,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
         // Create a line if it is null
         line=m_pLine[cursorLoc.y]=new TTXLine("                                        ");
     }
+
     // todo: Are there any more characters allowed in graphics mode? I think there are! CHECK!!!!
 
     // Move cursor a whole space if Alpha mode, or @ to _ (0x40 to 0x5f) or a control code.
@@ -1054,7 +1054,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                     // If we would move into the lower row of a double height, we need to decrement twice.
                     if (cursorLoc.y>2)
                     {
-                      if (GetRow(cursorLoc.y-2)->IsDoubleHeight(cursorLoc.x))
+                      if (GetRow(cursorLoc.y-2)->HasDoubleHeight())
                       {
                         cursorLoc.y--;
                       }
@@ -1090,8 +1090,8 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             {
                 if (cursorLoc.y<24)
                 {
-                    // If the last location was the top of a double height, we need to increment twice.
-                    if (GetRow(cursorLoc.y)->IsDoubleHeight(cursorLoc.x) && cursorLoc.y<23)
+                    // If the last location was the top half of a double height, we need to increment twice.
+                    if (GetRow(cursorLoc.y)->HasDoubleHeight() && cursorLoc.y<23)
                     {
                       cursorLoc.y++;
                     }
@@ -1148,7 +1148,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             }
             break;
         default :
-            // std::cout << "Default branch taken in SetCharAt " << (int)code << "i=" << instance << std::endl;
+            // std::cout << "Default branch taken in SetCharAt " << (int)code << " i=" << instance << std::endl;
             if (line)
             {
                 // By now we should only have teletext codes. If the new code is NOT a graphic then treat it as a character
@@ -1167,11 +1167,16 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
                         }
                         else
                         {
+                            // If this is double height, we need to skip an extra line
+                          if (cursorLoc.y<23 && line->HasDoubleHeight())
+                          {
+                            cursorLoc.y++;
+                          }
                           if (cursorLoc.y<24)
                           {
                             cursorLoc.y++;
                             cursorLoc.x=0;
-                            // If we have effects set up o n the left edge we would lose it
+                            // If we have effects set up on the left edge we would lose it
                             // so we check the first three characters just in case
                             TTXLine* line2=m_pLine[cursorLoc.y];
                             // Allow for up to three control codes on a wrap
@@ -1233,7 +1238,6 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
         // Deal with control codes that we might get sent
         // Backspace, line feed, carriage return. A lot of stuff to trap
         char oldChar;
-        std::cout << "[TTXPage::SetCharAt]TRACE 1" << std::endl;
         switch (code)
         {
         case WXK_BACK : // backspace 8

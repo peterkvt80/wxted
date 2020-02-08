@@ -511,12 +511,12 @@
 	<float.h>
 	<ieeefp.h>
 
-1562359383 source:e:\dev\wxted-github\wxted\helpframe.cpp
+1581098828 source:e:\dev\wxted-github\wxted\helpframe.cpp
 	"HelpFrame.h"
 	<wx/intl.h>
 	<wx/string.h>
 
-1427407161 e:\dev\wxted-github\wxted\helpframe.h
+1581098733 e:\dev\wxted-github\wxted\helpframe.h
 	<wx/frame.h>
 	<wx/html/htmlwin.h>
 
@@ -2273,7 +2273,7 @@
 
 1483012312 e:\dev\wxted-github\wxted\ttxcodes.h
 
-1563221963 e:\dev\wxted-github\wxted\ttxline.h
+1581183494 e:\dev\wxted-github\wxted\ttxline.h
 	<iostream>
 	<string>
 	<iomanip>
@@ -2281,10 +2281,10 @@
 
 1463302150 e:\dev\wxted-github\wxted\hamm-tables.h
 
-1574286336 source:e:\dev\wxted-github\wxted\ttxline.cpp
+1581183665 source:e:\dev\wxted-github\wxted\ttxline.cpp
 	"ttxline.h"
 
-1578743876 source:e:\dev\wxted-github\wxted\ttxpage.cpp
+1581186632 source:e:\dev\wxted-github\wxted\ttxpage.cpp
 	"ttxpage.h"
 
 1562535472 source:e:\dev\wxted-github\wxted\wxtedapp.cpp
@@ -2797,7 +2797,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1578693868 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1581100971 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
