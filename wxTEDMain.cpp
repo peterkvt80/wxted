@@ -154,7 +154,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 {
   int code=event.GetKeyCode();
   int modifiers=event.GetModifiers();
-  // std::cout << "Key event..." << code << std::endl;
+  std::cout << "Key event..." << code << std::endl;
   // We look at a few codes which apply to a page set rather than just a single page
   // If none of these codes apply, we send the character to the page
   TEDEvent* tev;
@@ -270,7 +270,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       case 'D': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_M;   break; // double height
       case 'O': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_R;   break; // conceal
       case 'S': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_T;   break; // separate graphics
-      case 's': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_D;   break; // contiguous
+      case 's': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_E;   break; // contiguous
       case 'J': modifiers=wxMOD_NONE;    code=172;   break; // hook maps to text block
       // @todo Lots more codes
       }
@@ -1178,7 +1178,7 @@ void wxTEDFrame::m_SetStatus()
             case ttxCodeGraphicsWhite: code<<"Graphics White=Ctrl-F7";break;
             case ttxCodeGraphicsBlack: code<<"Graphics White=Ctrl-F8";break;
             case ttxCodeConcealDisplay: code<<"Conceal=Shift W (F11 toggle)";break;
-            case ttxCodeContiguousGraphics: code<<"Contiguous graphics";break;
+            case ttxCodeContiguousGraphics: code<<"Contiguous graphics=Ctrl-D";break;
             case ttxCodeSeparatedGraphics: code<<"Separated graphics=Ctrl-T";break;
             case ttxCodeBlackBackground: code<<"Black background=Ctrl-U";break;
             case ttxCodeNewBackground: code<<"New background=Ctrl-B";break;

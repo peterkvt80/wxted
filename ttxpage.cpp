@@ -815,7 +815,7 @@ Other control codes TBA.
 */
 void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cursorSubLoc, bool ShowHeader)
 {
-
+    std::cout << "code=" << code << " modifiers=" << modifiers << std::endl;
     int yMin=1;     // If we show the header, then enable row 0
     if (ShowHeader)
     {
@@ -874,6 +874,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     if (modifiers & wxMOD_CONTROL) // Graphics Colours
     {
         char ch;
+        std::cout << "ch=" << ch << std::endl;
         switch (code) // Map key stroke to control code
         {
             // Graphics colours
@@ -895,7 +896,9 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_CONTROL_M: ch=ttxCodeDoubleHeight;break;   // Ctrl-M: double height
 
             case WXK_CONTROL_R: ch=ttxCodeConcealDisplay;break;     // Ctrl-R: conceal display
-            case WXK_CONTROL_D: ch=ttxCodeContiguousGraphics;break; // Ctrl-D: (was CTRL-Y)
+            case WXK_CONTROL_E: ch=ttxCodeContiguousGraphics;
+            std::cout << "GOT HERE" << std::endl;
+            break; // Was Ctrl-D, and before that CTRL-Y
             case WXK_CONTROL_T: ch=ttxCodeSeparatedGraphics;break;  // Ctrl-T:
             case WXK_CONTROL_U: ch=ttxCodeBlackBackground;break;    // Ctrl-U:
             case WXK_CONTROL_B: ch=ttxCodeNewBackground;break;      // Ctrl-B:

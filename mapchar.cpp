@@ -109,14 +109,14 @@ wchar_t mapRegion0(wchar_t ch, int language)
         if (ch=='$')  ch=0x00a4; // 2/4 currency bug
         if (ch=='@')  ch=0x00c9; // 4/0 E acute
         if (ch=='[')  ch=0x00c4; // 5/B A umlaut
-        if (ch=='\\') ch=0x00d4; // 5/C O umlaut
+        if (ch=='\\') ch=0x00d6; // 5/C O umlaut
         // Nat. opt. 2
         if (ch==']')  ch=0x00c5; // 5/D A ring
         if (ch=='^')  ch=0x00dc; // 5/E U umlaut
         if (ch=='_')  ch=0x005f; // 5/F Underscore (not mapped)
         if (ch=='`')  ch=0x00e9; // 6/0 e acute
         if (ch=='{')  ch=0x00e4; // 7/B a umlaut
-        if (ch=='|')  ch=0x00d6; // 7/C o umlaut
+        if (ch=='|')  ch=0x00f6; // 7/C o umlaut
         if (ch=='}')  ch=0x00e5; // 7/D a ring
         if (ch=='~')  ch=0x00fc; // 7/E u umlaut
         break;
@@ -255,14 +255,14 @@ wchar_t mapRegion1(wchar_t ch, int language) // West Europe plus Polish
         if (ch=='$')  ch=0x00a4; // 2/4 currency bug
         if (ch=='@')  ch=0x00c9; // 4/0 E acute
         if (ch=='[')  ch=0x00c4; // 5/B A umlaut
-        if (ch=='\\') ch=0x00d4; // 5/C O umlaut
+        if (ch=='\\') ch=0x00d6; // 5/C O umlaut // was d4
         // Nat. opt. 2
         if (ch==']')  ch=0x00c5; // 5/D A ring
         if (ch=='^')  ch=0x00dc; // 5/E U umlaut
         if (ch=='_')  ch=0x005f; // 5/F Underscore (not mapped)
         if (ch=='`')  ch=0x00e9; // 6/0 e acute
         if (ch=='{')  ch=0x00e4; // 7/B a umlaut
-        if (ch=='|')  ch=0x00d6; // 7/C o umlaut
+        if (ch=='|')  ch=0x00f6; // 7/C o umlaut // was d6
         if (ch=='}')  ch=0x00e5; // 7/D a ring
         if (ch=='~')  ch=0x00fc; // 7/E u umlaut
         break;
@@ -392,7 +392,7 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
         if (ch=='_')  ch=0x005f; // 5/F Underscore (not mapped)
         if (ch=='`')  ch=0x00e9; // 6/0 e acute
         if (ch=='{')  ch=0x00e4; // 7/B a umlaut
-        if (ch=='|')  ch=0x00d6; // 7/C o umlaut
+        if (ch=='|')  ch=0x00f6; // 7/C o umlaut
         if (ch=='}')  ch=0x00e5; // 7/D a ring
         if (ch=='~')  ch=0x00fc; // 7/E u umlaut
         break;
