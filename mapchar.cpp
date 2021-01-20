@@ -63,7 +63,6 @@ wchar_t mapRegion0(wchar_t ch, int language)
     /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
        The only exception is 7/F which is common to all languages*/
     ch&=0x7f;
-    // std::cout << "trace1" << std::endl;
     switch (language)
     {
     case 0 : // English
@@ -210,7 +209,6 @@ wchar_t mapRegion1(wchar_t ch, int language) // West Europe plus Polish
     /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
        The only exception is 7/F which is common to all languages*/
     ch&=0x7f;
-    // std::cout << "trace1" << std::endl;
     switch (language)
     {
     case 0 : // Polish
@@ -339,11 +337,9 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
     /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
        The only exception is 7/F which is common to all languages*/
     ch&=0x7f;
-    // std::cout << "trace1" << std::endl;
     switch (language)
     {
     case 0 : // English
-        // std::cout << "trace2" << std::endl;
 
         // Nat. opt. 2
         if (ch=='#')  ch=0x00A3; // 2/3 # is mapped to pound sign
@@ -360,7 +356,6 @@ wchar_t mapRegion2(wchar_t ch, int language) // West Europe plus Turkish
         if (ch=='|')  ch=0x2016; // 7/C Double pipe
         if (ch=='}')  ch=0xbe;   // 7/D Three quarters
         if (ch=='~')  ch=0x00f7; // 7/E Divide
-        // std::cout << "trace3" << std::endl;
         break;
     case 1 : // French
         // Nat. opt
@@ -532,7 +527,6 @@ wchar_t mapRegion4(wchar_t ch, int language) // Rus/Bul
     /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
        The only exception is 7/F which is common to all languages*/
     ch&=0x7f;
-    // std::cout << "trace1" << std::endl;
     switch (language)
     {
        case 0 : // Latin G0 Set - Option 2 Serbian/Croatian/Slovenian
@@ -736,7 +730,6 @@ wchar_t mapRegion4(wchar_t ch, int language) // Rus/Bul
     }
     if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
 
-    //std::cout << "trace4" << std::endl;
 
     return ch;
 } // mapRegion4
@@ -793,7 +786,6 @@ wchar_t mapRegion6(wchar_t ch, int language) // Turkish=3, Greek=7
     }
     if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
 
-    //std::cout << "trace4" << std::endl;
 
     return ch;
 } // mapRegion6
@@ -807,11 +799,9 @@ wchar_t mapRegion8(wchar_t ch, int language)
     /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
        The only exception is 7/F which is common to all languages*/
     ch&=0x7f;
-    // std::cout << "trace1" << std::endl;
     switch (language)
     {
     case 0 : // English
-        // std::cout << "trace2" << std::endl;
 
         // Nat. opt. 1
         if (ch=='#')  ch=0x00A3; // 2/3 # is mapped to pound sign
@@ -828,7 +818,6 @@ wchar_t mapRegion8(wchar_t ch, int language)
         if (ch=='|')  ch=0x2016; // 7/C Double pipe
         if (ch=='}')  ch=0xbe;   // 7/D Three quarters
         if (ch=='~')  ch=0x00f7; // 7/E Divide
-        // std::cout << "trace3" << std::endl;
         break;
     case 1 : // French
         // Nat. opt. 1
@@ -894,8 +883,6 @@ wchar_t mapRegion8(wchar_t ch, int language)
     // More language mappings including Greek
     if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
 
-    //std::cout << "trace4" << std::endl;
-
     return ch;
 } // region 8
 
@@ -908,7 +895,6 @@ wchar_t mapRegion10(wchar_t ch, int language)
     /* See ETSI "Latin National Option Sub-Sets" in ETSI EN 300 706 V1.2.1 (2003-04)
        The only exception is 7/F which is common to all languages*/
     ch&=0x7f;
-    // std::cout << "trace1" << std::endl;
     switch (language)
     {
     case 5 : // Hebrew
@@ -981,7 +967,6 @@ wchar_t mapRegion10(wchar_t ch, int language)
 
     if (ch==0x7f) ch=0xe65f; // 7/F Bullet (rectangle block)
 
-    //std::cout << "trace4" << std::endl;
 
     return ch;
 } // region 10

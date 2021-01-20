@@ -78,7 +78,7 @@ class TEDEvent
         /** If the char list is empty
          * \return true if the char list is empty
          */
-        bool CharIsNull(){return charList==0;}
+        bool CharIsNull(){return charList==nullptr;}
 
         /** Set the char iist
          * TODO: Test that the charList is not already set. Danger of memory leaks.

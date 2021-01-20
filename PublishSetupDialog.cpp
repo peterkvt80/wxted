@@ -29,7 +29,7 @@ PublishSetupDialog::PublishSetupDialog(wxWindow* parent,wxWindowID id,const wxPo
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	SetClientSize(wxSize(289,282));
 	Move(wxDefaultPosition);
-	Choice1 = new wxChoice(this, ID_CHOICE1, wxPoint(16,40), wxSize(168,21), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+	Choice1 = new wxChoice(this, ID_CHOICE1, wxPoint(16,40), wxSize(168,21), 0, nullptr, 0, wxDefaultValidator, _T("ID_CHOICE1"));
 	Choice1->SetSelection( Choice1->Append(_("FTP")) );
 	Choice1->Append(_("TED Scheduler"));
 	Choice1->Append(_("VBIT "));

@@ -42,14 +42,13 @@
              uint8_t outCol=0;
              uint8_t outRow=0; // Teletext40 uses the header row
              char line[40];
-             char* pos;
             // for (int i=0;i<40;i++)line[i]=0;
              for (uint16_t i=0; i<1167; i++)
              {
                 char ch=*hashstring ;
                 hashstring++;
-                pos=strchr(base64,ch);
-                if (pos==NULL)
+                const char* pos=strchr(base64,ch);
+                if (pos==nullptr)
                 {
                     std::cout << "can not find character " << ch << std::endl;
                 }

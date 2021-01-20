@@ -26,7 +26,7 @@
 
 bool TTXPage::pageChanged=false;
 
-TTXPage::TTXPage() : undoList(0), m_current(0)    //ctor
+TTXPage::TTXPage() : undoList(nullptr), m_current(nullptr)    //ctor
 {
   m_Init();
 }
@@ -873,8 +873,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     }
     if (modifiers & wxMOD_CONTROL) // Graphics Colours
     {
-        char ch;
-        std::cout << "ch=" << ch << std::endl;
+        char ch='?';
         switch (code) // Map key stroke to control code
         {
             // Graphics colours

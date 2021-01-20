@@ -29,14 +29,12 @@
 #define WXTEDMAIN_H
 
 //(*Headers(wxTEDFrame)
-#include <wx/notebook.h>
+#include <wx/filedlg.h>
+#include <wx/frame.h>
 #include <wx/menu.h>
 #include <wx/panel.h>
-#include <wx/filedlg.h>
-#include <wx/scrolbar.h>
-#include <wx/frame.h>
-#include <wx/timer.h>
 #include <wx/statusbr.h>
+#include <wx/timer.h>
 //*)
 #include <wx/clipbrd.h>
 #include <wx/config.h>
@@ -45,7 +43,7 @@
 /*
 <wx/confbase.h> - Base config class.
 <wx/fileconf.h> - wxFileConfig class.
-<wx/msw/regconf.h> - wxRegConfig class, see also wxRegKey.
+// <wx/msw/regconf.h> - wxRegConfig class, see also wxRegKey.
 */
 
 #include "HelpFrame.h"
@@ -58,8 +56,10 @@
 #define VERSION_STRING   wxT("1.47")
 
 // ftp
+#ifdef __WINDOWS__
 #include <wininet.h>
 #pragma comment(lib, "wininet")
+#endif // __WINDOWS__
 
 // Publish setup
 #include "PublishSetupDialog.h"
@@ -76,7 +76,7 @@ class wxTEDFrame: public wxFrame
         inline TTXPage* Page(){return m_rootPage;};
 
     private:
-				bool m_escapeMode; /// True if the last key pressed was Escape
+        bool m_escapeMode; /// True if the last key pressed was Escape
         int m_menuCount;      // How many menus are open
         bool m_inhibitStatus; // Inhibit the status bar while menus are up
 
@@ -185,20 +185,21 @@ class wxTEDFrame: public wxFrame
         void OnMenuNewFromTemplate(wxCommandEvent& event);
         void OnMenuDeleteLineSelected(wxCommandEvent& event);
         void OnMenuInsertLineSelected(wxCommandEvent& event);
-        //*)
-        /* Manually added handlers */
+        void OnPanel1KeyDown(wxKeyEvent& event);
+        void OnLeftDown(wxMouseEvent& event);
         void OnPaint(wxPaintEvent& event);
         void OnSize(wxSizeEvent& event);
-        void OnLeftDown(wxMouseEvent& event);
         void OnChar(wxKeyEvent& event);
         void OnTimer(wxTimerEvent& event);
         void OnEraseBackground(wxEraseEvent& event);
-        /* Manually added menu handlers */
         void OnOpen(wxCommandEvent& event);
         void OnSave(wxCommandEvent& event);
-
         void OnMenuOpen(wxMenuEvent& event); // On opening the menu
         void OnMenuClose(wxMenuEvent& event); // On closing the menu
+        void OnPanel1Char(wxKeyEvent& event);
+        void OnPanelTEMPORARYPaint(wxPaintEvent& event);
+        void OnPanel1LeftDClick(wxMouseEvent& event);
+        //*)
 
         /* Set the language menu radio option */
         void m_setLanguage();
@@ -214,9 +215,7 @@ class wxTEDFrame: public wxFrame
         wxWindow* m_parentWindow;
 
         //(*Identifiers(wxTEDFrame)
-        static const long ID_SCROLLBAR1;
         static const long ID_PANEL1;
-        static const long ID_NOTEBOOK1;
         static const long idNewPage;
         static const long idNewFromTemplate;
         static const long idOpenPage;
@@ -268,61 +267,61 @@ class wxTEDFrame: public wxFrame
         static const long idMenuClose;
 
         //(*Declarations(wxTEDFrame)
-        wxMenu* MenuPresentation;
-        wxMenu* MenuItem2;
-        wxMenuItem* MenuItemSpanish;
-        wxMenuItem* MenuItemExportTTX40;
-        wxMenuItem* MenuItemRegion0;
-        wxMenuItem* MenuItemItalian;
-        wxMenuItem* MenuItemSave;
-        wxMenuItem* MenuItemCzech;
-        wxNotebook* Notebook1;
-        wxMenuItem* MenuItemSaveAs;
-        wxMenuItem* MenuItemPublishSettings;
-        wxMenuItem* MenuItemSpecialKeys;
-        wxMenuItem* MenuItemTemplate;
-        wxMenu* Menu3;
-        wxMenu* MenuItemLanguage;
-        wxMenuItem* MenuItem1;
-        wxMenuItem* MenuItem4;
-        wxScrollBar* ScrollBar1;
-        wxMenuItem* MenuItem11;
-        wxMenuItem* MenuItemDeletePage;
-        wxMenuItem* MenuItemRegion6;
-        wxMenuItem* MenuItemGerman;
-        wxPanel* Panel1;
-        wxMenuItem* MenuItemRegion10;
-        wxMenuItem* MenuItemPageNumber;
-        wxMenuItem* MenuItemRegion2;
-        wxMenuItem* MenuInsertLine;
-        wxMenuItem* MenuItem3;
-        wxMenuItem* MenuItemConcealToggle;
-        wxStatusBar* StatusBar1;
-        wxMenuItem* MenuItemSelectAll;
-        wxMenuItem* MenuDeleteLine;
-        wxMenuItem* MenuItemSwedish;
-        wxFileDialog* LoadPageFileDialog;
-        wxMenuItem* MenuItemCopy;
-        wxMenuItem* MenuItemRegion1;
-        wxMenuItem* MenuItemPublish;
-        wxMenuItem* MenuItemInsertSubpage;
-        wxMenuItem* MenuItemRegion4;
-        wxMenuItem* MenuItemRegion8;
-        wxMenuItem* MenuItemFrench;
-        wxMenuItem* MenuItemRegion3;
-        wxMenuItem* MenuItemShowHeader;
-        wxMenuItem* MenuItemUnused;
-        wxMenuItem* MenuItemPaste;
-        wxMenuItem* MenuExportZxnet;
-        wxTimer m_Timer1;
-        wxMenuItem* MenuItemEnglish;
-        wxMenuItem* MenuItemUndo;
         wxFileDialog* FileDialogSaveAs;
+        wxFileDialog* LoadPageFileDialog;
+        wxMenu* Menu3;
+        wxMenu* MenuItem2;
+        wxMenu* MenuItemLanguage;
+        wxMenu* MenuPresentation;
+        wxMenuItem* MenuDeleteLine;
+        wxMenuItem* MenuExportZxnet;
+        wxMenuItem* MenuInsertLine;
+        wxMenuItem* MenuItem11;
+        wxMenuItem* MenuItem1;
+        wxMenuItem* MenuItem3;
+        wxMenuItem* MenuItem4;
+        wxMenuItem* MenuItemConcealToggle;
+        wxMenuItem* MenuItemCopy;
+        wxMenuItem* MenuItemCzech;
+        wxMenuItem* MenuItemDeletePage;
+        wxMenuItem* MenuItemEnglish;
+        wxMenuItem* MenuItemExportTTX40;
+        wxMenuItem* MenuItemFrench;
+        wxMenuItem* MenuItemGerman;
+        wxMenuItem* MenuItemInsertSubpage;
+        wxMenuItem* MenuItemItalian;
+        wxMenuItem* MenuItemPageNumber;
+        wxMenuItem* MenuItemPaste;
+        wxMenuItem* MenuItemPublish;
+        wxMenuItem* MenuItemPublishSettings;
+        wxMenuItem* MenuItemRegion0;
+        wxMenuItem* MenuItemRegion10;
+        wxMenuItem* MenuItemRegion1;
+        wxMenuItem* MenuItemRegion2;
+        wxMenuItem* MenuItemRegion3;
+        wxMenuItem* MenuItemRegion4;
+        wxMenuItem* MenuItemRegion6;
+        wxMenuItem* MenuItemRegion8;
+        wxMenuItem* MenuItemSave;
+        wxMenuItem* MenuItemSaveAs;
+        wxMenuItem* MenuItemSelectAll;
+        wxMenuItem* MenuItemShowHeader;
+        wxMenuItem* MenuItemSpanish;
+        wxMenuItem* MenuItemSpecialKeys;
+        wxMenuItem* MenuItemSwedish;
+        wxMenuItem* MenuItemTemplate;
+        wxMenuItem* MenuItemUndo;
+        wxMenuItem* MenuItemUnused;
+        wxPanel* Panel1;
+        wxStatusBar* StatusBar1;
+        wxTimer m_Timer1;
         //*)
 
         DECLARE_EVENT_TABLE()
 };
 
+#ifdef __WXMSW__
 int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nameonftp);
+#endif // __WXMSW__
 
 #endif // WXTEDMAIN_H

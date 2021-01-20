@@ -30,11 +30,15 @@
 #include "wxTEDMain.h"
 #include <wx/msgdlg.h>
 #include "wx/wx.h"
+
+#ifdef __WINDOWS__
 #include <winver.h>
+#endif
 
 //(*InternalHeaders(wxTEDFrame)
 #include <wx/font.h>
 #include <wx/intl.h>
+#include <wx/settings.h>
 #include <wx/string.h>
 //*)
 #include <wx/dcbuffer.h>
@@ -53,6 +57,7 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 
     if (format == long_f )
     {
+
 #if defined(__WXMSW__)
         wxbuild << _T("-Windows");
 #elif defined(__UNIX__)
@@ -70,9 +75,7 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 }
 
 //(*IdInit(wxTEDFrame)
-const long wxTEDFrame::ID_SCROLLBAR1 = wxNewId();
 const long wxTEDFrame::ID_PANEL1 = wxNewId();
-const long wxTEDFrame::ID_NOTEBOOK1 = wxNewId();
 const long wxTEDFrame::idNewPage = wxNewId();
 const long wxTEDFrame::idNewFromTemplate = wxNewId();
 const long wxTEDFrame::idOpenPage = wxNewId();
@@ -120,12 +123,9 @@ const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
 const long wxTEDFrame::ID_TIMER1 = wxNewId();
 //*)
 
-const long wxTEDFrame::idMenuOpen = wxNewId();
-const long wxTEDFrame::idMenuClose = wxNewId();
 
 BEGIN_EVENT_TABLE(wxTEDFrame,wxFrame)
     //(*EventTable(wxTEDFrame)
-    //*)
     EVT_PAINT(wxTEDFrame::OnPaint)
     EVT_SIZE(wxTEDFrame::OnSize)
     EVT_LEFT_DOWN(wxTEDFrame::OnLeftDown)
@@ -136,6 +136,7 @@ BEGIN_EVENT_TABLE(wxTEDFrame,wxFrame)
     EVT_ERASE_BACKGROUND(wxTEDFrame::OnEraseBackground)
     EVT_MENU_OPEN(wxTEDFrame::OnMenuOpen)
     EVT_MENU_CLOSE(wxTEDFrame::OnMenuClose)
+    //*)
 END_EVENT_TABLE()
 
 void wxTEDFrame::OnEraseBackground(wxEraseEvent& event)
@@ -154,7 +155,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 {
   int code=event.GetKeyCode();
   int modifiers=event.GetModifiers();
-  std::cout << "Key event..." << code << std::endl;
+  std::cout << "[OnChar]Key event..." << code << std::endl;
   // We look at a few codes which apply to a page set rather than just a single page
   // If none of these codes apply, we send the character to the page
   TEDEvent* tev;
@@ -283,6 +284,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
   m_cursorIsAlpha=m_currentPage->IsAlphaMode(m_cursorPoint);
   m_blinkToggle=true; // HCI: Make cursor moves immediately visible
   Refresh();
+  event.Skip();
 }
 
 void wxTEDFrame::OnTimer(wxTimerEvent& event)
@@ -1209,6 +1211,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     : m_escapeMode(false)
     , m_menuCount(0)
     , m_inhibitStatus(false)
+    , m_ShowMarkup(false)
+    , m_Released(true)
     , m_ttxW(15)
     , m_ttxH(20)
     , m_subPixelPoint(wxPoint(0,0))
@@ -1222,38 +1226,32 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     , m_offset(wxPoint(0,0))
     , m_slideOrigin(wxPoint(0,0))
     , m_slidePages(false)
+    , m_focused(true)
+    , m_propertiesDlg(new PageSettingsDialog(this,1000))
+    , m_config(new wxConfig("wxTED"))
+
 {
-    // std::cout << "[wxTEDFrame] Entered" << std::endl;
     m_parentWindow=parent;
-    m_ShowMarkup=false;
-    m_Released=true;
     m_blinkToggle=false;
-    m_propertiesDlg=new PageSettingsDialog(this,1000);
 
     m_reveal=true; // As this is an editor, reveal the text by default.
 
     m_clip = new wxClipboard();
 
-    // config
-    m_config=new wxConfig("wxTED");
 
     //(*Initialize(wxTEDFrame)
-    wxMenu* MenuHelp;
-    wxMenuItem* MenuItemAbout;
     wxMenu* Menu1;
-    wxMenuItem* MenuItemQuit;
+    wxMenu* MenuHelp;
     wxMenuBar* MenuBar1;
+    wxMenuItem* MenuItemAbout;
+    wxMenuItem* MenuItemQuit;
 
-    Create(parent, wxID_ANY, _("wxTED 1.22"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("wxTED Teletext Editor"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Hide();
+    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_HOTLIGHT));
     wxFont thisFont(10,wxFONTFAMILY_SWISS,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
-    Notebook1 = new wxNotebook(this, ID_NOTEBOOK1, wxDefaultPosition, wxSize(400,24), 0, _T("ID_NOTEBOOK1"));
-    Notebook1->Disable();
-    Notebook1->Hide();
-    Panel1 = new wxPanel(Notebook1, ID_PANEL1, wxDefaultPosition, wxSize(392,332), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
-    ScrollBar1 = new wxScrollBar(Panel1, ID_SCROLLBAR1, wxDefaultPosition, wxSize(384,33), 0, wxDefaultValidator, _T("ID_SCROLLBAR1"));
-    ScrollBar1->SetScrollbar(0, 1, 10, 1);
-    Notebook1->AddPage(Panel1, _("P1"), false);
+    Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
@@ -1370,6 +1368,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 
+    Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
+    Panel1->Connect(wxEVT_CHAR,(wxObjectEventFunction)&wxTEDFrame::OnChar,0,this);
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
@@ -1409,22 +1409,17 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idSpecialKeys,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSpecialKeys);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnAbout);
     Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&wxTEDFrame::OnClose);
-    Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown);
-    Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp);
+    Connect(wxEVT_PAINT,(wxObjectEventFunction)&wxTEDFrame::OnPaint);
+    Connect(wxEVT_ERASE_BACKGROUND,(wxObjectEventFunction)&wxTEDFrame::OnEraseBackground);
     Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
     Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus);
     Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp);
+    Connect(wxEVT_MIDDLE_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     Connect(wxEVT_RIGHT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnRightDown);
     Connect(wxEVT_RIGHT_UP,(wxObjectEventFunction)&wxTEDFrame::OnRightUp);
     Connect(wxEVT_MOTION,(wxObjectEventFunction)&wxTEDFrame::OnMouseMove);
     Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
-
-    Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnOpen);
-    Connect(idSavePage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnSave);
-
-    Connect(idMenuOpen,wxEVT_MENU_OPEN,(wxObjectEventFunction)&wxTEDFrame::OnMenuOpen);
-    Connect(idMenuClose,wxEVT_MENU_CLOSE,(wxObjectEventFunction)&wxTEDFrame::OnMenuClose);
 
     // Precompute the Font metrics
     wxFont wf=GetFont();
@@ -1468,8 +1463,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 
     m_cursorPoint=wxPoint(0,1);
 
-    m_focused=true;
-
     //Notebook1->AddPage(Panel1,"TAB 1"); // see http://www.codeprogress.com/cpp/libraries/wxwidgets/showWxExample.php?index=35&key=wxNotebookBackgroundImage
     //Notebook1->AddPage(Panel1,"TAB 2");
     //Notebook1->AddPage(Panel1,"TAB 3");
@@ -1498,6 +1491,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     helpFrame=new HelpFrame(this->GetDefaultItem(),1,wxP,wxS);
 
     m_rootPage->SetPageChanged(false);
+
 
     // std::cout << "Finished starting frame" << std::endl;
 }
@@ -1623,6 +1617,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
 {
+#ifdef __WXMSW__
     // If the page has no filename, we can not save it. Do Save As or load another page.
     // We probably alao want to prevent Publishing a page with unsaved work in it. TODO.
     wxString sp=m_rootPage->GetSourcePage();
@@ -1657,6 +1652,11 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
         StatusBar1->SetLabel("FTP Finished OK"); // This doesn't work!
         //std::cout << "Publish OK. source=" << _(source) << " destination=" << _(destination ) << std::endl;
     }
+#endif // __WXMSW__
+#ifdef __UNIX__
+        wxString msg="Publish to FTP not implemented for UNIX";
+        wxMessageBox(msg, _("Page not sent"));
+#endif // __UNIX__endif
 }
 
 void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
@@ -1674,7 +1674,7 @@ void wxTEDFrame::OnKillFocus(wxFocusEvent& event)
 
 void wxTEDFrame::OnSetFocus(wxFocusEvent& event)
 {
-  //std::cout << "Got focus" << std::endl;;
+  std::cout << "Got focus" << std::endl;;
   m_focused=true;
   event.Skip(true); // allow default handling
 }
@@ -1725,11 +1725,8 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 
     // Put up a welcome message
     std::ostringstream str;
-    //std::cout << "Trace1" << std::endl;
     str << "New subpage inserted " << iPage+1 << "/" << iPageCount;
-    //std::cout << "Trace2" << std::endl;
     m_currentPage->SetRow(1,str.str());
-    //std::cout << "Trace3" << std::endl;
     // m_rootPage->pageChanged=true;
     m_rootPage->SetPageChanged(true);
 }
@@ -1769,24 +1766,18 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
         }
         // Before we delete the page, save the pointer to the next sub page
         TTXPage* nextSub=m_currentPage->Getm_SubPage();
-        //std::cout << "Trace1 nextSub=" << (int)nextSub << std::endl;
         // Delete the page.
         m_currentPage->Setm_SubPage(NULL); // Break the link before delete, or the rest of the chain vanishes!
         delete m_currentPage;
-        //std::cout << "Trace2 p=" << (int)p << "  p->Next=" << (int)p->Getm_SubPage() << std::endl;
         // Make the parent the current page
         m_currentPage=p;
-        //std::cout << "Trace3 m_currentPage=" << (int) m_currentPage << std::endl;
         // Repair the page chain by relinking the next subpage.
         p->Setm_SubPage(nextSub);
-        //std::cout << "Trace4" << std::endl;
         // Fix the counters
         if (iPage>0) iPage--;
-        //std::cout << "Trace5" << std::endl;
     }
     // Recalculate the subcode sequence.
     iPageCount=m_rootPage->GetPageCount();
-    // std::cout << "Trace6" << std::endl;
 }
 
 void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
@@ -1946,6 +1937,8 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
     }
 }
 
+// FTP publish is only implemented in Windows
+#ifdef __WXMSW__
 int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nameonftp)
 {
 
@@ -1981,9 +1974,11 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 	}
 	return 1;
 }
+#endif // __WXMSW__
 
 void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 {
+    #ifdef __WXMSW__
     // Create the dialog object
     PublishSetupDialog dlg(this,1001);
     // Load the dialog fields
@@ -2010,6 +2005,7 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
     m_config->Write("/wxted/FTP/Username",m_publish_ftp_username);
     m_config->Write("/wxted/FTP/Password",m_publish_ftp_password);
     m_config->Write("/wxted/FTP/Remote"  ,m_publish_ftp_remote);
+#endif // __WXMSW__
 
 }
 
@@ -2162,6 +2158,7 @@ void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 
     // Skip(); // TODO: Is this needed? Probably is!
   }
+  event.Skip(); // wsfn Not sure if this is needed
 }
 
 
@@ -2495,34 +2492,39 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
   // Widen the URL
   std::wstring w;
   std::copy(page,page+strlen(page),back_inserter(w));
-  const wchar_t *wstr = w.c_str();
 
-  ShellExecute (NULL, L"open", wstr, NULL, NULL, SW_SHOWNORMAL);
+  wxLaunchDefaultBrowser(w);
+
 }
 
 void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
 {
-    if (event.GetModifiers() == wxMOD_ALTGR && m_Released)
+        std::cout << "TRACE1-OnKeyDown..." << std::endl;
+
+//    if (event.GetModifiers() == wxMOD_ALTGR && m_Released) // ALTGR does not work on Linux
+    if (event.GetModifiers() == wxMOD_ALTGR && m_Released) // ALTGR does not work on Linux
     {
         m_ShowMarkup=!m_ShowMarkup;
         m_Released=false;
     }
-    event.Skip(true);
+    event.Skip();
 }
 
 void wxTEDFrame::OnKeyUp(wxKeyEvent& event)
 {
+            std::cout << "TRACE2:OnKeyUp..." << std::endl;
+
     int k=event.GetKeyCode();
     if (k==WXK_ALT)
     {
         m_Released=true;
     }
-    event.Skip(true);
+    event.Skip();
 }
 
 void wxTEDFrame::OnMenuItemNewWindow(wxCommandEvent& event)
 {
-	wxTEDFrame * win = new wxTEDFrame(0);
+	wxTEDFrame * win = new wxTEDFrame(nullptr);
 	win->OnMenuNew(event);
 	win->Show(true);
 }
@@ -2564,9 +2566,7 @@ void wxTEDFrame::OnMenuItemZXNetSelected(wxCommandEvent& event)
   // Widen the URL
   std::wstring w;
   std::copy(page,page+strlen(page),back_inserter(w));
-  const wchar_t *wstr = w.c_str();
-
-  ShellExecute (NULL, L"open", wstr, NULL, NULL, SW_SHOWNORMAL);
+  wxLaunchDefaultBrowser(w);
 }
 
 void wxTEDFrame::OnRightDown(wxMouseEvent& event)
@@ -2581,11 +2581,6 @@ void wxTEDFrame::OnRightUp(wxMouseEvent& event)
 {
   // drag ended - Move the offset to match the drag
   m_slidePages=false;
-}
-
-
-void wxTEDFrame::OnPanel1Paint1(wxPaintEvent& event)
-{
 }
 
 void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
@@ -2652,4 +2647,30 @@ void wxTEDFrame::OnMenuDeleteLineSelected(wxCommandEvent& event)
 void wxTEDFrame::OnMenuInsertLineSelected(wxCommandEvent& event)
 {
   m_currentPage->InsertLine(m_cursorPoint);
+}
+
+// This does nothing. Where are my events going?
+void wxTEDFrame::OnPanel1KeyDown(wxKeyEvent& event)
+{
+    std::cout << "[wxTEDFrame::OnPanel1KeyDown]" << std::endl;
+        event.Skip();
+
+}
+
+
+void wxTEDFrame::OnPanel1Char(wxKeyEvent& event)
+{
+    std::cout << "[wxTEDFrame::OnPanel1Char]" << std::endl;
+    event.Skip();
+}
+
+
+void wxTEDFrame::OnPanelTEMPORARYPaint(wxPaintEvent& event)
+{
+}
+
+void wxTEDFrame::OnPanel1LeftDClick(wxMouseEvent& event)
+{
+    std::cout << "[wxTEDFrame::OnPanel1LeftDClick]" << std::endl;
+    event.Skip();
 }

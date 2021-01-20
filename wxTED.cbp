@@ -3,14 +3,14 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="wxTED" />
-		<Option pch_mode="2" />
-		<Option compiler="original_gnu_gcc_compiler" />
+		<Option pch_mode="0" />
+		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="original_gnu_gcc_compiler" />
+				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
@@ -18,29 +18,20 @@
 					<Add option="-Winit-self" />
 					<Add option="-Wredundant-decls" />
 					<Add option="-Wunreachable-code" />
+					<Add option="-Wall" />
 					<Add option="-g" />
-					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
-					<Add directory="E:/dev/downloads/wxWidgets302/include" />
 				</Compiler>
-				<ResourceCompiler>
-					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
-					<Add directory="E:/dev/downloads/wxWidgets302/include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add library="../../downloads/wxWidgets302/lib/gcc_dll/libwxmsw30ud.a" />
-					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll" />
-				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
-				<Option compiler="original_gnu_gcc_compiler" />
+				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
-					<Add directory="E:/dev/downloads/wxWidgets302/include" />
+					<Add option="-Wzero-as-null-pointer-constant" />
+					<Add option="-Wall" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll" />
@@ -48,30 +39,17 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="../../downloads/wxWidgets302/lib/gcc_dll/libwxmsw30u.a" />
 					<Add directory="C:/wxWidgets-3.0.2/lib/gcc_dll" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-g" />
 			<Add option="-pipe" />
-			<Add option="-mthreads" />
-			<Add option="-D__GNUWIN32__" />
-			<Add option="-D__WXMSW__" />
-			<Add option="-DWXUSINGDLL" />
-			<Add option="-DwxUSE_UNICODE" />
-			<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll/mswud" />
-			<Add directory="E:/dev/downloads/wxWidgets302/include" />
+			<Add option="`wx-config --cflags`" />
 		</Compiler>
-		<ResourceCompiler>
-			<Add directory="E:/dev/downloads/wxWidgets302/lib/gcc_dll/mswud" />
-			<Add directory="E:/dev/downloads/wxWidgets302/include" />
-		</ResourceCompiler>
 		<Linker>
-			<Add option="-mthreads" />
-			<Add option="-lwininet" />
+			<Add option="`wx-config --libs`" />
 		</Linker>
 		<Unit filename="HelpFrame.cpp" />
 		<Unit filename="HelpFrame.h" />
@@ -112,9 +90,6 @@
 		<Unit filename="wxsmith/PublishSetupDialog.wxs" />
 		<Unit filename="wxsmith/wxTEDframe.wxs" />
 		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
 			<lib_finder disable_auto="1" />
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="wxTEDApp.cpp" main="wxTEDFrame" init_handlers="necessary" language="CPP" />

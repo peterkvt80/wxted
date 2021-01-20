@@ -1,11 +1,11 @@
 #include "tedevent.h"
 
-TEDEvent::TEDEvent(EventType evt) : eventType(EventNone), nextEvent(0), lastEvent(0), charList(NULL)
+TEDEvent::TEDEvent(EventType evt) : eventType(EventNone), nextEvent(nullptr), lastEvent(nullptr), charList(NULL)
 {
     SeteventType(evt);
 }
 
-TEDEvent::TEDEvent() : eventType(EventNone), nextEvent(0), lastEvent(0), charList(NULL)
+TEDEvent::TEDEvent() : eventType(EventNone), nextEvent(nullptr), lastEvent(nullptr), charList(nullptr)
 {
     //ctor
 }
@@ -13,7 +13,7 @@ TEDEvent::TEDEvent() : eventType(EventNone), nextEvent(0), lastEvent(0), charLis
 TEDEvent::~TEDEvent()
 {
     //dtor
-    if (this->nextEvent!=NULL)
+    if (this->nextEvent!=nullptr)
         delete (nextEvent);
 }
 
@@ -29,7 +29,7 @@ void TEDEvent::print()
     case EventKey      : s="KEY";
         std::cout << "[TEDEvent::print] " << s <<std::endl;
         p=charList;
-        for (p=charList;p!=0;p=p->Getnext())
+        for (p=charList;p!=nullptr;p=p->Getnext())
         {
             std::cout << "[TEDEvent::print] old" << p->GetOldChar() <<std::endl;
             std::cout << "[TEDEvent::print] new" << p->GetNewChar() <<std::endl;
@@ -50,7 +50,7 @@ void TEDEvent::dump()
 {
     TEDEvent* p;
     EventType evt;
-    for (p=this;p!=0;p=p->GetlastEvent())
+    for (p=this;p!=nullptr;p=p->GetlastEvent())
     {
         std::cout << "[TEDEvent::dump]" << std::endl;
         evt=p->GeteventType();

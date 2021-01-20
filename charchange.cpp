@@ -1,6 +1,6 @@
 #include "charchange.h"
 
-CharChange::CharChange() : next(0), m_OldChar(' '), m_NewChar(' '), m_CursorLoc(wxPoint(0,0))
+CharChange::CharChange() : next(nullptr), m_OldChar(' '), m_NewChar(' '), m_CursorLoc(wxPoint(0,0))
 {
     //ctor
 }
@@ -8,7 +8,7 @@ CharChange::CharChange() : next(0), m_OldChar(' '), m_NewChar(' '), m_CursorLoc(
 CharChange::~CharChange()
 {
     //dtor
-    if (next!=0)
+    if (next!=nullptr)
     {
         std::cout << "TODO: need to destruct any remaining changes in this list" << std::endl;
         delete next;

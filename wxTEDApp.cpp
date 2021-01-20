@@ -23,11 +23,7 @@ bool wxTEDApp::OnInit()
     wxInitAllImageHandlers();
     if ( wxsOK )
     {
-        wxTEDFrame* Frame;
-    	if (wxApp::argc>1)
-            Frame = new wxTEDFrame(0,-1,wxApp::argv[1]);
-        else
-            Frame = new wxTEDFrame(0);
+    	wxTEDFrame* Frame = new wxTEDFrame(0);
     	Frame->Show();
     	SetTopWindow(Frame);
     }
