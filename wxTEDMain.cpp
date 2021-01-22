@@ -1103,7 +1103,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     // Marquee.
     // TODO: Make the marquee and cursor mutually exclusive
-    wxPen pen(*wxWHITE,1,wxSHORT_DASH);
+    wxPen pen(*wxWHITE,1,wxPENSTYLE_SHORT_DASH);
     paintDC.SetBrush(*wxTRANSPARENT_BRUSH); // no fill
 
     paintDC.SetPen(pen); // outline on
@@ -1252,6 +1252,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     wxFont thisFont(10,wxFONTFAMILY_SWISS,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
     Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+    Panel1->Hide();
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
@@ -1371,7 +1372,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
     Panel1->Connect(wxEVT_CHAR,(wxObjectEventFunction)&wxTEDFrame::OnChar,0,this);
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
-    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
+    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
@@ -1534,7 +1535,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
 
     iPageCount=m_rootPage->GetPageCount();
 
-    wxPaintEvent Pevent(0); // Make a dummy event
+    // wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
     iPage=0;
     m_offset.x=0;
@@ -1543,7 +1544,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
     SetRegionMenu(m_currentPage->GetRegion()); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
-    OnPaint(Pevent);    // Refresh with the new page
+    //OnPaint(event);    // Refresh with the new page
 
     // m_parentWindow->Refresh();
     // Force an update now
@@ -2615,7 +2616,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 
     iPageCount=m_rootPage->GetPageCount();
 
-    wxPaintEvent Pevent(0); // Make a dummy event
+    // wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
     iPage=0;
     m_offset.x=0;
@@ -2624,7 +2625,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     SetRegionMenu(m_currentPage->GetRegion()); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
-    OnPaint(Pevent);    // Refresh with the new page
+    // OnPaint(Pevent);    // Refresh with the new page
 
     // Force an update now
     Refresh();
