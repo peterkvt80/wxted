@@ -1,6 +1,6 @@
 DE,Description goes here
 DS,inserter
-SP,J:\peter\teletext pages\wxtedsplash.tti
+SP,/home/peterk/dev/wxted/wxtedsplash.tti
 PN,1ff01
 SC,0001
 PS,8000
@@ -66,7 +66,7 @@ OL,10, open a list of these.Fedit.tfGusers can
 OL,11, use most of the escape codes instead.  
 OL,13, To toggle viewing the control codes you
 OL,14, can press Alt-Gr. Codes are on a grey  
-OL,15, background.                            
+OL,15, background. (Linux use Esc X)          
 OL,17,CAlphaFcolourEisBtheGalpha symbol.      
 OL,18, Graphics uses a mosaic patternS&#?o#)4 
 OL,19,HFlashISteadyXConcealD]Cyellow on blue  
