@@ -4998,7 +4998,7 @@
 
 1610666403 /usr/local/include/wx-3.0/wx/gtk/app.h
 
-1611128135 /home/peterk/dev/wxted/wxTEDMain.h
+1611405034 /home/peterk/dev/wxted/wxTEDMain.h
 	<wx/filedlg.h>
 	<wx/frame.h>
 	<wx/menu.h>
@@ -5245,7 +5245,7 @@
 
 1610666403 /usr/local/include/wx-3.0/wx/vidmode.h
 
-1611393373 source:/home/peterk/dev/wxted/wxTEDMain.cpp
+1611405018 source:/home/peterk/dev/wxted/wxTEDMain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

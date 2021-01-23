@@ -1370,9 +1370,18 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 
     Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
+    Panel1->Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp,0,this);
     Panel1->Connect(wxEVT_CHAR,(wxObjectEventFunction)&wxTEDFrame::OnChar,0,this);
+    Panel1->Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus,0,this);
+    Panel1->Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus,0,this);
+    Panel1->Connect(wxEVT_LEFT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnLeftDown,0,this);
+    Panel1->Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp,0,this);
+    Panel1->Connect(wxEVT_RIGHT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnRightDown,0,this);
+    Panel1->Connect(wxEVT_RIGHT_UP,(wxObjectEventFunction)&wxTEDFrame::OnRightUp,0,this);
+    Panel1->Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel,0,this);
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
-    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
+    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
+    Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuOpenPage);
     Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
@@ -2574,6 +2583,34 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
 {
   wxPoint wxp=event.GetPosition();
   std::cout << "x=" << wxp.x << " y=" << wxp.y << std::endl;
+  // find the actual character row/column
+  // Must be over an actual page or we ignore the click
+  int x=event.GetPosition().x;
+  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *iPageCount)
+  {
+
+    std::cout << "Right button pressed..." << std::endl;
+    wxPoint save=m_cursorPoint;
+    m_cursorPoint=event.GetPosition();
+    // Adjust to slide offset
+    m_cursorPoint.x-=m_offset.x;
+
+    // Adjust to character location
+    m_cursorPoint.x/=m_ttxW;
+    m_cursorPoint.y/=m_ttxH;
+
+    // What character is at this position?
+    TTXLine* line=m_currentPage->GetRow(m_cursorPoint.y);
+    if (!line)
+    {
+      std::cout << "[wxTEDFrame::OnRightDown] We got a null line, we are about to crash" << std::endl;
+    }
+    wxChar wxc=line->GetCharAt(m_cursorPoint.y);
+    std::cout << "[wxTEDFrame::OnRightDown] char clicked on = " << wxc << std::endl;
+  }
+
+
+
   m_slideOrigin=event.GetPosition()-m_offset;
   m_slidePages=true;
 }
@@ -2674,4 +2711,41 @@ void wxTEDFrame::OnPanel1LeftDClick(wxMouseEvent& event)
 {
     std::cout << "[wxTEDFrame::OnPanel1LeftDClick]" << std::endl;
     event.Skip();
+}
+
+void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
+{
+    std::string str;
+    LoadPageFileDialog->SetMessage("Open teletext page");
+    if (LoadPageFileDialog->ShowModal() == wxID_CANCEL)
+    {
+      return;     // the user bottled out
+    }
+    if (m_rootPage!=NULL) delete m_rootPage; // Delete the root page. All subpages will go too.
+    str=LoadPageFileDialog->GetPath().ToStdString();
+
+    wxString filename=LoadPageFileDialog->GetFilename();
+    // std::cout << "the filename was " << filename << std::endl;
+    // std::cout << "Loading a teletext page " << str << std::endl;
+    m_rootPage = new TTXPage(str,filename.ToStdString());
+
+    MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
+
+    iPageCount=m_rootPage->GetPageCount();
+
+    // wxPaintEvent Pevent(0); // Make a dummy event
+    m_setLanguage();
+    iPage=0;
+    m_offset.x=0;
+    m_currentPage=m_rootPage;
+
+    SetRegionMenu(m_currentPage->GetRegion()); // Region language
+
+    SetTitle(m_rootPage->GetSourcePage());
+    //OnPaint(event);    // Refresh with the new page
+
+    // m_parentWindow->Refresh();
+    // Force an update now
+    Refresh();
+    Update();
 }

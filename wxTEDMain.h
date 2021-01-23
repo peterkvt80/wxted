@@ -199,6 +199,7 @@ class wxTEDFrame: public wxFrame
         void OnPanel1Char(wxKeyEvent& event);
         void OnPanelTEMPORARYPaint(wxPaintEvent& event);
         void OnPanel1LeftDClick(wxMouseEvent& event);
+        void OnMenuOpenPage(wxCommandEvent& event);
         //*)
 
         /* Set the language menu radio option */

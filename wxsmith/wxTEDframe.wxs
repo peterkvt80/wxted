@@ -25,8 +25,17 @@
 		<handler function="OnMouseMove" entry="EVT_MOTION" />
 		<handler function="OnMouseWheel" entry="EVT_MOUSEWHEEL" />
 		<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
+			<focused>1</focused>
 			<handler function="OnKeyDown" entry="EVT_KEY_DOWN" />
+			<handler function="OnKeyUp" entry="EVT_KEY_UP" />
 			<handler function="OnChar" entry="EVT_CHAR" />
+			<handler function="OnSetFocus" entry="EVT_SET_FOCUS" />
+			<handler function="OnKillFocus" entry="EVT_KILL_FOCUS" />
+			<handler function="OnLeftDown" entry="EVT_LEFT_DOWN" />
+			<handler function="OnLeftUp" entry="EVT_LEFT_UP" />
+			<handler function="OnRightDown" entry="EVT_RIGHT_DOWN" />
+			<handler function="OnRightUp" entry="EVT_RIGHT_UP" />
+			<handler function="OnMouseWheel" entry="EVT_MOUSEWHEEL" />
 		</object>
 		<object class="wxMenuBar" variable="MenuBar1" member="no">
 			<object class="wxMenu" variable="Menu1" member="no">
@@ -40,12 +49,13 @@
 				<object class="wxMenuItem" name="idNewFromTemplate" variable="MenuItemTemplate" member="yes">
 					<label>New from template</label>
 					<help>New page set up for graphics</help>
-					<handler function="OnMenuNew" entry="EVT_MENU" />
+					<handler function="OnMenuNewFromTemplate" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="idOpenPage" variable="MenuItem3" member="yes">
 					<label>Open</label>
 					<accel>CTRL-O</accel>
 					<help>Open a teletext page</help>
+					<handler function="OnMenuOpenPage" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="idSavePage" variable="MenuItemSave" member="yes">
 					<label>Save</label>
