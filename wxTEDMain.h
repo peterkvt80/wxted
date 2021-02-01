@@ -56,10 +56,10 @@
 #define VERSION_STRING   wxT("1.47")
 
 // ftp
-#ifdef __WINDOWS__
+#if defined(__WXMSW__)
 #include <wininet.h>
 #pragma comment(lib, "wininet")
-#endif // __WINDOWS__
+#endif // __WXMSW__
 
 // Publish setup
 #include "PublishSetupDialog.h"

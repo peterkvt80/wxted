@@ -31,7 +31,7 @@
 #include <wx/msgdlg.h>
 #include "wx/wx.h"
 
-#ifdef __WINDOWS__
+#if defined(__WXMSW__)
 #include <winver.h>
 #endif
 
