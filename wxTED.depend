@@ -2618,11 +2618,12 @@
 1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1612219508 e:\dev\wxted-github\wxted\wxtedmain.h
+1612220969 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/filedlg.h>
 	<wx/frame.h>
 	<wx/menu.h>
 	<wx/panel.h>
+	<wx/richtext/richtextsymboldlg.h>
 	<wx/statusbr.h>
 	<wx/timer.h>
 	<wx/clipbrd.h>
@@ -3063,14 +3064,13 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1612219406 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1612995206 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"
 	<winver.h>
 	<wx/font.h>
 	<wx/intl.h>
-	<wx/settings.h>
 	<wx/string.h>
 	<wx/dcbuffer.h>
 	<wx/stdpaths.h>
@@ -8792,4 +8792,20 @@
 	<aygshell.h>
 
 1612038929 e:\dev\wxwidgets\wxwidgets-3.0.5\include\wx\msw\rcdefs.h
+
+1612038914 e:\dev\wxwidgets\wxwidgets-3.0.5\include\wx\richtext\richtextsymboldlg.h
+	"wx/richtext/richtextuicustomization.h"
+	"wx/dialog.h"
+	"wx/vscroll.h"
+
+1612038914 e:\dev\wxwidgets\wxwidgets-3.0.5\include\wx\richtext\richtextuicustomization.h
+	"wx/window.h"
+
+1612038908 e:\dev\wxwidgets\wxwidgets-3.0.5\include\wx\vscroll.h
+	"wx/panel.h"
+	"wx/position.h"
+	"wx/scrolwin.h"
+
+1612038901 e:\dev\wxwidgets\wxwidgets-3.0.5\include\wx\position.h
+	"wx/gdicmn.h"
 

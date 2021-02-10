@@ -2,8 +2,11 @@
 <wxsmith>
 	<object class="wxFrame" name="wxTEDFrame">
 		<title>wxTED Teletext Editor</title>
+		<pos>-1,-1</pos>
+		<size>-1,-1</size>
 		<hidden>1</hidden>
-		<bg>wxSYS_COLOUR_HOTLIGHT</bg>
+		<fg>wxSYS_COLOUR_MENUHILIGHT</fg>
+		<bg>wxSYS_COLOUR_BTNSHADOW</bg>
 		<font>
 			<size>10</size>
 			<style>normal</style>
@@ -12,6 +15,8 @@
 			<family>swiss</family>
 			<face>teletext2</face>
 		</font>
+		<minsize>-1,-1</minsize>
+		<maxsize>-1,-1</maxsize>
 		<id_arg>0</id_arg>
 		<handler function="OnClose" entry="EVT_CLOSE" />
 		<handler function="OnPaint" entry="EVT_PAINT" />
@@ -25,7 +30,9 @@
 		<handler function="OnMouseMove" entry="EVT_MOTION" />
 		<handler function="OnMouseWheel" entry="EVT_MOUSEWHEEL" />
 		<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
+			<size>-1,-1</size>
 			<focused>1</focused>
+			<hidden>1</hidden>
 			<handler function="OnKeyDown" entry="EVT_KEY_DOWN" />
 			<handler function="OnKeyUp" entry="EVT_KEY_UP" />
 			<handler function="OnChar" entry="EVT_CHAR" />
@@ -304,5 +311,6 @@
 			<wildcard>TTI files (*.tti, *.ttix)|*.tti;*.ttix</wildcard>
 			<style>wxFD_SAVE|wxFD_OVERWRITE_PROMPT</style>
 		</object>
+		<object class="wxSymbolPickerDialog" name="ID_SYMBOLPICKERDIALOG1" variable="SymbolPickerDialog1" member="yes" />
 	</object>
 </wxsmith>

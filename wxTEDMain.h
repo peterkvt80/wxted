@@ -33,6 +33,7 @@
 #include <wx/frame.h>
 #include <wx/menu.h>
 #include <wx/panel.h>
+#include <wx/richtext/richtextsymboldlg.h>
 #include <wx/statusbr.h>
 #include <wx/timer.h>
 //*)
@@ -262,6 +263,7 @@ class wxTEDFrame: public wxFrame
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_TIMER1;
+        static const long ID_SYMBOLPICKERDIALOG1;
         //*)
 
         static const long idMenuOpen;
@@ -315,6 +317,7 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemUnused;
         wxPanel* Panel1;
         wxStatusBar* StatusBar1;
+        wxSymbolPickerDialog* SymbolPickerDialog1;
         wxTimer m_Timer1;
         //*)
 

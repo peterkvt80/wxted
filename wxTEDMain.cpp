@@ -121,6 +121,7 @@ const long wxTEDFrame::idSpecialKeys = wxNewId();
 const long wxTEDFrame::idMenuAbout = wxNewId();
 const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
 const long wxTEDFrame::ID_TIMER1 = wxNewId();
+const long wxTEDFrame::ID_SYMBOLPICKERDIALOG1 = wxNewId();
 //*)
 
 
@@ -431,7 +432,7 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
 
     // Year - two digits
     i=str.find("yy");
-    if (i<=0) i=str.find("%Y");
+    if (i<=0) i=str.find("%y");
     if (i>0)
     {
         val.str("");
@@ -1247,12 +1248,18 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     wxMenuItem* MenuItemQuit;
 
     Create(parent, wxID_ANY, _("wxTED Teletext Editor"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    SetClientSize(wxSize(-1,-1));
+    Move(wxPoint(-1,-1));
+    SetMinSize(wxSize(-1,-1));
+    SetMaxSize(wxSize(-1,-1));
     Hide();
-    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_HOTLIGHT));
+    SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT));
+    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
     wxFont thisFont(10,wxFONTFAMILY_SWISS,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
-    Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+    Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxSize(-1,-1), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     Panel1->SetFocus();
+    Panel1->Hide();
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
@@ -1368,6 +1375,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
 
     Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
     Panel1->Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp,0,this);
@@ -2607,6 +2615,14 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
     }
     wxChar wxc=line->GetCharAt(m_cursorPoint.y);
     std::cout << "[wxTEDFrame::OnRightDown] char clicked on = " << wxc << std::endl;
+
+    wxString InitialChar = "\xc8"; // The AE ligature
+    SymbolPickerDialog1->SetSymbol(InitialChar); // Ligature AE is at the start of the interesting characters
+    SymbolPickerDialog1->SetFromUnicode(true); // Definitely want unicode
+    SymbolPickerDialog1->SetFontName("teletext2"); // This is our only allowed font
+    SymbolPickerDialog1->ShowModal();
+    auto ch = SymbolPickerDialog1->GetSymbolChar();
+    std::cout << "[wxTEDFrame::OnRightDown] ch = " << ch << std::endl;
   }
 
 
