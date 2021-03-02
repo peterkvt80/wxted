@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan
  * License:
   *
- * Copyright (C) 2014-2020, Peter Kwan
+ * Copyright (C) 2014-2021, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -1257,9 +1257,10 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
     wxFont thisFont(10,wxFONTFAMILY_SWISS,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("teletext2"),wxFONTENCODING_DEFAULT);
     SetFont(thisFont);
-    Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxSize(-1,-1), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+    Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxSize(1,1), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+    Panel1->SetMinSize(wxSize(-1,-1));
     Panel1->SetFocus();
-    Panel1->Hide();
+    Panel1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
@@ -1375,8 +1376,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+#ifdef asdajskdhajk
     SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
-
+#endif
     Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
     Panel1->Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp,0,this);
     Panel1->Connect(wxEVT_CHAR,(wxObjectEventFunction)&wxTEDFrame::OnChar,0,this);
@@ -2616,6 +2618,8 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
     wxChar wxc=line->GetCharAt(m_cursorPoint.y);
     std::cout << "[wxTEDFrame::OnRightDown] char clicked on = " << wxc << std::endl;
 
+// For some reason, I can't use the symbol picker under Ubuntu
+#ifdef __WXMSW__
     wxString InitialChar = "\xc8"; // The AE ligature
     SymbolPickerDialog1->SetSymbol(InitialChar); // Ligature AE is at the start of the interesting characters
     SymbolPickerDialog1->SetFromUnicode(true); // Definitely want unicode
@@ -2623,6 +2627,7 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
     SymbolPickerDialog1->ShowModal();
     auto ch = SymbolPickerDialog1->GetSymbolChar();
     std::cout << "[wxTEDFrame::OnRightDown] ch = " << ch << std::endl;
+#endif
   }
 
 

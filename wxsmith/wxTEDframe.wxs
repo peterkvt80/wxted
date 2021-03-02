@@ -30,9 +30,10 @@
 		<handler function="OnMouseMove" entry="EVT_MOTION" />
 		<handler function="OnMouseWheel" entry="EVT_MOUSEWHEEL" />
 		<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
-			<size>-1,-1</size>
+			<size>1,1</size>
 			<focused>1</focused>
-			<hidden>1</hidden>
+			<bg>wxSYS_COLOUR_HIGHLIGHT</bg>
+			<minsize>-1,-1</minsize>
 			<handler function="OnKeyDown" entry="EVT_KEY_DOWN" />
 			<handler function="OnKeyUp" entry="EVT_KEY_UP" />
 			<handler function="OnChar" entry="EVT_CHAR" />
