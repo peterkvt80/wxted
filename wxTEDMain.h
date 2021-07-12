@@ -106,8 +106,6 @@ class wxTEDFrame: public wxFrame
         void CopyTextToClipboard(wxString text);
         wxString GetTextFromClipboard();
 
-        wxClipboard *m_clip;
-
         // Page
         TTXPage* m_rootPage; /// This is the root page used for load/save
         TTXPage* m_currentPage; /// This may point to a sub-page and is the page currently viewed and edited

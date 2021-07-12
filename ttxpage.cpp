@@ -857,13 +857,13 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_F5: ch=ttxCodeAlphaMagenta;break;  // Shift-F5 magenta
             case WXK_F6: ch=ttxCodeAlphaCyan;break;     // Shift-F6 cyan
             case WXK_F7: ch=ttxCodeAlphaWhite;break;    // Shift-F7 white
-            case WXK_F8: ch=0x7f;break;                 // Shift-F8 black SPECIAL CASE!
+            case WXK_F8: ch=0x80;break;                 // Shift-F8 black SPECIAL CASE!
             // case WXK_F9: InsertLine(); break; // Oh. We don't have the y location at this point
             default: ch=0; // not a valid shift code.
         }
         if (ch>0)
         {
-            if (ch==0x7f) ch=ttxCodeAlphaBlack; // Alpha black shenanigans
+            if (ch==0x80) ch=ttxCodeAlphaBlack; // Alpha black shenanigans
             char oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right

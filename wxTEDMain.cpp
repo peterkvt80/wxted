@@ -276,6 +276,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       case 'J': modifiers=wxMOD_NONE;    code=172;   break; // hook maps to text block
       // @todo Lots more codes
       }
+      std::cout << "[wxTEDFrame::OnChar] code = " << (int)code << std::endl;
     } // edit.tf escape mode
     m_currentPage->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
   }
@@ -1237,9 +1238,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 
     m_reveal=true; // As this is an editor, reveal the text by default.
 
-    m_clip = new wxClipboard();
-
-
     //(*Initialize(wxTEDFrame)
     wxMenu* Menu1;
     wxMenu* MenuHelp;
@@ -2187,7 +2185,7 @@ void wxTEDFrame::OnMenuItemCopySelected(wxCommandEvent& event)
     // *thinks*
     // How can we cut and paste between instances of wxTED because that would be really useful.
     // What data did we just copy?
-    //std::cout << m_MarqueeStart.x << "," << m_MarqueeStart.y << "    " << m_MarqueeEnd.x  << "," << m_MarqueeEnd.y << std::endl;
+    std::cout << m_MarqueeStart.x << "," << m_MarqueeStart.y << "    " << m_MarqueeEnd.x  << "," << m_MarqueeEnd.y << std::endl;
     // These are the coordinates
     int x1=m_MarqueeStart.x;
     int y1=m_MarqueeStart.y;
@@ -2232,38 +2230,39 @@ void wxTEDFrame::OnMenuItemCopySelected(wxCommandEvent& event)
 
 void wxTEDFrame::CopyTextToClipboard(wxString text)
 {
-   if (m_clip->Open())
+   if (wxTheClipboard->Open())
    {
-      m_clip->Clear();
-      m_clip->SetData( new wxTextDataObject( text ) );
-      m_clip->Flush();
-      m_clip->Close();
+      wxTheClipboard->Clear();
+      wxTheClipboard->SetData( new wxTextDataObject( text ) );
+      wxTheClipboard->Flush();
+      wxTheClipboard->Close();
    }
 }
 
 wxString wxTEDFrame::GetTextFromClipboard()
 {
    wxString wxs;
-   if (m_clip->Open())
+   if (wxTheClipboard->Open())
    {
-      if (m_clip->IsSupported( wxDF_TEXT ))
+      if (wxTheClipboard->IsSupported( wxDF_TEXT ))
       {
           wxTextDataObject data;
-          m_clip->GetData(data);
+          wxTheClipboard->GetData(data);
           wxs=data.GetText();
       }
       else
         wxs="";
-      m_clip->Close();
+      wxTheClipboard->Close();
    }
    return wxs;
 }
 
 /** Paste
- * One sneaky trick, is if the URL starts
+ * One sneaky trick, is if the URL contains one of the following
  * http://editor.teletext40.com (obsolete)
- * http://edit.tf (current)
- * http://zxnet.co.uk/teletext/editor
+ * edit.tf
+ * zxnet.co.uk/editor
+ * www.uniquecodeanddata.co.uk/editor
  * then we assume that the clipboard contains a URL from the teletext40 editor and should be decoded as such.
  */
 void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
