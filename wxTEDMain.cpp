@@ -581,7 +581,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
               if (line==NULL)
               {
-                  p->SetRow(row,"XXXXXXXXTEEFAX mpp DAY dd MTH \x3 hh:nn.ss"); // Could put in a sample header here
+                  p->SetRow(row,"XXXXXXXXTEEFAX %%# %%a %d %%b \x3 %H:%M.%S"); // Could put in a sample header here
                   //             aaaaaaaaaabbbbbbbbbbccccccccccd  ddddddddd
                   line=p->GetRow(row);
               }
@@ -1370,13 +1370,12 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     StatusBar1->SetFieldsCount(1,__wxStatusBarWidths_1);
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
-    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTP files (*.vtp)|*.vtp|VTX files (*.vtx)|*.vtx|All files|*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTP files (*.vtp)|*.vtp|VTX files (*.vtx)|*.vtx|T42 files (*.t42)|*.t42|All files|*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
-#ifdef asdajskdhajk
-    SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
-#endif
+    //SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
+
     Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
     Panel1->Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp,0,this);
     Panel1->Connect(wxEVT_CHAR,(wxObjectEventFunction)&wxTEDFrame::OnChar,0,this);

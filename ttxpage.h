@@ -21,6 +21,10 @@
 #include "ttxcodes.h"
 #include "ttxline.h"
 #include "ttxrow28.h"
+
+#include "T42.h"
+#include "HeaderPacket.h"
+
 #include "hamm.h"
 // #include "hamm-tables.h"
 #include "tedevent.h"
@@ -155,6 +159,12 @@ class TTXPage
        * \return true if the page was loaded
        */
       bool m_LoadEP1(std::string filename);
+
+      /** Load a T42 page
+       * \param filename : The source file
+       * \return true if the page was loaded
+       */
+      bool m_LoadT42(std::string filename);
 
       /** Load a VTX page
        * \param filename : The source file

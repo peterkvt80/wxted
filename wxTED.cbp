@@ -20,6 +20,7 @@
 					<Add option="-Wunreachable-code" />
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -32,6 +33,7 @@
 					<Add option="-O2" />
 					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wall" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -60,11 +62,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="hamm.h" />
+		<Unit filename="include/T42.h" />
 		<Unit filename="mapchar.cpp" />
 		<Unit filename="mapchar.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/T42.cpp" />
 		<Unit filename="teddybear.ico" />
 		<Unit filename="tedevent.cpp" />
 		<Unit filename="tedevent.h" />

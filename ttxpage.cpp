@@ -82,6 +82,79 @@ TTXPage::~TTXPage()
   }
 }
 
+bool TTXPage::m_LoadT42(std::string filename)
+{
+    // T42 is raw teletext data.
+  std::cout << "Trying T42" << std::endl;
+  T42* t42;
+  char buf[500];
+  TTXPage* p=this;
+  bool ok = false;
+  std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+
+  // todo Decode the packet to see what we do
+  // header/text line/fastext/other.
+  bool page_done{false};
+  for (uint8_t i = 0; !page_done; i++)
+  {
+      // Read in a packet
+      filein.read(buf,42); // TODO: Check for a failed read and abandon
+      t42 = new T42(buf);
+      // What sort of packet is it?
+      int mag = t42->GetMag();
+      int row = t42->GetRow();
+      // @todo row 0 should extract the page number and flags
+      std::cout << "[TTXPage::m_LoadT42] packet = " << mag << "/" << row << std::endl;
+      // End of file should also terminate
+
+      if (mag < 8) ok = true;
+
+      if (row > 0)
+      {
+          // @todo None of this should happen for row 0
+          if (mag == 0xff || row == 0xff || filein.eof())
+          {
+              page_done = true;
+          }
+          else
+          {
+                std::string s(&buf[2]);
+                p->SetRow(row,s);
+          }
+      }
+      else // Row 0 header
+      {
+          HeaderPacket header_packet{*t42};
+          char str[50];
+          strncpy(str, "        ",8);
+          strncat(str, header_packet.GetHeading(),24);
+          strncat(str, header_packet.GetTime(),8);
+          auto page_number=((header_packet.GetMag()) % 8) * 0x100 + header_packet.GetPageNumber();
+          p->SetPageNumber(page_number * 0x100); // Because we use old MRG mppss page numbers
+          // @todo Add subcode
+          p->SetRow(0,str);
+
+          std::cout << "[load t42] str = " << str << std::setw(4) << " page number = " << page_number << std::endl;
+      }
+  }
+  // Open the file
+  // Process packets
+  // Expect a row 0 with header details and a magazine
+  // Then a number of lines each with the same magazine
+  // and a row number.
+  // There are probably other rows too.
+  // The load is terminated by another row 0 or the end of data.
+ //   for (int line=1;line<25;line++)
+  //{
+//    filein.read(buf,42); // TODO: Check for a failed read and abandon
+    //std::string s(buf);
+    //p->SetRow(line,s);
+  //}
+
+  filein.close();
+  return ok;
+
+}
 // See http://rtlalphanet.asp.tss.nl/RTL4/100s01 for examples
 bool TTXPage::m_LoadVTX(std::string filename)
 {
@@ -169,7 +242,7 @@ bool TTXPage::m_LoadVTX(std::string filename)
     std::string s(buf);
     p->SetRow(i,s);
   }
-  p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+  p->SetRow(0,"         wxTED %%# %%a %d %%b \x3 %H:%M.%S"); // Overwrite anything in row 0 (usually empty)
   // With a pair of zeros at the end we can skip
   filein.close(); // Not sure that we need to close it
   p->Setm_SubPage(nullptr);
@@ -198,7 +271,7 @@ bool TTXPage::m_LoadEP1(std::string filename)
         std::string s(buf);
         p->SetRow(i,s);
     }
-    p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+    p->SetRow(0,"         wxTED %%# %%a %d %%b \x3 %H:%M.%S"); // Overwrite anything in row 0 (usually empty)
     // With a pair of zeros at the end we can skip
     filein.close(); // Not sure that we need to close it
     p->Setm_SubPage(nullptr);
@@ -361,7 +434,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
         std::string s(buf);
         p->SetRow(i+1,s);
     }
-    p->SetRow(0,"         wxTED mpp DAY dd MTH \x3 hh:nn.ss"); // Overwrite anything in row 0 (usually empty)
+    p->SetRow(0,"         wxTED %%# %%a %d %%b \x3 %H:%M.%S"); // Overwrite anything in row 0 (usually empty)
 
     filein.close();
     p->Setm_SubPage(nullptr);
@@ -623,6 +696,16 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
     {
       m_loaded=true;
     }
+  }
+
+  if (!m_loaded)
+  {
+    SetRow(1,"Trying T42");
+    if (m_LoadT42(filename))
+    {
+      m_loaded=true;
+    }
+    type++;
   }
 
   if (!m_loaded)
