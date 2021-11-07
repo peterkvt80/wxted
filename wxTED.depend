@@ -9250,7 +9250,7 @@
 
 1610664315 /home/peterk/dev/wxted/hamm-tables.h
 
-1610664315 source:/home/peterk/dev/wxted/HelpFrame.cpp
+1629150928 source:/home/peterk/dev/wxted/HelpFrame.cpp
 	"HelpFrame.h"
 	<wx/intl.h>
 	<wx/string.h>
@@ -10150,7 +10150,7 @@
 
 1614210795 /usr/local/include/wx-3.1/wx/gtk/app.h
 
-1626127426 /home/peterk/dev/wxted/wxTEDMain.h
+1636244483 /home/peterk/dev/wxted/wxTEDMain.h
 	<wx/filedlg.h>
 	<wx/frame.h>
 	<wx/menu.h>
@@ -10347,7 +10347,7 @@
 	"wx/persist.h"
 	"wx/window.h"
 
-1626681840 source:/home/peterk/dev/wxted/wxTEDMain.cpp
+1636244082 source:/home/peterk/dev/wxted/wxTEDMain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

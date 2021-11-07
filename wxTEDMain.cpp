@@ -80,7 +80,7 @@ const long wxTEDFrame::idNewPage = wxNewId();
 const long wxTEDFrame::idNewFromTemplate = wxNewId();
 const long wxTEDFrame::idOpenPage = wxNewId();
 const long wxTEDFrame::idSavePage = wxNewId();
-const long wxTEDFrame::isSavePageAs = wxNewId();
+const long wxTEDFrame::idSavePageAs = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idExportTTX40 = wxNewId();
@@ -1270,7 +1270,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemSave = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSave);
     MenuItemSave->Enable(false);
-    MenuItemSaveAs = new wxMenuItem(Menu1, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
+    MenuItemSaveAs = new wxMenuItem(Menu1, idSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSaveAs);
     Menu1->AppendSeparator();
     MenuItemPublish = new wxMenuItem(Menu1, idPublish, _("Publish"), _("Publish the page to an inserter"), wxITEM_NORMAL);
@@ -1389,7 +1389,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
     Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuOpenPage);
-    Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
+    Connect(idSavePage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnSave);
+    Connect(idSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
@@ -1570,6 +1571,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
 
 void wxTEDFrame::OnSave(wxCommandEvent& event)
 {
+    std::cout << "[OnSave] called" << std::endl;
     bool result=m_rootPage->SavePageDefault(); // Write the file back where it came from
     if (!result)
     {
@@ -1603,7 +1605,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg="Teletext editor\n(c) 2014-2019, Peter Kwan.\nwxTED";
+    wxString msg="Teletext editor\n(c) 2014-2021, Peter Kwan.\nwxTED";
     wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 

@@ -220,7 +220,7 @@ class wxTEDFrame: public wxFrame
         static const long idNewFromTemplate;
         static const long idOpenPage;
         static const long idSavePage;
-        static const long isSavePageAs;
+        static const long idSavePageAs;
         static const long idPublish;
         static const long idPublishSettings;
         static const long idExportTTX40;
