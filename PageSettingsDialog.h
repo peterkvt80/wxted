@@ -2,12 +2,12 @@
 #define PAGESETTINGSDIALOG_H
 
 //(*Headers(PageSettingsDialog)
-#include <wx/stattext.h>
-#include <wx/radiobox.h>
-#include <wx/textctrl.h>
-#include <wx/checkbox.h>
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/dialog.h>
+#include <wx/radiobox.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 //*)
 
 class PageSettingsDialog: public wxDialog
@@ -21,28 +21,28 @@ class PageSettingsDialog: public wxDialog
 		virtual ~PageSettingsDialog();
 
 		//(*Declarations(PageSettingsDialog)
-		wxStaticText* StaticTextLabel1;
-		wxTextCtrl* TextCtrlFastext2;
-		wxCheckBox* CheckBoxC5Newsflash;
-		wxTextCtrl* TextCtrlFastext3;
-		wxTextCtrl* TextCtrlFastextIndex;
-		wxRadioBox* RadioBoxCycleMode;
-		wxStaticText* StaticText2;
-		wxCheckBox* CheckBoxC7SuppressHeader;
-		wxButton* ButtonOK;
-		wxTextCtrl* TextCtrlFastext1;
-		wxStaticText* StaticText1;
-		wxStaticText* StaticText3;
-		wxTextCtrl* TextCtrlDescription;
 		wxButton* ButtonCancel;
-		wxTextCtrl* TextCtrlPageNumber;
-		wxCheckBox* CheckBoxC8Update;
+		wxButton* ButtonOK;
 		wxCheckBox* CheckBoxC4ErasePage;
+		wxCheckBox* CheckBoxC5Newsflash;
 		wxCheckBox* CheckBoxC6Subtitle;
-		wxStaticText* StaticText4;
-		wxTextCtrl* TextCtrlFastext4;
+		wxCheckBox* CheckBoxC7SuppressHeader;
+		wxCheckBox* CheckBoxC8Update;
 		wxCheckBox* CheckBoxTransmitPage;
+		wxRadioBox* RadioBoxCycleMode;
+		wxStaticText* StaticText1;
+		wxStaticText* StaticText2;
+		wxStaticText* StaticText3;
+		wxStaticText* StaticText4;
+		wxStaticText* StaticTextLabel1;
 		wxTextCtrl* TextCtrlCycleTime;
+		wxTextCtrl* TextCtrlDescription;
+		wxTextCtrl* TextCtrlFastext1;
+		wxTextCtrl* TextCtrlFastext2;
+		wxTextCtrl* TextCtrlFastext3;
+		wxTextCtrl* TextCtrlFastext4;
+		wxTextCtrl* TextCtrlFastextIndex;
+		wxTextCtrl* TextCtrlPageNumber;
 		//*)
 
 	protected:

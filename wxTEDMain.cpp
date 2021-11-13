@@ -31,7 +31,7 @@
 #include <wx/msgdlg.h>
 #include "wx/wx.h"
 
-#if defined(__WXMSW__)
+#if defined(__WXMSW_DISABLED__)
 #include <winver.h>
 #endif
 
@@ -80,7 +80,7 @@ const long wxTEDFrame::idNewPage = wxNewId();
 const long wxTEDFrame::idNewFromTemplate = wxNewId();
 const long wxTEDFrame::idOpenPage = wxNewId();
 const long wxTEDFrame::idSavePage = wxNewId();
-const long wxTEDFrame::idSavePageAs = wxNewId();
+const long wxTEDFrame::isSavePageAs = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idExportTTX40 = wxNewId();
@@ -1258,7 +1258,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxSize(1,1), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     Panel1->SetMinSize(wxSize(-1,-1));
     Panel1->SetFocus();
-    Panel1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
+    Panel1->Hide();
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
@@ -1270,7 +1270,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemSave = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSave);
     MenuItemSave->Enable(false);
-    MenuItemSaveAs = new wxMenuItem(Menu1, idSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
+    MenuItemSaveAs = new wxMenuItem(Menu1, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSaveAs);
     Menu1->AppendSeparator();
     MenuItemPublish = new wxMenuItem(Menu1, idPublish, _("Publish"), _("Publish the page to an inserter"), wxITEM_NORMAL);
@@ -1370,11 +1370,11 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     StatusBar1->SetFieldsCount(1,__wxStatusBarWidths_1);
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
-    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTP files (*.vtp)|*.vtp|VTX files (*.vtx)|*.vtx|T42 files (*.t42)|*.t42|All files|*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTP files (*.vtp)|*.vtp|VTX files (*.vtx)|*.vtx|All files|*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
-    //SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
+    SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
 
     Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
     Panel1->Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp,0,this);
@@ -1389,8 +1389,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
     Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuOpenPage);
-    Connect(idSavePage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnSave);
-    Connect(idSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
+    Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
@@ -1636,7 +1635,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
 {
-#ifdef __WXMSW__
+#ifdef __WXMSW_DISABLED__
     // If the page has no filename, we can not save it. Do Save As or load another page.
     // We probably alao want to prevent Publishing a page with unsaved work in it. TODO.
     wxString sp=m_rootPage->GetSourcePage();
@@ -1957,7 +1956,7 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
 }
 
 // FTP publish is only implemented in Windows
-#ifdef __WXMSW__
+#ifdef __WXMSW_DISABLED__
 int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nameonftp)
 {
 
@@ -1997,7 +1996,7 @@ int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nam
 
 void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 {
-    #ifdef __WXMSW__
+    #ifdef __WXMSW_DISABLED__
     // Create the dialog object
     PublishSetupDialog dlg(this,1001);
     // Load the dialog fields
@@ -2619,7 +2618,7 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
     std::cout << "[wxTEDFrame::OnRightDown] char clicked on = " << wxc << std::endl;
 
 // For some reason, I can't use the symbol picker under Ubuntu
-#ifdef __WXMSW__
+#ifdef __WXMSW_DISABLED__
     wxString InitialChar = "\xc8"; // The AE ligature
     SymbolPickerDialog1->SetSymbol(InitialChar); // Ligature AE is at the start of the interesting characters
     SymbolPickerDialog1->SetFromUnicode(true); // Definitely want unicode

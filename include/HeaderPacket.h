@@ -23,9 +23,9 @@ class HeaderPacket : public T42
     private:
         uint8_t mag{1};
         uint16_t flags{0};
-        char heading[25] = {"WXTED WXTED WXTED WXTED "};
+        char heading[25];
         uint8_t page_number{0};
-        char time[9] = {"00:00/00"};
+        char time[9]; // = {"00:00/00"};
 };
 
 #endif // HEADERPACKET_H

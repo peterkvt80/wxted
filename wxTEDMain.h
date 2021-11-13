@@ -3,7 +3,7 @@
  * Purpose:   Defines Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
- * Copyright: Peter Kwan (c) 2014-2020
+ * Copyright: Peter Kwan (c) 2014-2021
  * License:
  *
  * Permission to use, copy, modify, and distribute this software
@@ -54,7 +54,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.47")
+#define VERSION_STRING   wxT("1.48")
 
 // ftp
 #if defined(__WXMSW__)
@@ -220,7 +220,7 @@ class wxTEDFrame: public wxFrame
         static const long idNewFromTemplate;
         static const long idOpenPage;
         static const long idSavePage;
-        static const long idSavePageAs;
+        static const long isSavePageAs;
         static const long idPublish;
         static const long idPublishSettings;
         static const long idExportTTX40;

@@ -32,7 +32,7 @@
 		<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
 			<size>1,1</size>
 			<focused>1</focused>
-			<bg>wxSYS_COLOUR_HIGHLIGHT</bg>
+			<hidden>1</hidden>
 			<minsize>-1,-1</minsize>
 			<handler function="OnKeyDown" entry="EVT_KEY_DOWN" />
 			<handler function="OnKeyUp" entry="EVT_KEY_UP" />

@@ -3,15 +3,16 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="wxTED" />
-		<Option platforms="Unix;" />
+		<Option platforms="Windows;Unix;" />
 		<Option pch_mode="2" />
-		<Option compiler="gcc" />
+		<Option compiler="original_gnu_gcc_compiler" />
 		<Build>
 			<Target title="Debug">
+				<Option platforms="Windows;" />
 				<Option output="bin/Debug/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="gcc" />
+				<Option compiler="original_gnu_gcc_compiler" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wshadow" />
@@ -24,29 +25,49 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
+				<Option platforms="Windows;" />
 				<Option output="bin/Release/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
-				<Option compiler="gcc" />
+				<Option compiler="original_gnu_gcc_compiler" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wall" />
+					<Add option="-std=gnu++11" />
+					<Add option="-std=c++11" />
+					<Add option="-m64" />
+					<Add option="-D__WXMSW__" />
 					<Add directory="include" />
+					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
+					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include" />
 				</Compiler>
+				<ResourceCompiler>
+					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
+					<Add directory="E:/dev/wxTED-GitHub/wxted/" />
+				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-m64" />
+					<Add library="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/libwxmsw30u.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-m64" />
 			<Add option="-pipe" />
 			<Add option="`wx-config --cflags`" />
 			<Add option="-DwxUSE_UNICODE" />
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/mswu" />
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include/" />
 		</Compiler>
+		<ResourceCompiler>
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include" />
+		</ResourceCompiler>
 		<Linker>
+			<Add option="-m64" />
 			<Add option="`wx-config --libs`" />
 		</Linker>
 		<Unit filename="HelpFrame.cpp" />
@@ -62,12 +83,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="hamm.h" />
+		<Unit filename="include/HeaderPacket.h" />
 		<Unit filename="include/T42.h" />
 		<Unit filename="mapchar.cpp" />
 		<Unit filename="mapchar.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/HeaderPacket.cpp" />
 		<Unit filename="src/T42.cpp" />
 		<Unit filename="teddybear.ico" />
 		<Unit filename="tedevent.cpp" />
