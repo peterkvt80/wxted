@@ -2620,7 +2620,7 @@
 1412631243 e:\dev\downloads\wxwidgets302\include\wx\univ\theme.h
 	"wx/string.h"
 
-1636801601 e:\dev\wxted-github\wxted\wxtedmain.h
+1636894628 e:\dev\wxted-github\wxted\wxtedmain.h
 	<wx/filedlg.h>
 	<wx/frame.h>
 	<wx/menu.h>
@@ -3066,7 +3066,7 @@
 	"wx/dynarray.h"
 	"wx/vidmode.h"
 
-1636796012 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
+1636893566 source:e:\dev\wxted-github\wxted\wxtedmain.cpp
 	"wxTEDMain.h"
 	<wx/msgdlg.h>
 	"wx/wx.h"

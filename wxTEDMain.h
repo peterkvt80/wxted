@@ -54,7 +54,6 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING   wxT("1.48")
 
 // ftp
 #if defined(__WXMSW__)
@@ -220,11 +219,11 @@ class wxTEDFrame: public wxFrame
         static const long idNewFromTemplate;
         static const long idOpenPage;
         static const long idSavePage;
-        static const long isSavePageAs;
+        static const long idSavePageAs;
         static const long idPublish;
         static const long idPublishSettings;
         static const long idExportTTX40;
-        static const long isExportZxnet;
+        static const long idExportZxnet;
         static const long idMenuQuit;
         static const long idNewWindow;
         static const long idUndo;
@@ -232,8 +231,8 @@ class wxTEDFrame: public wxFrame
         static const long idCopy;
         static const long idPaste;
         static const long idSelectAll;
-        static const long isInsertLine;
-        static const long isDeleteLine;
+        static const long idInsertLine;
+        static const long idDeleteLine;
         static const long idInsertPage;
         static const long idDeleteSubPage;
         static const long idLanguageEnglish;
@@ -268,7 +267,7 @@ class wxTEDFrame: public wxFrame
         static const long idMenuClose;
 
         //(*Declarations(wxTEDFrame)
-        wxFileDialog* FileDialogSaveAs;
+        wxFileDialog* FileDialogSaveAs{ nullptr };
         wxFileDialog* LoadPageFileDialog;
         wxMenu* Menu3;
         wxMenu* MenuItem2;

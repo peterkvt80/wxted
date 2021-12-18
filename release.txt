@@ -12,7 +12,7 @@ Build->Select Target
 
 5) Commit the changes to Github Master and then Push origin.
 
-6) Run Inno Script Studio using the configuration that is in the Release folder and load winpackage.iss.
+6) Run Inno Setup Compiler using the configuration that is in the Release folder and load winpackage.iss.
    Set the myAppVersion and VersionInfoVersion to the new version number.
    Select Build->Compile.
    This creates a setup.exe in the same folder.
@@ -20,7 +20,7 @@ Build->Select Target
   
   
 7) Open the Github repo online https://github.com/peterkvt80/wxted 
-   Click Releases. Press the "Draft a mew release" button. Fill in the next tag number.
+   Click Releases. Press the "Draft a new release" button. Fill in the next tag number.
    Write a release description.
    Zip the setup_a_bc.exe.
    Drop the zip onto the release.

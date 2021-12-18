@@ -80,11 +80,11 @@ const long wxTEDFrame::idNewPage = wxNewId();
 const long wxTEDFrame::idNewFromTemplate = wxNewId();
 const long wxTEDFrame::idOpenPage = wxNewId();
 const long wxTEDFrame::idSavePage = wxNewId();
-const long wxTEDFrame::isSavePageAs = wxNewId();
+const long wxTEDFrame::idSavePageAs = wxNewId();
 const long wxTEDFrame::idPublish = wxNewId();
 const long wxTEDFrame::idPublishSettings = wxNewId();
 const long wxTEDFrame::idExportTTX40 = wxNewId();
-const long wxTEDFrame::isExportZxnet = wxNewId();
+const long wxTEDFrame::idExportZxnet = wxNewId();
 const long wxTEDFrame::idMenuQuit = wxNewId();
 const long wxTEDFrame::idNewWindow = wxNewId();
 const long wxTEDFrame::idUndo = wxNewId();
@@ -92,8 +92,8 @@ const long wxTEDFrame::idCut = wxNewId();
 const long wxTEDFrame::idCopy = wxNewId();
 const long wxTEDFrame::idPaste = wxNewId();
 const long wxTEDFrame::idSelectAll = wxNewId();
-const long wxTEDFrame::isInsertLine = wxNewId();
-const long wxTEDFrame::isDeleteLine = wxNewId();
+const long wxTEDFrame::idInsertLine = wxNewId();
+const long wxTEDFrame::idDeleteLine = wxNewId();
 const long wxTEDFrame::idInsertPage = wxNewId();
 const long wxTEDFrame::idDeleteSubPage = wxNewId();
 const long wxTEDFrame::idLanguageEnglish = wxNewId();
@@ -121,7 +121,7 @@ const long wxTEDFrame::idSpecialKeys = wxNewId();
 const long wxTEDFrame::idMenuAbout = wxNewId();
 const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
 const long wxTEDFrame::ID_TIMER1 = wxNewId();
-const long wxTEDFrame::ID_SYMBOLPICKERDIALOG1 = wxNewId();
+//const long wxTEDFrame::ID_SYMBOLPICKERDIALOG1 = wxNewId();
 //*)
 
 
@@ -1270,7 +1270,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemSave = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSave);
     MenuItemSave->Enable(false);
-    MenuItemSaveAs = new wxMenuItem(Menu1, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
+    MenuItemSaveAs = new wxMenuItem(Menu1, idSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSaveAs);
     Menu1->AppendSeparator();
     MenuItemPublish = new wxMenuItem(Menu1, idPublish, _("Publish"), _("Publish the page to an inserter"), wxITEM_NORMAL);
@@ -1279,7 +1279,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu1->Append(MenuItemPublishSettings);
     MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export edit.tf"), _("Open page on edit.tf website"), wxITEM_NORMAL);
     Menu1->Append(MenuItemExportTTX40);
-    MenuExportZxnet = new wxMenuItem(Menu1, isExportZxnet, _("Export ZxNet"), _("Edit page in ZxNet"), wxITEM_NORMAL);
+    MenuExportZxnet = new wxMenuItem(Menu1, idExportZxnet, _("Export ZxNet"), _("Edit page in ZxNet"), wxITEM_NORMAL);
     Menu1->Append(MenuExportZxnet);
     MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
     Menu1->Append(MenuItemQuit);
@@ -1301,9 +1301,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemSelectAll = new wxMenuItem(Menu3, idSelectAll, _("Select All\tCTRL-A"), _("Select the entire page"), wxITEM_NORMAL);
     Menu3->Append(MenuItemSelectAll);
     Menu3->AppendSeparator();
-    MenuInsertLine = new wxMenuItem(Menu3, isInsertLine, _("Insert line"), _("Insert a line below"), wxITEM_NORMAL);
+    MenuInsertLine = new wxMenuItem(Menu3, idInsertLine, _("Insert line"), _("Insert a line below"), wxITEM_NORMAL);
     Menu3->Append(MenuInsertLine);
-    MenuDeleteLine = new wxMenuItem(Menu3, isDeleteLine, _("Delete line"), _("Delete the current line"), wxITEM_NORMAL);
+    MenuDeleteLine = new wxMenuItem(Menu3, idDeleteLine, _("Delete line"), _("Delete the current line"), wxITEM_NORMAL);
     Menu3->Append(MenuDeleteLine);
     Menu3->AppendSeparator();
     MenuItemInsertSubpage = new wxMenuItem(Menu3, idInsertPage, _("Insert subpage after this one"), _("Add a subpage after this page"), wxITEM_NORMAL);
@@ -1373,8 +1373,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     LoadPageFileDialog = new wxFileDialog(this, _("Select teletext file"), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix|EP1 files (*.ep1)|*.ep1|TTX files (*.ttx)|*.ttx|VTP files (*.vtp)|*.vtp|VTX files (*.vtx)|*.vtx|All files|*.*"), wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
     m_Timer1.SetOwner(this, ID_TIMER1);
     m_Timer1.Start(456, false);
-    FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
-    SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
+//    FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+    FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    //SymbolPickerDialog1 = new wxSymbolPickerDialog( wxEmptyString, wxEmptyString, wxEmptyString, this, ID_SYMBOLPICKERDIALOG1, _("Title"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxCLOSE_BOX);
 
     Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
     Panel1->Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp,0,this);
@@ -1389,11 +1390,11 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
     Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
     Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuOpenPage);
-    Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
+    Connect(idSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
     Connect(idPublish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublish);
     Connect(idPublishSettings,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPublishSettings);
     Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
-    Connect(isExportZxnet,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemZXNetSelected);
+    Connect(idExportZxnet,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemZXNetSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
     Connect(idNewWindow,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemNewWindow);
     Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
@@ -1401,8 +1402,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idCopy,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemCopySelected);
     Connect(idPaste,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPasteSelected);
     Connect(idSelectAll,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemSelectAllSelected);
-    Connect(isInsertLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuInsertLineSelected);
-    Connect(isDeleteLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuDeleteLineSelected);
+    Connect(idInsertLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuInsertLineSelected);
+    Connect(idDeleteLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuDeleteLineSelected);
     Connect(idInsertPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemInsertSubpage);
     Connect(idDeleteSubPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemDeletePage);
     Connect(idLanguageEnglish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
@@ -1581,9 +1582,20 @@ void wxTEDFrame::OnSave(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 {
-    if (FileDialogSaveAs->ShowModal() == wxID_CANCEL)
+    std::clog << "[OnMenuSaveAs] enters" << std::endl;
+    wxFileDialog
+      saveFileDialog(this,
+                      _("Save file as..."),
+                      wxEmptyString, wxEmptyString,
+                       _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+
+    auto dialog_result = saveFileDialog.ShowModal();
+
+    if (dialog_result == wxID_CANCEL)
+    {
         return;     // the user bottled out
-    std::string str=FileDialogSaveAs->GetPath().ToStdString();
+    }
+    std::string str=saveFileDialog.GetPath().ToStdString();
     // std::cout << "Saving page to " << str << std::endl;
     bool result=m_rootPage->SavePage(str);
     if (!result)
@@ -1593,7 +1605,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
     }
     else // Set the filename
     {
-        wxString filename=FileDialogSaveAs->GetFilename();
+        wxString filename=saveFileDialog.GetFilename();
         m_rootPage->SetSourcePage(str);
         m_rootPage->SetShortFilename(filename.ToStdString());
         SetTitle(str);
@@ -1625,12 +1637,14 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
     // @todo - If the page has changed and not been saved, trap that here
     delete m_rootPage;
     m_rootPage=new TTXPage();
-    SetTitle("");
+    SetTitle(_("wxTED ")+VERSION_STRING);
+    m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
     m_setLanguage();
     SetRegionMenu(0);
     iPageCount=1;
     iPage=0;
     m_currentPage=m_rootPage;
+
 }
 
 void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)

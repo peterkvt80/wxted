@@ -35,13 +35,10 @@
 					<Add option="-O2" />
 					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wall" />
-					<Add option="-std=gnu++11" />
-					<Add option="-std=c++11" />
 					<Add option="-m64" />
 					<Add option="-D__WXMSW__" />
 					<Add directory="include" />
 					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
-					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
@@ -60,8 +57,10 @@
 			<Add option="-pipe" />
 			<Add option="`wx-config --cflags`" />
 			<Add option="-DwxUSE_UNICODE" />
+			<Add option="-D__WXMSW__" />
 			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/mswu" />
 			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include/" />
+			<Add directory="include" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include" />
@@ -69,6 +68,7 @@
 		<Linker>
 			<Add option="-m64" />
 			<Add option="`wx-config --libs`" />
+			<Add library="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/libwxmsw30u.a" />
 		</Linker>
 		<Unit filename="HelpFrame.cpp" />
 		<Unit filename="HelpFrame.h" />
