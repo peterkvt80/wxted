@@ -89,7 +89,7 @@ bool TTXPage::m_LoadT42(std::string filename)
   T42* t42;
   char buf[500];
   TTXPage* p=this;
-  bool ok = false;
+  bool ok{false};
   std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
 
   // todo Decode the packet to see what we do
@@ -115,6 +115,7 @@ bool TTXPage::m_LoadT42(std::string filename)
           if (mag == 0xff || row == 0xff || filein.eof())
           {
               page_done = true;
+              ok = false;
           }
           else
           {
