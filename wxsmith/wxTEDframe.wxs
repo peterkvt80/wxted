@@ -77,16 +77,6 @@
 					<handler function="OnMenuSaveAs" entry="EVT_MENU" />
 				</object>
 				<object class="separator" />
-				<object class="wxMenuItem" name="idPublish" variable="MenuItemPublish" member="yes">
-					<label>Publish</label>
-					<help>Publish the page to an inserter</help>
-					<handler function="OnMenuItemPublish" entry="EVT_MENU" />
-				</object>
-				<object class="wxMenuItem" name="idPublishSettings" variable="MenuItemPublishSettings" member="yes">
-					<label>Publish settings...</label>
-					<help>Choose publish method</help>
-					<handler function="OnMenuItemPublishSettings" entry="EVT_MENU" />
-				</object>
 				<object class="wxMenuItem" name="idExportTTX40" variable="MenuItemExportTTX40" member="yes">
 					<label>Export edit.tf</label>
 					<help>Open page on edit.tf website</help>
