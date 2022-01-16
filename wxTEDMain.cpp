@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan
  * License:
   *
- * Copyright (C) 2014-2021, Peter Kwan
+ * Copyright (C) 2014-2022, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -115,6 +115,15 @@ const long wxTEDFrame::ID_REGION = wxNewId();
 const long wxTEDFrame::idPageNumber = wxNewId();
 const long wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
 const long wxTEDFrame::ID_HIDECONCEAL = wxNewId();
+const long wxTEDFrame::idRun = wxNewId();
+const long wxTEDFrame::idRadioMode = wxNewId();
+const long wxTEDFrame::idRadioBounce = wxNewId();
+const long wxTEDFrame::idRadioMode0 = wxNewId();
+const long wxTEDFrame::idRadioMode1 = wxNewId();
+const long wxTEDFrame::idRadioMode2 = wxNewId();
+const long wxTEDFrame::idRadioMode3 = wxNewId();
+const long wxTEDFrame::idRadioMode4 = wxNewId();
+const long wxTEDFrame::idRadioMode5 = wxNewId();
 const long wxTEDFrame::idSpecialKeys = wxNewId();
 const long wxTEDFrame::idMenuAbout = wxNewId();
 const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
@@ -153,7 +162,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 {
   int code=event.GetKeyCode();
   int modifiers=event.GetModifiers();
-  std::cout << "[OnChar]Key event..." << code << std::endl;
+  // std::cout << "[OnChar]Key event..." << code << std::endl;
   // We look at a few codes which apply to a page set rather than just a single page
   // If none of these codes apply, we send the character to the page
   TEDEvent* tev;
@@ -166,6 +175,48 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       code=WXK_ESCAPE;
     }
   }
+  // hack for preview mode
+  if (m_previewMode)
+  {
+      if (code>0) // Cancel preview mode
+      {
+          m_previewMode = false;
+          m_Timer1.Start(456);
+      }
+      else
+      {
+          if (PreviewNormal->IsChecked())
+          {
+              // The timing comes from the file.
+              int seconds = m_currentPage->GetCycleTime();
+              m_Timer1.Start(seconds * 1000);
+          }
+          if (m_previewForwards)
+          {
+              if (iPage>=m_iPageCount-1) // forwards loop preview wrap
+              {
+                  if (m_bounceMode)
+                  {
+                    m_previewForwards = false; // reverse direction
+                  }
+                  else
+                  {
+                    iPage = -1;                // loop to beginning
+                  }
+              }
+              code = WXK_PAGEUP;
+          }
+          else
+          {
+              if (iPage<=0) // backwards loop preview
+              {
+                  iPage = 0;
+                  m_previewForwards = true;
+              }
+              code = WXK_PAGEDOWN;
+          }
+      }
+  }
   switch (code)
   {
   case WXK_ESCAPE:
@@ -177,9 +228,9 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     {
       m_cursorPoint.y=1;
     }
-    iPageCount=m_rootPage->GetPageCount();
+    m_iPageCount=m_rootPage->GetPageCount();
     iPage++;
-    if (iPage>=iPageCount) iPage=iPageCount-1; // Check we don't go past the last page
+    if (iPage>=m_iPageCount) iPage=m_iPageCount-1; // Check we don't go past the last page
     m_currentPage=m_rootPage->GetPage(iPage);
 
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
@@ -195,7 +246,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_PAGEDOWN:
     // std::cout << "Page down will get previous page of a multiple page carousel" << std::endl;
-    iPageCount=m_rootPage->GetPageCount();
+    m_iPageCount=m_rootPage->GetPageCount();
     iPage--;
     if (iPage<0) iPage=0;
     m_currentPage=m_rootPage->GetPage(iPage);
@@ -289,16 +340,26 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 void wxTEDFrame::OnTimer(wxTimerEvent& event)
 {
     // Only blink while focused otherwise stay on.
+    // Don't show the cursor in preview mode.
     // std::cout << "blink=" << m_blinkToggle << " m_focused=" << m_focused << std::endl;
-    if (m_blinkToggle && m_focused)
+
+    if ((m_blinkToggle && m_focused) || m_previewMode)
         m_blinkToggle=false;
     else
         m_blinkToggle=true;
 
+    if (m_previewMode)
+    {
+        wxKeyEvent pageup(wxEVT_CHAR);
+        //auto pageup = wxKeyEvent(WXK_PAGEUP);
+        OnChar(pageup);
+    }
+
     wxString s=GetTitle();
     if (m_currentPage)
-    // Paint it
-    Refresh();
+    {
+        Refresh(); // Paint it
+    }
 }
 
 bool wxTEDFrame::isMosaic(char ch)
@@ -1150,7 +1211,7 @@ void wxTEDFrame::m_SetStatus()
     TTXLine* line=m_currentPage->GetRow(c.y);
     if (m_rootPage->GetPageChanged())
       str << "* ";
-    str << "P" << iPage+1 << "/" << iPageCount << ", ";
+    str << "P" << iPage+1 << "/" << m_iPageCount << ", ";
     if (line!=NULL)
     {
         ch=line->GetLine()[c.x] & 0x7f;
@@ -1220,7 +1281,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     , m_MarqueeStart(wxPoint(0,0))
     , m_currentPage(NULL)
 
-    , iPageCount(1)
+    , m_iPageCount(1)
     , iPage(0)
     , m_offset(wxPoint(0,0))
     , m_slideOrigin(wxPoint(0,0))
@@ -1236,7 +1297,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_reveal=true; // As this is an editor, reveal the text by default.
 
     //(*Initialize(wxTEDFrame)
-    wxMenu* Menu1;
+    wxMenu* MenuFile;
     wxMenu* MenuHelp;
     wxMenuBar* MenuBar1;
     wxMenuItem* MenuItemAbout;
@@ -1256,53 +1317,53 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Panel1->SetMinSize(wxSize(-1,-1));
     Panel1->SetFocus();
     MenuBar1 = new wxMenuBar();
-    Menu1 = new wxMenu();
-    MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
-    Menu1->Append(MenuItem1);
-    MenuItemTemplate = new wxMenuItem(Menu1, idNewFromTemplate, _("New from template"), _("New page set up for graphics"), wxITEM_NORMAL);
-    Menu1->Append(MenuItemTemplate);
-    MenuItem3 = new wxMenuItem(Menu1, idOpenPage, _("Open\tCTRL-O"), _("Open a teletext page"), wxITEM_NORMAL);
-    Menu1->Append(MenuItem3);
-    MenuItemSave = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
-    Menu1->Append(MenuItemSave);
+    MenuFile = new wxMenu();
+    MenuItem1 = new wxMenuItem(MenuFile, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
+    MenuFile->Append(MenuItem1);
+    MenuItemTemplate = new wxMenuItem(MenuFile, idNewFromTemplate, _("New from template"), _("New page set up for graphics"), wxITEM_NORMAL);
+    MenuFile->Append(MenuItemTemplate);
+    MenuItem3 = new wxMenuItem(MenuFile, idOpenPage, _("Open\tCTRL-O"), _("Open a teletext page"), wxITEM_NORMAL);
+    MenuFile->Append(MenuItem3);
+    MenuItemSave = new wxMenuItem(MenuFile, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
+    MenuFile->Append(MenuItemSave);
     MenuItemSave->Enable(false);
-    MenuItemSaveAs = new wxMenuItem(Menu1, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
-    Menu1->Append(MenuItemSaveAs);
-    Menu1->AppendSeparator();
-    MenuItemExportTTX40 = new wxMenuItem(Menu1, idExportTTX40, _("Export edit.tf"), _("Open page on edit.tf website"), wxITEM_NORMAL);
-    Menu1->Append(MenuItemExportTTX40);
-    MenuExportZxnet = new wxMenuItem(Menu1, isExportZxnet, _("Export ZxNet"), _("Edit page in ZxNet"), wxITEM_NORMAL);
-    Menu1->Append(MenuExportZxnet);
-    MenuItemQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
-    Menu1->Append(MenuItemQuit);
-    Menu1->AppendSeparator();
-    MenuItem4 = new wxMenuItem(Menu1, idNewWindow, _("New Window"), wxEmptyString, wxITEM_NORMAL);
-    Menu1->Append(MenuItem4);
-    MenuBar1->Append(Menu1, _("&File"));
-    Menu3 = new wxMenu();
-    MenuItemUndo = new wxMenuItem(Menu3, idUndo, _("Undo\tCTRL-Z"), _("Undo the last edit"), wxITEM_NORMAL);
-    Menu3->Append(MenuItemUndo);
-    Menu3->AppendSeparator();
-    MenuItem11 = new wxMenuItem(Menu3, idCut, _("Cut"), _("Cut the selected area"), wxITEM_NORMAL);
-    Menu3->Append(MenuItem11);
+    MenuItemSaveAs = new wxMenuItem(MenuFile, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
+    MenuFile->Append(MenuItemSaveAs);
+    MenuFile->AppendSeparator();
+    MenuItemExportTTX40 = new wxMenuItem(MenuFile, idExportTTX40, _("Export edit.tf"), _("Open page on edit.tf website"), wxITEM_NORMAL);
+    MenuFile->Append(MenuItemExportTTX40);
+    MenuExportZxnet = new wxMenuItem(MenuFile, isExportZxnet, _("Export ZxNet"), _("Edit page in ZxNet"), wxITEM_NORMAL);
+    MenuFile->Append(MenuExportZxnet);
+    MenuItemQuit = new wxMenuItem(MenuFile, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
+    MenuFile->Append(MenuItemQuit);
+    MenuFile->AppendSeparator();
+    MenuItem4 = new wxMenuItem(MenuFile, idNewWindow, _("New Window"), wxEmptyString, wxITEM_NORMAL);
+    MenuFile->Append(MenuItem4);
+    MenuBar1->Append(MenuFile, _("&File"));
+    MenuEdit = new wxMenu();
+    MenuItemUndo = new wxMenuItem(MenuEdit, idUndo, _("Undo\tCTRL-Z"), _("Undo the last edit"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuItemUndo);
+    MenuEdit->AppendSeparator();
+    MenuItem11 = new wxMenuItem(MenuEdit, idCut, _("Cut"), _("Cut the selected area"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuItem11);
     MenuItem11->Enable(false);
-    MenuItemCopy = new wxMenuItem(Menu3, idCopy, _("Copy\tCTRL-C"), _("Copy the selected area"), wxITEM_NORMAL);
-    Menu3->Append(MenuItemCopy);
-    MenuItemPaste = new wxMenuItem(Menu3, idPaste, _("Paste\tCTRL-V"), _("Paste text from the clipboard"), wxITEM_NORMAL);
-    Menu3->Append(MenuItemPaste);
-    MenuItemSelectAll = new wxMenuItem(Menu3, idSelectAll, _("Select All\tCTRL-A"), _("Select the entire page"), wxITEM_NORMAL);
-    Menu3->Append(MenuItemSelectAll);
-    Menu3->AppendSeparator();
-    MenuInsertLine = new wxMenuItem(Menu3, isInsertLine, _("Insert line"), _("Insert a line below"), wxITEM_NORMAL);
-    Menu3->Append(MenuInsertLine);
-    MenuDeleteLine = new wxMenuItem(Menu3, isDeleteLine, _("Delete line"), _("Delete the current line"), wxITEM_NORMAL);
-    Menu3->Append(MenuDeleteLine);
-    Menu3->AppendSeparator();
-    MenuItemInsertSubpage = new wxMenuItem(Menu3, idInsertPage, _("Insert subpage after this one"), _("Add a subpage after this page"), wxITEM_NORMAL);
-    Menu3->Append(MenuItemInsertSubpage);
-    MenuItemDeletePage = new wxMenuItem(Menu3, idDeleteSubPage, _("Delete this subpage"), _("Delete subpage from this carousel"), wxITEM_NORMAL);
-    Menu3->Append(MenuItemDeletePage);
-    MenuBar1->Append(Menu3, _("Edit"));
+    MenuItemCopy = new wxMenuItem(MenuEdit, idCopy, _("Copy\tCTRL-C"), _("Copy the selected area"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuItemCopy);
+    MenuItemPaste = new wxMenuItem(MenuEdit, idPaste, _("Paste\tCTRL-V"), _("Paste text from the clipboard"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuItemPaste);
+    MenuItemSelectAll = new wxMenuItem(MenuEdit, idSelectAll, _("Select All\tCTRL-A"), _("Select the entire page"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuItemSelectAll);
+    MenuEdit->AppendSeparator();
+    MenuInsertLine = new wxMenuItem(MenuEdit, isInsertLine, _("Insert line"), _("Insert a line below"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuInsertLine);
+    MenuDeleteLine = new wxMenuItem(MenuEdit, isDeleteLine, _("Delete line"), _("Delete the current line"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuDeleteLine);
+    MenuEdit->AppendSeparator();
+    MenuItemInsertSubpage = new wxMenuItem(MenuEdit, idInsertPage, _("Insert subpage after this one"), _("Add a subpage after this page"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuItemInsertSubpage);
+    MenuItemDeletePage = new wxMenuItem(MenuEdit, idDeleteSubPage, _("Delete this subpage"), _("Delete subpage from this carousel"), wxITEM_NORMAL);
+    MenuEdit->Append(MenuItemDeletePage);
+    MenuBar1->Append(MenuEdit, _("Edit"));
     MenuPresentation = new wxMenu();
     MenuItemLanguage = new wxMenu();
     MenuItemEnglish = new wxMenuItem(MenuItemLanguage, idLanguageEnglish, _("English"), wxEmptyString, wxITEM_RADIO);
@@ -1349,6 +1410,28 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), _("Conceal/show hidden text"), wxITEM_NORMAL);
     MenuPresentation->Append(MenuItemConcealToggle);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
+    MenuPreview = new wxMenu();
+    PreviewRun = new wxMenuItem(MenuPreview, idRun, _("Run"), wxEmptyString, wxITEM_NORMAL);
+    MenuPreview->Append(PreviewRun);
+    MenuPreview->AppendSeparator();
+    ModeLoop = new wxMenuItem(MenuPreview, idRadioMode, _("Loop"), wxEmptyString, wxITEM_RADIO);
+    MenuPreview->Append(ModeLoop);
+    ModeBounce = new wxMenuItem(MenuPreview, idRadioBounce, _("Bounce"), _("Bounce animation"), wxITEM_RADIO);
+    MenuPreview->Append(ModeBounce);
+    MenuPreview->AppendSeparator();
+    PreviewNormal = new wxMenuItem(MenuPreview, idRadioMode0, _("Normal"), _("Normal carousel timing"), wxITEM_RADIO);
+    MenuPreview->Append(PreviewNormal);
+    Preview30fps = new wxMenuItem(MenuPreview, idRadioMode1, _("30 fps"), _("Frame rate"), wxITEM_RADIO);
+    MenuPreview->Append(Preview30fps);
+    Preview25fps = new wxMenuItem(MenuPreview, idRadioMode2, _("25 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuPreview->Append(Preview25fps);
+    Preview12fps = new wxMenuItem(MenuPreview, idRadioMode3, _("12 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuPreview->Append(Preview12fps);
+    Preview6fps = new wxMenuItem(MenuPreview, idRadioMode4, _("6 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuPreview->Append(Preview6fps);
+    Preview2fps = new wxMenuItem(MenuPreview, idRadioMode5, _("2 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuPreview->Append(Preview2fps);
+    MenuBar1->Append(MenuPreview, _("Preview"));
     MenuHelp = new wxMenu();
     MenuItemSpecialKeys = new wxMenuItem(MenuHelp, idSpecialKeys, _("Special keys"), _("Show the special function key table"), wxITEM_NORMAL);
     MenuHelp->Append(MenuItemSpecialKeys);
@@ -1412,6 +1495,15 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(ID_REGION10,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(idPageNumber,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
     Connect(ID_HIDECONCEAL,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
+    Connect(idRun,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewRunSelected);
+    Connect(idRadioMode,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioBounce,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode0,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewNormalSelected);
+    Connect(idRadioMode1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode4,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode5,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
     Connect(idSpecialKeys,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSpecialKeys);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnAbout);
     Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&wxTEDFrame::OnClose);
@@ -1448,7 +1540,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_currentPage=m_rootPage = new TTXPage(initialPage.ToStdString(),"");
     m_setLanguage();
 
-    iPageCount=m_rootPage->GetPageCount();
+    m_iPageCount=m_rootPage->GetPageCount();
     iPage=0;
 
     std::cerr  << "[wxTEDFrame::wxTEDFrame]initialPage=" << initialPage << std::endl;
@@ -1538,7 +1630,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
 
     MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
 
-    iPageCount=m_rootPage->GetPageCount();
+    m_iPageCount=m_rootPage->GetPageCount();
 
     // wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
@@ -1617,7 +1709,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
     SetTitle("");
     m_setLanguage();
     SetRegionMenu(0);
-    iPageCount=1;
+    m_iPageCount=1;
     iPage=0;
     m_currentPage=m_rootPage;
 }
@@ -1696,16 +1788,22 @@ void wxTEDFrame::OnMenuOpen(wxMenuEvent& event)
 
 void wxTEDFrame::OnMenuClose(wxMenuEvent& event)
 {
-  std::cout << "Menu close" << std::endl;
-  // Don't enable status again until all menus are closed.
-  m_menuCount--;
-  if (!m_menuCount)
-  {
+    std::cout << "Menu close" << std::endl;
+    // Don't enable status again until all menus are closed.
+    m_menuCount--;
+    if (!m_menuCount)
+    {
     m_inhibitStatus=false;
-  }
+    }
+    // If we are in preview mode, we just changed a setting, so run the handler to update everything
+    if (m_previewMode)
+    {
+        std::cout << "Refresh preview settings" << std::endl;
+        UpdatePreview();
+    }
 }
 
-        void OnMenuOpen(wxPaintEvent& event); // On opening the menu
+void OnMenuOpen(wxPaintEvent& event); // On opening the menu
 
 void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 {
@@ -1727,15 +1825,14 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     m_currentPage->Setm_SubPage(childPage);
 
     // Recalculate the subcode sequence.
-    iPageCount=m_rootPage->GetPageCount();
-    //std::cout << "Suspect that we are in trouble AFTER this" << std::endl;
+    m_iPageCount=m_rootPage->GetPageCount();
 
     // Put up a welcome message
     std::ostringstream str;
-    str << "New subpage inserted " << iPage+1 << "/" << iPageCount;
+    str << "New subpage inserted " << iPage+1 << "/" << m_iPageCount;
     m_currentPage->SetRow(1,str.str());
     // m_rootPage->pageChanged=true;
-    m_rootPage->SetPageChanged(true);
+    ShowPreviewMenu();
 }
 
 void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
@@ -1784,7 +1881,8 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
         if (iPage>0) iPage--;
     }
     // Recalculate the subcode sequence.
-    iPageCount=m_rootPage->GetPageCount();
+    m_iPageCount=m_rootPage->GetPageCount();
+    ShowPreviewMenu();
 }
 
 void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
@@ -2044,11 +2142,11 @@ void wxTEDFrame::OnMouseWheel(wxMouseEvent& event)
    //int delta=event.GetWheelDelta();
    int rotate=event.GetWheelRotation();
    //std::cout << "Wheel Delta is " << delta << " Distance=" << rotate << std::endl;
-   iPageCount=m_rootPage->GetPageCount();
+   m_iPageCount=m_rootPage->GetPageCount();
    if (rotate>=0)
    {
         iPage++;
-        if (iPage>=iPageCount) iPage=iPageCount-1;
+        if (iPage>=m_iPageCount) iPage=m_iPageCount-1;
    }
    if (rotate<0)
    {
@@ -2074,7 +2172,7 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
   auto xloc=event.GetPosition().x;
   // std::cout << std::dec <<"Mouse move, yay!" << xloc <<  std::endl;
   auto leftX=m_offset.x;
-  int rightX=leftX+m_ttxW*41*iPageCount;
+  int rightX=leftX+m_ttxW*41*m_iPageCount;
   if (xloc<leftX || xloc>rightX)
   {
     wxSetCursor (wxCursor (wxCURSOR_NO_ENTRY));
@@ -2127,7 +2225,7 @@ void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 {
   // Must be over an actual page or we ignore the click
   int x=event.GetPosition().x;
-  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *iPageCount)
+  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *m_iPageCount)
   {
     m_dragging=true;
 
@@ -2584,11 +2682,11 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
   // find the actual character row/column
   // Must be over an actual page or we ignore the click
   int x=event.GetPosition().x;
-  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *iPageCount)
+  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *m_iPageCount)
   {
 
     std::cout << "Right button pressed..." << std::endl;
-    wxPoint save=m_cursorPoint;
+//    wxPoint save=m_cursorPoint;
     m_cursorPoint=event.GetPosition();
     // Adjust to slide offset
     m_cursorPoint.x-=m_offset.x;
@@ -2660,7 +2758,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 
     MenuItemSave->Enable(false); // Protect the template, do not enable save
 
-    iPageCount=m_rootPage->GetPageCount();
+    m_iPageCount=m_rootPage->GetPageCount();
 
     // wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
@@ -2676,6 +2774,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     // Force an update now
     Refresh();
     Update();
+    ShowPreviewMenu();
   }
 
 }
@@ -2740,7 +2839,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
 
     MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
 
-    iPageCount=m_rootPage->GetPageCount();
+    m_iPageCount=m_rootPage->GetPageCount();
 
     // wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
@@ -2757,4 +2856,49 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     // Force an update now
     Refresh();
     Update();
+    ShowPreviewMenu();
+}
+
+/// Preview a carousel.
+void wxTEDFrame::OnPreviewRunSelected(wxCommandEvent& event)
+{
+    // Enter Preview mode.
+    // Cancelled by any key
+    m_previewMode = true;
+    UpdatePreview();
+}
+
+void wxTEDFrame::UpdatePreview()
+{
+    int timer_period{456};
+    if (PreviewNormal->IsChecked()) timer_period = 456; // Normal (Time of the blink)
+    if (Preview30fps->IsChecked()) timer_period = (1000/30); // 30 fps
+    if (Preview25fps->IsChecked()) timer_period = (1000/25); // 25 fps
+    if (Preview12fps->IsChecked()) timer_period = (1000/12); // 12 fps
+    if (Preview6fps->IsChecked()) timer_period = (1000/6); // 6 fps
+    if (Preview2fps->IsChecked()) timer_period = (1000/2); // 2 fps
+    m_Timer1.Start(timer_period);
+    m_normalMode = PreviewNormal->IsChecked();
+    m_bounceMode = ModeBounce->IsChecked();
+}
+
+void wxTEDFrame::ShowPreviewMenu()
+{
+    const bool show{ m_iPageCount>1 };
+    std::clog << "[ShowPreviewMenu] show = " << (show?"SHOW":"HIDE") << std::endl;
+    MenuPreview->Enable(idRadioMode1, show);
+    MenuPreview->Enable(idRadioMode2, show);
+    MenuPreview->Enable(idRadioMode3, show);
+    MenuPreview->Enable(idRadioMode4, show);
+    MenuPreview->Enable(idRadioMode5, show);
+}
+
+void wxTEDFrame::OnPreviewSpeed(wxCommandEvent& event)
+{
+    UpdatePreview();
+}
+
+void wxTEDFrame::OnPreviewNormalSelected(wxCommandEvent& event)
+{
+    UpdatePreview();
 }
