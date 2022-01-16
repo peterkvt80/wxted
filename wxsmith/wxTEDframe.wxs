@@ -32,7 +32,6 @@
 		<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
 			<size>1,1</size>
 			<focused>1</focused>
-			<hidden>1</hidden>
 			<minsize>-1,-1</minsize>
 			<handler function="OnKeyDown" entry="EVT_KEY_DOWN" />
 			<handler function="OnKeyUp" entry="EVT_KEY_UP" />
@@ -77,16 +76,6 @@
 					<handler function="OnMenuSaveAs" entry="EVT_MENU" />
 				</object>
 				<object class="separator" />
-				<object class="wxMenuItem" name="idPublish" variable="MenuItemPublish" member="yes">
-					<label>Publish</label>
-					<help>Publish the page to an inserter</help>
-					<handler function="OnMenuItemPublish" entry="EVT_MENU" />
-				</object>
-				<object class="wxMenuItem" name="idPublishSettings" variable="MenuItemPublishSettings" member="yes">
-					<label>Publish settings...</label>
-					<help>Choose publish method</help>
-					<handler function="OnMenuItemPublishSettings" entry="EVT_MENU" />
-				</object>
 				<object class="wxMenuItem" name="idExportTTX40" variable="MenuItemExportTTX40" member="yes">
 					<label>Export edit.tf</label>
 					<help>Open page on edit.tf website</help>
@@ -279,6 +268,58 @@
 					<handler function="OnMenuItemConcealToggle" entry="EVT_MENU" />
 				</object>
 			</object>
+			<object class="wxMenu" variable="Menu2" member="yes">
+				<label>Preview</label>
+				<object class="wxMenuItem" name="idRun" variable="PreviewRun" member="yes">
+					<label>Run</label>
+					<handler function="OnPreviewRunSelected" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idRadioMode" variable="ModeLoop" member="yes">
+					<label>Loop</label>
+					<handler function="OnPreviewSpeed" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+				<object class="wxMenuItem" name="idRadioBounce" variable="ModeBounce" member="yes">
+					<label>Bounce</label>
+					<help>Bounce animation</help>
+					<handler function="OnPreviewSpeed" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idRadioMode0" variable="PreviewNormal" member="yes">
+					<label>Normal</label>
+					<help>Normal carousel timing</help>
+					<handler function="OnPreviewNormalSelected" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+				<object class="wxMenuItem" name="idRadioMode1" variable="Preview30fps" member="yes">
+					<label>30 fps</label>
+					<help>Frame rate</help>
+					<handler function="OnPreviewSpeed" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+				<object class="wxMenuItem" name="idRadioMode2" variable="Preview25fps" member="yes">
+					<label>25 fps</label>
+					<handler function="OnPreviewSpeed" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+				<object class="wxMenuItem" name="idRadioMode3" variable="Preview12fps" member="yes">
+					<label>12 fps</label>
+					<handler function="OnPreviewSpeed" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+				<object class="wxMenuItem" name="idRadioMode4" variable="Preview6fps" member="yes">
+					<label>6 fps</label>
+					<handler function="OnPreviewSpeed" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+				<object class="wxMenuItem" name="idRadioMode5" variable="Preview2fps" member="yes">
+					<label>2 fps</label>
+					<handler function="OnPreviewSpeed" entry="EVT_MENU" />
+					<radio>1</radio>
+				</object>
+			</object>
 			<object class="wxMenu" variable="MenuHelp" member="no">
 				<label>Help</label>
 				<object class="wxMenuItem" name="idSpecialKeys" variable="MenuItemSpecialKeys" member="yes">
@@ -312,6 +353,5 @@
 			<wildcard>TTI files (*.tti, *.ttix)|*.tti;*.ttix</wildcard>
 			<style>wxFD_SAVE|wxFD_OVERWRITE_PROMPT</style>
 		</object>
-		<object class="wxSymbolPickerDialog" name="ID_SYMBOLPICKERDIALOG1" variable="SymbolPickerDialog1" member="yes" />
 	</object>
 </wxsmith>

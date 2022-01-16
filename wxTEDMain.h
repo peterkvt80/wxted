@@ -3,7 +3,7 @@
  * Purpose:   Defines Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
- * Copyright: Peter Kwan (c) 2014-2021
+ * Copyright: Peter Kwan (c) 2014-2022
  * License:
  *
  * Permission to use, copy, modify, and distribute this software
@@ -33,7 +33,6 @@
 #include <wx/frame.h>
 #include <wx/menu.h>
 #include <wx/panel.h>
-#include <wx/richtext/richtextsymboldlg.h>
 #include <wx/statusbr.h>
 #include <wx/timer.h>
 //*)
@@ -111,15 +110,22 @@ class wxTEDFrame: public wxFrame
         void m_resize(wxSize event);
         wchar_t mapTextChar(wchar_t ch);  /// Maps a teletext character to a teletext2 font if they aren't the same
 
-        int iPageCount;     // How many pages in this set?
-        int iPage;          // Which page are we looking at?
-        wxPoint m_offset;   // The offset of the current page
+        int m_iPageCount;   /// How many pages in this set?
+        int iPage;          /// Which page are we looking at?
+        wxPoint m_offset;   /// The offset of the current page
 
-        wxPoint m_slideOrigin;  // Origin of a slide
-        bool m_slidePages;      // True if we are sliding the page with the right mouse key
+        wxPoint m_slideOrigin;  /// X,Y Origin of a slide
+        bool m_slidePages;      /// True if we are sliding the page with the right mouse key
 
-        // Frame
-        bool m_focused;
+        bool m_focused; /// Frame
+
+        bool m_previewMode{false};    /// Preview carousel mode. @todo Hide the menu option for a single frame page
+        bool m_normalMode{true};      /// Normal mode means using the page's animation timings
+        bool m_bounceMode{false};     /// Does the animation direction bounce?
+        bool m_previewForwards{true}; /// true = forwards, false = backwards
+
+        void ShowPreviewMenu(); /// Show the preview menu if appropriate
+
 
         // Properties Dialog
         PageSettingsDialog* m_propertiesDlg;
@@ -198,6 +204,10 @@ class wxTEDFrame: public wxFrame
         void OnPanelTEMPORARYPaint(wxPaintEvent& event);
         void OnPanel1LeftDClick(wxMouseEvent& event);
         void OnMenuOpenPage(wxCommandEvent& event);
+        void OnMenuPreviewModeSelected(wxCommandEvent& event);
+        void OnPreviewRunSelected(wxCommandEvent& event);
+        void OnPreviewSpeed(wxCommandEvent& event);
+        void OnPreviewNormalSelected(wxCommandEvent& event);
         //*)
 
         /* Set the language menu radio option */
@@ -207,6 +217,9 @@ class wxTEDFrame: public wxFrame
          * \return true if the character is in the range of mosaics, not including A-Z.
          */
         bool isMosaic(char ch);
+
+        /// Update the preview settings (speed and mode)
+        void UpdatePreview();
 
 
         wxSize m_fontSize[100];
@@ -219,9 +232,7 @@ class wxTEDFrame: public wxFrame
         static const long idNewFromTemplate;
         static const long idOpenPage;
         static const long idSavePage;
-        static const long idSavePageAs;
-        static const long idPublish;
-        static const long idPublishSettings;
+        static const long isSavePageAs;
         static const long idExportTTX40;
         static const long idExportZxnet;
         static const long idMenuQuit;
@@ -256,11 +267,19 @@ class wxTEDFrame: public wxFrame
         static const long idPageNumber;
         static const long ID_MENUITEMSHOWHEADER;
         static const long ID_HIDECONCEAL;
+        static const long idRun;
+        static const long idRadioMode;
+        static const long idRadioBounce;
+        static const long idRadioMode0;
+        static const long idRadioMode1;
+        static const long idRadioMode2;
+        static const long idRadioMode3;
+        static const long idRadioMode4;
+        static const long idRadioMode5;
         static const long idSpecialKeys;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_TIMER1;
-        static const long ID_SYMBOLPICKERDIALOG1;
         //*)
 
         static const long idMenuOpen;
@@ -269,10 +288,11 @@ class wxTEDFrame: public wxFrame
         //(*Declarations(wxTEDFrame)
         wxFileDialog* FileDialogSaveAs{ nullptr };
         wxFileDialog* LoadPageFileDialog;
-        wxMenu* Menu3;
+        wxMenu* MenuEdit;
         wxMenu* MenuItem2;
         wxMenu* MenuItemLanguage;
         wxMenu* MenuPresentation;
+        wxMenu* MenuPreview;
         wxMenuItem* MenuDeleteLine;
         wxMenuItem* MenuExportZxnet;
         wxMenuItem* MenuInsertLine;
@@ -292,8 +312,6 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemItalian;
         wxMenuItem* MenuItemPageNumber;
         wxMenuItem* MenuItemPaste;
-        wxMenuItem* MenuItemPublish;
-        wxMenuItem* MenuItemPublishSettings;
         wxMenuItem* MenuItemRegion0;
         wxMenuItem* MenuItemRegion10;
         wxMenuItem* MenuItemRegion1;
@@ -312,9 +330,17 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemTemplate;
         wxMenuItem* MenuItemUndo;
         wxMenuItem* MenuItemUnused;
+        wxMenuItem* ModeBounce;
+        wxMenuItem* ModeLoop;
+        wxMenuItem* Preview12fps;
+        wxMenuItem* Preview25fps;
+        wxMenuItem* Preview2fps;
+        wxMenuItem* Preview30fps;
+        wxMenuItem* Preview6fps;
+        wxMenuItem* PreviewNormal;
+        wxMenuItem* PreviewRun;
         wxPanel* Panel1;
         wxStatusBar* StatusBar1;
-        wxSymbolPickerDialog* SymbolPickerDialog1;
         wxTimer m_Timer1;
         //*)
 
