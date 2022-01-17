@@ -53,12 +53,7 @@
 #include "mapchar.h"
 
 // Version number
-
-// ftp
-#if defined(__WXMSW__)
-#include <wininet.h>
-#pragma comment(lib, "wininet")
-#endif // __WXMSW__
+#define VERSION_STRING wxT("1.51")
 
 // Publish setup
 #include "PublishSetupDialog.h"
@@ -234,7 +229,7 @@ class wxTEDFrame: public wxFrame
         static const long idSavePage;
         static const long isSavePageAs;
         static const long idExportTTX40;
-        static const long idExportZxnet;
+        static const long isExportZxnet;
         static const long idMenuQuit;
         static const long idNewWindow;
         static const long idUndo;
@@ -242,8 +237,8 @@ class wxTEDFrame: public wxFrame
         static const long idCopy;
         static const long idPaste;
         static const long idSelectAll;
-        static const long idInsertLine;
-        static const long idDeleteLine;
+        static const long isInsertLine;
+        static const long isDeleteLine;
         static const long idInsertPage;
         static const long idDeleteSubPage;
         static const long idLanguageEnglish;
@@ -286,13 +281,13 @@ class wxTEDFrame: public wxFrame
         static const long idMenuClose;
 
         //(*Declarations(wxTEDFrame)
-        wxFileDialog* FileDialogSaveAs{ nullptr };
+        wxFileDialog* FileDialogSaveAs;
         wxFileDialog* LoadPageFileDialog;
-        wxMenu* MenuEdit;
+        wxMenu* Menu2;
+        wxMenu* Menu3;
         wxMenu* MenuItem2;
         wxMenu* MenuItemLanguage;
         wxMenu* MenuPresentation;
-        wxMenu* MenuPreview;
         wxMenuItem* MenuDeleteLine;
         wxMenuItem* MenuExportZxnet;
         wxMenuItem* MenuInsertLine;
