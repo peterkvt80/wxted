@@ -1316,7 +1316,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxSize(1,1), wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     Panel1->SetMinSize(wxSize(-1,-1));
     Panel1->SetFocus();
-    Panel1->Hide();
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem1 = new wxMenuItem(Menu1, idNewPage, _("New\tCTRL-N"), _("Create a new page"), wxITEM_NORMAL);
@@ -1591,7 +1590,12 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 
     m_rootPage->SetPageChanged(false);
 
-
+    // Compatibility.
+    // Windows: Panel1 must be hidden or it makes an ugly rectangle on the screen
+    // Linux: Panel1 must not be hidden as keyboard events will not be captured
+#ifdef _WXMSW_
+    Panel1->Hide();
+#endif
     // std::cout << "Finished starting frame" << std::endl;
 }
 
@@ -1652,7 +1656,7 @@ void wxTEDFrame::OnOpen(wxCommandEvent& event)
 
 void wxTEDFrame::OnSave(wxCommandEvent& event)
 {
-    std::cout << "[OnSave] called" << std::endl;
+    // std::cout << "[OnSave] called" << std::endl;
     bool result=m_rootPage->SavePageDefault(); // Write the file back where it came from
     if (!result)
     {

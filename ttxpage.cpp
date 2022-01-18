@@ -40,6 +40,7 @@ void TTXPage::m_Init()
   Setm_SubPage(nullptr); // Pointer to the next sub page
   for (int i=0;i<=MAXROW;i++)
   {
+    // m_pLine[i]=new TTXLine("                                        ");
     m_pLine[i]=nullptr;
   }
   for (int i=0;i<6;i++)
@@ -798,6 +799,7 @@ void TTXPage::Undo(wxPoint& cursorloc)
   wxPoint loc=tev->GetCharList()->GetLoc();    // and where are we putting it?
   // Write to the edit window
   TTXLine* line=m_pLine[loc.y];
+  if (line==nullptr) return;
   line->SetCharAt(loc.x,oldChar);
   // Dump the Undo (or do we?) No, just move the m_current pointer. Keep it in case we want to do a Redo
   // Step back to the previous event
@@ -824,13 +826,16 @@ TTXLine* TTXPage::GetRow(unsigned int row)
   }
   TTXLine* line=m_pLine[row];
   // Don't create row 0, as that is special.
-  if (line==nullptr && row>0)
+  if (line==nullptr)
   {
-    line=m_pLine[row]=new TTXLine("                                        ");
-  }
-  if (!line)
-  {
-    std::cout << "[TTXPage::GetRow] returning NULL " << std::endl;
+    if (row>0)
+    {
+        line=m_pLine[row]=new TTXLine("                                        ");
+    }
+    else
+    {
+      line=m_pLine[row]=new TTXLine("        wxTED New page          %H:%M.%S");
+    }
   }
   return line;
 }
@@ -838,7 +843,7 @@ TTXLine* TTXPage::GetRow(unsigned int row)
 void TTXPage::SetRow(unsigned int rownumber, std::string line)
 {
   if (rownumber>MAXROW || rownumber<0) return;
-  if (!m_pLine[rownumber])
+  if (m_pLine[rownumber]==nullptr)
   {
     m_pLine[rownumber]=new TTXLine(line); // Didn't exist before
   }
@@ -913,7 +918,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     TTXLine* line=m_pLine[cursorLoc.y];
 
     // Is the line NULL? If so we had better make the line!
-    if (!line)
+    if (line==nullptr)
     {
         // Create a line if it is null
         line=m_pLine[cursorLoc.y]=new TTXLine("                                        ");
@@ -1392,7 +1397,7 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
         // This one for Droidfax compatibility
       s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
       ttxfile << "OL," << std::dec << i << "," << s << "\n";
-  }
+    }
   }
   std::cout << "sent a subpage" << "\n";
 }
@@ -1498,6 +1503,7 @@ bool TTXPage::IsAlphaMode(wxPoint loc)
   // Check that the parameter is valid
   if (loc.x<0 || loc.x>39 || loc.y<1 || loc.y>24) return result;
   // Get pointer to the relevant line
+  if (m_pLine==nullptr) return result;
   TTXLine* line=m_pLine[loc.y];
   if (line)
   {

@@ -53,7 +53,7 @@
 #include "mapchar.h"
 
 // Version number
-#define VERSION_STRING wxT("1.51")
+#define VERSION_STRING wxT("1.52")
 
 // Publish setup
 #include "PublishSetupDialog.h"

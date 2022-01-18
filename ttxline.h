@@ -47,7 +47,7 @@ class TTXLine
 
         /**
          * @brief Check if the line is blank so that we don't bother to write it to the file.
-         * @return true is the line is blank
+         * @return true if the line is blank
          */
         bool IsBlank();
 
