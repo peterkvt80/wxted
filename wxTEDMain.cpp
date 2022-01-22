@@ -1593,7 +1593,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     // Compatibility.
     // Windows: Panel1 must be hidden or it makes an ugly rectangle on the screen
     // Linux: Panel1 must not be hidden as keyboard events will not be captured
-#ifdef _WXMSW_
+#ifdef __WXMSW__
     Panel1->Hide();
 #endif
     // std::cout << "Finished starting frame" << std::endl;

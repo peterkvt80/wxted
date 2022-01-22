@@ -36,4 +36,7 @@ Attention
 =========
 Each year update the copyright year in wxTEDMain.cpp.
 
+Other hints
+===========
+On Windows, select the GNU GCC Compiler(x86)
 
