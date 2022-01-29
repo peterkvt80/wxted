@@ -219,3 +219,4 @@ pip-log.txt
 moviecam.tti
 manual-127.odt
 wxTED.depend
+*.depend
