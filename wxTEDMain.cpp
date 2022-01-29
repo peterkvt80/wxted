@@ -1668,7 +1668,7 @@ void wxTEDFrame::OnSave(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 {
-    std::clog << "[OnMenuSaveAs] enters" << std::endl;
+    // std::clog << "[OnMenuSaveAs] enters" << std::endl;
     wxFileDialog
       saveFileDialog(this,
                       _("Save file as..."),
