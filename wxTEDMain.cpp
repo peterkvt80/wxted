@@ -1618,43 +1618,6 @@ void wxTEDFrame::OnQuit(wxCommandEvent& event)
     Close();
 }
 
-void wxTEDFrame::OnOpen(wxCommandEvent& event)
-{
-    std::string str;
-    LoadPageFileDialog->SetMessage("Open teletext page");
-    if (LoadPageFileDialog->ShowModal() == wxID_CANCEL)
-    {
-      return;     // the user bottled out
-    }
-    if (m_rootPage!=NULL) delete m_rootPage; // Delete the root page. All subpages will go too.
-    str=LoadPageFileDialog->GetPath().ToStdString();
-
-    wxString filename=LoadPageFileDialog->GetFilename();
-    // std::cout << "the filename was " << filename << std::endl;
-    // std::cout << "Loading a teletext page " << str << std::endl;
-    m_rootPage = new TTXPage(str,filename.ToStdString());
-
-    MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
-
-    m_iPageCount=m_rootPage->GetPageCount();
-
-    // wxPaintEvent Pevent(0); // Make a dummy event
-    m_setLanguage();
-    iPage=0;
-    m_offset.x=0;
-    m_currentPage=m_rootPage;
-
-    SetRegionMenu(m_currentPage->GetRegion()); // Region language
-
-    SetTitle(m_rootPage->GetSourcePage());
-    //OnPaint(event);    // Refresh with the new page
-
-    // m_parentWindow->Refresh();
-    // Force an update now
-    Refresh();
-    Update();
-}
-
 void wxTEDFrame::OnSave(wxCommandEvent& event)
 {
     // std::cout << "[OnSave] called" << std::endl;
@@ -1672,7 +1635,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
     wxFileDialog
       saveFileDialog(this,
                       _("Save file as..."),
-                      wxEmptyString, wxEmptyString,
+                        m_path, wxEmptyString,
                        _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
 
     auto dialog_result = saveFileDialog.ShowModal();
@@ -2844,6 +2807,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
 {
     std::string str;
     LoadPageFileDialog->SetMessage("Open teletext page");
+    LoadPageFileDialog->SetDirectory(m_path);
     if (LoadPageFileDialog->ShowModal() == wxID_CANCEL)
     {
       return;     // the user bottled out
@@ -2851,9 +2815,11 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     if (m_rootPage!=NULL) delete m_rootPage; // Delete the root page. All subpages will go too.
     str=LoadPageFileDialog->GetPath().ToStdString();
 
+    m_path = LoadPageFileDialog->GetDirectory().ToStdString(); // Save the path
+
     wxString filename=LoadPageFileDialog->GetFilename();
-    // std::cout << "the filename was " << filename << std::endl;
-    // std::cout << "Loading a teletext page " << str << std::endl;
+    std::cout << "the filename was " << filename << std::endl;
+    std::cout << "Loading a teletext page " << str << " path " << m_path << std::endl;
     m_rootPage = new TTXPage(str,filename.ToStdString());
 
     MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load

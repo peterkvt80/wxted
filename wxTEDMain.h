@@ -121,6 +121,8 @@ class wxTEDFrame: public wxFrame
 
         void ShowPreviewMenu(); /// Show the preview menu if appropriate
 
+        std::string m_path{""}; /// Path of the last file that was loaded (Do we need to set this to dot? What about Windows?)
+
 
         // Properties Dialog
         PageSettingsDialog* m_propertiesDlg;
@@ -191,7 +193,6 @@ class wxTEDFrame: public wxFrame
         void OnChar(wxKeyEvent& event);
         void OnTimer(wxTimerEvent& event);
         void OnEraseBackground(wxEraseEvent& event);
-        void OnOpen(wxCommandEvent& event);
         void OnSave(wxCommandEvent& event);
         void OnMenuOpen(wxMenuEvent& event); // On opening the menu
         void OnMenuClose(wxMenuEvent& event); // On closing the menu
