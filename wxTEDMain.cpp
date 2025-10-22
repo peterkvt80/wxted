@@ -1665,7 +1665,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg="Teletext editor\n(c) 2014-2021, Peter Kwan.\nwxTED";
+    wxString msg="Teletext editor\n(c) 2014-2025, Peter Kwan.\nwxTED";
     wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 

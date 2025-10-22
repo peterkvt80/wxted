@@ -290,7 +290,7 @@ class TTXPage
         // Private objects
         TTXPage* m_SubPage; //!< Member variable "m_SubPage"
         TTXLine* m_pLine[MAXROW+1];   // OL. 26,27,28,29 might be set by other apps. Keep whatever people put in there
-        TTXRow28* m_row28;
+        TTXRow28* m_row28;          // OL,28 Packet X28 only
         int m_fastextlinks[6];      // FL
 
         std::string m_destination;  // DS
