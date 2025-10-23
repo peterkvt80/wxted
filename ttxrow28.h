@@ -14,6 +14,15 @@ class TTXRow28 : public TTXLine
     /** Default destructor */
     virtual ~TTXRow28();
 
+    /**
+     * @brief remap - Convert a colour 0..7 to a 12 bit RGB value
+     * Uses the current CLUT remapping to select the color
+     * @param colour - Value from 0 to 7
+     * @param useForeground - If true, use the colour from the foreground CLUT
+     * @return 12 bit RGB value
+     */
+    unsigned int Remap(unsigned int colour, bool useForeground);
+
   protected:
 
   private:
@@ -32,10 +41,10 @@ class TTXRow28 : public TTXLine
     bool enableLeftPanel = false; /// Show the left hand panel. false = do not show left panel
     bool enableRightPanel = false; /// Show the right panel. false = do not show right panel
     bool sidePanelStatusFlag = false; /// false = side panels only required at level 3.5.
-    bool leftColumns = -1; /// 0..15
+    unsigned int leftColumns = -1; /// 0..15
 
-    // Implied field
-    bool rightColumns = 0; /// implied. 16 - leftColumns. [!] @todo Turn this into a function
+    /// Number of columns in right panel
+    unsigned int rightColumns();
 
     // Functions
 

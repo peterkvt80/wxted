@@ -55,6 +55,9 @@
 // Version number
 #define VERSION_STRING wxT("1.54")
 
+// Hacky stand in for Magenta
+#define wxMAGENTA wxLIGHT_GREY
+
 // Publish setup
 #include "PublishSetupDialog.h"
 
@@ -217,6 +220,7 @@ class wxTEDFrame: public wxFrame
         /// Update the preview settings (speed and mode)
         void UpdatePreview();
 
+        static const wxColour* ttxCode2wxColour(const unsigned int); // Given a ttxCode 0..7 return a wxColour
 
         wxSize m_fontSize[100];
 

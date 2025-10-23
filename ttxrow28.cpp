@@ -52,7 +52,7 @@ bool TTXRow28::decode(std::string line)
   }
   std::cout << std::endl;
 
-  // @todo DC
+  this->dc = line.c_str()[0] & 0x3f;
 
   // Extract all of the TTI X28 parameters
   this->pageFunction = triples[0] & 0x0f; // t1, 1..4
@@ -97,9 +97,28 @@ bool TTXRow28::decode(std::string line)
     }
   }
 
+  // Screen colour remapping
+  this->defaultScreenColour = (triples[12] >> 4) & 0x1f; // t13, 5..9
+  this->defaultRowColour = (triples[12] >> 9) & 0x1f; // t13, 10..14
+  this->blackBackgroundSub = (triples[12] >> 14) & 0x01; // t13, 15
+  this->remap = (triples[12] >> 15) & 0x07; // t13, 16..18
+
+  // left and right extension panels
+  this->enableLeftPanel = (triples[1] & 0x08) > 0; // t2, 4
+  this->enableRightPanel = (triples[1] & 0x10) > 0; // t2, 5
+  this->sidePanelStatusFlag = (triples[1] & 0x20) > 0; // t2, 6
+  this->leftColumns = (triples[1] >> 6) & 0x0f; // t2, 7..10
+  // result.rightColumns = (triples[12]) Implied. Always 16-leftColumns  [!] Make this a function
+
 
   return result;
 }
+
+unsigned int TTXRow28::rightColumns()
+{
+  return 16 - this->leftColumns;
+}
+
 
 void TTXRow28::defaultClut()
 {
@@ -142,6 +161,45 @@ void TTXRow28::defaultClut()
   this->clut[3][5] = 0xf7f; // pastel magenta
   this->clut[3][6] = 0x7ff; // pastel cyan
   this->clut[3][7] = 0xddd; // pastel white
-
 }
 
+unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
+{
+  unsigned int clutIndex = 0;
+  if (useForeground)
+  {
+    if (this->remap > 4)
+    {
+      clutIndex = 2;
+    }
+    else if (this->remap < 3)
+    {
+      clutIndex = 0;
+    }
+    else
+    {
+      clutIndex = 1;
+    }
+  }
+  else
+  {
+    if (this->remap < 3) // background
+    {
+      clutIndex = this->remap;
+    }
+    else if (this->remap == 3 || this->remap == 5)
+    {
+      clutIndex = 1;
+    }
+    else if (this->remap == 4 || this->remap == 6)
+    {
+      clutIndex = 2;
+    }
+    else
+    {
+      clutIndex = 3;
+    }
+  }
+  colour = colour & 0x07;
+  return clut[clutIndex][colour];
+}

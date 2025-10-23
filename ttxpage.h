@@ -282,6 +282,15 @@ class TTXPage
        */
       void DeleteLine(wxPoint& cursorLoc);
 
+      /**
+      * @brief remap - Convert a colour 0..7 to a 12 bit RGB value
+      * Uses the current CLUT remapping to select the color
+      * @param colour - Value from 0 to 7
+      * @param useForeground - If true, use the colour from the foreground CLUT
+      * @return 12 bit RGB value
+      */
+      unsigned int Remap(unsigned int colour, bool useForeground);
+
     protected:
     private:
         static bool pageChanged;         // / True if we have done some edits (on any subpage)

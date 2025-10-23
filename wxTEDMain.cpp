@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan
  * License:
   *
- * Copyright (C) 2014-2022, Peter Kwan
+ * Copyright (C) 2014-2025, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -548,8 +548,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     // redraw the whole teletext page
 
     /* colours */
-    const wxColour* fg=wxWHITE;
-    const wxColour* bg=wxBLACK;
+    unsigned int fg = ttxCodeAlphaWhite;
+    unsigned int bg = ttxCodeAlphaBlack;
 
     wxBitmap doubleHeightBitmap(m_ttxW*40,m_ttxH*2);    // The image buffer for double height. (Sized for a single height plus generous fudge factor)
 
@@ -568,6 +568,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         //doubleHeightDC.SetPen(*wxGREY_PEN);
         //paintDC.SetPen(*wxGREY_PEN);
     //}
+    // SetTTXBrushColour(*wxBLACK_BRUSH);
     paintDC.SetBrush(wxBrush(*wxBLACK_BRUSH));
     doubleHeightDC.SetBrush(wxBrush(*wxBLACK_BRUSH));
     int w,h;
@@ -580,6 +581,45 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     doubleHeightDC.SetBackgroundMode(wxSOLID); // Otherwise the background colour is transparent!
 
     wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
+
+    // Some lambdas because we want functions with access to the local environment
+    auto SetTTXForegroundColour = [&](const unsigned int colour)
+    {
+      // Find the teletext colour index
+      // Map it through the X28 clut
+      unsigned int clrRemap = m_currentPage->Remap(colour, true); // 12 bit value returned
+      // Split the colour back to RGB
+      unsigned char R = (clrRemap >> 8) & 0x0f;
+      unsigned char G = (clrRemap >> 4) & 0x0f;
+      unsigned char B = (clrRemap) & 0x0f;
+      const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+      doubleHeightDC.SetTextForeground(*wxc);
+      paintDC.SetTextForeground(*wxc);
+    };
+
+    auto SetTTXBackgroundColour = [&](const unsigned int colour)
+    // auto SetTTXBackgroundColour = [&](const wxColour& colour)
+    {
+      // const wxColour* wxc =  ttxCode2wxColour(colour);
+      unsigned int clrRemap = m_currentPage->Remap(colour, false); // 12 bit value returned
+      // Split the colour back to RGB
+      unsigned char R = (clrRemap >> 8) & 0x0f;
+      unsigned char G = (clrRemap >> 4) & 0x0f;
+      unsigned char B = (clrRemap) & 0x0f;
+      const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+      doubleHeightDC.SetTextBackground(*wxc);
+      paintDC.SetTextBackground(*wxc);
+    };
+
+//    auto SetTTXBrushColour = [&](const wxColour& colour)
+    auto SetTTXBrushColour = [&](const unsigned int colour)
+    {
+      const wxColour* wxc =  ttxCode2wxColour(colour);
+      paintDC.SetBrush(wxBrush(*wxc));
+      doubleHeightDC.SetBrush(wxBrush(*wxc));
+    };
+
+
     /* page */
 
     // Assume horizontal subpages for now
@@ -625,8 +665,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
           char holdChar=' ';
           bool concealed=false;
 
-          fg=wxWHITE;
-          bg=wxBLACK;
+          fg = ttxCodeAlphaWhite;
+          bg = ttxCodeAlphaBlack;
 
           doubleHeightDC.SetBackground(*wxBLACK_BRUSH); //  wxBLACK_BRUSH. Change this to GREY to track down bugs
           doubleHeightDC.Clear();
@@ -703,7 +743,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                       separated=true;
                       break;
                   case ttxCodeBlackBackground : // Background black
-                      bg=wxBLACK;
+                      bg = ttxCodeAlphaBlack;
                       break;
                   case ttxCodeNewBackground : // New background
                       bg=fg;
@@ -753,8 +793,8 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                           if (j==0x20) j<<=1; // Skip the alphabet exception
 
                           // Draw the full sized pixel in background colour
-                          paintDC.SetBrush(wxBrush(*bg));
-                          doubleHeightDC.SetBrush(wxBrush(*bg));
+                          paintDC.SetBrush(wxBrush(*ttxCode2wxColour(bg)));
+                          doubleHeightDC.SetBrush(wxBrush(*ttxCode2wxColour(bg)));
                           int k=1; // Full size pixel
                           if (doubleHeight)
                           {
@@ -771,11 +811,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                           // Now draw the actual pixel
                           if (pixelSet)
                           {
-                              paintDC.SetBrush(wxBrush(*fg));
+                              SetTTXBrushColour(fg);
+                              // paintDC.SetBrush(wxBrush(*fg));
                               if (separated) k=-2; // Thin border around the pixel
                               if (doubleHeight)
                               {
-                                  doubleHeightDC.SetBrush(wxBrush(*fg));
+                                  //doubleHeightDC.SetBrush(wxBrush(*fg));
                                   doubleHeightDC.DrawRectangle(wxPoint(col*m_ttxW + (i % 2)*m_ttxW/2,
                                                         (i/2)*m_ttxH/3)+offset,
                                                     wxSize(k+m_ttxW/2,k+m_ttxH/3));
@@ -795,17 +836,20 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                       // Foreground colour
                       if (m_blinkToggle || !flashing)
                       {
-                          paintDC.SetTextForeground(*fg); // Normal
-                          doubleHeightDC.SetTextForeground(*fg); // Normal
+                          // paintDC.SetTextForeground(*fg); // Normal
+                          SetTTXForegroundColour(fg); // Normal
+                          //doubleHeightDC.SetTextForeground(*fg); // Normal
                       }
                       else
                       {
-                          paintDC.SetTextForeground(*bg); // Blink off
-                          doubleHeightDC.SetTextForeground(*bg); // blink off
+                          //paintDC.SetTextForeground(*bg); // Blink off
+                          SetTTXForegroundColour(bg); // Blink off
+                          doubleHeightDC.SetTextForeground(bg); // blink off
                       }
                       // Background colour
-                      doubleHeightDC.SetTextBackground(*bg);
-                      paintDC.SetTextBackground(*bg);
+                      SetTTXBackgroundColour(bg);
+                      //doubleHeightDC.SetTextBackground(*bg);
+                      //paintDC.SetTextBackground(*bg);
 
                       if (doubleHeight)
                       {
@@ -824,86 +868,97 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                                       wxPoint(col*m_ttxW,0),wxSize(m_ttxW,m_ttxH)); //src
                   // Set-after codes implemented here, also the show markup
                   paintDC.SetTextForeground(*wxWHITE);
+
                   paintDC.SetTextBackground(*wxLIGHT_GREY);
                   switch (str[col])
                   {
                   case ttxCodeAlphaBlack :
-                      fg=wxBLACK;
+                      fg=ttxCodeAlphaBlack;
                       concealed=false;    // Side effect of colour. It cancels a conceal.
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
+
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
                   case ttxCodeAlphaRed :
-                      fg=wxRED;
+                      fg=ttxCodeAlphaRed;
                       concealed=false;
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
+
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
                   case ttxCodeAlphaGreen :
-                      fg=wxGREEN;
+                      fg=ttxCodeAlphaGreen;
                       concealed=false;
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
                   case ttxCodeAlphaYellow :
-                      fg=wxYELLOW;
+                      fg=ttxCodeAlphaYellow;
                       concealed=false;
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
                   case ttxCodeAlphaBlue :
-                      fg=wxBLUE;
+                      fg=ttxCodeAlphaBlue;
                       concealed=false;
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
                   case ttxCodeAlphaMagenta :
-                      fg=magenta;
+                      fg=ttxCodeAlphaMagenta;
                       concealed=false;
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
                   case ttxCodeAlphaCyan :
-                      fg=wxCYAN;
+                      fg=ttxCodeAlphaCyan;
                       concealed=false;
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
                   case ttxCodeAlphaWhite :
-                      fg=wxWHITE;
+                      fg=ttxCodeAlphaWhite;
                       concealed=false;
                       graphicsMode=false;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\x03B1'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // graphic sample
                       }
                       break;
@@ -957,80 +1012,88 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                   case ttxCodeGraphicsBlack : // Graphics black
                       concealed=false;
                       graphicsMode=true;
-                      fg=wxBLACK;
+                      fg=ttxCodeAlphaBlack;
                       if (addMarkup)
                       {
-                        paintDC.SetTextForeground(*fg);
+                        // paintDC.SetTextForeground(*fg);
+                        SetTTXForegroundColour(fg);
                         paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
                   case ttxCodeGraphicsRed : // Graphics red
                       concealed=false;
                       graphicsMode=true;
-                      fg=wxRED;
+                      fg=ttxCodeAlphaRed;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
                   case ttxCodeGraphicsGreen : // Graphics green
                       concealed=false;
                       graphicsMode=true;
-                      fg=wxGREEN;
+                      fg=ttxCodeAlphaGreen;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
                   case ttxCodeGraphicsYellow : // Graphics yellow
                       concealed=false;
                       graphicsMode=true;
-                      fg=wxYELLOW;
+                      fg=ttxCodeAlphaYellow;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
                   case ttxCodeGraphicsBlue : // Graphics blue
                       concealed=false;
                       graphicsMode=true;
-                      fg=wxBLUE;
+                      fg=ttxCodeAlphaBlue;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
                   case ttxCodeGraphicsMagenta : // Graphics magenta
                       concealed=false;
                       graphicsMode=true;
-                      fg=magenta;
+                      fg=ttxCodeAlphaMagenta;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
                   case ttxCodeGraphicsCyan : // Graphics cyan
                       concealed=false;
                       graphicsMode=true;
-                      fg=wxCYAN;
+                      fg=ttxCodeAlphaCyan;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
                   case ttxCodeGraphicsWhite : // Graphics white
                       concealed=false;
                       graphicsMode=true;
-                      fg=wxWHITE;
+                      fg=ttxCodeAlphaWhite;
                       if (addMarkup)
                       {
-                          paintDC.SetTextForeground(*fg);
+                          // paintDC.SetTextForeground(*fg);
+                          SetTTXForegroundColour(fg);
                           paintDC.DrawText(_((wxChar)L'\xE6F6'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // Show a blob where a control code is
                       }
                       break;
@@ -2886,4 +2949,22 @@ void wxTEDFrame::OnPreviewSpeed(wxCommandEvent& event)
 void wxTEDFrame::OnPreviewNormalSelected(wxCommandEvent& event)
 {
     UpdatePreview();
+}
+
+/// Maps the standard colours only. X28 mapping is more complex.
+const wxColour* wxTEDFrame::ttxCode2wxColour(const unsigned int colour) // Given a ttxCode 0..7 return a wxColour
+{
+  switch (colour)
+  {
+    case 0: return wxBLACK;
+    case 1: return wxRED;
+    case 2: return wxGREEN;
+    case 3: return wxYELLOW;
+    case 4: return wxBLUE;
+    case 5: return new wxColour(0xff, 0x00, 0xff);
+    case 6: return wxCYAN;
+    case 7: return wxWHITE;
+    default:
+      return(new wxColour(0xff, 0x88, 0x00));
+  }
 }

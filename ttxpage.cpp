@@ -43,6 +43,7 @@ void TTXPage::m_Init()
     // m_pLine[i]=new TTXLine("                                        ");
     m_pLine[i]=nullptr;
   }
+  m_row28 = new TTXRow28();
   for (int i=0;i<6;i++)
   {
     SetFastextLink(i,0x8ff);
@@ -1621,4 +1622,9 @@ void TTXPage::DeleteLine(wxPoint& cursorLoc)
     SetRow(i, line);
   }
   SetRow(23,"                                        ");
+}
+
+unsigned int TTXPage::Remap(unsigned int colour, bool useForeground)
+{
+  return m_row28->Remap(colour, useForeground);
 }
