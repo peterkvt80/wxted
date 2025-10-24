@@ -15,8 +15,8 @@
 				<Option compiler="original_gnu_gcc_compiler" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-Wall" />
 					<Add option="-m64" />
-					<Add option="-Og" />
 					<Add option="-g" />
 					<Add option="-D__WXMSW__" />
 					<Add directory="include" />

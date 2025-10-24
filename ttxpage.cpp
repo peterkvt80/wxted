@@ -1548,6 +1548,7 @@ void TTXPage::CopyMetaData(TTXPage* page)
   m_region=page->m_region;            // RE
 }
 
+// [!] @todo Update for X28
 void TTXPage::SetLanguage(int language)
 {
   language=language & 0x07;   // Limit language 0..7
@@ -1559,9 +1560,16 @@ void TTXPage::SetLanguage(int language)
 int TTXPage::GetLanguage()
 {
   int language;
-  language=(m_pagestatus >> 7) & 0x07;
+  // language=(m_pagestatus >> 7) & 0x07;
   // std::cout << "Get Language PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
+  language = m_row28->Language();
   return language;
+}
+
+int TTXPage::GetRegion()
+{
+  unsigned int region = m_row28->Region();
+  return region;
 }
 
 void TTXPage::SetPageNumber(int page)

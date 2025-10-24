@@ -15,20 +15,28 @@
 wchar_t MapChar(wchar_t ch, int language, int region);
 
 /**
- *
+ * mapEnglish - Translate from ASCII to corresponding teletext2 font character/
  * \param ch - Character to transform
- * \param language - Sub language 0..7 from bits C12 to C14 (reverse order!)
  * \return Transformed character ready to display
  */
-wchar_t mapRegion0(wchar_t ch, int language); // west europe
-wchar_t mapRegion1(wchar_t ch, int language); // west europe + polish
-wchar_t mapRegion2(wchar_t ch, int language); // west europe + turkish
-wchar_t mapRegion3(wchar_t ch, int language); // west europe + turkish
-wchar_t mapRegion4(wchar_t ch, int language); // 4: Ser/Cro/Ger/Est/Lit/Rus/Bul/Ukr/Cze/Slo
-wchar_t mapRegion6(wchar_t ch, int language);
-wchar_t mapRegion8(wchar_t ch, int language); // 8: English/French/Arabic
-wchar_t mapRegion10(wchar_t ch, int language); // 10: Hebrew/Arabic
 
-
+wchar_t mapEnglish(wchar_t ch);
+wchar_t mapFrench(wchar_t ch);
+wchar_t mapSwedish(wchar_t ch);
+wchar_t mapCzechSlovak(wchar_t ch);
+wchar_t mapGerman(wchar_t ch);
+wchar_t mapSpanishPortuguese(wchar_t ch);
+wchar_t mapItalian(wchar_t ch);
+wchar_t mapPolish(wchar_t ch);
+wchar_t mapTurkish(wchar_t ch);
+wchar_t mapSerbian(wchar_t ch);
+wchar_t mapRumanian(wchar_t ch);
+wchar_t mapRussianBulgarian(wchar_t ch);
+wchar_t mapEstonian(wchar_t ch);
+wchar_t mapUkranian(wchar_t ch);
+wchar_t mapLettishLithuanian(wchar_t ch);
+wchar_t mapGreek(wchar_t ch);
+wchar_t mapArabic(wchar_t ch);
+wchar_t mapHebrew(wchar_t ch);
 
 #endif // MAPCHAR_H_INCLUDED

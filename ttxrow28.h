@@ -23,6 +23,16 @@ class TTXRow28 : public TTXLine
      */
     unsigned int Remap(unsigned int colour, bool useForeground);
 
+    /** Language - Get the language number 0..7
+     *  @return Language code 0..7
+     */
+    unsigned int Language();
+
+    /** Region - Get the language number 0..7
+     *  @return Region code 0..10
+     */
+    unsigned int Region();
+
   protected:
 
   private:

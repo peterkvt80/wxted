@@ -244,7 +244,7 @@ class TTXPage
       /** Get the region.
        * \return region 0..f.
        */
-      int GetRegion(){return m_region;}
+      int GetRegion();
 
       /** Get a Fastext link
        * \param link 0..5 where 0..3 are the main links, 5 is index and 4, nobody knows why

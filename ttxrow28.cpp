@@ -213,3 +213,13 @@ unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
   colour = colour & 0x07;
   return clut[clutIndex][colour];
 }
+
+unsigned int TTXRow28::Region()
+{
+  return defaultG0G2CharacterSet >> 3;
+}
+
+unsigned int TTXRow28::Language()
+{
+  return defaultG0G2CharacterSet & 0x07;
+}

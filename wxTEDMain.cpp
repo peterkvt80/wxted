@@ -1253,7 +1253,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
 wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
 {
-    return MapChar(ch,m_currentPage->GetLanguage(),m_currentPage->GetRegion());
+  return MapChar(ch, m_currentPage->GetLanguage(), m_currentPage->GetRegion());
 }
 
 void wxTEDFrame::m_SetStatus()
