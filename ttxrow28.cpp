@@ -166,6 +166,16 @@ void TTXRow28::defaultClut()
 unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
 {
   unsigned int clutIndex = 0;
+
+  // Black Background Colour Substitution
+  // If this is set, then colour 0 in a row is replaced by the default row colour
+  if (blackBackgroundSub && !useForeground && colour == 0) {
+    const auto value = defaultRowColour;
+    clutIndex = (value >> 3) & 0x03;
+    const auto colourIndex = value & 0x07;
+    return clut[clutIndex][colourIndex];
+  }
+
   if (useForeground)
   {
     if (this->remap > 4)
