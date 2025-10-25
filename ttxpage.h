@@ -230,9 +230,10 @@ class TTXPage
       void SetLanguage(int language);
 
       /** Get the language.
+       * @param primary - If true returns the primary language
        * \return language 0..6.
        */
-      int GetLanguage();
+      int GetLanguage(bool primary);
 
       /** Set the region.
        * A region is just one of the 16 sets of character sets.
@@ -242,9 +243,10 @@ class TTXPage
       void SetRegion(int region){m_region=region;}
 
       /** Get the region.
+       *  @param primary - If true returns the primary region
        * \return region 0..f.
        */
-      int GetRegion();
+      int GetRegion(bool primary);
 
       /** Get a Fastext link
        * \param link 0..5 where 0..3 are the main links, 5 is index and 4, nobody knows why

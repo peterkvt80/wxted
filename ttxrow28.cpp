@@ -214,12 +214,26 @@ unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
   return clut[clutIndex][colour];
 }
 
-unsigned int TTXRow28::Region()
+unsigned int TTXRow28::Region(bool primary)
 {
-  return defaultG0G2CharacterSet >> 3;
+  if (primary)
+  {
+    return defaultG0G2CharacterSet >> 3;
+  }
+  else
+  {
+    return secondG0G2CharacterSet >> 3;
+  }
 }
 
-unsigned int TTXRow28::Language()
+unsigned int TTXRow28::Language(bool primary)
 {
-  return defaultG0G2CharacterSet & 0x07;
+  if (primary)
+  {
+    return defaultG0G2CharacterSet & 0x07;
+  }
+  else
+  {
+    return secondG0G2CharacterSet & 0x07;
+  }
 }

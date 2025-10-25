@@ -106,7 +106,7 @@ class wxTEDFrame: public wxFrame
         TTXPage* m_rootPage; /// This is the root page used for load/save
         TTXPage* m_currentPage; /// This may point to a sub-page and is the page currently viewed and edited
         void m_resize(wxSize event);
-        wchar_t mapTextChar(wchar_t ch);  /// Maps a teletext character to a teletext2 font if they aren't the same
+        wchar_t mapTextChar(wchar_t ch, bool primary);  /// Maps a teletext character to a teletext2 font
 
         int m_iPageCount;   /// How many pages in this set?
         int iPage;          /// Which page are we looking at?

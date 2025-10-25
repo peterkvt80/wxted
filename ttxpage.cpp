@@ -1037,7 +1037,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
 
     // std::cout << "Code trace 2=" << code << std::endl;
     /* Some keys need remapping from English PC keyboard into the teletext world. TODO: Localizing */
-    switch (GetLanguage())
+    switch (GetLanguage(true))
     {
     case 0: // English
         if (code==35)  code=0x5f;   // Hash
@@ -1557,18 +1557,18 @@ void TTXPage::SetLanguage(int language)
   // std::cout << "Set Language: PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
 }
 
-int TTXPage::GetLanguage()
+int TTXPage::GetLanguage(bool primary)
 {
   int language;
   // language=(m_pagestatus >> 7) & 0x07;
   // std::cout << "Get Language PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
-  language = m_row28->Language();
+  language = m_row28->Language(primary);
   return language;
 }
 
-int TTXPage::GetRegion()
+int TTXPage::GetRegion(bool primary)
 {
-  unsigned int region = m_row28->Region();
+  unsigned int region = m_row28->Region(primary);
   return region;
 }
 

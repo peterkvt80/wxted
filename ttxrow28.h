@@ -24,14 +24,16 @@ class TTXRow28 : public TTXLine
     unsigned int Remap(unsigned int colour, bool useForeground);
 
     /** Language - Get the language number 0..7
+     *  @param primary - If true returns the primary language
      *  @return Language code 0..7
      */
-    unsigned int Language();
+    unsigned int Language(bool primary);
 
     /** Region - Get the language number 0..7
+     *  @param primary - If true returns the primary region
      *  @return Region code 0..10
      */
-    unsigned int Region();
+    unsigned int Region(bool primary);
 
   protected:
 

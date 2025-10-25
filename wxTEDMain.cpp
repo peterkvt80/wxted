@@ -664,6 +664,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
           bool hold=false;
           char holdChar=' ';
           bool concealed=false;
+          bool toggleG0Set = true;
 
           fg = ttxCodeAlphaWhite;
           bg = ttxCodeAlphaBlack;
@@ -742,6 +743,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                   case ttxCodeSeparatedGraphics : // Separated gfx
                       separated=true;
                       break;
+                  case ttxCodeSwitch : // Default <==> Second G0 switch
+                      toggleG0Set = !toggleG0Set;
+                      break;
                   case ttxCodeBlackBackground : // Background black
                       bg = ttxCodeAlphaBlack;
                       break;
@@ -760,7 +764,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                       // std::cout << "Trace OL:ordinary character " << ch << std::endl;
                       ch=str[col] & 0x7f;
                       ch2=str[col];
-                      ch2=mapTextChar(ch2);
+                      ch2=mapTextChar(ch2, toggleG0Set);
                       // holdchar records the last mosaic character sent out
                       if (isMosaic(ch))
                       {
@@ -1251,9 +1255,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     // std::cout << "[OnPaint] exits " << std::endl;
 } // OnPaint
 
-wchar_t wxTEDFrame::mapTextChar(wchar_t ch)
+wchar_t wxTEDFrame::mapTextChar(wchar_t ch, bool primary)
 {
-  return MapChar(ch, m_currentPage->GetLanguage(), m_currentPage->GetRegion());
+  return MapChar(ch, m_currentPage->GetLanguage(primary), m_currentPage->GetRegion(primary));
 }
 
 void wxTEDFrame::m_SetStatus()
@@ -1319,7 +1323,7 @@ void wxTEDFrame::m_SetStatus()
     {
         if (ch>' ')
         {
-            ch=mapTextChar(ch);
+            ch=mapTextChar(ch, true);
             //std::string s2=ch;
             //s2[0]=ch;
             code<<(char)ch;
@@ -1638,7 +1642,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_publish_ftp_password=m_config->Read("/wxted/FTP/Password");
     m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
-    SetRegionMenu(m_currentPage->GetRegion()); // Region language
+    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language [!] @todo Add second language but probably on an X28 config dialog
 
 
 // wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
@@ -1858,7 +1862,7 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     // Create a new page
     p=new TTXPage();
     m_setLanguage();
-    SetRegionMenu(m_currentPage->GetRegion()); // Region language
+    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language [!] Move to dialog and add second G0
     iPage++;
     // Save the child page pointer
     childPage=m_currentPage->Getm_SubPage();
@@ -1940,7 +1944,7 @@ void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
 void wxTEDFrame::m_setLanguage()
 {
 //    std::cout << "m_setLanguage " << m_rootPage->GetLanguage() << std::endl;
-    int language=m_currentPage->GetLanguage();
+    int language=m_currentPage->GetLanguage(true);
     // idLanguageEnglish
     /*
     MenuItemEnglish->Check(true);break;
@@ -2574,7 +2578,7 @@ void wxTEDFrame::SetRegionMenu(int region)
     default: region=0;
     }
     m_currentPage->SetRegion(region);
-    int language=m_currentPage->GetLanguage();
+    int language=m_currentPage->GetLanguage(true);
     switch (language)
     {
     case 0: MenuItemEnglish->Check(true);break;
@@ -2811,7 +2815,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     m_offset.x=0;
     m_currentPage=m_rootPage;
 
-    SetRegionMenu(m_currentPage->GetRegion()); // Region language
+    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
     // OnPaint(Pevent);    // Refresh with the new page
@@ -2895,7 +2899,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     m_offset.x=0;
     m_currentPage=m_rootPage;
 
-    SetRegionMenu(m_currentPage->GetRegion()); // Region language
+    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
     //OnPaint(event);    // Refresh with the new page
