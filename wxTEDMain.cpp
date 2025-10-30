@@ -238,6 +238,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     if (iPage>=m_iPageCount) iPage=m_iPageCount-1; // Check we don't go past the last page
     m_currentPage=m_rootPage->GetPage(iPage);
 
+    paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
+
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
       auto rightEdge=(iPage+1)*m_ttxW*41; // Distance from first page to end of current page
@@ -587,42 +589,6 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
 
-    // Some lambdas because we want functions with access to the local environment
-    auto SetTTXForegroundColour = [&](const unsigned int colour)
-    {
-      // Find the teletext colour index
-      // Map it through the X28 clut
-      unsigned int clrRemap = m_currentPage->Remap(colour, true); // 12 bit value returned
-      // Split the colour back to RGB
-      unsigned char R = (clrRemap >> 8) & 0x0f;
-      unsigned char G = (clrRemap >> 4) & 0x0f;
-      unsigned char B = (clrRemap) & 0x0f;
-      const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
-      doubleHeightDC.SetTextForeground(*wxc);
-      paintDC.SetTextForeground(*wxc);
-    };
-
-    auto SetTTXBackgroundColour = [&](const unsigned int colour)
-    // auto SetTTXBackgroundColour = [&](const wxColour& colour)
-    {
-      // const wxColour* wxc =  ttxCode2wxColour(colour);
-      unsigned int clrRemap = m_currentPage->Remap(colour, false); // 12 bit value returned
-      // Split the colour back to RGB
-      unsigned char R = (clrRemap >> 8) & 0x0f;
-      unsigned char G = (clrRemap >> 4) & 0x0f;
-      unsigned char B = (clrRemap) & 0x0f;
-      const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
-      doubleHeightDC.SetTextBackground(*wxc);
-      paintDC.SetTextBackground(*wxc);
-    };
-
-//    auto SetTTXBrushColour = [&](const wxColour& colour)
-    auto SetTTXBrushColour = [&](const unsigned int colour)
-    {
-      const wxColour* wxc =  ttxCode2wxColour(colour);
-      paintDC.SetBrush(wxBrush(*wxc));
-      doubleHeightDC.SetBrush(wxBrush(*wxc));
-    };
 
 
     /* page */
@@ -632,6 +598,47 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         p!=nullptr && (offset.x < this->GetClientSize().GetWidth()); // Don't bother to render pages outside of the window
         p=p->Getm_SubPage())
     {
+      // Some lambdas because we want functions with access to the local environment
+      auto SetTTXForegroundColour = [&](const unsigned int colour)
+      {
+        // Find the teletext colour index
+        // Map it through the X28 clut
+        unsigned int clrRemap = p->Remap(colour, true); // 12 bit value returned
+        // Split the colour back to RGB
+        unsigned char R = (clrRemap >> 8) & 0x0f;
+        unsigned char G = (clrRemap >> 4) & 0x0f;
+        unsigned char B = (clrRemap) & 0x0f;
+        const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+        doubleHeightDC.SetTextForeground(*wxc);
+        paintDC.SetTextForeground(*wxc);
+      };
+
+      auto SetTTXBackgroundColour = [&](const unsigned int colour)
+      {
+        unsigned int clrRemap = p->Remap(colour, false); // 12 bit value returned
+        // Split the colour back to RGB
+        unsigned char R = (clrRemap >> 8) & 0x0f;
+        unsigned char G = (clrRemap >> 4) & 0x0f;
+        unsigned char B = (clrRemap) & 0x0f;
+        const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+        doubleHeightDC.SetTextBackground(*wxc);
+        paintDC.SetTextBackground(*wxc);
+      };
+
+      auto SetTTXBrushColour = [&](const unsigned int colour, bool foreground)
+      {
+        unsigned int clrRemap = p->Remap(colour, foreground); // 12 bit value returned
+        // Split the colour back to RGB
+        unsigned char R = (clrRemap >> 8) & 0x0f;
+        unsigned char G = (clrRemap >> 4) & 0x0f;
+        unsigned char B = (clrRemap) & 0x0f;
+        const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+        paintDC.SetBrush(wxBrush(*wxc));
+        doubleHeightDC.SetBrush(wxBrush(*wxc));
+      };
+
+
+
       // Skip frames that are completely on the left of the window
       if (offset.x+(static_cast<int>(m_ttxW)*41)<0)
       {
@@ -802,8 +809,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                           if (j==0x20) j<<=1; // Skip the alphabet exception
 
                           // Draw the full sized pixel in background colour
-                          paintDC.SetBrush(wxBrush(*ttxCode2wxColour(bg)));
-                          doubleHeightDC.SetBrush(wxBrush(*ttxCode2wxColour(bg)));
+                          SetTTXBrushColour(bg, false);
+                          //paintDC.SetBrush(wxBrush(*ttxCode2wxColour(bg)));
+                          //doubleHeightDC.SetBrush(wxBrush(*ttxCode2wxColour(bg)));
                           int k=1; // Full size pixel
                           if (doubleHeight)
                           {
@@ -820,7 +828,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                           // Now draw the actual pixel
                           if (pixelSet)
                           {
-                              SetTTXBrushColour(fg);
+                              SetTTXBrushColour(fg, true);
                               // paintDC.SetBrush(wxBrush(*fg));
                               if (separated) k=-2; // Thin border around the pixel
                               if (doubleHeight)
@@ -3001,7 +3009,7 @@ void wxTEDFrame::OnMenuItemPaletteSelected(wxCommandEvent& event)
 {
   // "todo Get cluts from the X28 row if it exists and populate the palette
   TTXRow28* x28row;
-  x28row = this->Page()->GetX28Row(); // @todo If we change subpage, do we set the correct page???
+  x28row = m_currentPage->GetX28Row(); // @todo If we change subpage, do we set the correct page???
   paletteFrame->SetX28(x28row);
   paletteFrame->Show(true);
 }

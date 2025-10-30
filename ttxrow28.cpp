@@ -102,6 +102,7 @@ bool TTXRow28::decode(std::string line)
   this->defaultRowColour = (triples[12] >> 9) & 0x1f; // t13, 10..14
   this->blackBackgroundSub = (triples[12] >> 14) & 0x01; // t13, 15
   this->remap = (triples[12] >> 15) & 0x07; // t13, 16..18
+  std::cout << "[TTXRow28::TTXRow28] this->remap =  " << this->remap << std::endl;
 
   // left and right extension panels
   this->enableLeftPanel = (triples[1] & 0x08) > 0; // t2, 4
@@ -166,6 +167,7 @@ void TTXRow28::defaultClut()
 unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
 {
   unsigned int clutIndex = 0;
+  colour = colour & 0x07;
 
   // Black Background Colour Substitution
   // If this is set, then colour 0 in a row is replaced by the default row colour
@@ -195,7 +197,7 @@ unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
   {
     if (this->remap < 3) // background
     {
-      clutIndex = this->remap;
+      clutIndex = this->remap; // 0..2
     }
     else if (this->remap == 3 || this->remap == 5)
     {
@@ -207,10 +209,9 @@ unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
     }
     else
     {
-      clutIndex = 3;
+      clutIndex = 3; // 7
     }
   }
-  colour = colour & 0x07;
   return clut[clutIndex][colour];
 }
 

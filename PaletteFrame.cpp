@@ -103,7 +103,7 @@ void PaletteFrame::SetX28(TTXRow28* x28)
   // Copy clut colours to the GUI
   for (unsigned int clut = 0; clut < 4; ++clut)
   {
-    for (unsigned int colour = 0; colour <8; ++colour)
+    for (unsigned int colour = 0; colour < 8; ++colour)
     {
       unsigned int clr = x28row->GetColour(clut, colour);
       unsigned int b = clr & 0x0f;
@@ -116,5 +116,6 @@ void PaletteFrame::SetX28(TTXRow28* x28)
       colours[clut][colour]->SetBackgroundColour(wxColour(r, g, b));
     }
   }
+  this->Refresh();
 }
 
