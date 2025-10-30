@@ -5,30 +5,22 @@
 		<Option title="wxTED" />
 		<Option platforms="Windows;Unix;" />
 		<Option pch_mode="2" />
-		<Option compiler="original_gnu_gcc_compiler" />
+		<Option compiler="gcc-mingw64" />
 		<Build>
 			<Target title="Debug">
 				<Option platforms="Windows;Unix;" />
 				<Option output="bin/Debug/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="original_gnu_gcc_compiler" />
+				<Option compiler="gcc-mingw64" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-m64" />
 					<Add option="-g" />
-					<Add option="-D__WXMSW__" />
-					<Add directory="include" />
-					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
 				</Compiler>
-				<ResourceCompiler>
-					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
-					<Add directory="E:/dev/wxTED-GitHub/wxted/" />
-				</ResourceCompiler>
 				<Linker>
 					<Add option="-m64" />
-					<Add library="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/libwxmsw30u.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -36,46 +28,32 @@
 				<Option output="bin/Release/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
-				<Option compiler="original_gnu_gcc_compiler" />
+				<Option compiler="gcc-mingw64" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wall" />
 					<Add option="-m64" />
-					<Add option="-D__WXMSW__" />
-					<Add directory="include" />
-					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
 				</Compiler>
-				<ResourceCompiler>
-					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
-					<Add directory="E:/dev/wxTED-GitHub/wxted/" />
-				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-m64" />
-					<Add library="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/libwxmsw30u.a" />
 				</Linker>
 			</Target>
 			<Target title="debug2">
 				<Option output="wxTED" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
-				<Option compiler="original_gnu_gcc_compiler" />
+				<Option compiler="gcc-mingw64" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-m64" />
 					<Add option="-Og" />
 					<Add option="-g" />
-					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
 				</Compiler>
-				<ResourceCompiler>
-					<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5" />
-					<Add directory="E:/dev/wxTED-GitHub/wxted/" />
-				</ResourceCompiler>
 				<Linker>
 					<Add option="-m64" />
-					<Add library="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/libwxmsw30u.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -85,16 +63,23 @@
 			<Add option="-pipe" />
 			<Add option="`wx-config --cflags`" />
 			<Add option="-DwxUSE_UNICODE" />
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/lib/gcc_dll/mswu" />
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include/" />
+			<Add option="-D__GNUWIN32__" />
+			<Add option="-D__WXMSW__" />
+			<Add option="-DWXUSINGDLL" />
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8/lib/gcc_dll/mswu" />
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8/include/" />
 			<Add directory="include" />
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8" />
 		</Compiler>
 		<ResourceCompiler>
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.0.5/include" />
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8/include" />
+			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8" />
+			<Add directory="E:/dev/wxTED-GitHub/wxted/" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-m64" />
 			<Add option="`wx-config --libs`" />
+			<Add library="E:/dev/wxwidgets/wxWidgets-3.2.8/lib/gcc_dll/libwxmsw32u.a" />
 		</Linker>
 		<Unit filename="HelpFrame.cpp">
 			<Option target="Debug" />
@@ -112,6 +97,8 @@
 			<Option target="Debug" />
 			<Option target="Release" />
 		</Unit>
+		<Unit filename="PaletteFrame.cpp" />
+		<Unit filename="PaletteFrame.h" />
 		<Unit filename="PublishSetupDialog.cpp">
 			<Option target="Debug" />
 			<Option target="Release" />
@@ -242,6 +229,7 @@
 			<Option target="Debug" />
 			<Option target="Release" />
 		</Unit>
+		<Unit filename="wxsmith/PaletteFrame.wxs" />
 		<Unit filename="wxsmith/PublishSetupDialog.wxs">
 			<Option target="Debug" />
 			<Option target="Release" />
@@ -260,6 +248,7 @@
 					<wxDialog wxs="wxsmith/PublishSetupDialog.wxs" src="PublishSetupDialog.cpp" hdr="PublishSetupDialog.h" fwddecl="0" i18n="1" name="PublishSetupDialog" language="CPP" />
 					<wxFrame wxs="wxsmith/HelpFrame1.wxs" src="HelpFrame.cpp" hdr="HelpFrame.h" fwddecl="0" i18n="1" name="HelpFrame" language="CPP" />
 					<wxDialog wxs="wxsmith/Quit.wxs" src="Quit.cpp" hdr="Quit.h" fwddecl="0" i18n="1" name="Quit" language="CPP" />
+					<wxFrame wxs="wxsmith/PaletteFrame.wxs" src="PaletteFrame.cpp" hdr="PaletteFrame.h" fwddecl="0" i18n="1" name="PaletteFrame" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

@@ -47,10 +47,13 @@
 */
 
 #include "HelpFrame.h"
+#include "PaletteFrame.h"
 #include <sstream>
 #include "ttxpage.h"
+#include "ttxrow28.h"
 #include "PageSettingsDialog.h"
 #include "mapchar.h"
+
 
 // Version number
 #define VERSION_STRING wxT("1.54")
@@ -136,6 +139,9 @@ class wxTEDFrame: public wxFrame
         // Help
         HelpFrame* helpFrame;
 
+        // Palette
+        PaletteFrame* paletteFrame;
+
 
         // Publishing
         wxString m_publish_ftp_server;
@@ -207,6 +213,7 @@ class wxTEDFrame: public wxFrame
         void OnPreviewRunSelected(wxCommandEvent& event);
         void OnPreviewSpeed(wxCommandEvent& event);
         void OnPreviewNormalSelected(wxCommandEvent& event);
+        void OnMenuItemPaletteSelected(wxCommandEvent& event);
         //*)
 
         /* Set the language menu radio option */
@@ -227,59 +234,64 @@ class wxTEDFrame: public wxFrame
         wxWindow* m_parentWindow;
 
         //(*Identifiers(wxTEDFrame)
-        static const long ID_PANEL1;
-        static const long idNewPage;
-        static const long idNewFromTemplate;
-        static const long idOpenPage;
-        static const long idSavePage;
-        static const long isSavePageAs;
-        static const long idExportTTX40;
-        static const long isExportZxnet;
-        static const long idMenuQuit;
-        static const long idNewWindow;
-        static const long idUndo;
-        static const long idCut;
-        static const long idCopy;
-        static const long idPaste;
-        static const long idSelectAll;
-        static const long isInsertLine;
-        static const long isDeleteLine;
-        static const long idInsertPage;
-        static const long idDeleteSubPage;
-        static const long idLanguageEnglish;
-        static const long idLanguageFrench;
-        static const long idLanguageSwedish;
-        static const long idLanguageCzechSlovak;
-        static const long idLanguageGerman;
-        static const long idLanguageSpanish;
-        static const long idLanguageItalian;
-        static const long idLanguageUnused;
-        static const long ID_MENUITEM1;
-        static const long ID_REGION0;
-        static const long ID_REGION1;
-        static const long ID_REGION2;
-        static const long ID_REGION3;
-        static const long ID_REGION4;
-        static const long ID_REGION6;
-        static const long ID_REGION8;
-        static const long ID_REGION10;
-        static const long ID_REGION;
-        static const long idPageNumber;
-        static const long ID_MENUITEMSHOWHEADER;
-        static const long ID_HIDECONCEAL;
-        static const long idRun;
-        static const long idRadioMode;
-        static const long idRadioBounce;
-        static const long idRadioMode0;
-        static const long idRadioMode1;
-        static const long idRadioMode2;
-        static const long idRadioMode3;
-        static const long idRadioMode4;
-        static const long idRadioMode5;
-        static const long idSpecialKeys;
-        static const long idMenuAbout;
-        static const long ID_STATUSBAR1;
-        static const long ID_TIMER1;
+        static const wxWindowID ID_PANEL1;
+        static const wxWindowID idNewPage;
+        static const wxWindowID idNewFromTemplate;
+        static const wxWindowID idOpenPage;
+        static const wxWindowID idSavePage;
+        static const wxWindowID isSavePageAs;
+        static const wxWindowID idExportTTX40;
+        static const wxWindowID isExportZxnet;
+        static const wxWindowID idMenuQuit;
+        static const wxWindowID idNewWindow;
+        static const wxWindowID idUndo;
+        static const wxWindowID idCut;
+        static const wxWindowID idCopy;
+        static const wxWindowID idPaste;
+        static const wxWindowID idSelectAll;
+        static const wxWindowID isInsertLine;
+        static const wxWindowID isDeleteLine;
+        static const wxWindowID idInsertPage;
+        static const wxWindowID idDeleteSubPage;
+        static const wxWindowID idLanguageEnglish;
+        static const wxWindowID idLanguageFrench;
+        static const wxWindowID idLanguageSwedish;
+        static const wxWindowID idLanguageCzechSlovak;
+        static const wxWindowID idLanguageGerman;
+        static const wxWindowID idLanguageSpanish;
+        static const wxWindowID idLanguageItalian;
+        static const wxWindowID idLanguageUnused;
+        static const wxWindowID ID_MENUITEM1;
+        static const wxWindowID idPageNumber;
+        static const wxWindowID ID_MENUITEMSHOWHEADER;
+        static const wxWindowID ID_HIDECONCEAL;
+        static const wxWindowID ID_LANGUAGE1;
+        static const wxWindowID ID_REGION0;
+        static const wxWindowID ID_REGION1;
+        static const wxWindowID ID_REGION2;
+        static const wxWindowID ID_REGION3;
+        static const wxWindowID ID_REGION4;
+        static const wxWindowID ID_REGION6;
+        static const wxWindowID ID_REGION8;
+        static const wxWindowID ID_REGION10;
+        static const wxWindowID ID_REGION;
+        static const wxWindowID ID_LANGUAGE2;
+        static const wxWindowID ID_MENUITEM2;
+        static const wxWindowID ID_PALETTE;
+        static const wxWindowID x28enhance;
+        static const wxWindowID idRun;
+        static const wxWindowID idRadioMode;
+        static const wxWindowID idRadioBounce;
+        static const wxWindowID idRadioMode0;
+        static const wxWindowID idRadioMode1;
+        static const wxWindowID idRadioMode2;
+        static const wxWindowID idRadioMode3;
+        static const wxWindowID idRadioMode4;
+        static const wxWindowID idRadioMode5;
+        static const wxWindowID idSpecialKeys;
+        static const wxWindowID idMenuAbout;
+        static const wxWindowID ID_STATUSBAR1;
+        static const wxWindowID ID_TIMER1;
         //*)
 
         static const long idMenuOpen;
@@ -291,6 +303,7 @@ class wxTEDFrame: public wxFrame
         wxMenu* Menu2;
         wxMenu* Menu3;
         wxMenu* MenuItem2;
+        wxMenu* MenuItem5;
         wxMenu* MenuItemLanguage;
         wxMenu* MenuPresentation;
         wxMenuItem* MenuDeleteLine;
@@ -300,6 +313,9 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItem1;
         wxMenuItem* MenuItem3;
         wxMenuItem* MenuItem4;
+        wxMenuItem* MenuItem6;
+        wxMenuItem* MenuItem7;
+        wxMenuItem* MenuItem8;
         wxMenuItem* MenuItemConcealToggle;
         wxMenuItem* MenuItemCopy;
         wxMenuItem* MenuItemCzech;
@@ -311,6 +327,7 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemInsertSubpage;
         wxMenuItem* MenuItemItalian;
         wxMenuItem* MenuItemPageNumber;
+        wxMenuItem* MenuItemPalette;
         wxMenuItem* MenuItemPaste;
         wxMenuItem* MenuItemRegion0;
         wxMenuItem* MenuItemRegion10;

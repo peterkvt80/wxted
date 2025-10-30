@@ -134,7 +134,7 @@ std::string TTXLine::GetMappedline7bit()
 bool TTXLine::HasDoubleHeight()
 {
   bool doubleHeight=false;
-  uint8_t x=40;
+  unsigned char x=40;
   if (m_textline.empty())
   {
     return false;
@@ -200,7 +200,7 @@ char TTXLine::SetCharAt(int x,int code)
 
 char TTXLine::GetCharAt(int xLoc)
 {
-    if (m_textline.length()<(uint16_t)xLoc)
+    if (m_textline.length()<(unsigned int)xLoc)
     {
         // extend the line to 40 characters
         std::cout << "[TTXLine::SetCharAt] oops, need to extend this line" << std::endl;

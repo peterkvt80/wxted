@@ -293,6 +293,12 @@ class TTXPage
       */
       unsigned int Remap(unsigned int colour, bool useForeground);
 
+      /** @brief GetX28Row - Get access to the X28 language and palette enhancement packet
+       *  @return - TTXRow28* pointer
+       */
+       TTXRow28* GetX28Row(){return m_row28;};
+
+
     protected:
     private:
         static bool pageChanged;         // / True if we have done some edits (on any subpage)

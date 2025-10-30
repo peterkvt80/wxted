@@ -23,9 +23,9 @@ bool wxTEDApp::OnInit()
     wxInitAllImageHandlers();
     if ( wxsOK )
     {
-    	wxTEDFrame* Frame = new wxTEDFrame(0);
-    	Frame->Show();
-    	SetTopWindow(Frame);
+      wxTEDFrame* Frame = new wxTEDFrame(0);
+      Frame->Show();
+      SetTopWindow(Frame);
     }
     //*)
     return wxsOK;

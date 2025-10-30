@@ -2,11 +2,11 @@
 #define PUBLISHSETUPDIALOG_H
 
 //(*Headers(PublishSetupDialog)
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/dialog.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/choice.h>
-#include <wx/button.h>
-#include <wx/dialog.h>
 //*)
 
 class PublishSetupDialog: public wxDialog
@@ -17,33 +17,33 @@ class PublishSetupDialog: public wxDialog
 		virtual ~PublishSetupDialog();
 
 		//(*Declarations(PublishSetupDialog)
-		wxTextCtrl* TextCtrlFTPRemote;
-		wxStaticText* StaticText2;
-		wxTextCtrl* TextCtrlFTPUsername;
-		wxButton* ButtonOK;
-		wxStaticText* StaticText1;
-		wxStaticText* StaticText3;
 		wxButton* ButtonCancel;
-		wxTextCtrl* TextCtrlFTPServer;
+		wxButton* ButtonOK;
+		wxChoice* Choice1;
+		wxStaticText* StaticText1;
+		wxStaticText* StaticText2;
+		wxStaticText* StaticText3;
+		wxStaticText* StaticText4;
 		wxStaticText* StaticText5;
 		wxTextCtrl* TextCtrlFTPPassword;
-		wxStaticText* StaticText4;
-		wxChoice* Choice1;
+		wxTextCtrl* TextCtrlFTPRemote;
+		wxTextCtrl* TextCtrlFTPServer;
+		wxTextCtrl* TextCtrlFTPUsername;
 		//*)
 
 	protected:
 
 		//(*Identifiers(PublishSetupDialog)
-		static const long ID_CHOICE1;
-		static const long ID_STATICTEXT2;
-		static const long ID_STATICTEXT5;
-		static const long ID_STATICTEXT3;
-		static const long ID_STATICTEXT1;
-		static const long ID_TEXTCTRLFTPPASSWORD;
-		static const long ID_TEXTCTRLFTPREMOTE;
-		static const long ID_TEXTCTRLFTPSERVER;
-		static const long ID_TEXTCTRLUSERNAME;
-		static const long ID_STATICTEXT4;
+		static const wxWindowID ID_CHOICE1;
+		static const wxWindowID ID_STATICTEXT2;
+		static const wxWindowID ID_STATICTEXT5;
+		static const wxWindowID ID_STATICTEXT3;
+		static const wxWindowID ID_STATICTEXT1;
+		static const wxWindowID ID_TEXTCTRLFTPPASSWORD;
+		static const wxWindowID ID_TEXTCTRLFTPREMOTE;
+		static const wxWindowID ID_TEXTCTRLFTPSERVER;
+		static const wxWindowID ID_TEXTCTRLUSERNAME;
+		static const wxWindowID ID_STATICTEXT4;
 		//*)
 
 	private:

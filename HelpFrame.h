@@ -20,7 +20,7 @@ class HelpFrame: public wxFrame
 	protected:
 
 		//(*Identifiers(HelpFrame)
-		static const long ID_HTMLWINDOW1;
+		static const wxWindowID ID_HTMLWINDOW1;
 		//*)
 
 	private:

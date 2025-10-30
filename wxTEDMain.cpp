@@ -75,59 +75,64 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 }
 
 //(*IdInit(wxTEDFrame)
-const long wxTEDFrame::ID_PANEL1 = wxNewId();
-const long wxTEDFrame::idNewPage = wxNewId();
-const long wxTEDFrame::idNewFromTemplate = wxNewId();
-const long wxTEDFrame::idOpenPage = wxNewId();
-const long wxTEDFrame::idSavePage = wxNewId();
-const long wxTEDFrame::isSavePageAs = wxNewId();
-const long wxTEDFrame::idExportTTX40 = wxNewId();
-const long wxTEDFrame::isExportZxnet = wxNewId();
-const long wxTEDFrame::idMenuQuit = wxNewId();
-const long wxTEDFrame::idNewWindow = wxNewId();
-const long wxTEDFrame::idUndo = wxNewId();
-const long wxTEDFrame::idCut = wxNewId();
-const long wxTEDFrame::idCopy = wxNewId();
-const long wxTEDFrame::idPaste = wxNewId();
-const long wxTEDFrame::idSelectAll = wxNewId();
-const long wxTEDFrame::isInsertLine = wxNewId();
-const long wxTEDFrame::isDeleteLine = wxNewId();
-const long wxTEDFrame::idInsertPage = wxNewId();
-const long wxTEDFrame::idDeleteSubPage = wxNewId();
-const long wxTEDFrame::idLanguageEnglish = wxNewId();
-const long wxTEDFrame::idLanguageFrench = wxNewId();
-const long wxTEDFrame::idLanguageSwedish = wxNewId();
-const long wxTEDFrame::idLanguageCzechSlovak = wxNewId();
-const long wxTEDFrame::idLanguageGerman = wxNewId();
-const long wxTEDFrame::idLanguageSpanish = wxNewId();
-const long wxTEDFrame::idLanguageItalian = wxNewId();
-const long wxTEDFrame::idLanguageUnused = wxNewId();
-const long wxTEDFrame::ID_MENUITEM1 = wxNewId();
-const long wxTEDFrame::ID_REGION0 = wxNewId();
-const long wxTEDFrame::ID_REGION1 = wxNewId();
-const long wxTEDFrame::ID_REGION2 = wxNewId();
-const long wxTEDFrame::ID_REGION3 = wxNewId();
-const long wxTEDFrame::ID_REGION4 = wxNewId();
-const long wxTEDFrame::ID_REGION6 = wxNewId();
-const long wxTEDFrame::ID_REGION8 = wxNewId();
-const long wxTEDFrame::ID_REGION10 = wxNewId();
-const long wxTEDFrame::ID_REGION = wxNewId();
-const long wxTEDFrame::idPageNumber = wxNewId();
-const long wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
-const long wxTEDFrame::ID_HIDECONCEAL = wxNewId();
-const long wxTEDFrame::idRun = wxNewId();
-const long wxTEDFrame::idRadioMode = wxNewId();
-const long wxTEDFrame::idRadioBounce = wxNewId();
-const long wxTEDFrame::idRadioMode0 = wxNewId();
-const long wxTEDFrame::idRadioMode1 = wxNewId();
-const long wxTEDFrame::idRadioMode2 = wxNewId();
-const long wxTEDFrame::idRadioMode3 = wxNewId();
-const long wxTEDFrame::idRadioMode4 = wxNewId();
-const long wxTEDFrame::idRadioMode5 = wxNewId();
-const long wxTEDFrame::idSpecialKeys = wxNewId();
-const long wxTEDFrame::idMenuAbout = wxNewId();
-const long wxTEDFrame::ID_STATUSBAR1 = wxNewId();
-const long wxTEDFrame::ID_TIMER1 = wxNewId();
+const wxWindowID wxTEDFrame::ID_PANEL1 = wxNewId();
+const wxWindowID wxTEDFrame::idNewPage = wxNewId();
+const wxWindowID wxTEDFrame::idNewFromTemplate = wxNewId();
+const wxWindowID wxTEDFrame::idOpenPage = wxNewId();
+const wxWindowID wxTEDFrame::idSavePage = wxNewId();
+const wxWindowID wxTEDFrame::isSavePageAs = wxNewId();
+const wxWindowID wxTEDFrame::idExportTTX40 = wxNewId();
+const wxWindowID wxTEDFrame::isExportZxnet = wxNewId();
+const wxWindowID wxTEDFrame::idMenuQuit = wxNewId();
+const wxWindowID wxTEDFrame::idNewWindow = wxNewId();
+const wxWindowID wxTEDFrame::idUndo = wxNewId();
+const wxWindowID wxTEDFrame::idCut = wxNewId();
+const wxWindowID wxTEDFrame::idCopy = wxNewId();
+const wxWindowID wxTEDFrame::idPaste = wxNewId();
+const wxWindowID wxTEDFrame::idSelectAll = wxNewId();
+const wxWindowID wxTEDFrame::isInsertLine = wxNewId();
+const wxWindowID wxTEDFrame::isDeleteLine = wxNewId();
+const wxWindowID wxTEDFrame::idInsertPage = wxNewId();
+const wxWindowID wxTEDFrame::idDeleteSubPage = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageEnglish = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageFrench = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageSwedish = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageCzechSlovak = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageGerman = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageSpanish = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageItalian = wxNewId();
+const wxWindowID wxTEDFrame::idLanguageUnused = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM1 = wxNewId();
+const wxWindowID wxTEDFrame::idPageNumber = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
+const wxWindowID wxTEDFrame::ID_HIDECONCEAL = wxNewId();
+const wxWindowID wxTEDFrame::ID_LANGUAGE1 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION0 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION1 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION3 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION4 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION6 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION8 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION10 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION = wxNewId();
+const wxWindowID wxTEDFrame::ID_LANGUAGE2 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM2 = wxNewId();
+const wxWindowID wxTEDFrame::ID_PALETTE = wxNewId();
+const wxWindowID wxTEDFrame::x28enhance = wxNewId();
+const wxWindowID wxTEDFrame::idRun = wxNewId();
+const wxWindowID wxTEDFrame::idRadioMode = wxNewId();
+const wxWindowID wxTEDFrame::idRadioBounce = wxNewId();
+const wxWindowID wxTEDFrame::idRadioMode0 = wxNewId();
+const wxWindowID wxTEDFrame::idRadioMode1 = wxNewId();
+const wxWindowID wxTEDFrame::idRadioMode2 = wxNewId();
+const wxWindowID wxTEDFrame::idRadioMode3 = wxNewId();
+const wxWindowID wxTEDFrame::idRadioMode4 = wxNewId();
+const wxWindowID wxTEDFrame::idRadioMode5 = wxNewId();
+const wxWindowID wxTEDFrame::idSpecialKeys = wxNewId();
+const wxWindowID wxTEDFrame::idMenuAbout = wxNewId();
+const wxWindowID wxTEDFrame::ID_STATUSBAR1 = wxNewId();
+const wxWindowID wxTEDFrame::ID_TIMER1 = wxNewId();
 //*)
 
 
@@ -1451,6 +1456,17 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemLanguage->Append(MenuItemUnused);
     MenuItemUnused->Enable(false);
     MenuPresentation->Append(ID_MENUITEM1, _("Language"), MenuItemLanguage, wxEmptyString);
+    MenuItemPageNumber = new wxMenuItem(MenuPresentation, idPageNumber, _("Properties..."), _("Set the page number for transmission"), wxITEM_NORMAL);
+    MenuPresentation->Append(MenuItemPageNumber);
+    MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), _("Show/hide header row"), wxITEM_CHECK);
+    MenuPresentation->Append(MenuItemShowHeader);
+    MenuItemShowHeader->Check(true);
+    MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), _("Conceal/show hidden text"), wxITEM_NORMAL);
+    MenuPresentation->Append(MenuItemConcealToggle);
+    MenuPresentation->AppendSeparator();
+    MenuItem5 = new wxMenu();
+    MenuItem7 = new wxMenuItem(MenuItem5, ID_LANGUAGE1, _("Main language"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem5->Append(MenuItem7);
     MenuItem2 = new wxMenu();
     MenuItemRegion0 = new wxMenuItem(MenuItem2, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion0);
@@ -1468,14 +1484,14 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItem2->Append(MenuItemRegion8);
     MenuItemRegion10 = new wxMenuItem(MenuItem2, ID_REGION10, _("10: Hebrew/Arabic"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion10);
-    MenuPresentation->Append(ID_REGION, _("Region"), MenuItem2, wxEmptyString);
-    MenuItemPageNumber = new wxMenuItem(MenuPresentation, idPageNumber, _("Properties..."), _("Set the page number for transmission"), wxITEM_NORMAL);
-    MenuPresentation->Append(MenuItemPageNumber);
-    MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), _("Show/hide header row"), wxITEM_CHECK);
-    MenuPresentation->Append(MenuItemShowHeader);
-    MenuItemShowHeader->Check(true);
-    MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), _("Conceal/show hidden text"), wxITEM_NORMAL);
-    MenuPresentation->Append(MenuItemConcealToggle);
+    MenuItem5->Append(ID_REGION, _("Main region"), MenuItem2, wxEmptyString);
+    MenuItem6 = new wxMenuItem(MenuItem5, ID_LANGUAGE2, _("Second language"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem5->Append(MenuItem6);
+    MenuItem8 = new wxMenuItem(MenuItem5, ID_MENUITEM2, _("Second region"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem5->Append(MenuItem8);
+    MenuItemPalette = new wxMenuItem(MenuItem5, ID_PALETTE, _("Palette..."), _("Colours"), wxITEM_NORMAL);
+    MenuItem5->Append(MenuItemPalette);
+    MenuPresentation->Append(x28enhance, _("X28 enhancements"), MenuItem5, wxEmptyString);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
     Menu2 = new wxMenu();
     PreviewRun = new wxMenuItem(Menu2, idRun, _("Run"), wxEmptyString, wxITEM_NORMAL);
@@ -1517,74 +1533,75 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_Timer1.Start(456, false);
     FileDialogSaveAs = new wxFileDialog(this, _("Save file as..."), wxEmptyString, wxEmptyString, _("TTI files (*.tti, *.ttix)|*.tti;*.ttix"), wxFD_SAVE|wxFD_OVERWRITE_PROMPT, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 
-    Panel1->Connect(wxEVT_KEY_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnKeyDown,0,this);
-    Panel1->Connect(wxEVT_KEY_UP,(wxObjectEventFunction)&wxTEDFrame::OnKeyUp,0,this);
-    Panel1->Connect(wxEVT_CHAR,(wxObjectEventFunction)&wxTEDFrame::OnChar,0,this);
-    Panel1->Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus,0,this);
-    Panel1->Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus,0,this);
-    Panel1->Connect(wxEVT_LEFT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnLeftDown,0,this);
-    Panel1->Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp,0,this);
-    Panel1->Connect(wxEVT_RIGHT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnRightDown,0,this);
-    Panel1->Connect(wxEVT_RIGHT_UP,(wxObjectEventFunction)&wxTEDFrame::OnRightUp,0,this);
-    Panel1->Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel,0,this);
-    Connect(idNewPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
-    Connect(idNewFromTemplate,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
-    Connect(idOpenPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuOpenPage);
-    Connect(idSavePage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnSave);
-    Connect(isSavePageAs,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
-    Connect(idExportTTX40,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
-    Connect(isExportZxnet,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemZXNetSelected);
-    Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnQuit);
-    Connect(idNewWindow,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemNewWindow);
-    Connect(idUndo,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
-    Connect(idCut,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
-    Connect(idCopy,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemCopySelected);
-    Connect(idPaste,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemPasteSelected);
-    Connect(idSelectAll,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemSelectAllSelected);
-    Connect(isInsertLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuInsertLineSelected);
-    Connect(isDeleteLine,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuDeleteLineSelected);
-    Connect(idInsertPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemInsertSubpage);
-    Connect(idDeleteSubPage,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemDeletePage);
-    Connect(idLanguageEnglish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(idLanguageFrench,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(idLanguageSwedish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(idLanguageCzechSlovak,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(idLanguageGerman,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(idLanguageSpanish,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(idLanguageItalian,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(idLanguageUnused,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
-    Connect(ID_REGION0,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(ID_REGION1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(ID_REGION2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(ID_REGION3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(ID_REGION4,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(ID_REGION6,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(ID_REGION8,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(ID_REGION10,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
-    Connect(idPageNumber,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
-    Connect(ID_HIDECONCEAL,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
-    Connect(idRun,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewRunSelected);
-    Connect(idRadioMode,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
-    Connect(idRadioBounce,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
-    Connect(idRadioMode0,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewNormalSelected);
-    Connect(idRadioMode1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
-    Connect(idRadioMode2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
-    Connect(idRadioMode3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
-    Connect(idRadioMode4,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
-    Connect(idRadioMode5,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
-    Connect(idSpecialKeys,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnMenuSpecialKeys);
-    Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&wxTEDFrame::OnAbout);
-    Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&wxTEDFrame::OnClose);
-    Connect(wxEVT_PAINT,(wxObjectEventFunction)&wxTEDFrame::OnPaint);
-    Connect(wxEVT_ERASE_BACKGROUND,(wxObjectEventFunction)&wxTEDFrame::OnEraseBackground);
-    Connect(wxEVT_SET_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
-    Connect(wxEVT_KILL_FOCUS,(wxObjectEventFunction)&wxTEDFrame::OnKillFocus);
-    Connect(wxEVT_LEFT_UP,(wxObjectEventFunction)&wxTEDFrame::OnLeftUp);
-    Connect(wxEVT_MIDDLE_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
-    Connect(wxEVT_RIGHT_DOWN,(wxObjectEventFunction)&wxTEDFrame::OnRightDown);
-    Connect(wxEVT_RIGHT_UP,(wxObjectEventFunction)&wxTEDFrame::OnRightUp);
-    Connect(wxEVT_MOTION,(wxObjectEventFunction)&wxTEDFrame::OnMouseMove);
-    Connect(wxEVT_MOUSEWHEEL,(wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
+    Panel1->Connect(wxEVT_KEY_DOWN, (wxObjectEventFunction)&wxTEDFrame::OnKeyDown, NULL, this);
+    Panel1->Connect(wxEVT_KEY_UP, (wxObjectEventFunction)&wxTEDFrame::OnKeyUp, NULL, this);
+    Panel1->Connect(wxEVT_CHAR, (wxObjectEventFunction)&wxTEDFrame::OnChar, NULL, this);
+    Panel1->Connect(wxEVT_SET_FOCUS, (wxObjectEventFunction)&wxTEDFrame::OnSetFocus, NULL, this);
+    Panel1->Connect(wxEVT_KILL_FOCUS, (wxObjectEventFunction)&wxTEDFrame::OnKillFocus, NULL, this);
+    Panel1->Connect(wxEVT_LEFT_DOWN, (wxObjectEventFunction)&wxTEDFrame::OnLeftDown, NULL, this);
+    Panel1->Connect(wxEVT_LEFT_UP, (wxObjectEventFunction)&wxTEDFrame::OnLeftUp, NULL, this);
+    Panel1->Connect(wxEVT_RIGHT_DOWN, (wxObjectEventFunction)&wxTEDFrame::OnRightDown, NULL, this);
+    Panel1->Connect(wxEVT_RIGHT_UP, (wxObjectEventFunction)&wxTEDFrame::OnRightUp, NULL, this);
+    Panel1->Connect(wxEVT_MOUSEWHEEL, (wxObjectEventFunction)&wxTEDFrame::OnMouseWheel, NULL, this);
+    Connect(idNewPage, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuNew);
+    Connect(idNewFromTemplate, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuNewFromTemplate);
+    Connect(idOpenPage, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuOpenPage);
+    Connect(idSavePage, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnSave);
+    Connect(isSavePageAs, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuSaveAs);
+    Connect(idExportTTX40, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemExportTTX40Selected);
+    Connect(isExportZxnet, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemZXNetSelected);
+    Connect(idMenuQuit, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnQuit);
+    Connect(idNewWindow, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemNewWindow);
+    Connect(idUndo, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
+    Connect(idCut, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemUndo);
+    Connect(idCopy, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemCopySelected);
+    Connect(idPaste, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemPasteSelected);
+    Connect(idSelectAll, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemSelectAllSelected);
+    Connect(isInsertLine, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuInsertLineSelected);
+    Connect(isDeleteLine, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuDeleteLineSelected);
+    Connect(idInsertPage, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemInsertSubpage);
+    Connect(idDeleteSubPage, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemDeletePage);
+    Connect(idLanguageEnglish, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageFrench, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageSwedish, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageCzechSlovak, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageGerman, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageSpanish, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageItalian, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idLanguageUnused, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
+    Connect(idPageNumber, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
+    Connect(ID_HIDECONCEAL, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
+    Connect(ID_REGION0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION2, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION3, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION4, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION6, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION8, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION10, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_PALETTE, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemPaletteSelected);
+    Connect(idRun, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewRunSelected);
+    Connect(idRadioMode, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioBounce, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewNormalSelected);
+    Connect(idRadioMode1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode2, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode3, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode4, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idRadioMode5, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
+    Connect(idSpecialKeys, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuSpecialKeys);
+    Connect(idMenuAbout, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnAbout);
+    Connect(wxID_ANY, wxEVT_CLOSE_WINDOW, (wxObjectEventFunction)&wxTEDFrame::OnClose);
+    Connect(wxEVT_PAINT, (wxObjectEventFunction)&wxTEDFrame::OnPaint);
+    Connect(wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)&wxTEDFrame::OnEraseBackground);
+    Connect(wxEVT_SET_FOCUS, (wxObjectEventFunction)&wxTEDFrame::OnSetFocus);
+    Connect(wxEVT_KILL_FOCUS, (wxObjectEventFunction)&wxTEDFrame::OnKillFocus);
+    Connect(wxEVT_LEFT_UP, (wxObjectEventFunction)&wxTEDFrame::OnLeftUp);
+    Connect(wxEVT_MIDDLE_DOWN, (wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
+    Connect(wxEVT_RIGHT_DOWN, (wxObjectEventFunction)&wxTEDFrame::OnRightDown);
+    Connect(wxEVT_RIGHT_UP, (wxObjectEventFunction)&wxTEDFrame::OnRightUp);
+    Connect(wxEVT_MOTION, (wxObjectEventFunction)&wxTEDFrame::OnMouseMove);
+    Connect(wxEVT_MOUSEWHEEL, (wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
 
     // Precompute the Font metrics
@@ -1656,6 +1673,9 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 
     helpFrame=new HelpFrame(this->GetDefaultItem(),1,wxP,wxS);
 
+
+    paletteFrame = new PaletteFrame(this->GetDefaultItem(), 1, wxPoint(100,100), wxSize(500, 200));
+
     m_rootPage->SetPageChanged(false);
 
     // Compatibility.
@@ -1670,6 +1690,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 wxTEDFrame::~wxTEDFrame()
 {
     delete helpFrame;
+    delete paletteFrame;
     delete m_config;
     if (m_rootPage!=NULL)
     {
@@ -1677,6 +1698,8 @@ wxTEDFrame::~wxTEDFrame()
         m_rootPage=NULL;
     }
     //(*Destroy(wxTEDFrame)
+    LoadPageFileDialog->Destroy();
+    FileDialogSaveAs->Destroy();
     //*)
 }
 
@@ -2965,10 +2988,20 @@ const wxColour* wxTEDFrame::ttxCode2wxColour(const unsigned int colour) // Given
     case 2: return wxGREEN;
     case 3: return wxYELLOW;
     case 4: return wxBLUE;
-    case 5: return new wxColour(0xff, 0x00, 0xff);
+    case 5: return new wxColour(0xff, 0x00, 0xff); // Magenta
     case 6: return wxCYAN;
     case 7: return wxWHITE;
     default:
       return(new wxColour(0xff, 0x88, 0x00));
   }
+}
+
+/// Opens the colour table frame
+void wxTEDFrame::OnMenuItemPaletteSelected(wxCommandEvent& event)
+{
+  // "todo Get cluts from the X28 row if it exists and populate the palette
+  TTXRow28* x28row;
+  x28row = this->Page()->GetX28Row(); // @todo If we change subpage, do we set the correct page???
+  paletteFrame->SetX28(x28row);
+  paletteFrame->Show(true);
 }

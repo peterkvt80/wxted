@@ -35,6 +35,8 @@ class TTXRow28 : public TTXLine
      */
     unsigned int Region(bool primary);
 
+    unsigned int GetColour(unsigned int clutIx, unsigned int colour){return clut[clutIx][colour];};
+
   protected:
 
   private:

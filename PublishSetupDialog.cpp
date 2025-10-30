@@ -6,16 +6,16 @@
 //*)
 
 //(*IdInit(PublishSetupDialog)
-const long PublishSetupDialog::ID_CHOICE1 = wxNewId();
-const long PublishSetupDialog::ID_STATICTEXT2 = wxNewId();
-const long PublishSetupDialog::ID_STATICTEXT5 = wxNewId();
-const long PublishSetupDialog::ID_STATICTEXT3 = wxNewId();
-const long PublishSetupDialog::ID_STATICTEXT1 = wxNewId();
-const long PublishSetupDialog::ID_TEXTCTRLFTPPASSWORD = wxNewId();
-const long PublishSetupDialog::ID_TEXTCTRLFTPREMOTE = wxNewId();
-const long PublishSetupDialog::ID_TEXTCTRLFTPSERVER = wxNewId();
-const long PublishSetupDialog::ID_TEXTCTRLUSERNAME = wxNewId();
-const long PublishSetupDialog::ID_STATICTEXT4 = wxNewId();
+const wxWindowID PublishSetupDialog::ID_CHOICE1 = wxNewId();
+const wxWindowID PublishSetupDialog::ID_STATICTEXT2 = wxNewId();
+const wxWindowID PublishSetupDialog::ID_STATICTEXT5 = wxNewId();
+const wxWindowID PublishSetupDialog::ID_STATICTEXT3 = wxNewId();
+const wxWindowID PublishSetupDialog::ID_STATICTEXT1 = wxNewId();
+const wxWindowID PublishSetupDialog::ID_TEXTCTRLFTPPASSWORD = wxNewId();
+const wxWindowID PublishSetupDialog::ID_TEXTCTRLFTPREMOTE = wxNewId();
+const wxWindowID PublishSetupDialog::ID_TEXTCTRLFTPSERVER = wxNewId();
+const wxWindowID PublishSetupDialog::ID_TEXTCTRLUSERNAME = wxNewId();
+const wxWindowID PublishSetupDialog::ID_STATICTEXT4 = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(PublishSetupDialog,wxDialog)
@@ -29,7 +29,7 @@ PublishSetupDialog::PublishSetupDialog(wxWindow* parent,wxWindowID id,const wxPo
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	SetClientSize(wxSize(289,282));
 	Move(wxDefaultPosition);
-	Choice1 = new wxChoice(this, ID_CHOICE1, wxPoint(16,40), wxSize(168,21), 0, nullptr, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+	Choice1 = new wxChoice(this, ID_CHOICE1, wxPoint(16,40), wxSize(168,21), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
 	Choice1->SetSelection( Choice1->Append(_("FTP")) );
 	Choice1->Append(_("TED Scheduler"));
 	Choice1->Append(_("VBIT "));
@@ -49,9 +49,9 @@ PublishSetupDialog::PublishSetupDialog(wxWindow* parent,wxWindowID id,const wxPo
 	ButtonOK = new wxButton(this, wxID_OK, _("OK"), wxPoint(96,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_OK"));
 	ButtonCancel = new wxButton(this, wxID_CANCEL, _("Cancel"), wxPoint(192,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_CANCEL"));
 
-	Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&PublishSetupDialog::OnChoice1Select);
-	Connect(wxID_OK,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&PublishSetupDialog::OnButtonOKClick);
-	Connect(wxID_CANCEL,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&PublishSetupDialog::OnButtonCancelClick);
+	Connect(ID_CHOICE1, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PublishSetupDialog::OnChoice1Select);
+	Connect(wxID_OK, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PublishSetupDialog::OnButtonOKClick);
+	Connect(wxID_CANCEL, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PublishSetupDialog::OnButtonCancelClick);
 	//*)
 }
 
