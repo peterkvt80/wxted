@@ -51,6 +51,8 @@ class PaletteFrame: public wxFrame
     void OnClosePalette(wxCloseEvent& event);
     void OnChoice1Select(wxCommandEvent& event);
     void OnColourClick(wxCommandEvent& event);
+    void OnClutPanel1MouseEnter(wxMouseEvent& event);
+    void OnClutPanel1MouseLeave(wxMouseEvent& event);
     //*)
     wxBoxSizer* palSizer; // CLUT Layout
     wxBoxSizer* fgs[4]; // Colours Layout

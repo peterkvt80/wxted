@@ -54,7 +54,13 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
 
   Connect(ID_CHOICE1, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PaletteFrame::OnChoice1Select);
   Connect(ID_COLOUR, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PaletteFrame::OnColourClick);
+  ClutPanel1->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseEnter, NULL, this);
+  ClutPanel1->Connect(wxEVT_LEAVE_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
+  ClutPanel2->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseEnter, NULL, this);
+  ClutPanel3->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
+  ClutPanel4->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
   Connect(wxID_ANY, wxEVT_CLOSE_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClosePalette);
+  Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave);
   //*)
   Connect(wxID_ANY, wxEVT_BUTTON, (wxObjectEventFunction)&PaletteFrame::OnColourClick);
   palSizer->Add(PaletteRemapChoice, 0);
@@ -78,7 +84,7 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
     for (int colour = 0; colour < 8; ++colour)
     {
       fgs[clut]->AddSpacer(10);
-      auto button = new wxButton(cluts[clut], wxID_ANY, wxString::Format("%d", colour), wxDefaultPosition, wxSize(28,28), wxBORDER_NONE);
+      wxButton* button = new wxButton(cluts[clut], wxID_ANY, wxString::Format("%d", colour), wxDefaultPosition, wxSize(28,28), wxBORDER_NONE);
       button->Enable(clut > 1);
       fgs[clut]->Add( colours[clut][colour] = button);
     }
@@ -142,15 +148,30 @@ void PaletteFrame::OnColourClick(wxCommandEvent& event)
     unsigned int green = static_cast<unsigned char>(clr2.Green());
     unsigned int blue = static_cast<unsigned char>(clr2.Blue());
     std::cout << "red = " << red << " green = " << green << " blue = " << blue << std::endl;
-    // @todo Put this colour back into the correct CLUT location
+    // Put this colour back into the CLUT GUI
+    button->SetBackgroundColour(clr2);
+    // Put this colour into the X28 CLUT
+    // Get the clut and colour of the button
+    unsigned int clut;
+    unsigned int colour;
+    for (clut = 0; clut < 4; ++clut)
+    {
+      for (colour = 0; colour < 8; ++colour)
+      {
+          if (colours[clut][colour] == button)
+          {
+            break;
+          }
+      }
+      if (colours[clut][colour] == button)
+      {
+        break;
+      }
+    }
+    std::cout << "Found button, clut = " << clut << " colour = " << colour << std::endl;
+    unsigned int colourVal = ((red & 0x0f) << 8) | ((green & 0x0f) << 4) | (blue & 0x0f);
+    x28row->SetColour(colourVal, clut, colour);
   }
-  /*
-  auto cd = ColourDialog1->GetColourData();
-  cd.SetColour(clr);
-  ColourDialog1->Set
-  ColourDialog1->ShowModal();
-  std::cout << "[PaletteFrame::OnColourClick] an event happened. label = " << button->GetLabel() << std::endl;
-  */
 }
 
 wxColour Pal2wxColour(unsigned int pal)
@@ -168,4 +189,16 @@ wxColour Pal2wxColour(unsigned int pal)
 unsigned int wxColour2Pal(wxColour wxc)
 {
   return 0; // @todo
+}
+
+void PaletteFrame::OnClutPanel1MouseEnter(wxMouseEvent& event)
+{
+  // Set the cursor to unclickable
+  SetCursor(wxCURSOR_NO_ENTRY );
+}
+
+void PaletteFrame::OnClutPanel1MouseLeave(wxMouseEvent& event)
+{
+  // Set the cursor to normal
+  SetCursor(*wxSTANDARD_CURSOR);
 }

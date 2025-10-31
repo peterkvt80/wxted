@@ -8,6 +8,7 @@
 		<layout_window>0</layout_window>
 		<style>wxCAPTION|wxDEFAULT_FRAME_STYLE</style>
 		<handler function="OnClosePalette" entry="EVT_CLOSE" />
+		<handler function="OnClutPanel1MouseLeave" entry="EVT_ENTER_WINDOW" />
 		<object class="wxChoice" name="ID_CHOICE1" variable="PaletteRemapChoice" member="yes">
 			<content>
 				<item>Fore 0 Back 0</item>
@@ -30,6 +31,8 @@
 			<pos>32,56</pos>
 			<size>496,32</size>
 			<bg>wxSYS_COLOUR_ACTIVECAPTION</bg>
+			<handler function="OnClutPanel1MouseEnter" entry="EVT_ENTER_WINDOW" />
+			<handler function="OnClutPanel1MouseLeave" entry="EVT_LEAVE_WINDOW" />
 			<object class="wxButton" name="ID_COLOUR" variable="Button2" member="yes">
 				<label>F0F</label>
 				<pos>56,8</pos>
@@ -42,15 +45,18 @@
 		<object class="wxPanel" name="ID_CLUTPANEL2" variable="ClutPanel2" member="yes">
 			<pos>32,96</pos>
 			<size>472,40</size>
+			<handler function="OnClutPanel1MouseEnter" entry="EVT_ENTER_WINDOW" />
 		</object>
 		<object class="wxPanel" name="ID_CLUTPANEL3" variable="ClutPanel3" member="yes">
 			<pos>32,152</pos>
 			<size>496,40</size>
 			<bg>wxSYS_COLOUR_ACTIVECAPTION</bg>
+			<handler function="OnClutPanel1MouseLeave" entry="EVT_ENTER_WINDOW" />
 		</object>
 		<object class="wxPanel" name="ID_CLUTPANEL4" variable="ClutPanel4" member="yes">
 			<pos>24,200</pos>
 			<size>504,32</size>
+			<handler function="OnClutPanel1MouseLeave" entry="EVT_ENTER_WINDOW" />
 		</object>
 		<object class="wxButton" name="ID_BUTTON1" variable="Button1" member="yes">
 			<label>Label</label>

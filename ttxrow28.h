@@ -36,6 +36,7 @@ class TTXRow28 : public TTXLine
     unsigned int Region(bool primary);
 
     unsigned int GetColour(unsigned int clutIx, unsigned int colour){return clut[clutIx][colour];};
+    void SetColour(unsigned int colourVal, unsigned int clutIx, unsigned int colour){clut[clutIx][colour] = colourVal;};
 
   protected:
 

@@ -31,6 +31,9 @@ TTXRow28::~TTXRow28()
   //dtor
 }
 
+/// @todo Encode a TTI formatted packet
+
+/// Decode a tti formatted packet 28
 bool TTXRow28::decode(std::string line)
 {
   bool result = true;
@@ -238,3 +241,5 @@ unsigned int TTXRow28::Language(bool primary)
     return secondG0G2CharacterSet & 0x07;
   }
 }
+
+
