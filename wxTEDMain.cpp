@@ -258,6 +258,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     if (iPage<0) iPage=0;
     m_currentPage=m_rootPage->GetPage(iPage);
 
+    paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
       int leftEdge=iPage*m_ttxW*41; // Distance from first page to left edge of current page

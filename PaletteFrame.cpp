@@ -8,11 +8,12 @@
 
 //(*IdInit(PaletteFrame)
 const wxWindowID PaletteFrame::ID_CHOICE1 = wxNewId();
-const wxWindowID PaletteFrame::ID_PANEL1 = wxNewId();
+const wxWindowID PaletteFrame::ID_COLOUR = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL1 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL2 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL3 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL4 = wxNewId();
+const wxWindowID PaletteFrame::ID_BUTTON1 = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(PaletteFrame,wxFrame)
@@ -39,16 +40,23 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   PaletteRemapChoice->SetToolTip(_("Choose the foreground and background colour look up tables"));
   ClutPanel1 = new wxPanel(this, ID_CLUTPANEL1, wxPoint(32,56), wxSize(496,32), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL1"));
   ClutPanel1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION));
-  Panel1 = new wxPanel(ClutPanel1, ID_PANEL1, wxPoint(24,16), wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+  Button2 = new wxButton(ClutPanel1, ID_COLOUR, _("F0F"), wxPoint(56,8), wxSize(28,28), 0, wxDefaultValidator, _T("ID_COLOUR"));
+  Button2->Disable();
+  Button2->Hide();
   ClutPanel2 = new wxPanel(this, ID_CLUTPANEL2, wxPoint(32,96), wxSize(472,40), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL2"));
   ClutPanel3 = new wxPanel(this, ID_CLUTPANEL3, wxPoint(32,152), wxSize(496,40), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL3"));
   ClutPanel3->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION));
   ClutPanel4 = new wxPanel(this, ID_CLUTPANEL4, wxPoint(24,200), wxSize(504,32), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL4"));
-  ColourDialog1 = new wxColourDialog(this);
+  Button1 = new wxButton(this, ID_BUTTON1, _("Label"), wxPoint(232,16), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+  wxColourData __ColourData_1;
+  __ColourData_1.SetColour(wxColour(128,0,255));
+  ColourDialog1 = new wxColourDialog(this, &__ColourData_1);
 
   Connect(ID_CHOICE1, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PaletteFrame::OnChoice1Select);
+  Connect(ID_COLOUR, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PaletteFrame::OnColourClick);
   Connect(wxID_ANY, wxEVT_CLOSE_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClosePalette);
   //*)
+  Connect(wxID_ANY, wxEVT_BUTTON, (wxObjectEventFunction)&PaletteFrame::OnColourClick);
   palSizer->Add(PaletteRemapChoice, 0);
   palSizer->Add(ClutPanel1, 1, wxEXPAND);
   palSizer->Add(ClutPanel2, 1, wxEXPAND);
@@ -70,7 +78,9 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
     for (int colour = 0; colour < 8; ++colour)
     {
       fgs[clut]->AddSpacer(10);
-      fgs[clut]->Add( colours[clut][colour] = new wxButton(cluts[clut], wxID_ANY, wxString::Format("%d", colour)) );
+      auto button = new wxButton(cluts[clut], wxID_ANY, wxString::Format("%d", colour), wxDefaultPosition, wxSize(28,28), wxBORDER_NONE);
+      button->Enable(clut > 1);
+      fgs[clut]->Add( colours[clut][colour] = button);
     }
     cluts[clut]->SetSizer(fgs[clut]);
   }
@@ -106,16 +116,56 @@ void PaletteFrame::SetX28(TTXRow28* x28)
     for (unsigned int colour = 0; colour < 8; ++colour)
     {
       unsigned int clr = x28row->GetColour(clut, colour);
-      unsigned int b = clr & 0x0f;
-      unsigned int g = clr >> 4 & 0x0f;
-      unsigned int r = clr >> 8 & 0x0f;
-      // Stretch values
-      r = r | r << 4;
-      g = g | g << 4;
-      b = b | b << 4;
-      colours[clut][colour]->SetBackgroundColour(wxColour(r, g, b));
+      wxColour wxc = Pal2wxColour(clr);
+      colours[clut][colour]->SetBackgroundColour(wxc);
     }
   }
   this->Refresh();
 }
 
+
+void PaletteFrame::OnColourClick(wxCommandEvent& event)
+{
+  std::cout << "[PaletteFrame::OnColourClick] an event happened" << std::endl;
+  // Which button did we click on?
+  wxButton* button = static_cast<wxButton*>(event.GetEventObject());
+  // What colour is it?
+  auto clr = button->GetBackgroundColour();
+
+  wxColourData wxcd;
+  wxcd.SetColour(clr);
+  wxColourDialog* ColourDialog = new wxColourDialog(this, &wxcd);
+  if (ColourDialog->ShowModal() == wxID_OK)
+  {
+    wxColour clr2 = ColourDialog->GetColourData().GetColour();
+    unsigned int red = static_cast<unsigned char>(clr2.Red());
+    unsigned int green = static_cast<unsigned char>(clr2.Green());
+    unsigned int blue = static_cast<unsigned char>(clr2.Blue());
+    std::cout << "red = " << red << " green = " << green << " blue = " << blue << std::endl;
+    // @todo Put this colour back into the correct CLUT location
+  }
+  /*
+  auto cd = ColourDialog1->GetColourData();
+  cd.SetColour(clr);
+  ColourDialog1->Set
+  ColourDialog1->ShowModal();
+  std::cout << "[PaletteFrame::OnColourClick] an event happened. label = " << button->GetLabel() << std::endl;
+  */
+}
+
+wxColour Pal2wxColour(unsigned int pal)
+{
+  unsigned int b = pal & 0x0f;
+  unsigned int g = pal >> 4 & 0x0f;
+  unsigned int r = pal >> 8 & 0x0f;
+  // Stretch values
+  r = r | r << 4;
+  g = g | g << 4;
+  b = b | b << 4;
+  return wxColour(r, g, b);
+}
+
+unsigned int wxColour2Pal(wxColour wxc)
+{
+  return 0; // @todo
+}

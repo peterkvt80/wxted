@@ -30,8 +30,13 @@
 			<pos>32,56</pos>
 			<size>496,32</size>
 			<bg>wxSYS_COLOUR_ACTIVECAPTION</bg>
-			<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
-				<pos>24,16</pos>
+			<object class="wxButton" name="ID_COLOUR" variable="Button2" member="yes">
+				<label>F0F</label>
+				<pos>56,8</pos>
+				<size>28,28</size>
+				<enabled>0</enabled>
+				<hidden>1</hidden>
+				<handler function="OnColourClick" entry="EVT_BUTTON" />
 			</object>
 		</object>
 		<object class="wxPanel" name="ID_CLUTPANEL2" variable="ClutPanel2" member="yes">
@@ -47,6 +52,12 @@
 			<pos>24,200</pos>
 			<size>504,32</size>
 		</object>
-		<object class="wxColourDialog" variable="ColourDialog1" member="yes" />
+		<object class="wxButton" name="ID_BUTTON1" variable="Button1" member="yes">
+			<label>Label</label>
+			<pos>232,16</pos>
+		</object>
+		<object class="wxColourDialog" variable="ColourDialog1" member="yes">
+			<colour>#8000FF</colour>
+		</object>
 	</object>
 </wxsmith>
