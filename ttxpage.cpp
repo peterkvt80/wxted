@@ -1378,25 +1378,53 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
   // that we can have individual timings and properties per page.
   ttxfile << "CT," << std::dec << p->m_cycletimeseconds << "," << p->m_cycletimetype << std::endl;
 
-  ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
+  // ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
   // @todo Add support for individual CT timers here.
 
-
-  // The order is weird.
-  // First output row 0
-  // Then the enhancement packets
-  // Then the normal text rowa
-  std::string s=p->m_pLine[0]->GetMappedline7bit();
-  ttxfile << "OL," << std::dec << 0 << "," << s << "\n";
-  for (int j=0;j<MAXROW;j++)
+  // Handle enhancement packets here
+  if (p->m_pLine[25]!=nullptr && !p->m_pLine[25]->IsBlank()) // Placeholder: Just copy the packet for now
   {
-    int i=1+((24+j) % MAXROW); // Ensure that enhancement packets go out first. It helps with vbit
+    std::string s=p->m_pLine[25]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful.
+    ttxfile << "OL,25," << s << "\n";
+  }
+
+  if (p->m_pLine[26]!=nullptr && !p->m_pLine[26]->IsBlank()) // Placeholder: Just copy the packet for now
+  {
+    std::string s=p->m_pLine[26]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful.
+    ttxfile << "OL,26," << s << "\n";
+  }
+
+  if (p->m_pLine[27]!=nullptr && !p->m_pLine[27]->IsBlank()) // Placeholder: Just copy the packet for now
+  {
+    std::string s=p->m_pLine[27]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful.
+    ttxfile << "OL,27," << s << "\n";
+  }
+
+  std::string x28string = p->m_row28->encode(); // Packet 28 palette and language enhancement
+  if (x28string != "")
+  {
+    ttxfile << "OL,28," << x28string << std::endl;
+  }
+
+  if (p->m_pLine[29]!=nullptr && !p->m_pLine[29]->IsBlank()) // Placeholder: Just copy the packet for now
+  {
+    std::string s=p->m_pLine[29]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful.
+    ttxfile << "OL,29," << s << "\n";
+  }
+
+  // Output row 0. Inserters usually discard row 0. However they are useful for online viewers
+  if (p->m_pLine[0] != nullptr)
+  {
+    std::string s=p->m_pLine[0]->GetMappedline7bit();
+    ttxfile << "OL," << std::dec << 0 << "," << s << "\n";
+  }
+
+  // Then the normal text rows
+  for (int i = 1; i < 25; ++i)
+  {
     if (p->m_pLine[i]!=nullptr && !p->m_pLine[i]->IsBlank()) // Skip empty lines
     {
-        // This one for Andreas
-//             std::string s=p->m_pLine[i]->GetMappedline(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
-        // This one for Droidfax compatibility
-      s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
+      std::string s=p->m_pLine[i]->GetMappedline7bit(); // Choose the 7 bit output as it is more useful. TODO: Make this a menu option.
       ttxfile << "OL," << std::dec << i << "," << s << "\n";
     }
   }

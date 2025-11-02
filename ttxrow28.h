@@ -35,6 +35,12 @@ class TTXRow28 : public TTXLine
      */
     unsigned int Region(bool primary);
 
+    /** encode - Put X28 member data into TTI OL,28 string
+     *  @return TTI OL,28 packet string.
+     */
+    std::string encode();
+
+
     unsigned int GetColour(unsigned int clutIx, unsigned int colour){return clut[clutIx][colour];};
     void SetColour(unsigned int colourVal, unsigned int clutIx, unsigned int colour){clut[clutIx][colour] = colourVal;};
 
@@ -43,7 +49,7 @@ class TTXRow28 : public TTXLine
   private:
     // See ETSI EN 300 706 Table 4
     // Expanded fields from the packet 28 row
-    unsigned int dc = 0; /// Designation code
+    unsigned int dc = -1; /// Designation code
     unsigned int pageFunction = 0; /// Page function (dc 3..0) default 0 = level 1 page
     unsigned int pageCoding = 0; /// Page coding (dc 6..4) default 2 = Hamming DC + 13 triples
     unsigned int defaultG0G2CharacterSet = 0; /// Primary character set. 4 bits region and 3 bits language. 0 = Region 0 English
@@ -73,6 +79,7 @@ class TTXRow28 : public TTXLine
      *
      */
     void defaultClut();
+    bool isValid(){return dc >= 0;}; /// If this object has valid data
 
 };
 

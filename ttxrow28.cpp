@@ -243,3 +243,97 @@ unsigned int TTXRow28::Language(bool primary)
 }
 
 
+/** Encode this object's X28/0/1 data into a tti OL,28 packet.
+ * Packs the colour palette and colour remappings into triplets
+ * as well as the language settings.
+ * @return OL,28 line or "" if it fails
+ */
+std::string TTXRow28::encode()
+{
+  if (dc <0) { // Uninitialised?
+    return "";
+  }
+  unsigned int triples[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+  /** AddX28 - lambda has access to the triples array
+   *  Places bitCount bits of value into the triple[tripleIndex] and can
+   *  overflow into the next triple if needed.
+   *  @param value : Data to add to the packet
+   *  @param tripleIndex : Number of triple that the value starts in 1..13
+   *  @param bitIndex : The bit offset where the value starts in the triple
+   *  @param bitCount : The number of bits to use from value
+   */
+  auto AddX28 = [&](unsigned int value, unsigned int tripleIndex, unsigned int bitIndex, unsigned int bitCount)
+  {
+    // Mask off bitCount bits
+    unsigned int mask = (1 << bitCount) - 1;
+    unsigned int v2 = value & mask;
+
+    // Shift to the required bit index and trim any overflow
+    v2 = (v2 << (bitIndex-1)) & 0x3ffff;
+    triples[tripleIndex-1] |= v2;
+
+    // Overflow of high bits goes into the next triple
+    if ((bitIndex + bitCount) > 18)
+    {
+      v2 = value >>= 18 - bitIndex + 1;
+      triples[tripleIndex] |= v2;
+    }
+  };
+
+  // Work our way along the packet
+  AddX28(pageFunction, 1, 1, 4); // 1: 1-4 Page function. 4 bits
+  AddX28(pageCoding, 1, 5, 3); // 1: 5-7 Page coding. 3 bits
+  // @todo Implement X28 character sets
+  AddX28(defaultG0G2CharacterSet, 1, 8, 7); // 1: 8-14 Default G0 and G2 character set designation. 7 bits
+  AddX28(secondG0G2CharacterSet, 1, 15, 7); // 1: 15-18, 2: 1-3 Second G0 Set designation
+  AddX28(enableLeftPanel, 2, 4, 1);
+  AddX28(enableRightPanel, 2, 5, 1);
+  AddX28(sidePanelStatusFlag, 2, 6, 1);
+  AddX28(leftColumns, 2, 7, 4);
+  // 2: 11-18, 3:1-18, 13: 1-4
+  // 16x12 bit values
+  unsigned int tr = 2; // triple
+  unsigned int bi = 11; // bit offset
+  for (unsigned int colourix = 0; colourix<16; ++colourix)
+  {
+    unsigned int c = clut[2 + colourix / 8][colourix % 8]; // X28 only encodes CLUT 2 and 3
+    // Need to swap red and blue because X28 does colours backwards
+    unsigned int colour = ((c & 0x00f) << 8) | (c & 0x0f0) | (c & 0xf00) >> 8;
+    AddX28(colour, tr, bi, 12);
+    bi += 12;
+    if (bi >= 18)
+    {
+      bi = bi - 18;
+      tr++;
+    }
+  }
+
+  AddX28(defaultScreenColour, 13, 5, 5); // t13 5..9
+  AddX28(defaultRowColour, 13, 10, 5); // t13 10..14
+  AddX28(blackBackgroundSub, 13, 15, 1); // t13 15
+  AddX28(remap, 13, 16, 3); // t13 16..18
+
+  /*
+  if (false) {
+    let result = "                                        "
+    let s = ""
+    for (let i=0; i<13; ++i) {
+      s+=hex(triples[i],5)+" "
+    }
+    console.log("triples enc = " + s)
+  }
+  */
+  // Pack the triples into a tti OL,28
+  std::string result = "";
+  result += static_cast<char>(0x40);
+  for (unsigned int tr(0); tr < 13; ++tr) {
+    unsigned int t = triples[tr];
+    result += static_cast<char>( (t & 0x3f) | 0x40 );
+    result += static_cast<char>( ((t>>6) & 0x3f) | 0x40 );
+    result += static_cast<char>( ((t>>12) & 0x3f) | 0x40 );
+  }
+  std::cout << "result = " << result << std::endl;
+  return result;
+} // EncodeOL28
+
