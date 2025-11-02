@@ -23,6 +23,16 @@ class TTXRow28 : public TTXLine
      */
     unsigned int Remap(unsigned int colour, bool useForeground);
 
+    /** SetRemap. Controls the CLUT remapping.
+     *  @param mapval - CLUT remapping value 0..7
+     */
+    void SetRemap(unsigned int mapVal){remap = mapVal;}; // @todo Check range of value
+
+    /** GetRemap. Controls the CLUT remapping.
+     *  @return - The current CLUT remapping value 0..7
+     */
+    unsigned int GetRemap(){return remap;};
+
     /** Language - Get the language number 0..7
      *  @param primary - If true returns the primary language
      *  @return Language code 0..7

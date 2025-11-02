@@ -9,7 +9,7 @@
 		<style>wxCAPTION|wxDEFAULT_FRAME_STYLE</style>
 		<handler function="OnClosePalette" entry="EVT_CLOSE" />
 		<handler function="OnClutPanel1MouseLeave" entry="EVT_ENTER_WINDOW" />
-		<object class="wxChoice" name="ID_CHOICE1" variable="PaletteRemapChoice" member="yes">
+		<object class="wxChoice" name="ID_REMAP_CHOICE" variable="PaletteRemapChoice" member="yes">
 			<content>
 				<item>Fore 0 Back 0</item>
 				<item>Fore 0 Back 1</item>

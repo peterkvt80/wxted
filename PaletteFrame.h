@@ -35,7 +35,7 @@ class PaletteFrame: public wxFrame
   protected:
 
     //(*Identifiers(PaletteFrame)
-    static const wxWindowID ID_CHOICE1;
+    static const wxWindowID ID_REMAP_CHOICE;
     static const wxWindowID ID_COLOUR;
     static const wxWindowID ID_CLUTPANEL1;
     static const wxWindowID ID_CLUTPANEL2;
@@ -49,7 +49,7 @@ class PaletteFrame: public wxFrame
 
     //(*Handlers(PaletteFrame)
     void OnClosePalette(wxCloseEvent& event);
-    void OnChoice1Select(wxCommandEvent& event);
+    void OnChoiceRemapSelect(wxCommandEvent& event);
     void OnColourClick(wxCommandEvent& event);
     void OnClutPanel1MouseEnter(wxMouseEvent& event);
     void OnClutPanel1MouseLeave(wxMouseEvent& event);

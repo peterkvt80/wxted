@@ -7,7 +7,7 @@
 //*)
 
 //(*IdInit(PaletteFrame)
-const wxWindowID PaletteFrame::ID_CHOICE1 = wxNewId();
+const wxWindowID PaletteFrame::ID_REMAP_CHOICE = wxNewId();
 const wxWindowID PaletteFrame::ID_COLOUR = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL1 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL2 = wxNewId();
@@ -27,7 +27,7 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   //(*Initialize(PaletteFrame)
   Create(0, wxID_ANY, _("Colour lookup tables"), wxDefaultPosition, wxDefaultSize, wxCAPTION|wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
   SetClientSize(wxSize(554,240));
-  PaletteRemapChoice = new wxChoice(this, ID_CHOICE1, wxPoint(10,10), wxDLG_UNIT(this,wxSize(90,12)), 0, 0, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+  PaletteRemapChoice = new wxChoice(this, ID_REMAP_CHOICE, wxPoint(10,10), wxDLG_UNIT(this,wxSize(90,12)), 0, 0, 0, wxDefaultValidator, _T("ID_REMAP_CHOICE"));
   PaletteRemapChoice->SetSelection( PaletteRemapChoice->Append(_("Fore 0 Back 0")) );
   PaletteRemapChoice->Append(_("Fore 0 Back 1"));
   PaletteRemapChoice->Append(_("Fore 0 Back 2"));
@@ -52,7 +52,7 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   __ColourData_1.SetColour(wxColour(128,0,255));
   ColourDialog1 = new wxColourDialog(this, &__ColourData_1);
 
-  Connect(ID_CHOICE1, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PaletteFrame::OnChoice1Select);
+  Connect(ID_REMAP_CHOICE, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PaletteFrame::OnChoiceRemapSelect);
   Connect(ID_COLOUR, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PaletteFrame::OnColourClick);
   ClutPanel1->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseEnter, NULL, this);
   ClutPanel1->Connect(wxEVT_LEAVE_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
@@ -64,6 +64,7 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   //*)
   Connect(wxID_ANY, wxEVT_BUTTON, (wxObjectEventFunction)&PaletteFrame::OnColourClick);
   palSizer->Add(PaletteRemapChoice, 0);
+  palSizer->AddSpacer(10);
   palSizer->Add(ClutPanel1, 1, wxEXPAND);
   palSizer->Add(ClutPanel2, 1, wxEXPAND);
   palSizer->Add(ClutPanel3, 1, wxEXPAND);
@@ -105,8 +106,12 @@ void PaletteFrame::OnClosePalette(wxCloseEvent& event)
   Show(false);
 }
 
-void PaletteFrame::OnChoice1Select(wxCommandEvent& event)
+void PaletteFrame::OnChoiceRemapSelect(wxCommandEvent& event)
 {
+  // Get the remap number 0..7
+  unsigned int choice = PaletteRemapChoice->GetSelection();
+  x28row->SetRemap(choice);
+  // Set the x28
 }
 
 void PaletteFrame::SetX28(TTXRow28* x28)
@@ -116,6 +121,9 @@ void PaletteFrame::SetX28(TTXRow28* x28)
   {
     return;
   }
+  // Copy remap to the choice widget
+  PaletteRemapChoice->SetSelection(x28row->GetRemap());
+
   // Copy clut colours to the GUI
   for (unsigned int clut = 0; clut < 4; ++clut)
   {
