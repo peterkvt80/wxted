@@ -25,7 +25,7 @@
 			<size>90,12d</size>
 			<tooltip>Choose the foreground and background colour look up tables</tooltip>
 			<maxsize>200,100</maxsize>
-			<handler function="OnChoice1Select" entry="EVT_CHOICE" />
+			<handler function="OnChoiceRemapSelect" entry="EVT_CHOICE" />
 		</object>
 		<object class="wxPanel" name="ID_CLUTPANEL1" variable="ClutPanel1" member="yes">
 			<pos>32,56</pos>
@@ -33,34 +33,51 @@
 			<bg>wxSYS_COLOUR_ACTIVECAPTION</bg>
 			<handler function="OnClutPanel1MouseEnter" entry="EVT_ENTER_WINDOW" />
 			<handler function="OnClutPanel1MouseLeave" entry="EVT_LEAVE_WINDOW" />
-			<object class="wxButton" name="ID_COLOUR" variable="Button2" member="yes">
-				<label>F0F</label>
-				<pos>56,8</pos>
-				<size>28,28</size>
-				<enabled>0</enabled>
-				<hidden>1</hidden>
-				<handler function="OnColourClick" entry="EVT_BUTTON" />
+			<object class="wxStaticText" name="ID_STATICTEXT0" variable="StaticTextCLUT0" member="yes">
+				<label>CLUT 0: Foreground &amp; Background</label>
+				<pos>0,16</pos>
+				<size>272,16</size>
+				<bg>wxSYS_COLOUR_WINDOW</bg>
 			</object>
 		</object>
 		<object class="wxPanel" name="ID_CLUTPANEL2" variable="ClutPanel2" member="yes">
 			<pos>32,96</pos>
 			<size>472,40</size>
 			<handler function="OnClutPanel1MouseEnter" entry="EVT_ENTER_WINDOW" />
+			<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticTextCLUT1" member="yes">
+				<label>CLUT 0: Foreground &amp; Background</label>
+				<pos>0,24</pos>
+				<size>272,16</size>
+				<bg>wxSYS_COLOUR_WINDOW</bg>
+			</object>
 		</object>
 		<object class="wxPanel" name="ID_CLUTPANEL3" variable="ClutPanel3" member="yes">
 			<pos>32,152</pos>
 			<size>496,40</size>
 			<bg>wxSYS_COLOUR_ACTIVECAPTION</bg>
 			<handler function="OnClutPanel1MouseLeave" entry="EVT_ENTER_WINDOW" />
+			<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticTextCLUT2" member="yes">
+				<label>CLUT 0: Foreground &amp; Background</label>
+				<pos>0,24</pos>
+				<size>272,16</size>
+				<bg>wxSYS_COLOUR_WINDOW</bg>
+			</object>
 		</object>
 		<object class="wxPanel" name="ID_CLUTPANEL4" variable="ClutPanel4" member="yes">
 			<pos>24,200</pos>
 			<size>504,32</size>
 			<handler function="OnClutPanel1MouseLeave" entry="EVT_ENTER_WINDOW" />
+			<object class="wxStaticText" name="ID_STATICTEXT3" variable="StaticTextCLUT3" member="yes">
+				<label>CLUT 0: Foreground &amp; Background</label>
+				<pos>0,16</pos>
+				<size>272,16</size>
+				<bg>wxSYS_COLOUR_WINDOW</bg>
+			</object>
 		</object>
-		<object class="wxButton" name="ID_BUTTON1" variable="Button1" member="yes">
-			<label>Label</label>
-			<pos>232,16</pos>
+		<object class="wxButton" name="ID_DEFAULT_BUTTON" variable="DefaultsButton" member="yes">
+			<label>Set defaults</label>
+			<pos>424,8</pos>
+			<handler function="OnDefaultButtonClick" entry="EVT_BUTTON" />
 		</object>
 		<object class="wxColourDialog" variable="ColourDialog1" member="yes">
 			<colour>#8000FF</colour>

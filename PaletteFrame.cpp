@@ -8,12 +8,15 @@
 
 //(*IdInit(PaletteFrame)
 const wxWindowID PaletteFrame::ID_REMAP_CHOICE = wxNewId();
-const wxWindowID PaletteFrame::ID_COLOUR = wxNewId();
+const wxWindowID PaletteFrame::ID_STATICTEXT0 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL1 = wxNewId();
+const wxWindowID PaletteFrame::ID_STATICTEXT1 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL2 = wxNewId();
+const wxWindowID PaletteFrame::ID_STATICTEXT2 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL3 = wxNewId();
+const wxWindowID PaletteFrame::ID_STATICTEXT3 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL4 = wxNewId();
-const wxWindowID PaletteFrame::ID_BUTTON1 = wxNewId();
+const wxWindowID PaletteFrame::ID_DEFAULT_BUTTON = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(PaletteFrame,wxFrame)
@@ -40,25 +43,30 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   PaletteRemapChoice->SetToolTip(_("Choose the foreground and background colour look up tables"));
   ClutPanel1 = new wxPanel(this, ID_CLUTPANEL1, wxPoint(32,56), wxSize(496,32), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL1"));
   ClutPanel1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION));
-  Button2 = new wxButton(ClutPanel1, ID_COLOUR, _("F0F"), wxPoint(56,8), wxSize(28,28), 0, wxDefaultValidator, _T("ID_COLOUR"));
-  Button2->Disable();
-  Button2->Hide();
+  StaticTextCLUT0 = new wxStaticText(ClutPanel1, ID_STATICTEXT0, _("CLUT 0: Foreground & Background"), wxPoint(0,16), wxSize(272,16), 0, _T("ID_STATICTEXT0"));
+  StaticTextCLUT0->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   ClutPanel2 = new wxPanel(this, ID_CLUTPANEL2, wxPoint(32,96), wxSize(472,40), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL2"));
+  StaticTextCLUT1 = new wxStaticText(ClutPanel2, ID_STATICTEXT1, _("CLUT 0: Foreground & Background"), wxPoint(0,24), wxSize(272,16), 0, _T("ID_STATICTEXT1"));
+  StaticTextCLUT1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   ClutPanel3 = new wxPanel(this, ID_CLUTPANEL3, wxPoint(32,152), wxSize(496,40), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL3"));
   ClutPanel3->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION));
+  StaticTextCLUT2 = new wxStaticText(ClutPanel3, ID_STATICTEXT2, _("CLUT 0: Foreground & Background"), wxPoint(0,24), wxSize(272,16), 0, _T("ID_STATICTEXT2"));
+  StaticTextCLUT2->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
   ClutPanel4 = new wxPanel(this, ID_CLUTPANEL4, wxPoint(24,200), wxSize(504,32), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL4"));
-  Button1 = new wxButton(this, ID_BUTTON1, _("Label"), wxPoint(232,16), wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
+  StaticTextCLUT3 = new wxStaticText(ClutPanel4, ID_STATICTEXT3, _("CLUT 0: Foreground & Background"), wxPoint(0,16), wxSize(272,16), 0, _T("ID_STATICTEXT3"));
+  StaticTextCLUT3->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+  DefaultsButton = new wxButton(this, ID_DEFAULT_BUTTON, _("Set defaults"), wxPoint(424,8), wxDefaultSize, 0, wxDefaultValidator, _T("ID_DEFAULT_BUTTON"));
   wxColourData __ColourData_1;
   __ColourData_1.SetColour(wxColour(128,0,255));
   ColourDialog1 = new wxColourDialog(this, &__ColourData_1);
 
   Connect(ID_REMAP_CHOICE, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PaletteFrame::OnChoiceRemapSelect);
-  Connect(ID_COLOUR, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PaletteFrame::OnColourClick);
   ClutPanel1->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseEnter, NULL, this);
   ClutPanel1->Connect(wxEVT_LEAVE_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
   ClutPanel2->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseEnter, NULL, this);
   ClutPanel3->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
   ClutPanel4->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
+  Connect(ID_DEFAULT_BUTTON, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PaletteFrame::OnDefaultButtonClick);
   Connect(wxID_ANY, wxEVT_CLOSE_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClosePalette);
   Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave);
   //*)
@@ -75,12 +83,18 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   cluts[2] = ClutPanel3;
   cluts[3] = ClutPanel4;
 
+  captions[0] = StaticTextCLUT0;
+  captions[1] = StaticTextCLUT1;
+  captions[2] = StaticTextCLUT2;
+  captions[3] = StaticTextCLUT3;
+
   SetSizer(palSizer);
 
   // Colour array
 
   for (unsigned int clut = 0; clut < 4; ++clut)
   {
+    // The eight colour swatches
     fgs[clut] = new wxBoxSizer(wxHORIZONTAL);
     for (int colour = 0; colour < 8; ++colour)
     {
@@ -89,7 +103,12 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
       button->Enable(clut > 1);
       fgs[clut]->Add( colours[clut][colour] = button);
     }
-    cluts[clut]->SetSizer(fgs[clut]);
+    // Layout the swatches and the text
+    clutSizer[clut] = new wxBoxSizer(wxVERTICAL);
+    clutSizer[clut]-> Add(fgs[clut]);
+    clutSizer[clut]-> Add(captions[clut]);
+    // cluts[clut]->SetSizer(fgs[clut]);
+    cluts[clut]-> SetSizer(clutSizer[clut]);
   }
 }
 
@@ -110,8 +129,59 @@ void PaletteFrame::OnChoiceRemapSelect(wxCommandEvent& event)
 {
   // Get the remap number 0..7
   unsigned int choice = PaletteRemapChoice->GetSelection();
-  x28row->SetRemap(choice);
-  // Set the x28
+  x28row->SetRemap(choice); // Set the x28
+  // Update the captions
+  // Clear all the captions
+  for (unsigned int i = 0; i<4; ++i)
+  {
+    captions[i]->SetLabel("");
+    captions[i]->Show(false);
+  }
+  switch (choice)
+  {
+  case 0:
+    captions[0]->Show();
+    captions[0]->SetLabel("Foreground and background");
+    break;
+  case 1:
+    captions[0]->SetLabel("Foreground");
+    captions[0]->Show();
+    captions[1]->SetLabel("Background");
+    captions[1]->Show();
+    break;
+  case 2:
+    captions[0]->SetLabel("Foreground");
+    captions[0]->Show();
+    captions[2]->SetLabel("Background");
+    captions[2]->Show();
+    break;
+  case 3:
+    captions[1]->Show();
+    captions[1]->SetLabel("Foreground and background");
+    break;
+  case 4:
+    captions[1]->SetLabel("Foreground");
+    captions[1]->Show();
+    captions[2]->SetLabel("Background");
+    captions[2]->Show();
+    break;
+  case 5:
+    captions[2]->Show();
+    captions[2]->SetLabel("Foreground");
+    captions[1]->Show();
+    captions[1]->SetLabel("Background");
+    break;
+  case 6:
+    captions[2]->Show();
+    captions[2]->SetLabel("Foreground and background");
+    break;
+  case 7:
+    captions[2]->SetLabel("Foreground");
+    captions[2]->Show();
+    captions[3]->SetLabel("Background");
+    captions[3]->Show();
+    break;
+  }
 }
 
 void PaletteFrame::SetX28(TTXRow28* x28)
@@ -119,6 +189,7 @@ void PaletteFrame::SetX28(TTXRow28* x28)
   x28row = x28;
   if (x28 == nullptr)
   {
+    std::cout << "[PaletteFrame::SetX28] x28 is null :-(" << std::endl;
     return;
   }
   // Copy remap to the choice widget
@@ -134,15 +205,35 @@ void PaletteFrame::SetX28(TTXRow28* x28)
       colours[clut][colour]->SetBackgroundColour(wxc);
     }
   }
+
+  OnChoiceRemapSelect(*(new wxCommandEvent()) );
   this->Refresh();
 }
 
+template< typename T >
+std::string int_to_hex( T i )
+{
+  std::stringstream stream;
+  stream << std::setfill ('0') << std::setw(2)
+         << std::hex << i;
+  return stream.str();
+}
 
 void PaletteFrame::OnColourClick(wxCommandEvent& event)
 {
   std::cout << "[PaletteFrame::OnColourClick] an event happened" << std::endl;
   // Which button did we click on?
   wxButton* button = static_cast<wxButton*>(event.GetEventObject());
+
+  // No idea why the default button event comes here,
+  // so redirect to the handler that we actually want.
+  // Some mysterious way that wxID_ANY works?
+  if (button == DefaultsButton)
+  {
+    OnDefaultButtonClick(event);
+    return;
+  }
+
   // What colour is it?
   auto clr = button->GetBackgroundColour();
 
@@ -177,7 +268,8 @@ void PaletteFrame::OnColourClick(wxCommandEvent& event)
       }
     }
     std::cout << "Found button, clut = " << clut << " colour = " << colour << std::endl;
-    unsigned int colourVal = ((red & 0x0f) << 8) | ((green & 0x0f) << 4) | (blue & 0x0f);
+    unsigned int colourVal = ((red & 0xf0) << 4) | ((green & 0xf0)) | (blue & 0xf0 >> 4);
+    button->SetLabel(int_to_hex(colourVal));
     x28row->SetColour(colourVal, clut, colour);
   }
 }
@@ -209,4 +301,12 @@ void PaletteFrame::OnClutPanel1MouseLeave(wxMouseEvent& event)
 {
   // Set the cursor to normal
   SetCursor(*wxSTANDARD_CURSOR);
+}
+
+void PaletteFrame::OnDefaultButtonClick(wxCommandEvent& event)
+{
+  x28row->defaultClut();
+  x28row->SetRemap(0);
+  // @todo black background substitution
+  SetX28(x28row);
 }

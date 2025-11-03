@@ -50,6 +50,10 @@ class TTXRow28 : public TTXLine
      */
     std::string encode();
 
+    /** @brief Set the cluts to all the default values
+     *
+     */
+    void defaultClut();
 
     unsigned int GetColour(unsigned int clutIx, unsigned int colour){return clut[clutIx][colour];};
     void SetColour(unsigned int colourVal, unsigned int clutIx, unsigned int colour){clut[clutIx][colour] = colourVal;};
@@ -85,10 +89,6 @@ class TTXRow28 : public TTXLine
      */
     bool decode(std::string line);
 
-    /** @brief Set the cluts to all the default values
-     *
-     */
-    void defaultClut();
     bool isValid(){return dc >= 0;}; /// If this object has valid data
 
 };

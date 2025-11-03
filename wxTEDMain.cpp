@@ -2825,8 +2825,10 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 
   if (LoadPageFileDialog->ShowModal() != wxID_CANCEL)
   {
-
-    if (m_rootPage!=NULL) delete m_rootPage; // Delete the root page. All subpages will go too.
+    if (m_rootPage!=NULL)
+    {
+      delete m_rootPage; // Delete the root page. All subpages will go too.
+    }
     auto pathStr=LoadPageFileDialog->GetPath().ToStdString();
 
     wxString filename=LoadPageFileDialog->GetFilename();
@@ -2841,16 +2843,18 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 
     m_iPageCount=m_rootPage->GetPageCount();
 
-    // wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
     iPage=0;
     m_offset.x=0;
-    m_currentPage=m_rootPage;
 
-    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language
+    SetRegionMenu(m_rootPage->GetRegion(true)); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
-    // OnPaint(Pevent);    // Refresh with the new page
+
+    // Update the palette in case it is visible
+    paletteFrame->SetX28(m_rootPage->GetX28Row());
+
+    m_currentPage=m_rootPage;
 
     // Force an update now
     Refresh();
@@ -2925,18 +2929,19 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
 
     m_iPageCount=m_rootPage->GetPageCount();
 
-    // wxPaintEvent Pevent(0); // Make a dummy event
     m_setLanguage();
     iPage=0;
     m_offset.x=0;
-    m_currentPage=m_rootPage;
 
-    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language
+    SetRegionMenu(m_rootPage->GetRegion(true)); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
-    //OnPaint(event);    // Refresh with the new page
 
-    // m_parentWindow->Refresh();
+    // Update the palette in case it is visible
+    paletteFrame->SetX28(m_rootPage->GetX28Row());
+
+    m_currentPage=m_rootPage;
+
     // Force an update now
     Refresh();
     Update();
