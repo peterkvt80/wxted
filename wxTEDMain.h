@@ -84,7 +84,7 @@ class wxTEDFrame: public wxFrame
         bool m_Released;   // If true, m_ShowMarkup can be toggled
 
         // Language menu
-        void SetRegionMenu(int region);
+        void SetRegionMenu(wxMenuItem* languages[8], int region);
 
         unsigned int m_ttxW; /// Font width
         unsigned int m_ttxH; /// Font height
@@ -154,6 +154,10 @@ class wxTEDFrame: public wxFrame
          * \param line of text to transform
          */
         void GenerateHeader(TTXLine* line);
+
+        // Items in language menu lists
+        wxMenuItem* PrimaryLanguage[8];
+        wxMenuItem* SecondLanguage[8];
 
 
 
@@ -275,7 +279,15 @@ class wxTEDFrame: public wxFrame
         static const wxWindowID ID_REGION8;
         static const wxWindowID ID_REGION10;
         static const wxWindowID ID_REGION;
-        static const wxWindowID ID_LANGUAGE2;
+        static const wxWindowID idSecondLanguage0;
+        static const wxWindowID idSecondLanguage1;
+        static const wxWindowID idSecondLanguage2;
+        static const wxWindowID idSecondLanguage3;
+        static const wxWindowID idSecondLanguage4;
+        static const wxWindowID idSecondLanguage5;
+        static const wxWindowID idSecondLanguage6;
+        static const wxWindowID idSecondLanguage7;
+        static const wxWindowID ID_SECOND_REGION;
         static const wxWindowID ID_MENUITEM2;
         static const wxWindowID ID_PALETTE;
         static const wxWindowID x28enhance;
@@ -306,14 +318,22 @@ class wxTEDFrame: public wxFrame
         wxMenu* MenuItem5;
         wxMenu* MenuItemLanguage;
         wxMenu* MenuPresentation;
+        wxMenu* SecondLanguageMenu;
         wxMenuItem* MenuDeleteLine;
         wxMenuItem* MenuExportZxnet;
         wxMenuItem* MenuInsertLine;
         wxMenuItem* MenuItem11;
         wxMenuItem* MenuItem1;
+        wxMenuItem* MenuItem2ndLang0;
+        wxMenuItem* MenuItem2ndLang1;
+        wxMenuItem* MenuItem2ndLang2;
+        wxMenuItem* MenuItem2ndLang3;
+        wxMenuItem* MenuItem2ndLang4;
+        wxMenuItem* MenuItem2ndLang5;
+        wxMenuItem* MenuItem2ndLang6;
+        wxMenuItem* MenuItem2ndLang7;
         wxMenuItem* MenuItem3;
         wxMenuItem* MenuItem4;
-        wxMenuItem* MenuItem6;
         wxMenuItem* MenuItem7;
         wxMenuItem* MenuItem8;
         wxMenuItem* MenuItemConcealToggle;

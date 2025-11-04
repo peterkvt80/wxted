@@ -274,8 +274,32 @@
 							<radio>1</radio>
 						</object>
 					</object>
-					<object class="wxMenuItem" name="ID_LANGUAGE2" variable="MenuItem6" member="yes">
+					<object class="wxMenu" name="ID_SECOND_REGION" variable="SecondLanguageMenu" member="yes">
 						<label>Second language</label>
+						<object class="wxMenuItem" name="idSecondLanguage0" variable="MenuItem2ndLang0" member="yes">
+							<label>language 0</label>
+						</object>
+						<object class="wxMenuItem" name="idSecondLanguage1" variable="MenuItem2ndLang1" member="yes">
+							<label>language 1</label>
+						</object>
+						<object class="wxMenuItem" name="idSecondLanguage2" variable="MenuItem2ndLang2" member="yes">
+							<label>language 2</label>
+						</object>
+						<object class="wxMenuItem" name="idSecondLanguage3" variable="MenuItem2ndLang3" member="yes">
+							<label>language 3</label>
+						</object>
+						<object class="wxMenuItem" name="idSecondLanguage4" variable="MenuItem2ndLang4" member="yes">
+							<label>language 4</label>
+						</object>
+						<object class="wxMenuItem" name="idSecondLanguage5" variable="MenuItem2ndLang5" member="yes">
+							<label>language 5</label>
+						</object>
+						<object class="wxMenuItem" name="idSecondLanguage6" variable="MenuItem2ndLang6" member="yes">
+							<label>language 6</label>
+						</object>
+						<object class="wxMenuItem" name="idSecondLanguage7" variable="MenuItem2ndLang7" member="yes">
+							<label>language 7</label>
+						</object>
 					</object>
 					<object class="wxMenuItem" name="ID_MENUITEM2" variable="MenuItem8" member="yes">
 						<label>Second region</label>

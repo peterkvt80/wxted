@@ -116,7 +116,15 @@ const wxWindowID wxTEDFrame::ID_REGION6 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION8 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION10 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION = wxNewId();
-const wxWindowID wxTEDFrame::ID_LANGUAGE2 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage0 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage1 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage2 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage3 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage4 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage5 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage6 = wxNewId();
+const wxWindowID wxTEDFrame::idSecondLanguage7 = wxNewId();
+const wxWindowID wxTEDFrame::ID_SECOND_REGION = wxNewId();
 const wxWindowID wxTEDFrame::ID_MENUITEM2 = wxNewId();
 const wxWindowID wxTEDFrame::ID_PALETTE = wxNewId();
 const wxWindowID wxTEDFrame::x28enhance = wxNewId();
@@ -240,6 +248,11 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 
     paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
 
+    // Take the languages and regions and update the menu selections
+    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // true is primary
+    // @todo Secondary language
+
+
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
       auto rightEdge=(iPage+1)*m_ttxW*41; // Distance from first page to end of current page
@@ -257,6 +270,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     iPage--;
     if (iPage<0) iPage=0;
     m_currentPage=m_rootPage->GetPage(iPage);
+    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // true is primary
+    // @todo Secondary language
 
     paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
@@ -1494,8 +1509,24 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItemRegion10 = new wxMenuItem(MenuItem2, ID_REGION10, _("10: Hebrew/Arabic"), _("Language group"), wxITEM_RADIO);
     MenuItem2->Append(MenuItemRegion10);
     MenuItem5->Append(ID_REGION, _("Main region"), MenuItem2, wxEmptyString);
-    MenuItem6 = new wxMenuItem(MenuItem5, ID_LANGUAGE2, _("Second language"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem5->Append(MenuItem6);
+    SecondLanguageMenu = new wxMenu();
+    MenuItem2ndLang0 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage0, _("language 0"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang0);
+    MenuItem2ndLang1 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage1, _("language 1"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang1);
+    MenuItem2ndLang2 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage2, _("language 2"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang2);
+    MenuItem2ndLang3 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage3, _("language 3"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang3);
+    MenuItem2ndLang4 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage4, _("language 4"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang4);
+    MenuItem2ndLang5 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage5, _("language 5"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang5);
+    MenuItem2ndLang6 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage6, _("language 6"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang6);
+    MenuItem2ndLang7 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage7, _("language 7"), wxEmptyString, wxITEM_NORMAL);
+    SecondLanguageMenu->Append(MenuItem2ndLang7);
+    MenuItem5->Append(ID_SECOND_REGION, _("Second language"), SecondLanguageMenu, wxEmptyString);
     MenuItem8 = new wxMenuItem(MenuItem5, ID_MENUITEM2, _("Second region"), wxEmptyString, wxITEM_NORMAL);
     MenuItem5->Append(MenuItem8);
     MenuItemPalette = new wxMenuItem(MenuItem5, ID_PALETTE, _("Palette..."), _("Colours"), wxITEM_NORMAL);
@@ -1613,6 +1644,24 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(wxEVT_MOUSEWHEEL, (wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
 
+    PrimaryLanguage[0] = MenuItemEnglish;
+    PrimaryLanguage[1] = MenuItemFrench;
+    PrimaryLanguage[2] = MenuItemSwedish;
+    PrimaryLanguage[3] = MenuItemCzech;
+    PrimaryLanguage[4] = MenuItemGerman;
+    PrimaryLanguage[5] = MenuItemSpanish;
+    PrimaryLanguage[6] = MenuItemItalian;
+    PrimaryLanguage[7] = MenuItemUnused;
+
+    SecondLanguage[0] = MenuItem2ndLang0;
+    SecondLanguage[1] = MenuItem2ndLang1;
+    SecondLanguage[2] = MenuItem2ndLang2;
+    SecondLanguage[3] = MenuItem2ndLang3;
+    SecondLanguage[4] = MenuItem2ndLang4;
+    SecondLanguage[5] = MenuItem2ndLang5;
+    SecondLanguage[6] = MenuItem2ndLang6;
+    SecondLanguage[7] = MenuItem2ndLang7;
+
     // Precompute the Font metrics
     wxFont wf=GetFont();
     wxSize ttxSize;
@@ -1668,7 +1717,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_publish_ftp_password=m_config->Read("/wxted/FTP/Password");
     m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
-    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language [!] @todo Add second language but probably on an X28 config dialog
+    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // Region language [!] @todo Add second language but probably on an X28 config dialog
 
 
 // wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
@@ -1788,7 +1837,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
     SetTitle(_("wxTED ")+VERSION_STRING);
     m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
     m_setLanguage();
-    SetRegionMenu(0);
+    SetRegionMenu(PrimaryLanguage, 0);
     m_iPageCount=1;
     iPage=0;
     m_currentPage=m_rootPage;
@@ -1894,7 +1943,7 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     // Create a new page
     p=new TTXPage();
     m_setLanguage();
-    SetRegionMenu(m_currentPage->GetRegion(true)); // Region language [!] Move to dialog and add second G0
+    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // Region language [!] Move to dialog and add second G0
     iPage++;
     // Save the child page pointer
     childPage=m_currentPage->Getm_SubPage();
@@ -2511,105 +2560,98 @@ void wxTEDFrame::OnMenuItemRegionSelected(wxCommandEvent& event)
     // See Table 32: Function of Default G0 and G2 Character Set Designation and National Option
     // Selection bits in packets X/28/0 Format 1, X/28/4, M/29/0 and M/29/4
 
-    SetRegionMenu(region);
+    SetRegionMenu(PrimaryLanguage, region);
 }
 
-void wxTEDFrame::SetRegionMenu(int region)
+void wxTEDFrame::SetRegionMenu(wxMenuItem* languages[8], int region)
 {
-    // Enable everything
-    MenuItemEnglish->Enable(true);
-    MenuItemFrench->Enable(true);
-    MenuItemSwedish->Enable(true);
-    MenuItemCzech->Enable(true);
-    MenuItemGerman->Enable(true);
-    MenuItemSpanish->Enable(true);
-    MenuItemItalian->Enable(true);
-    MenuItemUnused->Enable(true);
-    switch (region) // Admittedly, the first 5 are redundant!
+    switch (region)
     {
     case 0:
-        MenuItemEnglish->SetItemLabel(_("English"));
-        MenuItemFrench->SetItemLabel (_("French"));
-        MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
-        MenuItemCzech->SetItemLabel  (_("Czech/Slovak"));
-        MenuItemGerman->SetItemLabel (_("German"));
-        MenuItemSpanish->SetItemLabel(_("Portuguese/Spanish"));
-        MenuItemItalian->SetItemLabel(_("Italian"));
-        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
-        break;
+      {
+        std::string langStrings[8] = {"English", "French", "Swedish/Finnish/Hungarian","Czech/Slovak", "German", "Portuguese/Spanish", "Italian", "Unused"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     case 1:
-        MenuItemEnglish->SetItemLabel(_("Polish"));
-        MenuItemFrench->SetItemLabel (_("French"));
-        MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
-        MenuItemCzech->SetItemLabel  (_("Czech/Slovak"));
-        MenuItemGerman->SetItemLabel (_("German"));
-        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
-        MenuItemItalian->SetItemLabel(_("Italian"));
-        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
-        break;
+      {
+        std::string langStrings[8] = {"Polish", "French", "Swedish/Finnish/Hungarian","Czech/Slovak", "German", "Unused", "Italian", "Unused"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     case 2:
-        MenuItemEnglish->SetItemLabel(_("English"));
-        MenuItemFrench->SetItemLabel (_("French"));
-        MenuItemSwedish->SetItemLabel(_("Swedish/Finnish/Hungarian"));
-        MenuItemCzech->SetItemLabel  (_("Turkish"));
-        MenuItemGerman->SetItemLabel (_("German"));
-        MenuItemSpanish->SetItemLabel(_("Portuguese/Spanish"));
-        MenuItemItalian->SetItemLabel(_("Italian"));
-        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
-        break;
+      {
+        std::string langStrings[8] = {"English", "French", "Swedish/Finnish/Hungarian","Turkish", "German", "Portuguese/Spanish", "Italian", "Unused"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     case 3:
-        MenuItemEnglish->SetItemLabel(_("Unused")); MenuItemEnglish->Enable(false);
-        MenuItemFrench->SetItemLabel (_("Unused")); MenuItemFrench->Enable(false);
-        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
-        MenuItemCzech->SetItemLabel  (_("Unused")); MenuItemCzech->Enable(false);
-        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
-        MenuItemSpanish->SetItemLabel(_("Serbian/Croatian/Slovenian"));
-        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
-        MenuItemUnused->SetItemLabel (_("Rumanian"));
-        break;
+      {
+        std::string langStrings[8] = {"Unused", "Unused", "Unused", "Unused", "Unused", "Serbian/Croatian/Slovenian", "Unused", "Rumanian"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     case 4:
-        MenuItemEnglish->SetItemLabel(_("Serbian/Croatian"));
-        MenuItemFrench->SetItemLabel (_("Russian/Bulgarian"));
-        MenuItemSwedish->SetItemLabel(_("Estonian"));
-        MenuItemCzech->SetItemLabel  (_("Czech/Slovak"));
-        MenuItemGerman->SetItemLabel (_("German"));
-        MenuItemSpanish->SetItemLabel(_("Ukrainian"));
-        MenuItemItalian->SetItemLabel(_("Lettish/Lithuanian"));
-        MenuItemUnused->SetItemLabel (_("Unused")); MenuItemUnused->Enable(false);
-        break;
+      {
+        std::string langStrings[8] = {"Serbian/Croatian", "Russian/Bulgarian", "Estonian", "Czech/Slovak", "German", "Ukrainian", "Lettish/Lithuanian", "Unused"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     case 6: // Turkish and Greek
-        MenuItemEnglish->SetItemLabel(_("Unused")); MenuItemEnglish->Enable(false);
-        MenuItemFrench->SetItemLabel (_("Unused")); MenuItemFrench->Enable(false);
-        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
-        MenuItemCzech->SetItemLabel  (_("Turkish"));
-        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
-        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
-        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
-        MenuItemUnused->SetItemLabel (_("Greek"));
-        break;
+      {
+        std::string langStrings[8] = {"Unused", "Unused", "Unused", "Turkish", "Unused", "Unused", "Unused", "Greek"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     case 8: // English/French/Arabic;
-        MenuItemEnglish->SetItemLabel(_("English"));
-        MenuItemFrench->SetItemLabel (_("French"));
-        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
-        MenuItemCzech->SetItemLabel  (_("Unused")); MenuItemCzech->Enable(false);
-        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
-        MenuItemSpanish->SetItemLabel(_("Unused")); MenuItemSpanish->Enable(false);
-        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
-        MenuItemUnused->SetItemLabel (_("Arabic"));
-        break;
+      {
+        std::string langStrings[8] = {"English", "French", "Unused", "Unused", "Unused", "Unused", "Unused", "Arabic"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     case 10: // Hebrew/Arabic
-        MenuItemEnglish->SetItemLabel(_("Unused")); MenuItemEnglish->Enable(false);
-        MenuItemFrench->SetItemLabel (_("Unused")); MenuItemFrench->Enable(false);
-        MenuItemSwedish->SetItemLabel(_("Unused")); MenuItemSwedish->Enable(false);
-        MenuItemCzech->SetItemLabel  (_("Unused")); MenuItemCzech->Enable(false);
-        MenuItemGerman->SetItemLabel (_("Unused")); MenuItemGerman->Enable(false);
-        MenuItemSpanish->SetItemLabel(_("Hebrew"));
-        MenuItemItalian->SetItemLabel(_("Unused")); MenuItemItalian->Enable(false);
-        MenuItemUnused->SetItemLabel (_("Arabic"));
-        break;
+      {
+        std::string langStrings[8] = {"Unused", "Unused", "Unused", "Unused", "Unused", "Hebrew", "Unused", "Arabic"};
+        for (auto i(0); i < 8; ++i)
+        {
+            languages[i]->SetItemLabel(langStrings[i]);
+        }
+      }
+      break;
     default: region=0;
     }
-    m_currentPage->SetRegion(region);
+
+    // Hide the unused menu items
+    for (auto lang(0); lang < 8; ++lang)
+    {
+       wxString s = languages[lang]->GetItemLabel();
+       languages[lang]->Enable(s.compare(wxString("Unused")) != 0);
+    }
+
+
+    // Now check the appropriate menu item
+    m_currentPage->SetRegion(region); // @todo Remember not to execute this line for secondary language!
     int language=m_currentPage->GetLanguage(true);
     switch (language)
     {
@@ -2847,7 +2889,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     iPage=0;
     m_offset.x=0;
 
-    SetRegionMenu(m_rootPage->GetRegion(true)); // Region language
+    SetRegionMenu(PrimaryLanguage, m_rootPage->GetRegion(true)); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
 
@@ -2933,7 +2975,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     iPage=0;
     m_offset.x=0;
 
-    SetRegionMenu(m_rootPage->GetRegion(true)); // Region language
+    SetRegionMenu(PrimaryLanguage, m_rootPage->GetRegion(true)); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
 

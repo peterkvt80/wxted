@@ -206,7 +206,7 @@ void PaletteFrame::SetX28(TTXRow28* x28)
     }
   }
 
-  OnChoiceRemapSelect(*(new wxCommandEvent()) );
+  OnChoiceRemapSelect(*(new wxCommandEvent())); // Make sure the labels get updated
   this->Refresh();
 }
 

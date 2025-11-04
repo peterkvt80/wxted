@@ -242,6 +242,22 @@ unsigned int TTXRow28::Language(bool primary)
   }
 }
 
+void TTXRow28::SetLanguage(int language, bool primary)
+{
+  language &= 0x07; // Mask language
+  if (primary)
+  {
+    defaultG0G2CharacterSet &= 0x38;
+    defaultG0G2CharacterSet |= language;
+  }
+  else
+  {
+    secondG0G2CharacterSet &= 0x38;
+    secondG0G2CharacterSet |= language;
+  }
+}
+
+
 
 /** Encode this object's X28/0/1 data into a tti OL,28 packet.
  * Packs the colour palette and colour remappings into triplets

@@ -39,6 +39,13 @@ class TTXRow28 : public TTXLine
      */
     unsigned int Language(bool primary);
 
+    /** Language - Set the language number 0..7
+     *  @param language - Language code 0..7
+     *  @param primary - If true sets the primary language
+     *  @return Language code 0..7
+     */
+    void SetLanguage(int language, bool primary);
+
     /** Region - Get the language number 0..7
      *  @param primary - If true returns the primary region
      *  @return Region code 0..10
