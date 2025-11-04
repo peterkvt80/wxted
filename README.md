@@ -34,7 +34,7 @@ sudo apt-get update
 sudo apt-get install build-essential git libwxgtk3.2-dev
 ```
 
-## Compilation Steps
+### Compilation Steps
 
 1. Clone the repository:
 ```bash
@@ -71,7 +71,7 @@ g++ -o wxTED \
 ./wxTED
 ```
 
-## Optional: Installation
+### Optional: Installation
 
 To install wxTED system-wide:
 ```bash
