@@ -52,6 +52,12 @@ class TTXRow28 : public TTXLine
      */
     unsigned int Region(bool primary);
 
+    /** SetRegion - Set the language number 0..7
+     *  @param primary - If true sets the primary region
+     *  @param region - Region code 0..10
+     */
+    void SetRegion(int region, bool primary);
+
     /** encode - Put X28 member data into TTI OL,28 string
      *  @return TTI OL,28 packet string.
      */

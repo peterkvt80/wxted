@@ -240,7 +240,7 @@ class TTXPage
        * \param region : A hex value 0..f
        * \return Nothing.
        */
-      void SetRegion(int region){m_region=region;}
+      void SetRegion(int region, bool primary); // Probably want to check primary or second font
 
       /** Get the region.
        *  @param primary - If true returns the primary region
@@ -318,7 +318,6 @@ class TTXPage
         char m_cycletimetype;       // CT
         int m_subcode;              // SC
         int m_pagestatus;           // PS
-        int m_region;               // RE
         // Private functions
         void m_Init();
         void m_OutputLines(std::ofstream& ttxfile, TTXPage* p); /// Send ttx lines to an output stream

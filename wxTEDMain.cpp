@@ -2561,6 +2561,7 @@ void wxTEDFrame::OnMenuItemRegionSelected(wxCommandEvent& event)
     // Selection bits in packets X/28/0 Format 1, X/28/4, M/29/0 and M/29/4
 
     SetRegionMenu(PrimaryLanguage, region);
+    m_currentPage->SetRegion(region, true);
 }
 
 void wxTEDFrame::SetRegionMenu(wxMenuItem* languages[8], int region)
@@ -2651,10 +2652,10 @@ void wxTEDFrame::SetRegionMenu(wxMenuItem* languages[8], int region)
 
 
     // Now check the appropriate menu item
-    m_currentPage->SetRegion(region); // @todo Remember not to execute this line for secondary language!
+    m_currentPage->SetRegion(region, true); // @todo Remember not to execute this line for secondary language!
     int language=m_currentPage->GetLanguage(true);
     switch (language)
-    {
+    { // @TODO SECOND LANGUAGE!!!
     case 0: MenuItemEnglish->Check(true);break;
     case 1: MenuItemFrench ->Check(true);break;
     case 2: MenuItemSwedish->Check(true);break;

@@ -35,7 +35,6 @@ static int instanceCount=0;
 
 void TTXPage::m_Init()
 {
-  m_region=0;
   SetPageNumber(FIRSTPAGE); // Valid but unlikely page
   Setm_SubPage(nullptr); // Pointer to the next sub page
   for (int i=0;i<=MAXROW;i++)
@@ -510,7 +509,7 @@ int TTXPage::findPageNumber(char* buf)
 
 bool TTXPage::m_LoadTTI(std::string filename)
 {
-    const std::string cmd[]={"DS","SP","DE","CT","PN","SC","PS","MS","OL","FL","RD","RE"};
+    const std::string cmd[]={"DS","SP","DE","CT","PN","SC","PS","MS","OL","FL","RD"};
     const int cmdCount = 12; // There are 12 possible commands, maybe DT and RT too on really old files
     unsigned int lineNumber;
     int lines=0;
@@ -650,10 +649,6 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     break;
                 case 10 : // "RD"; - not sure!
                     std::getline(filein, line);
-                    break;
-                case 11 : // "RE"; - Set page region code 0..f
-                    std::getline(filein, line); // TODO: Implement this
-                    m_region=std::strtol(line.c_str(), &ptr, 16);
                     break;
                 default:
                     std::cout << "Command not understood " << line << std::endl;
@@ -1378,7 +1373,6 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
   // that we can have individual timings and properties per page.
   ttxfile << "CT," << std::dec << p->m_cycletimeseconds << "," << p->m_cycletimetype << std::endl;
 
-  // ttxfile << "RE," << std::setw(1) << std::hex << p->m_region << std::endl;
   // @todo Add support for individual CT timers here.
 
   // Handle enhancement packets here
@@ -1573,7 +1567,6 @@ void TTXPage::CopyMetaData(TTXPage* page)
   m_cycletimetype=page->m_cycletimetype;       // CT
   m_subcode=page->m_subcode;              // SC
   m_pagestatus=page->m_pagestatus;           // PS
-  m_region=page->m_region;            // RE
 }
 
 void TTXPage::SetLanguage(int language)
@@ -1599,6 +1592,11 @@ int TTXPage::GetRegion(bool primary)
 {
   unsigned int region = m_row28->Region(primary);
   return region;
+}
+
+void TTXPage::SetRegion(int language, bool primary)
+{
+  m_row28->SetRegion(language, primary);
 }
 
 void TTXPage::SetPageNumber(int page)

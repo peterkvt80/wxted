@@ -1,4 +1,30 @@
-#include "ttxrow28.h"
+/***************************************************************
+ * Name:      ttxrow28.h
+ * Purpose:   Handle packet 28 usage and import/export TTI
+ * Author:    Peter Kwan (peterk.vt80@gmail.com)
+ * Created:   2025-11-01
+ * Copyright: Peter Kwan (c) 2025
+ * License:
+ *
+ * Permission to use, copy, modify, and distribute this software
+ * and its documentation for any purpose and without fee is hereby
+ * granted, provided that the above copyright notice appear in all
+ * copies and that both that the copyright notice and this
+ * permission notice and warranty disclaimer appear in supporting
+ * documentation, and that the name of the author not be used in
+ * advertising or publicity pertaining to distribution of the
+ * software without specific, written prior permission.
+ *
+ * The author disclaims all warranties with regard to this
+ * software, including all implied warranties of merchantability
+ * and fitness.  In no event shall the author be liable for any
+ * special, indirect or consequential damages or any damages
+ * whatsoever resulting from loss of use, data or profits, whether
+ * in an action of contract, negligence or other tortious action,
+ * arising out of or in connection with the use or performance of
+ * this software.
+ *************************************************************************** **/
+ #include "ttxrow28.h"
 /**
  * @brief Read tti packet 28 line and decode it to a packet 28 structure.
  * Access routines to read and set X28 parameters
@@ -229,6 +255,23 @@ unsigned int TTXRow28::Region(bool primary)
     return secondG0G2CharacterSet >> 3;
   }
 }
+
+void TTXRow28::SetRegion(int region, bool primary)
+{
+  region &= 0x0f;
+  region <<= 3;
+  if (primary)
+  {
+    defaultG0G2CharacterSet &= 0x07;
+    defaultG0G2CharacterSet |= region;
+  }
+  else
+  {
+    secondG0G2CharacterSet &= 0x07;
+    secondG0G2CharacterSet |= region;
+  }
+}
+
 
 unsigned int TTXRow28::Language(bool primary)
 {
