@@ -125,7 +125,15 @@ const wxWindowID wxTEDFrame::idSecondLanguage5 = wxNewId();
 const wxWindowID wxTEDFrame::idSecondLanguage6 = wxNewId();
 const wxWindowID wxTEDFrame::idSecondLanguage7 = wxNewId();
 const wxWindowID wxTEDFrame::ID_SECOND_REGION = wxNewId();
-const wxWindowID wxTEDFrame::ID_MENUITEM2 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R0 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R1 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R2 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R3 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R4 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R6 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R8 = wxNewId();
+const wxWindowID wxTEDFrame::ID_REGION2R10 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEMREGION2 = wxNewId();
 const wxWindowID wxTEDFrame::ID_PALETTE = wxNewId();
 const wxWindowID wxTEDFrame::x28enhance = wxNewId();
 const wxWindowID wxTEDFrame::idRun = wxNewId();
@@ -175,7 +183,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 {
   int code=event.GetKeyCode();
   int modifiers=event.GetModifiers();
-  // std::cout << "[OnChar]Key event..." << code << std::endl;
+  std::cout << "[OnChar]Key event..." << code << std::endl;
   // We look at a few codes which apply to a page set rather than just a single page
   // If none of these codes apply, we send the character to the page
   TEDEvent* tev;
@@ -249,7 +257,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
 
     // Take the languages and regions and update the menu selections
-    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // true is primary
+    SetRegionMenu(m_currentPage->GetRegion(true), true); // true is primary
     // @todo Secondary language
 
 
@@ -270,7 +278,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     iPage--;
     if (iPage<0) iPage=0;
     m_currentPage=m_rootPage->GetPage(iPage);
-    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // true is primary
+    SetRegionMenu(m_currentPage->GetRegion(true), true); // true is primary
     // @todo Secondary language
 
     paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
@@ -301,8 +309,6 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     // tev=m_currentPage->GetUndo();
     m_currentPage->Undo(m_cursorPoint);
     break;
-  case WXK_CONTROL:
-    break;
     // Moved this to ttxpage as it acts on the page
   //case WXK_TAB: // This will insert a space
 //    std::cout << "Insert a space TBA" << std::endl;
@@ -315,22 +321,38 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       // Find the key that was pressed, and map it to a native keycode
       switch (code)
       {
-      case 'r': modifiers=wxMOD_SHIFT;   code=WXK_F1;break; // alpha red
-      case 'R': modifiers=wxMOD_CONTROL; code=WXK_F1;break; // mosaic red
-      case 'g': modifiers=wxMOD_SHIFT;   code=WXK_F2;break; // alpha green
-      case 'G': modifiers=wxMOD_CONTROL; code=WXK_F2;break; // mosaic green
-      case 'y': modifiers=wxMOD_SHIFT;   code=WXK_F3;break; // alpha yellow
-      case 'Y': modifiers=wxMOD_CONTROL; code=WXK_F3;break; // mosaic yellow
-      case 'b': modifiers=wxMOD_SHIFT;   code=WXK_F4;break; // alpha blue
-      case 'B': modifiers=wxMOD_CONTROL; code=WXK_F4;break; // mosaic blue
-      case 'm': modifiers=wxMOD_SHIFT;   code=WXK_F5;break; // alpha magenta
-      case 'M': modifiers=wxMOD_CONTROL; code=WXK_F5;break; // mosaic magenta
-      case 'c': modifiers=wxMOD_SHIFT;   code=WXK_F6;break; // alpha cyan
-      case 'C': modifiers=wxMOD_CONTROL; code=WXK_F6;break; // mosaic cyan
-      case 'w': modifiers=wxMOD_SHIFT;   code=WXK_F7;break; // alpha white
-      case 'W': modifiers=wxMOD_CONTROL; code=WXK_F7;break; // mosaic white
-      case 'k': modifiers=wxMOD_SHIFT;   code=WXK_F8;break; // alpha black
-      case 'K': modifiers=wxMOD_CONTROL; code=WXK_F8;break; // mosaic black
+      case 'r': ;
+      case '1': modifiers=wxMOD_SHIFT;   code=WXK_F1;break; // alpha red
+      case 'R': ;
+      case '!': modifiers=wxMOD_CONTROL; code=WXK_F1;break; // mosaic red
+      case 'g': ;
+      case '2': modifiers=wxMOD_SHIFT;   code=WXK_F2;break; // alpha green
+      case 'G': ;
+      case '"': modifiers=wxMOD_CONTROL; code=WXK_F2;break; // mosaic green
+      case 'y': ;
+      case '3': modifiers=wxMOD_SHIFT;   code=WXK_F3;break; // alpha yellow
+      case 'Y': ;
+      case '£': modifiers=wxMOD_CONTROL; code=WXK_F3;break; // mosaic yellow
+      case 'b': ;
+      case '4': modifiers=wxMOD_SHIFT;   code=WXK_F4;break; // alpha blue
+      case 'B': ;
+      case '$': modifiers=wxMOD_CONTROL; code=WXK_F4;break; // mosaic blue
+      case 'm': ;
+      case '5': modifiers=wxMOD_SHIFT;   code=WXK_F5;break; // alpha magenta
+      case 'M': ;
+      case '%': modifiers=wxMOD_CONTROL; code=WXK_F5;break; // mosaic magenta
+      case 'c': ;
+      case '6': modifiers=wxMOD_SHIFT;   code=WXK_F6;break; // alpha cyan
+      case 'C': ;
+      case '^': modifiers=wxMOD_CONTROL; code=WXK_F6;break; // mosaic cyan
+      case 'w': ;
+      case '7': modifiers=wxMOD_SHIFT;   code=WXK_F7;break; // alpha white
+      case 'W': ;
+      case '&': modifiers=wxMOD_CONTROL; code=WXK_F7;break; // mosaic white
+      case 'k': ;
+      case '0': modifiers=wxMOD_SHIFT;   code=WXK_F8;break; // alpha black
+      case 'K': ;
+      case ')': modifiers=wxMOD_CONTROL; code=WXK_F8;break; // mosaic black
       case 'i': modifiers=wxMOD_SHIFT;   code=WXK_F9;break; // insert line
       case 'I': modifiers=wxMOD_CONTROL; code=WXK_F9;break; // delete line
       case 'N': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_B;   break; // new background
@@ -343,9 +365,20 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       case 'D': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_M;   break; // double height
       case 'O': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_R;   break; // conceal
       case 'S': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_T;   break; // separate graphics
-      case 's': modifiers=wxMOD_CONTROL; code=WXK_CONTROL_E;   break; // contiguous
+      case 's': /*
+        if (m_controlModifier)
+        {
+          std::cout << "Implement ESC CTRL S " << std::endl; // ctrl-s Insert an ESC (language toggle)
+        }
+        else */
+        {
+          modifiers=wxMOD_CONTROL; code=WXK_CONTROL_E; // contiguous
+        }
+        break;
       case 'J': modifiers=wxMOD_NONE;    code=172;   break; // hook maps to text block
+
       // @todo Lots more codes
+      // asc(20) is ctrl-s which can be used for ESC which is the language toggle code
       }
       std::cout << "[wxTEDFrame::OnChar] code = " << (int)code << std::endl;
     } // edit.tf escape mode
@@ -1365,6 +1398,7 @@ void wxTEDFrame::m_SetStatus()
 }
 wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     : m_escapeMode(false)
+    , m_controlModifier(false)
     , m_menuCount(0)
     , m_inhibitStatus(false)
     , m_ShowMarkup(false)
@@ -1527,8 +1561,24 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuItem2ndLang7 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage7, _("language 7"), wxEmptyString, wxITEM_NORMAL);
     SecondLanguageMenu->Append(MenuItem2ndLang7);
     MenuItem5->Append(ID_SECOND_REGION, _("Second language"), SecondLanguageMenu, wxEmptyString);
-    MenuItem8 = new wxMenuItem(MenuItem5, ID_MENUITEM2, _("Second region"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem5->Append(MenuItem8);
+    MenuItem8 = new wxMenu();
+    MenuItemRegionB0 = new wxMenuItem(MenuItem8, ID_REGION2R0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB0);
+    MenuItemRegionB1 = new wxMenuItem(MenuItem8, ID_REGION2R1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB1);
+    MenuItemRegionB2 = new wxMenuItem(MenuItem8, ID_REGION2R2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB2);
+    MenuItemRegionB3 = new wxMenuItem(MenuItem8, ID_REGION2R3, _("3: Ser/Cro/Slovenian/Romanian"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB3);
+    MenuItemRegionB4 = new wxMenuItem(MenuItem8, ID_REGION2R4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB4);
+    MenuItemRegionB6 = new wxMenuItem(MenuItem8, ID_REGION2R6, _("6: Tur/Gre"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB6);
+    MenuItemRegionB8 = new wxMenuItem(MenuItem8, ID_REGION2R8, _("8: Eng/Fre/Arabic"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB8);
+    MenuItemRegionB10 = new wxMenuItem(MenuItem8, ID_REGION2R10, _("10: Hebrew/Arabic"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem8->Append(MenuItemRegionB10);
+    MenuItem5->Append(ID_MENUITEMREGION2, _("Second region"), MenuItem8, wxEmptyString);
     MenuItemPalette = new wxMenuItem(MenuItem5, ID_PALETTE, _("Palette..."), _("Colours"), wxITEM_NORMAL);
     MenuItem5->Append(MenuItemPalette);
     MenuPresentation->Append(x28enhance, _("X28 enhancements"), MenuItem5, wxEmptyString);
@@ -1619,6 +1669,14 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(ID_REGION6, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION8, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION10, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(ID_REGION2R0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
+    Connect(ID_REGION2R1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
+    Connect(ID_REGION2R2, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
+    Connect(ID_REGION2R3, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
+    Connect(ID_REGION2R4, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
+    Connect(ID_REGION2R6, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
+    Connect(ID_REGION2R8, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
+    Connect(ID_REGION2R10, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
     Connect(ID_PALETTE, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemPaletteSelected);
     Connect(idRun, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewRunSelected);
     Connect(idRadioMode, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnPreviewSpeed);
@@ -1661,6 +1719,24 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     SecondLanguage[5] = MenuItem2ndLang5;
     SecondLanguage[6] = MenuItem2ndLang6;
     SecondLanguage[7] = MenuItem2ndLang7;
+
+    PrimaryRegion[0] = MenuItemRegion0;
+    PrimaryRegion[1] = MenuItemRegion1;
+    PrimaryRegion[2] = MenuItemRegion2;
+    PrimaryRegion[3] = MenuItemRegion3;
+    PrimaryRegion[4] = MenuItemRegion4;
+    PrimaryRegion[5] = MenuItemRegion6;
+    PrimaryRegion[6] = MenuItemRegion8;
+    PrimaryRegion[7] = MenuItemRegion10;
+
+    SecondRegion[0] = MenuItemRegionB0;
+    SecondRegion[1] = MenuItemRegionB1;
+    SecondRegion[2] = MenuItemRegionB2;
+    SecondRegion[3] = MenuItemRegionB3;
+    SecondRegion[4] = MenuItemRegionB4;
+    SecondRegion[5] = MenuItemRegionB6;
+    SecondRegion[6] = MenuItemRegionB8;
+    SecondRegion[7] = MenuItemRegionB10;
 
     // Precompute the Font metrics
     wxFont wf=GetFont();
@@ -1717,7 +1793,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_publish_ftp_password=m_config->Read("/wxted/FTP/Password");
     m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
-    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // Region language [!] @todo Add second language but probably on an X28 config dialog
+    SetRegionMenu(m_currentPage->GetRegion(true), true); // Region language [!] @todo Add second language but probably on an X28 config dialog
 
 
 // wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
@@ -1768,13 +1844,22 @@ void wxTEDFrame::OnQuit(wxCommandEvent& event)
 
 void wxTEDFrame::OnSave(wxCommandEvent& event)
 {
-    // std::cout << "[OnSave] called" << std::endl;
+  if (m_escapeMode) // edit.tf escape?
+  {
+    // Special hack. esc ctrl-s writes an ESC character. (Toggle G0 G2 language)
+    std::cout << "[OnSave] swap G0 g2 " << std::endl;
+    m_currentPage->SetCharAt(WXK_ESCAPE, 0, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
+    m_escapeMode = false;
+  }
+  else
+  {
     bool result=m_rootPage->SavePageDefault(); // Write the file back where it came from
     if (!result)
     {
         wxString msg="File NOT saved.\nUse Save As and choose a new name";
         wxMessageBox(msg, _("Error"));
     }
+  }
 }
 
 void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
@@ -1837,7 +1922,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
     SetTitle(_("wxTED ")+VERSION_STRING);
     m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
     m_setLanguage();
-    SetRegionMenu(PrimaryLanguage, 0);
+    SetRegionMenu(0, true);
     m_iPageCount=1;
     iPage=0;
     m_currentPage=m_rootPage;
@@ -1910,27 +1995,35 @@ void wxTEDFrame::OnSetFocus(wxFocusEvent& event)
 
 void wxTEDFrame::OnMenuOpen(wxMenuEvent& event)
 {
-  std::cout << "Menu open" << std::endl;
-  // @todo Add something to show the menu hint for a reasonable time
   m_menuCount++;
-  m_inhibitStatus=true;
+  if (!m_escapeMode)
+  {
+    std::cout << "Menu open" << std::endl;
+    // @todo Add something to show the menu hint for a reasonable time
+    m_inhibitStatus=true;
+  }
+  event.Skip();
 }
 
 void wxTEDFrame::OnMenuClose(wxMenuEvent& event)
 {
+  m_menuCount--;
+  if (!m_escapeMode)
+  {
     std::cout << "Menu close" << std::endl;
     // Don't enable status again until all menus are closed.
-    m_menuCount--;
     if (!m_menuCount)
     {
-    m_inhibitStatus=false;
+      m_inhibitStatus=false;
     }
     // If we are in preview mode, we just changed a setting, so run the handler to update everything
     if (m_previewMode)
     {
-        std::cout << "Refresh preview settings" << std::endl;
-        UpdatePreview();
+      std::cout << "Refresh preview settings" << std::endl;
+      UpdatePreview();
     }
+  }
+  event.Skip();
 }
 
 void OnMenuOpen(wxPaintEvent& event); // On opening the menu
@@ -1943,7 +2036,7 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     // Create a new page
     p=new TTXPage();
     m_setLanguage();
-    SetRegionMenu(PrimaryLanguage, m_currentPage->GetRegion(true)); // Region language [!] Move to dialog and add second G0
+    SetRegionMenu(m_currentPage->GetRegion(true), true); // Region language [!] Move to dialog and add second G0
     iPage++;
     // Save the child page pointer
     childPage=m_currentPage->Getm_SubPage();
@@ -2531,41 +2624,53 @@ void wxTEDFrame::OnMenuItemSelectAllSelected(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuItemRegionSelected(wxCommandEvent& event)
 {
-    int region=event.GetId()-MenuItemRegion0->GetId();
-    // Map menu numbers to regions
-    switch (region)
-    {
-    case 0: region=0;
-        break;
-    case 1: region=1;
-        break;
-    case 2: region=2;
-        break;
-    case 3: region=3;
-        break;
-    case 4: region=4;
-        break;
-    case 5: region=6; // Turkish and Greek
-        break;
-    case 6: region=8; // English/French/Arabic;
-        break;
-    case 7: region=10; // Hebrew/Arabic
-        break;
-    default: region=0;
-    }
-    std::cout << "Region changed to " << region << std::endl;
-    // TODO: Remember the reserved regions we need to map over
-    // Note that the C12,C13,C14 bits determine the order of the languages
-    // and we reverse them from transmission order.
-    // See Table 32: Function of Default G0 and G2 Character Set Designation and National Option
-    // Selection bits in packets X/28/0 Format 1, X/28/4, M/29/0 and M/29/4
-
-    SetRegionMenu(PrimaryLanguage, region);
-    m_currentPage->SetRegion(region, true);
+    int region=event.GetId() - MenuItemRegion0->GetId();
+    SetRegion(region, true); // Primary region
 }
 
-void wxTEDFrame::SetRegionMenu(wxMenuItem* languages[8], int region)
+void wxTEDFrame::OnMenuItemRegionBSelected(wxCommandEvent& event)
 {
+  int region=event.GetId() - MenuItemRegionB0->GetId();
+  SetRegion(region, false); // Second region
+}
+
+void wxTEDFrame::SetRegion(int region, bool UsePrimary)
+{
+  // Map menu numbers to regions
+  switch (region)
+  {
+  case 0: region=0;
+      break;
+  case 1: region=1;
+      break;
+  case 2: region=2;
+      break;
+  case 3: region=3;
+      break;
+  case 4: region=4;
+      break;
+  case 5: region=6; // Turkish and Greek
+      break;
+  case 6: region=8; // English/French/Arabic;
+      break;
+  case 7: region=10; // Hebrew/Arabic
+      break;
+  default: region=0;
+  }
+  std::cout << "Region changed to " << region << std::endl;
+  // TODO: Remember the reserved regions we need to map over
+  // Note that the C12,C13,C14 bits determine the order of the languages
+  // and we reverse them from transmission order.
+  // See Table 32: Function of Default G0 and G2 Character Set Designation and National Option
+  // Selection bits in packets X/28/0 Format 1, X/28/4, M/29/0 and M/29/4
+
+  SetRegionMenu(region, UsePrimary);
+  m_currentPage->SetRegion(region, UsePrimary);
+}
+
+void wxTEDFrame::SetRegionMenu(int region, bool UsePrimary)
+{
+  wxMenuItem** languages = UsePrimary ? PrimaryLanguage : SecondLanguage;
     switch (region)
     {
     case 0:
@@ -2643,7 +2748,7 @@ void wxTEDFrame::SetRegionMenu(wxMenuItem* languages[8], int region)
     default: region=0;
     }
 
-    // Hide the unused menu items
+    // Disable the unused menu items
     for (auto lang(0); lang < 8; ++lang)
     {
        wxString s = languages[lang]->GetItemLabel();
@@ -2652,30 +2757,12 @@ void wxTEDFrame::SetRegionMenu(wxMenuItem* languages[8], int region)
 
 
     // Now check the appropriate menu item
-    m_currentPage->SetRegion(region, true); // @todo Remember not to execute this line for secondary language!
-    int language=m_currentPage->GetLanguage(true);
-    switch (language)
-    { // @TODO SECOND LANGUAGE!!!
-    case 0: MenuItemEnglish->Check(true);break;
-    case 1: MenuItemFrench ->Check(true);break;
-    case 2: MenuItemSwedish->Check(true);break;
-    case 3: MenuItemCzech  ->Check(true);break;
-    case 4: MenuItemGerman ->Check(true);break;
-    case 5: MenuItemSpanish->Check(true);break;
-    case 6: MenuItemItalian->Check(true);break;
-    case 7: MenuItemUnused ->Check(true);break;
-    }
-    switch (region)
-    {
-    case 0:  MenuItemRegion0 ->Check(true);break;
-    case 1:  MenuItemRegion1 ->Check(true);break;
-    case 2:  MenuItemRegion2 ->Check(true);break;
-    case 3:  MenuItemRegion3 ->Check(true);break;
-    case 4:  MenuItemRegion4 ->Check(true);break;
-    case 6:  MenuItemRegion6 ->Check(true);break;
-    case 8:  MenuItemRegion8 ->Check(true);break;
-    case 10: MenuItemRegion10->Check(true);break;
-    }
+    m_currentPage->SetRegion(region, UsePrimary);
+    int language=m_currentPage->GetLanguage(UsePrimary);
+    languages[language]->Check(true);
+    wxMenuItem** regions = UsePrimary ? PrimaryRegion : SecondRegion;
+    regions[region]->Check(true); // We need to have a primary and a second region array
+
 }
 
 void wxTEDFrame::OnMenuSpecialKeys(wxCommandEvent& event)
@@ -2729,25 +2816,35 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
 
 void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
 {
-        std::cout << "TRACE1-OnKeyDown..." << std::endl;
+  auto key = event.GetKeyCode();
+  auto modifier = event.GetModifiers();
+  std::cout << "TRACE1-OnKeyDown... modifier = " << modifier << " key = " << key << std::endl;
 
-//    if (event.GetModifiers() == wxMOD_ALTGR && m_Released) // ALTGR does not work on Linux
-    if (event.GetModifiers() == wxMOD_ALTGR && m_Released) // ALTGR does not work on Linux
-    {
-        m_ShowMarkup=!m_ShowMarkup;
-        m_Released=false;
-    }
-    event.Skip();
+  if ((modifier == wxMOD_ALTGR) && m_Released) // ALTGR does not work on Linux
+  {
+      m_ShowMarkup=!m_ShowMarkup;
+      m_Released=false;
+  }
+  if (modifier == wxMOD_CONTROL) // Only really used to add language switching code ESC
+  {
+    m_controlModifier = true;
+  }
+  event.Skip();
 }
 
 void wxTEDFrame::OnKeyUp(wxKeyEvent& event)
 {
-            std::cout << "TRACE2:OnKeyUp..." << std::endl;
+    std::cout << "TRACE2:OnKeyUp..." << std::endl;
+    auto modifier = event.GetModifiers();
 
-    int k=event.GetKeyCode();
-    if (k==WXK_ALT)
+    // int k=event.GetKeyCode();
+    if (modifier == WXK_ALT)
     {
         m_Released=true;
+    }
+    if (modifier == wxMOD_CONTROL)
+    {
+      m_controlModifier = false;
     }
     event.Skip();
 }
@@ -2890,7 +2987,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     iPage=0;
     m_offset.x=0;
 
-    SetRegionMenu(PrimaryLanguage, m_rootPage->GetRegion(true)); // Region language
+    SetRegionMenu(m_rootPage->GetRegion(true), true); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
 
@@ -2976,7 +3073,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     iPage=0;
     m_offset.x=0;
 
-    SetRegionMenu(PrimaryLanguage, m_rootPage->GetRegion(true)); // Region language
+    SetRegionMenu(m_rootPage->GetRegion(true), true); // Region language
 
     SetTitle(m_rootPage->GetSourcePage());
 

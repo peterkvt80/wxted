@@ -1351,6 +1351,10 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             line->SetCharAt(cursorLoc.x, ' '); // The current location is now a space
           }
           break;
+        case WXK_ESCAPE:; // G0G2 toggle
+          line->SetCharAt(cursorLoc.x,'\x1b');
+          if (cursorLoc.x<39) cursorLoc.x++;   // Move right if possible
+          break;
         default:
             std::cout << "This key code is not implemented: " << code << std::endl;
         }
@@ -1584,7 +1588,10 @@ int TTXPage::GetLanguage(bool primary)
   int language;
   // language=(m_pagestatus >> 7) & 0x07;
   // std::cout << "Get Language PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
-  language = m_row28->Language(primary);
+  if (m_row28 != nullptr)
+  {
+    language = m_row28->Language(primary);
+  }
   return language;
 }
 

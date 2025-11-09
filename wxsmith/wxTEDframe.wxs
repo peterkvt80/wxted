@@ -301,8 +301,40 @@
 							<label>language 7</label>
 						</object>
 					</object>
-					<object class="wxMenuItem" name="ID_MENUITEM2" variable="MenuItem8" member="yes">
+					<object class="wxMenu" name="ID_MENUITEMREGION2" variable="MenuItem8" member="yes">
 						<label>Second region</label>
+						<object class="wxMenuItem" name="ID_REGION2R0" variable="MenuItemRegionB0" member="yes">
+							<label>0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
+						<object class="wxMenuItem" name="ID_REGION2R1" variable="MenuItemRegionB1" member="yes">
+							<label>1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
+						<object class="wxMenuItem" name="ID_REGION2R2" variable="MenuItemRegionB2" member="yes">
+							<label>2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
+						<object class="wxMenuItem" name="ID_REGION2R3" variable="MenuItemRegionB3" member="yes">
+							<label>3: Ser/Cro/Slovenian/Romanian</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
+						<object class="wxMenuItem" name="ID_REGION2R4" variable="MenuItemRegionB4" member="yes">
+							<label>4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
+						<object class="wxMenuItem" name="ID_REGION2R6" variable="MenuItemRegionB6" member="yes">
+							<label>6: Tur/Gre</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
+						<object class="wxMenuItem" name="ID_REGION2R8" variable="MenuItemRegionB8" member="yes">
+							<label>8: Eng/Fre/Arabic</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
+						<object class="wxMenuItem" name="ID_REGION2R10" variable="MenuItemRegionB10" member="yes">
+							<label>10: Hebrew/Arabic</label>
+							<handler function="OnMenuItemRegionBSelected" entry="EVT_MENU" />
+						</object>
 					</object>
 					<object class="wxMenuItem" name="ID_PALETTE" variable="MenuItemPalette" member="yes">
 						<label>Palette...</label>
