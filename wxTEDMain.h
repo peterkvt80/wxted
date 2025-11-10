@@ -84,8 +84,10 @@ class wxTEDFrame: public wxFrame
         bool m_ShowMarkup; // If true, we show ttx markup
         bool m_Released;   // If true, m_ShowMarkup can be toggled
 
-        // Language menu
-        /// @param UsePrimary - True = Primary language, false = Second language
+        /** Set up the primary or second region menu
+         *  @param region - The X28 region number 0,1,2,3,4,6,8,10
+         *  @param UsePrimary - True = Primary language, false = Second language
+         */
         void SetRegionMenu(int region, bool UsePrimary);
 
         unsigned int m_ttxW; /// Font width
@@ -159,6 +161,7 @@ class wxTEDFrame: public wxFrame
 
         // Items in language menu lists
         wxMenuItem* PrimaryLanguage[8];
+        wxMenuItem* PrimaryLanguageX28[9]; // This should always match PrimaryLanguage
         wxMenuItem* SecondLanguage[8];
 
         // Items in region menu lists
@@ -226,10 +229,12 @@ class wxTEDFrame: public wxFrame
         void OnPreviewNormalSelected(wxCommandEvent& event);
         void OnMenuItemPaletteSelected(wxCommandEvent& event);
         void OnMenuItemRegionBSelected(wxCommandEvent& event);
+        void OnMenuItemLanguageB(wxCommandEvent& event);
+        void OnMenuItemLanguageX28(wxCommandEvent& event);
         //*)
 
         /* Set the language menu radio option */
-        void m_setLanguage();
+        void m_setLanguage(bool UsePrimary);
 
         /**
          * \return true if the character is in the range of mosaics, not including A-Z.
@@ -277,7 +282,15 @@ class wxTEDFrame: public wxFrame
         static const wxWindowID idPageNumber;
         static const wxWindowID ID_MENUITEMSHOWHEADER;
         static const wxWindowID ID_HIDECONCEAL;
-        static const wxWindowID ID_LANGUAGE1;
+        static const wxWindowID idMainLanguage0;
+        static const wxWindowID idMainLanguage1;
+        static const wxWindowID idMainLanguage2;
+        static const wxWindowID idMainLanguage3;
+        static const wxWindowID idMainLanguage4;
+        static const wxWindowID idMainLanguage5;
+        static const wxWindowID idMainLanguage6;
+        static const wxWindowID idMainLanguage7;
+        static const wxWindowID ID_MAINLANGUAGE;
         static const wxWindowID ID_REGION0;
         static const wxWindowID ID_REGION1;
         static const wxWindowID ID_REGION2;
@@ -286,15 +299,15 @@ class wxTEDFrame: public wxFrame
         static const wxWindowID ID_REGION6;
         static const wxWindowID ID_REGION8;
         static const wxWindowID ID_REGION10;
-        static const wxWindowID ID_REGION;
+        static const wxWindowID ID_MENUMAINREGION;
         static const wxWindowID idSecondLanguage0;
-        static const wxWindowID idSecondLanguage1;
-        static const wxWindowID idSecondLanguage2;
-        static const wxWindowID idSecondLanguage3;
-        static const wxWindowID idSecondLanguage4;
-        static const wxWindowID idSecondLanguage5;
-        static const wxWindowID idSecondLanguage6;
-        static const wxWindowID idSecondLanguage7;
+        static const wxWindowID ID_MENUITEM2;
+        static const wxWindowID ID_MENUITEM3;
+        static const wxWindowID ID_MENUITEM4;
+        static const wxWindowID ID_MENUITEM5;
+        static const wxWindowID ID_MENUITEM6;
+        static const wxWindowID ID_MENUITEM7;
+        static const wxWindowID ID_MENUITEM8;
         static const wxWindowID ID_SECOND_REGION;
         static const wxWindowID ID_REGION2R0;
         static const wxWindowID ID_REGION2R1;
@@ -304,7 +317,7 @@ class wxTEDFrame: public wxFrame
         static const wxWindowID ID_REGION2R6;
         static const wxWindowID ID_REGION2R8;
         static const wxWindowID ID_REGION2R10;
-        static const wxWindowID ID_MENUITEMREGION2;
+        static const wxWindowID ID_MENUSECONDREGION;
         static const wxWindowID ID_PALETTE;
         static const wxWindowID x28enhance;
         static const wxWindowID idRun;
@@ -330,12 +343,13 @@ class wxTEDFrame: public wxFrame
         wxFileDialog* LoadPageFileDialog;
         wxMenu* Menu2;
         wxMenu* Menu3;
-        wxMenu* MenuItem2;
         wxMenu* MenuItem5;
-        wxMenu* MenuItem8;
+        wxMenu* MenuItem7;
         wxMenu* MenuItemLanguage;
+        wxMenu* MenuMainRegion;
         wxMenu* MenuPresentation;
-        wxMenu* SecondLanguageMenu;
+        wxMenu* MenuSecondLanguage;
+        wxMenu* MenuSecondRegion;
         wxMenuItem* MenuDeleteLine;
         wxMenuItem* MenuExportZxnet;
         wxMenuItem* MenuInsertLine;
@@ -351,17 +365,21 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItem2ndLang7;
         wxMenuItem* MenuItem3;
         wxMenuItem* MenuItem4;
-        wxMenuItem* MenuItem7;
         wxMenuItem* MenuItemConcealToggle;
         wxMenuItem* MenuItemCopy;
         wxMenuItem* MenuItemCzech;
+        wxMenuItem* MenuItemCzechX28;
         wxMenuItem* MenuItemDeletePage;
         wxMenuItem* MenuItemEnglish;
+        wxMenuItem* MenuItemEnglishX28;
         wxMenuItem* MenuItemExportTTX40;
         wxMenuItem* MenuItemFrench;
+        wxMenuItem* MenuItemFrenchX28;
         wxMenuItem* MenuItemGerman;
+        wxMenuItem* MenuItemGermanX28;
         wxMenuItem* MenuItemInsertSubpage;
         wxMenuItem* MenuItemItalian;
+        wxMenuItem* MenuItemItalianX28;
         wxMenuItem* MenuItemPageNumber;
         wxMenuItem* MenuItemPalette;
         wxMenuItem* MenuItemPaste;
@@ -386,11 +404,14 @@ class wxTEDFrame: public wxFrame
         wxMenuItem* MenuItemSelectAll;
         wxMenuItem* MenuItemShowHeader;
         wxMenuItem* MenuItemSpanish;
+        wxMenuItem* MenuItemSpanishX28;
         wxMenuItem* MenuItemSpecialKeys;
         wxMenuItem* MenuItemSwedish;
+        wxMenuItem* MenuItemSwedishX28;
         wxMenuItem* MenuItemTemplate;
         wxMenuItem* MenuItemUndo;
         wxMenuItem* MenuItemUnused;
+        wxMenuItem* MenuItemUnusedX28;
         wxMenuItem* ModeBounce;
         wxMenuItem* ModeLoop;
         wxMenuItem* Preview12fps;

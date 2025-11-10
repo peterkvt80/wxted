@@ -227,7 +227,7 @@ class TTXPage
        * \param language A language number 0..6 for western europe.
        * \return Nothing.
        */
-      void SetLanguage(int language);
+      void SetLanguage(int language, bool UsePrimary);
 
       /** Get the language.
        * @param primary - If true returns the primary language

@@ -106,7 +106,15 @@ const wxWindowID wxTEDFrame::ID_MENUITEM1 = wxNewId();
 const wxWindowID wxTEDFrame::idPageNumber = wxNewId();
 const wxWindowID wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
 const wxWindowID wxTEDFrame::ID_HIDECONCEAL = wxNewId();
-const wxWindowID wxTEDFrame::ID_LANGUAGE1 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage0 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage1 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage2 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage3 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage4 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage5 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage6 = wxNewId();
+const wxWindowID wxTEDFrame::idMainLanguage7 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MAINLANGUAGE = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION0 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION1 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION2 = wxNewId();
@@ -115,15 +123,15 @@ const wxWindowID wxTEDFrame::ID_REGION4 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION6 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION8 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION10 = wxNewId();
-const wxWindowID wxTEDFrame::ID_REGION = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUMAINREGION = wxNewId();
 const wxWindowID wxTEDFrame::idSecondLanguage0 = wxNewId();
-const wxWindowID wxTEDFrame::idSecondLanguage1 = wxNewId();
-const wxWindowID wxTEDFrame::idSecondLanguage2 = wxNewId();
-const wxWindowID wxTEDFrame::idSecondLanguage3 = wxNewId();
-const wxWindowID wxTEDFrame::idSecondLanguage4 = wxNewId();
-const wxWindowID wxTEDFrame::idSecondLanguage5 = wxNewId();
-const wxWindowID wxTEDFrame::idSecondLanguage6 = wxNewId();
-const wxWindowID wxTEDFrame::idSecondLanguage7 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM2 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM3 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM4 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM5 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM6 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM7 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUITEM8 = wxNewId();
 const wxWindowID wxTEDFrame::ID_SECOND_REGION = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION2R0 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION2R1 = wxNewId();
@@ -133,7 +141,7 @@ const wxWindowID wxTEDFrame::ID_REGION2R4 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION2R6 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION2R8 = wxNewId();
 const wxWindowID wxTEDFrame::ID_REGION2R10 = wxNewId();
-const wxWindowID wxTEDFrame::ID_MENUITEMREGION2 = wxNewId();
+const wxWindowID wxTEDFrame::ID_MENUSECONDREGION = wxNewId();
 const wxWindowID wxTEDFrame::ID_PALETTE = wxNewId();
 const wxWindowID wxTEDFrame::x28enhance = wxNewId();
 const wxWindowID wxTEDFrame::idRun = wxNewId();
@@ -190,7 +198,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
   // Toggle invisible control codes?
   if (m_escapeMode)
   {
-    if (code=='Q' || code=='X') // Codes and Grid are combined in wxTED
+    if (code=='Q' || code=='q' || code=='X' || code=='x') // Codes and Grid are combined in wxTED
     {
       m_ShowMarkup=!m_ShowMarkup;
       code=WXK_ESCAPE;
@@ -1184,8 +1192,14 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
                           paintDC.DrawText('s',wxPoint(col*m_ttxW,row*m_ttxH)+offset); // (s)eparate
                       }
                       break;
+                  case ttxCodeSwitch : // Go/G2 code toggle
+                      if (addMarkup)
+                      {
+                          paintDC.SetTextForeground(*wxWHITE);
+                          paintDC.DrawText(_((wxChar)L'\x5dd'),wxPoint(col*m_ttxW,row*m_ttxH)+offset); // code switch Rectangle
+                      }
+                      break;
                   case ttxCodeBlackBackground : // Background black
-
                       if (addMarkup)
                       {
                           paintDC.SetTextForeground(*wxWHITE);
@@ -1523,62 +1537,80 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     MenuPresentation->Append(MenuItemConcealToggle);
     MenuPresentation->AppendSeparator();
     MenuItem5 = new wxMenu();
-    MenuItem7 = new wxMenuItem(MenuItem5, ID_LANGUAGE1, _("Main language"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem5->Append(MenuItem7);
-    MenuItem2 = new wxMenu();
-    MenuItemRegion0 = new wxMenuItem(MenuItem2, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion0);
-    MenuItemRegion1 = new wxMenuItem(MenuItem2, ID_REGION1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion1);
-    MenuItemRegion2 = new wxMenuItem(MenuItem2, ID_REGION2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion2);
-    MenuItemRegion3 = new wxMenuItem(MenuItem2, ID_REGION3, _("3: Ser/Cro/Slovenian/Romanian"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion3);
-    MenuItemRegion4 = new wxMenuItem(MenuItem2, ID_REGION4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion4);
-    MenuItemRegion6 = new wxMenuItem(MenuItem2, ID_REGION6, _("6: Tur/Gre"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion6);
-    MenuItemRegion8 = new wxMenuItem(MenuItem2, ID_REGION8, _("8: Eng/Fre/Arabic"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion8);
-    MenuItemRegion10 = new wxMenuItem(MenuItem2, ID_REGION10, _("10: Hebrew/Arabic"), _("Language group"), wxITEM_RADIO);
-    MenuItem2->Append(MenuItemRegion10);
-    MenuItem5->Append(ID_REGION, _("Main region"), MenuItem2, wxEmptyString);
-    SecondLanguageMenu = new wxMenu();
-    MenuItem2ndLang0 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage0, _("language 0"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang0);
-    MenuItem2ndLang1 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage1, _("language 1"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang1);
-    MenuItem2ndLang2 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage2, _("language 2"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang2);
-    MenuItem2ndLang3 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage3, _("language 3"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang3);
-    MenuItem2ndLang4 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage4, _("language 4"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang4);
-    MenuItem2ndLang5 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage5, _("language 5"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang5);
-    MenuItem2ndLang6 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage6, _("language 6"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang6);
-    MenuItem2ndLang7 = new wxMenuItem(SecondLanguageMenu, idSecondLanguage7, _("language 7"), wxEmptyString, wxITEM_NORMAL);
-    SecondLanguageMenu->Append(MenuItem2ndLang7);
-    MenuItem5->Append(ID_SECOND_REGION, _("Second language"), SecondLanguageMenu, wxEmptyString);
-    MenuItem8 = new wxMenu();
-    MenuItemRegionB0 = new wxMenuItem(MenuItem8, ID_REGION2R0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB0);
-    MenuItemRegionB1 = new wxMenuItem(MenuItem8, ID_REGION2R1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB1);
-    MenuItemRegionB2 = new wxMenuItem(MenuItem8, ID_REGION2R2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB2);
-    MenuItemRegionB3 = new wxMenuItem(MenuItem8, ID_REGION2R3, _("3: Ser/Cro/Slovenian/Romanian"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB3);
-    MenuItemRegionB4 = new wxMenuItem(MenuItem8, ID_REGION2R4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB4);
-    MenuItemRegionB6 = new wxMenuItem(MenuItem8, ID_REGION2R6, _("6: Tur/Gre"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB6);
-    MenuItemRegionB8 = new wxMenuItem(MenuItem8, ID_REGION2R8, _("8: Eng/Fre/Arabic"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB8);
-    MenuItemRegionB10 = new wxMenuItem(MenuItem8, ID_REGION2R10, _("10: Hebrew/Arabic"), wxEmptyString, wxITEM_NORMAL);
-    MenuItem8->Append(MenuItemRegionB10);
-    MenuItem5->Append(ID_MENUITEMREGION2, _("Second region"), MenuItem8, wxEmptyString);
+    MenuItem7 = new wxMenu();
+    MenuItemEnglishX28 = new wxMenuItem(MenuItem7, idMainLanguage0, _("English"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemEnglishX28);
+    MenuItemFrenchX28 = new wxMenuItem(MenuItem7, idMainLanguage1, _("French"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemFrenchX28);
+    MenuItemSwedishX28 = new wxMenuItem(MenuItem7, idMainLanguage2, _("Swedish/Finnish/Hungarian"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemSwedishX28);
+    MenuItemCzechX28 = new wxMenuItem(MenuItem7, idMainLanguage3, _("Czech/Slovak"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemCzechX28);
+    MenuItemGermanX28 = new wxMenuItem(MenuItem7, idMainLanguage4, _("German"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemGermanX28);
+    MenuItemSpanishX28 = new wxMenuItem(MenuItem7, idMainLanguage5, _("Spanish/Portuguese"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemSpanishX28);
+    MenuItemItalianX28 = new wxMenuItem(MenuItem7, idMainLanguage6, _("Italian"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemItalianX28);
+    MenuItemUnusedX28 = new wxMenuItem(MenuItem7, idMainLanguage7, _("Unused"), wxEmptyString, wxITEM_RADIO);
+    MenuItem7->Append(MenuItemUnusedX28);
+    MenuItemUnusedX28->Enable(false);
+    MenuItem5->Append(ID_MAINLANGUAGE, _("Main language"), MenuItem7, wxEmptyString);
+    MenuMainRegion = new wxMenu();
+    MenuItemRegion0 = new wxMenuItem(MenuMainRegion, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion0);
+    MenuItemRegion1 = new wxMenuItem(MenuMainRegion, ID_REGION1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion1);
+    MenuItemRegion2 = new wxMenuItem(MenuMainRegion, ID_REGION2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion2);
+    MenuItemRegion3 = new wxMenuItem(MenuMainRegion, ID_REGION3, _("3: Ser/Cro/Slovenian/Romanian"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion3);
+    MenuItemRegion4 = new wxMenuItem(MenuMainRegion, ID_REGION4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion4);
+    MenuItemRegion6 = new wxMenuItem(MenuMainRegion, ID_REGION6, _("6: Tur/Gre"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion6);
+    MenuItemRegion8 = new wxMenuItem(MenuMainRegion, ID_REGION8, _("8: Eng/Fre/Arabic"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion8);
+    MenuItemRegion10 = new wxMenuItem(MenuMainRegion, ID_REGION10, _("10: Hebrew/Arabic"), _("Language group"), wxITEM_RADIO);
+    MenuMainRegion->Append(MenuItemRegion10);
+    MenuItem5->Append(ID_MENUMAINREGION, _("Main region"), MenuMainRegion, wxEmptyString);
+    MenuSecondLanguage = new wxMenu();
+    MenuItem2ndLang0 = new wxMenuItem(MenuSecondLanguage, idSecondLanguage0, _("English"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang0);
+    MenuItem2ndLang1 = new wxMenuItem(MenuSecondLanguage, ID_MENUITEM2, _("French"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang1);
+    MenuItem2ndLang2 = new wxMenuItem(MenuSecondLanguage, ID_MENUITEM3, _("Swedish"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang2);
+    MenuItem2ndLang3 = new wxMenuItem(MenuSecondLanguage, ID_MENUITEM4, _("Czech"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang3);
+    MenuItem2ndLang4 = new wxMenuItem(MenuSecondLanguage, ID_MENUITEM5, _("German"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang4);
+    MenuItem2ndLang5 = new wxMenuItem(MenuSecondLanguage, ID_MENUITEM6, _("Spanish"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang5);
+    MenuItem2ndLang6 = new wxMenuItem(MenuSecondLanguage, ID_MENUITEM7, _("Italian"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang6);
+    MenuItem2ndLang7 = new wxMenuItem(MenuSecondLanguage, ID_MENUITEM8, _("Unused"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondLanguage->Append(MenuItem2ndLang7);
+    MenuItem2ndLang7->Enable(false);
+    MenuItem5->Append(ID_SECOND_REGION, _("Second language"), MenuSecondLanguage, wxEmptyString);
+    MenuSecondRegion = new wxMenu();
+    MenuItemRegionB0 = new wxMenuItem(MenuSecondRegion, ID_REGION2R0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB0);
+    MenuItemRegionB1 = new wxMenuItem(MenuSecondRegion, ID_REGION2R1, _("1: Pol/Ger/Swe/Fin/Hun/Ita/Fre/Cze/Slo"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB1);
+    MenuItemRegionB2 = new wxMenuItem(MenuSecondRegion, ID_REGION2R2, _("2: Eng/Fre/Swe-Fin-Hun/Tur/Ger/Por-Spa/Ita"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB2);
+    MenuItemRegionB3 = new wxMenuItem(MenuSecondRegion, ID_REGION2R3, _("3: Ser/Cro/Slovenian/Romanian"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB3);
+    MenuItemRegionB4 = new wxMenuItem(MenuSecondRegion, ID_REGION2R4, _("4: Ser-Cro/Ger/Est/Lit/Rus-Bul/Ukr/Cze-Slo"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB4);
+    MenuItemRegionB6 = new wxMenuItem(MenuSecondRegion, ID_REGION2R6, _("6: Tur/Gre"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB6);
+    MenuItemRegionB8 = new wxMenuItem(MenuSecondRegion, ID_REGION2R8, _("8: Eng/Fre/Arabic"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB8);
+    MenuItemRegionB10 = new wxMenuItem(MenuSecondRegion, ID_REGION2R10, _("10: Hebrew/Arabic"), wxEmptyString, wxITEM_RADIO);
+    MenuSecondRegion->Append(MenuItemRegionB10);
+    MenuItem5->Append(ID_MENUSECONDREGION, _("Second region"), MenuSecondRegion, wxEmptyString);
     MenuItemPalette = new wxMenuItem(MenuItem5, ID_PALETTE, _("Palette..."), _("Colours"), wxITEM_NORMAL);
     MenuItem5->Append(MenuItemPalette);
     MenuPresentation->Append(x28enhance, _("X28 enhancements"), MenuItem5, wxEmptyString);
@@ -1661,6 +1693,14 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(idLanguageUnused, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idPageNumber, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
     Connect(ID_HIDECONCEAL, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
+    Connect(idMainLanguage0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
+    Connect(idMainLanguage1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
+    Connect(idMainLanguage2, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
+    Connect(idMainLanguage3, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
+    Connect(idMainLanguage4, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
+    Connect(idMainLanguage5, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
+    Connect(idMainLanguage6, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
+    Connect(idMainLanguage7, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
     Connect(ID_REGION0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION2, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
@@ -1669,6 +1709,14 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Connect(ID_REGION6, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION8, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
     Connect(ID_REGION10, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionSelected);
+    Connect(idSecondLanguage0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
+    Connect(ID_MENUITEM2, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
+    Connect(ID_MENUITEM3, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
+    Connect(ID_MENUITEM4, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
+    Connect(ID_MENUITEM5, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
+    Connect(ID_MENUITEM6, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
+    Connect(ID_MENUITEM7, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
+    Connect(ID_MENUITEM8, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageB);
     Connect(ID_REGION2R0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
     Connect(ID_REGION2R1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
     Connect(ID_REGION2R2, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemRegionBSelected);
@@ -1710,6 +1758,15 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     PrimaryLanguage[5] = MenuItemSpanish;
     PrimaryLanguage[6] = MenuItemItalian;
     PrimaryLanguage[7] = MenuItemUnused;
+
+    PrimaryLanguageX28[0] = MenuItemEnglishX28;
+    PrimaryLanguageX28[1] = MenuItemFrenchX28;
+    PrimaryLanguageX28[2] = MenuItemSwedishX28;
+    PrimaryLanguageX28[3] = MenuItemCzechX28;
+    PrimaryLanguageX28[4] = MenuItemGermanX28;
+    PrimaryLanguageX28[5] = MenuItemSpanishX28;
+    PrimaryLanguageX28[6] = MenuItemItalianX28;
+    PrimaryLanguageX28[7] = MenuItemUnusedX28;
 
     SecondLanguage[0] = MenuItem2ndLang0;
     SecondLanguage[1] = MenuItem2ndLang1;
@@ -1757,7 +1814,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
 
     /* Initial page */
     m_currentPage=m_rootPage = new TTXPage(initialPage.ToStdString(),"");
-    m_setLanguage();
+    m_setLanguage(true);
 
     m_iPageCount=m_rootPage->GetPageCount();
     iPage=0;
@@ -1921,7 +1978,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
     m_rootPage=new TTXPage();
     SetTitle(_("wxTED ")+VERSION_STRING);
     m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
-    m_setLanguage();
+    m_setLanguage(true);
     SetRegionMenu(0, true);
     m_iPageCount=1;
     iPage=0;
@@ -2035,7 +2092,7 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
     TTXPage* childPage;
     // Create a new page
     p=new TTXPage();
-    m_setLanguage();
+    m_setLanguage(true);
     SetRegionMenu(m_currentPage->GetRegion(true), true); // Region language [!] Move to dialog and add second G0
     iPage++;
     // Save the child page pointer
@@ -2110,15 +2167,36 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
 {
-    int language=event.GetId()-(MenuItemEnglish->GetId() & 0x07);
-    m_currentPage->SetLanguage(language);
-    //std::cout << "Language handler " << m_currentPage->GetLanguage() << std::endl;
+  int language = (event.GetId() - MenuItemEnglish->GetId()) & 0x07;
+  m_currentPage->SetLanguage(language, true);
+  // Update the X28 checked item
+  PrimaryLanguageX28[language]->Check(true);
+  std::cout << "Language handler " << m_currentPage->GetLanguage(true) << std::endl;
 }
 
-void wxTEDFrame::m_setLanguage()
+void wxTEDFrame::OnMenuItemLanguageX28(wxCommandEvent& event)
+{
+  int language = (event.GetId()- MenuItemEnglishX28->GetId()) & 0x07;
+  m_currentPage->SetLanguage(language, true);
+  // Update the original language checked item
+  PrimaryLanguage[language]->Check(true);
+  std::cout << "Language handler " << m_currentPage->GetLanguage(true) << std::endl;
+}
+
+
+void wxTEDFrame::OnMenuItemLanguageB(wxCommandEvent& event)
+{
+    int language = (event.GetId() - MenuItem2ndLang0->GetId()) & 0x07;
+    m_currentPage->SetLanguage(language, false);
+    std::cout << "Language handler " << m_currentPage->GetLanguage(false) << std::endl;
+}
+
+void wxTEDFrame::m_setLanguage(bool UsePrimary)
 {
 //    std::cout << "m_setLanguage " << m_rootPage->GetLanguage() << std::endl;
-    int language=m_currentPage->GetLanguage(true);
+  int language=m_currentPage->GetLanguage(UsePrimary);
+  wxMenuItem** languages = UsePrimary ? PrimaryLanguage : SecondLanguage;
+  languages[language]->Check(true);
     // idLanguageEnglish
     /*
     MenuItemEnglish->Check(true);break;
@@ -2129,6 +2207,7 @@ void wxTEDFrame::m_setLanguage()
     MenuItemSpanish->Check(true);break;
     MenuItemItalian->Check(true);break;
     */
+    /*
     switch (language)
     {
     case 0: MenuItemEnglish->Check(true);break;
@@ -2140,6 +2219,7 @@ void wxTEDFrame::m_setLanguage()
     case 6: MenuItemItalian->Check(true);break;
     case 7: MenuItemUnused ->Check(true);break;
     }
+    */
 }
 
 void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
@@ -2745,7 +2825,9 @@ void wxTEDFrame::SetRegionMenu(int region, bool UsePrimary)
         }
       }
       break;
-    default: region=0;
+    default:
+      std::cout << "[wxTEDMain::SetRegionMenu] ERROR: Bad region = " << region << std::endl;
+      region=0;
     }
 
     // Disable the unused menu items
@@ -2755,14 +2837,52 @@ void wxTEDFrame::SetRegionMenu(int region, bool UsePrimary)
        languages[lang]->Enable(s.compare(wxString("Unused")) != 0);
     }
 
-
     // Now check the appropriate menu item
     m_currentPage->SetRegion(region, UsePrimary);
     int language=m_currentPage->GetLanguage(UsePrimary);
-    languages[language]->Check(true);
-    wxMenuItem** regions = UsePrimary ? PrimaryRegion : SecondRegion;
-    regions[region]->Check(true); // We need to have a primary and a second region array
+    // Is language not checkable?
+    if (!languages[language]->IsCheckable())
+    {
+      for (int lan = 0; lan < 8; ++lan)
+      {
+        if (languages[lan]->IsCheckable())
+        {
+          language = lan; // Found a language that is valid
+          std::cout << "[SetRegionMenu] found valid language = " << language << std::endl;
+          break;
+        }
+      }
+    }
 
+   std::cout << "[SetRegionMenu] " << std::endl;
+   for (int i=0;i<8;i++)
+   {
+    std::cout << "[SetRegionMenu] language[" << i <<"] = " << languages[i]->GetItemLabel() << std::endl;
+
+   }
+
+    if (!languages[language]->IsCheckable())
+    {
+      std::cout << "[SetRegionMenu] ERROR: Failure is inevitable. language = " << language<< std::endl;
+    }
+    else
+    {
+      languages[language]->Check(true);
+      // Check against the current region, as it might not already be checked
+      wxMenuItem** regions = UsePrimary ? PrimaryRegion : SecondRegion;
+      // Map X28 region back to a menu item
+      region = region < 5
+      ? region
+      : region == 6
+      ? 5
+      : region == 8
+      ? 6
+      : region == 10
+      ? 7
+      : 0;
+
+      regions[region]->Check(true);
+    }
 }
 
 void wxTEDFrame::OnMenuSpecialKeys(wxCommandEvent& event)
@@ -2983,7 +3103,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 
     m_iPageCount=m_rootPage->GetPageCount();
 
-    m_setLanguage();
+    m_setLanguage(true);
     iPage=0;
     m_offset.x=0;
 
@@ -3069,7 +3189,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
 
     m_iPageCount=m_rootPage->GetPageCount();
 
-    m_setLanguage();
+    m_setLanguage(true);
     iPage=0;
     m_offset.x=0;
 
@@ -3159,3 +3279,5 @@ void wxTEDFrame::OnMenuItemPaletteSelected(wxCommandEvent& event)
   paletteFrame->SetX28(x28row);
   paletteFrame->Show(true);
 }
+
+

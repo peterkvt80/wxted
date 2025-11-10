@@ -685,8 +685,6 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
   // Try all the possible formats.
 
   int type=1;
-  SetRow(3,shortFilename);
-
   if (!m_loaded)
   {
     SetRow(1,"                                        ");
@@ -830,7 +828,7 @@ TTXLine* TTXPage::GetRow(unsigned int row)
     }
     else
     {
-      line=m_pLine[row]=new TTXLine("        wxTED New page          %H:%M.%S");
+      line=m_pLine[row]=new TTXLine("        wxTED Header mpp        %H:%M.%S");
     }
   }
   return line;
@@ -1573,14 +1571,14 @@ void TTXPage::CopyMetaData(TTXPage* page)
   m_pagestatus=page->m_pagestatus;           // PS
 }
 
-void TTXPage::SetLanguage(int language)
+void TTXPage::SetLanguage(int language, bool UsePrimary)
 {
   language=language & 0x07;   // Limit language 0..7
   m_pagestatus=m_pagestatus & ~0x0380; // Clear the old language bits
   m_pagestatus=m_pagestatus | (language << 7);   // Shift the language bits into the right place and OR them in
   // std::cout << "Set Language: PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
   // @todo have to send this back to  m_row28
-  m_row28->SetLanguage(language, true); // Set the primary language
+  m_row28->SetLanguage(language, UsePrimary); // Set the primary language
 }
 
 int TTXPage::GetLanguage(bool primary)
