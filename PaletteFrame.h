@@ -23,6 +23,7 @@ class PaletteFrame: public wxFrame
 
     //(*Declarations(PaletteFrame)
     wxButton* DefaultsButton;
+    wxChoice* PageColourChoice;
     wxChoice* PaletteRemapChoice;
     wxChoice* RowColourChoice;
     wxColourDialog* ColourDialog1;
@@ -30,12 +31,18 @@ class PaletteFrame: public wxFrame
     wxPanel* ClutPanel2;
     wxPanel* ClutPanel3;
     wxPanel* ClutPanel4;
+    wxPanel* PageColourPanel;
+    wxPanel* RowColourPanel;
     wxStaticText* StaticTextCLUT0;
     wxStaticText* StaticTextCLUT1;
     wxStaticText* StaticTextCLUT2;
     wxStaticText* StaticTextCLUT3;
     //*)
     void SetX28(TTXRow28* x28); /// Save a pointer to Packet 28
+
+    void UpdateDefaultRowColour();   /// Draw the row colour
+    void UpdateDefaultScreenColour();   /// Draw the screen colour
+
 
   protected:
 
@@ -51,6 +58,9 @@ class PaletteFrame: public wxFrame
     static const wxWindowID ID_CLUTPANEL4;
     static const wxWindowID ID_DEFAULT_BUTTON;
     static const wxWindowID ID_CHOICE1;
+    static const wxWindowID ID_ROW_COLOUR_PANEL;
+    static const wxWindowID ID_PAGE_COLOUR_PANEL;
+    static const wxWindowID ID_PAGE_COLOUR_CHOICE;
     //*)
     // static const wxWindowID ID_COLOUR;
 
@@ -64,6 +74,8 @@ class PaletteFrame: public wxFrame
     void OnClutPanel1MouseLeave(wxMouseEvent& event);
     void OnDefaultButtonClick(wxCommandEvent& event);
     void OnPaletteRemapChoiceSelect(wxCommandEvent& event);
+    void OnRowColourChoiceSelect(wxCommandEvent& event);
+    void OnPageColourChoiceSelect(wxCommandEvent& event);
     //*)
     wxBoxSizer* palSizer; // CLUT Layout
     wxBoxSizer* clutSizer[4]; // fgs Colours and caption text

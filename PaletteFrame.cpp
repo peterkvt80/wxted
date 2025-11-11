@@ -18,6 +18,9 @@ const wxWindowID PaletteFrame::ID_STATICTEXT3 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL4 = wxNewId();
 const wxWindowID PaletteFrame::ID_DEFAULT_BUTTON = wxNewId();
 const wxWindowID PaletteFrame::ID_CHOICE1 = wxNewId();
+const wxWindowID PaletteFrame::ID_ROW_COLOUR_PANEL = wxNewId();
+const wxWindowID PaletteFrame::ID_PAGE_COLOUR_PANEL = wxNewId();
+const wxWindowID PaletteFrame::ID_PAGE_COLOUR_CHOICE = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(PaletteFrame,wxFrame)
@@ -31,7 +34,7 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   //(*Initialize(PaletteFrame)
   Create(0, wxID_ANY, _("Colour lookup tables"), wxDefaultPosition, wxDefaultSize, wxCAPTION|wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
   SetClientSize(wxSize(554,240));
-  PaletteRemapChoice = new wxChoice(this, ID_REMAP_CHOICE, wxPoint(10,10), wxDLG_UNIT(this,wxSize(90,12)), 0, 0, 0, wxDefaultValidator, _T("ID_REMAP_CHOICE"));
+  PaletteRemapChoice = new wxChoice(this, ID_REMAP_CHOICE, wxPoint(0,0), wxDLG_UNIT(this,wxSize(90,12)), 0, 0, 0, wxDefaultValidator, _T("ID_REMAP_CHOICE"));
   PaletteRemapChoice->SetSelection( PaletteRemapChoice->Append(_("Fore 0 Back 0")) );
   PaletteRemapChoice->Append(_("Fore 0 Back 1"));
   PaletteRemapChoice->Append(_("Fore 0 Back 2"));
@@ -91,9 +94,48 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   _T("3:6"),
   _T("3:7"),
   };
-  RowColourChoice = new wxChoice(this, ID_CHOICE1, wxPoint(176,0), wxDefaultSize, 32, RowColourChoice_choices, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+  RowColourChoice = new wxChoice(this, ID_CHOICE1, wxPoint(216,0), wxSize(64,23), 32, RowColourChoice_choices, 0, wxDefaultValidator, _T("ID_CHOICE1"));
   RowColourChoice->SetForegroundColour(wxColour(255,0,0));
   RowColourChoice->SetBackgroundColour(wxColour(0,255,0));
+  RowColourPanel = new wxPanel(this, ID_ROW_COLOUR_PANEL, wxPoint(168,0), wxSize(40,20), wxFULL_REPAINT_ON_RESIZE, _T("ID_ROW_COLOUR_PANEL"));
+  RowColourPanel->SetForegroundColour(wxColour(255,0,0));
+  RowColourPanel->SetBackgroundColour(wxColour(0,255,0));
+  PageColourPanel = new wxPanel(this, ID_PAGE_COLOUR_PANEL, wxPoint(288,0), wxSize(40,20), wxFULL_REPAINT_ON_RESIZE, _T("ID_PAGE_COLOUR_PANEL"));
+  PageColourPanel->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION));
+  PageColourPanel->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT));
+  PageColourChoice = new wxChoice(this, ID_PAGE_COLOUR_CHOICE, wxPoint(336,0), wxSize(72,23), 0, 0, 0, wxDefaultValidator, _T("ID_PAGE_COLOUR_CHOICE"));
+  PageColourChoice->Append(_T("0:0"));
+  PageColourChoice->Append(_T("0:1"));
+  PageColourChoice->Append(_T("0:2"));
+  PageColourChoice->Append(_T("0:3"));
+  PageColourChoice->Append(_T("0:4"));
+  PageColourChoice->Append(_T("0:5"));
+  PageColourChoice->Append(_T("0:6"));
+  PageColourChoice->Append(_T("0:7"));
+  PageColourChoice->Append(_T("1:0"));
+  PageColourChoice->Append(_T("1:1"));
+  PageColourChoice->Append(_T("1:2"));
+  PageColourChoice->Append(_T("1:3"));
+  PageColourChoice->Append(_T("1:4"));
+  PageColourChoice->Append(_T("1:5"));
+  PageColourChoice->Append(_T("1:6"));
+  PageColourChoice->Append(_T("1:7"));
+  PageColourChoice->Append(_T("2:0"));
+  PageColourChoice->Append(_T("2:1"));
+  PageColourChoice->Append(_T("2:2"));
+  PageColourChoice->Append(_T("2:3"));
+  PageColourChoice->Append(_T("2:4"));
+  PageColourChoice->Append(_T("2:5"));
+  PageColourChoice->Append(_T("2:6"));
+  PageColourChoice->Append(_T("2:7"));
+  PageColourChoice->Append(_T("3:0"));
+  PageColourChoice->Append(_T("3:1"));
+  PageColourChoice->Append(_T("3:2"));
+  PageColourChoice->Append(_T("3:3"));
+  PageColourChoice->Append(_T("3:4"));
+  PageColourChoice->Append(_T("3:5"));
+  PageColourChoice->Append(_T("3:6"));
+  PageColourChoice->Append(_T("3:7"));
   wxColourData __ColourData_1;
   __ColourData_1.SetColour(wxColour(128,0,255));
   ColourDialog1 = new wxColourDialog(this, &__ColourData_1);
@@ -105,6 +147,8 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   ClutPanel3->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
   ClutPanel4->Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave, NULL, this);
   Connect(ID_DEFAULT_BUTTON, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PaletteFrame::OnDefaultButtonClick);
+  Connect(ID_CHOICE1, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PaletteFrame::OnRowColourChoiceSelect);
+  Connect(ID_PAGE_COLOUR_CHOICE, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&PaletteFrame::OnPageColourChoiceSelect);
   Connect(wxID_ANY, wxEVT_CLOSE_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClosePalette);
   Connect(wxEVT_ENTER_WINDOW, (wxObjectEventFunction)&PaletteFrame::OnClutPanel1MouseLeave);
   //*)
@@ -233,6 +277,8 @@ void PaletteFrame::SetX28(TTXRow28* x28)
   // Copy remap to the choice widget
   PaletteRemapChoice->SetSelection(x28row->GetRemap());
 
+  UpdateDefaultRowColour();
+  UpdateDefaultScreenColour();
   // Copy clut colours to the GUI
   for (unsigned int clut = 0; clut < 4; ++clut)
   {
@@ -347,4 +393,36 @@ void PaletteFrame::OnDefaultButtonClick(wxCommandEvent& event)
   x28row->SetRemap(0);
   // @todo black background substitution
   SetX28(x28row);
+}
+
+void PaletteFrame::OnRowColourChoiceSelect(wxCommandEvent& event)
+{
+  x28row->SetDefaultRowColour(event.GetInt());
+  UpdateDefaultRowColour();
+  this->Refresh();
+}
+
+void PaletteFrame::UpdateDefaultRowColour()   // Set up the row colour
+{
+  int x = x28row->GetDefaultRowColour();
+  int clut = x >> 3;
+  int colour = x & 0x07;
+  unsigned int clr = x28row->GetColour(clut, colour);
+  RowColourPanel->SetBackgroundColour(Pal2wxColour(clr));
+}
+
+void PaletteFrame::UpdateDefaultScreenColour()   // Set up the Screen colour
+{
+  int x = x28row->GetDefaultScreenColour();
+  int clut = x >> 3;
+  int colour = x & 0x07;
+  unsigned int clr = x28row->GetColour(clut, colour);
+  PageColourPanel->SetBackgroundColour(Pal2wxColour(clr));
+}
+
+void PaletteFrame::OnPageColourChoiceSelect(wxCommandEvent& event)
+{
+  x28row->SetDefaultScreenColour(event.GetInt());
+  UpdateDefaultScreenColour();
+  this->Refresh();
 }

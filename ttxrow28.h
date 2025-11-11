@@ -58,6 +58,26 @@ class TTXRow28 : public TTXLine
      */
     void SetRegion(int region, bool primary);
 
+    /** GetDefaultRowColour - Get the default row colour.
+     * @return Row colour 5 bits: 2 Clut + 3 Colour
+     */
+    unsigned int GetDefaultRowColour(){return defaultRowColour;};
+
+    /** SetDefaultRowColour - Set the default row colour.
+     * @return Row colour 5 bits: 2 Clut + 3 Colour
+     */
+    void SetDefaultRowColour(unsigned int colour){defaultRowColour = colour;};
+
+    /** GetDefaultScreenColour - Get the default screen colour.
+     * @return Screen colour 5 bits: 2 Clut + 3 Colour
+     */
+    unsigned int GetDefaultScreenColour(){return defaultScreenColour;};
+
+    /** SetDefaultScreenColour - Set the default screen colour.
+     * @return Screen colour 5 bits: 2 Clut + 3 Colour
+     */
+    void SetDefaultScreenColour(unsigned int colour){defaultScreenColour = colour;};
+
     /** encode - Put X28 member data into TTI OL,28 string
      *  @return TTI OL,28 packet string.
      */
