@@ -17,6 +17,7 @@ const wxWindowID PaletteFrame::ID_CLUTPANEL3 = wxNewId();
 const wxWindowID PaletteFrame::ID_STATICTEXT3 = wxNewId();
 const wxWindowID PaletteFrame::ID_CLUTPANEL4 = wxNewId();
 const wxWindowID PaletteFrame::ID_DEFAULT_BUTTON = wxNewId();
+const wxWindowID PaletteFrame::ID_CHOICE1 = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(PaletteFrame,wxFrame)
@@ -55,7 +56,44 @@ PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,con
   ClutPanel4 = new wxPanel(this, ID_CLUTPANEL4, wxPoint(24,200), wxSize(504,32), wxTAB_TRAVERSAL, _T("ID_CLUTPANEL4"));
   StaticTextCLUT3 = new wxStaticText(ClutPanel4, ID_STATICTEXT3, _("CLUT 0: Foreground & Background"), wxPoint(0,16), wxSize(272,16), 0, _T("ID_STATICTEXT3"));
   StaticTextCLUT3->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
-  DefaultsButton = new wxButton(this, ID_DEFAULT_BUTTON, _("Set defaults"), wxPoint(424,8), wxDefaultSize, 0, wxDefaultValidator, _T("ID_DEFAULT_BUTTON"));
+  DefaultsButton = new wxButton(this, ID_DEFAULT_BUTTON, _("Set defaults"), wxPoint(424,0), wxDefaultSize, 0, wxDefaultValidator, _T("ID_DEFAULT_BUTTON"));
+  const wxString RowColourChoice_choices[] = {
+  _T("0:0"),
+  _T("0:1"),
+  _T("0:2"),
+  _T("0:3"),
+  _T("0:4"),
+  _T("0:5"),
+  _T("0:6"),
+  _T("0:7"),
+  _T("1:0"),
+  _T("1:1"),
+  _T("1:2"),
+  _T("1:3"),
+  _T("1:4"),
+  _T("1:5"),
+  _T("1:6"),
+  _T("1:7"),
+  _T("2:0"),
+  _T("2:1"),
+  _T("2:2"),
+  _T("2:3"),
+  _T("2:4"),
+  _T("2:5"),
+  _T("2:6"),
+  _T("2:7"),
+  _T("3:0"),
+  _T("3:1"),
+  _T("3:2"),
+  _T("3:3"),
+  _T("3:4"),
+  _T("3:5"),
+  _T("3:6"),
+  _T("3:7"),
+  };
+  RowColourChoice = new wxChoice(this, ID_CHOICE1, wxPoint(176,0), wxDefaultSize, 32, RowColourChoice_choices, 0, wxDefaultValidator, _T("ID_CHOICE1"));
+  RowColourChoice->SetForegroundColour(wxColour(255,0,0));
+  RowColourChoice->SetBackgroundColour(wxColour(0,255,0));
   wxColourData __ColourData_1;
   __ColourData_1.SetColour(wxColour(128,0,255));
   ColourDialog1 = new wxColourDialog(this, &__ColourData_1);

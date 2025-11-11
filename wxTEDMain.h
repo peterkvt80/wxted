@@ -119,6 +119,9 @@ class wxTEDFrame: public wxFrame
         int iPage;          /// Which page are we looking at?
         wxPoint m_offset;   /// The offset of the current page
 
+        bool m_EnableSave = false; /// Initial page we need to protect against overwriting
+        void EnableSave(bool enable = true){m_EnableSave = enable;}; /// If true then ctrl-s is allowed to save the page
+
         wxPoint m_slideOrigin;  /// X,Y Origin of a slide
         bool m_slidePages;      /// True if we are sliding the page with the right mouse key
 

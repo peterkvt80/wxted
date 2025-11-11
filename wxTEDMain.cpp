@@ -1408,6 +1408,10 @@ void wxTEDFrame::m_SetStatus()
     }
     else
         str << "(" << c.x << "." << d.x << "," << c.y << "." << d.y <<") " << code.str(); // Graphics
+    if (m_escapeMode) // Confirm to the user that they pressed Escape
+    {
+      str << " Escape...";
+    }
     StatusBar1->SetLabelText(str.str());
 }
 wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
@@ -1470,7 +1474,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     Menu1->Append(MenuItem3);
     MenuItemSave = new wxMenuItem(Menu1, idSavePage, _("Save\tCTRL-S"), _("Save a teletext page"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSave);
-    MenuItemSave->Enable(false);
     MenuItemSaveAs = new wxMenuItem(Menu1, isSavePageAs, _("Save as"), _("Save a teletext page with a different name"), wxITEM_NORMAL);
     Menu1->Append(MenuItemSaveAs);
     Menu1->AppendSeparator();
@@ -1829,7 +1832,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     else // Started with a page argument
     {
       // Typically when a page file is double clicked.
-      MenuItemSave->Enable(true);
+      //MenuItemSave->Enable(true);
+      EnableSave(true);
       SetTitle(initialPage.ToStdString());
     }
 
@@ -1948,7 +1952,8 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
         m_rootPage->SetSourcePage(str);
         m_rootPage->SetShortFilename(filename.ToStdString());
         SetTitle(str);
-        MenuItemSave->Enable(true);
+        // MenuItemSave->Enable(true);
+        EnableSave(true);
     }
 
 }
@@ -3099,7 +3104,8 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     m_rootPage->SetSourcePage("");
     m_rootPage->SetPageNumber(0x1ff); // Invalid
 
-    MenuItemSave->Enable(false); // Protect the template, do not enable save
+    // MenuItemSave->Enable(false); // Protect the template, do not enable save
+    EnableSave(false);
 
     m_iPageCount=m_rootPage->GetPageCount();
 
@@ -3185,7 +3191,8 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     std::cout << "Loading a teletext page " << str << " path " << m_path << std::endl;
     m_rootPage = new TTXPage(str,filename.ToStdString());
 
-    MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
+    // MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
+    EnableSave(m_rootPage->IsLoaded());
 
     m_iPageCount=m_rootPage->GetPageCount();
 

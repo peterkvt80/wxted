@@ -24,6 +24,7 @@ class PaletteFrame: public wxFrame
     //(*Declarations(PaletteFrame)
     wxButton* DefaultsButton;
     wxChoice* PaletteRemapChoice;
+    wxChoice* RowColourChoice;
     wxColourDialog* ColourDialog1;
     wxPanel* ClutPanel1;
     wxPanel* ClutPanel2;
@@ -49,6 +50,7 @@ class PaletteFrame: public wxFrame
     static const wxWindowID ID_STATICTEXT3;
     static const wxWindowID ID_CLUTPANEL4;
     static const wxWindowID ID_DEFAULT_BUTTON;
+    static const wxWindowID ID_CHOICE1;
     //*)
     // static const wxWindowID ID_COLOUR;
 
