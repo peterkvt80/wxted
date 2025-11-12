@@ -3,7 +3,7 @@
  * Purpose:   Defines Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
- * Copyright: Peter Kwan (c) 2014-2022
+ * Copyright: Peter Kwan (c) 2014-2025
  * License:
  *
  * Permission to use, copy, modify, and distribute this software
@@ -56,7 +56,7 @@
 
 
 // Version number
-#define VERSION_STRING wxT("1.55")
+#define VERSION_STRING wxT("1.56")
 
 // Hacky stand in for Magenta
 #define wxMAGENTA wxLIGHT_GREY

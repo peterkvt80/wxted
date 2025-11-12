@@ -48,26 +48,26 @@ class PageSettingsDialog: public wxDialog
 	protected:
 
 		//(*Identifiers(PageSettingsDialog)
-		static const long ID_STATICTEXT4;
-		static const long ID_STATICTEXT5;
-		static const long ID_STATICTEXT2;
-		static const long ID_STATICTEXT3;
-		static const long ID_STATICTEXT1;
-		static const long ID_TEXTCTRLPAGENUMBER;
-		static const long ID_TEXTCTRLDESCRIPTION;
-		static const long ID_TEXTCTRLCYCLETIME;
-		static const long ID_RADIOBOXCYCLE;
-		static const long ID_CHECKBOXC4ERASEPAGE;
-		static const long ID_CHECKBOXC5Newsflash;
-		static const long ID_CHECKBOXTransmitPage;
-		static const long ID_CHECKBOXC8UPDATE;
-		static const long ID_CHECKBOXC7SuppressHeader;
-		static const long ID_CHECKBOXC6Subtitle;
-		static const long ID_TEXTCTRLFASTEXTLINK1;
-		static const long ID_TEXTCTRLFASTEXTINDEX;
-		static const long ID_TEXTCTRLFASTEXTLINK4;
-		static const long ID_TEXTCTRLFASTEXTLINK3;
-		static const long ID_TEXTCTRLFASTEXTLINK2;
+		static const wxWindowID ID_STATICTEXT4;
+		static const wxWindowID ID_STATICTEXT5;
+		static const wxWindowID ID_STATICTEXT2;
+		static const wxWindowID ID_STATICTEXT3;
+		static const wxWindowID ID_STATICTEXT1;
+		static const wxWindowID ID_TEXTCTRLPAGENUMBER;
+		static const wxWindowID ID_TEXTCTRLDESCRIPTION;
+		static const wxWindowID ID_TEXTCTRLCYCLETIME;
+		static const wxWindowID ID_RADIOBOXCYCLE;
+		static const wxWindowID ID_CHECKBOXC4ERASEPAGE;
+		static const wxWindowID ID_CHECKBOXC5Newsflash;
+		static const wxWindowID ID_CHECKBOXTransmitPage;
+		static const wxWindowID ID_CHECKBOXC8UPDATE;
+		static const wxWindowID ID_CHECKBOXC7SuppressHeader;
+		static const wxWindowID ID_CHECKBOXC6Subtitle;
+		static const wxWindowID ID_TEXTCTRLFASTEXTLINK1;
+		static const wxWindowID ID_TEXTCTRLFASTEXTINDEX;
+		static const wxWindowID ID_TEXTCTRLFASTEXTLINK4;
+		static const wxWindowID ID_TEXTCTRLFASTEXTLINK3;
+		static const wxWindowID ID_TEXTCTRLFASTEXTLINK2;
 		//*)
 
 	private:

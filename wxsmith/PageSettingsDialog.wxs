@@ -2,6 +2,7 @@
 <wxsmith>
 	<object class="wxDialog" name="PageSettingsDialog">
 		<size>397,278</size>
+		<parent_arg>0</parent_arg>
 		<id_arg>0</id_arg>
 		<object class="wxStaticText" name="ID_STATICTEXT4" variable="StaticText3" member="yes">
 			<label>Page number</label>
@@ -62,7 +63,7 @@
 			</content>
 			<default>1</default>
 			<pos>0,120</pos>
-			<size>88,56</size>
+			<size>88,64</size>
 		</object>
 		<object class="wxCheckBox" name="ID_CHECKBOXC4ERASEPAGE" variable="CheckBoxC4ErasePage" member="yes">
 			<label>C4 Erase Page</label>

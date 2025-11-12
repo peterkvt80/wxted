@@ -6,6 +6,9 @@ Release Procedure
 2) Set the current build to Release by selecting
 Build->Select Target
 
+If you updated the compiler, then double check that Build options, Compiler options, static libgcc and static libstdc++ are checked.
+However, it still seems to want various compiler dlls so what the heck, just bundle those in too.
+
 3) Select Build->Rebuild
 
 4) Run wxTED. It should show the new version string in the window title bar.
@@ -14,6 +17,7 @@ Build->Select Target
 
 6) Run Inno Setup Compiler using the configuration that is in the Release folder and load winpackage.iss.
    Set the myAppVersion and VersionInfoVersion to the new version number.
+   If you are using a rebuilt wxWidgets then copy the new dll (eg. wxmsw32u_gcc_custom.dll) and update the file entry.
    Select Build->Compile.
    This creates a setup.exe in the same folder.
    Rename setup.exe to include the version number like setup_1.45.exe.
