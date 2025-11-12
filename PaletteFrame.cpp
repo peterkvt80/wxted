@@ -1,4 +1,5 @@
 #include "PaletteFrame.h"
+#include <sstream>
 
 //(*InternalHeaders(PaletteFrame)
 #include <wx/intl.h>
