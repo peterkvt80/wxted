@@ -56,7 +56,7 @@
 
 
 // Version number
-#define VERSION_STRING wxT("1.54")
+#define VERSION_STRING wxT("1.55")
 
 // Hacky stand in for Magenta
 #define wxMAGENTA wxLIGHT_GREY

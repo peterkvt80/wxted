@@ -3,6 +3,7 @@
 
 //(*Headers(PaletteFrame)
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/colordlg.h>
 #include <wx/frame.h>
@@ -23,6 +24,7 @@ class PaletteFrame: public wxFrame
 
     //(*Declarations(PaletteFrame)
     wxButton* DefaultsButton;
+    wxCheckBox* BlackBGSubCheckBox;
     wxChoice* PageColourChoice;
     wxChoice* PaletteRemapChoice;
     wxChoice* RowColourChoice;
@@ -33,6 +35,8 @@ class PaletteFrame: public wxFrame
     wxPanel* ClutPanel4;
     wxPanel* PageColourPanel;
     wxPanel* RowColourPanel;
+    wxStaticText* StaticText1;
+    wxStaticText* StaticText2;
     wxStaticText* StaticTextCLUT0;
     wxStaticText* StaticTextCLUT1;
     wxStaticText* StaticTextCLUT2;
@@ -42,7 +46,6 @@ class PaletteFrame: public wxFrame
 
     void UpdateDefaultRowColour();   /// Draw the row colour
     void UpdateDefaultScreenColour();   /// Draw the screen colour
-
 
   protected:
 
@@ -61,6 +64,9 @@ class PaletteFrame: public wxFrame
     static const wxWindowID ID_ROW_COLOUR_PANEL;
     static const wxWindowID ID_PAGE_COLOUR_PANEL;
     static const wxWindowID ID_PAGE_COLOUR_CHOICE;
+    static const wxWindowID ID_BLACKBGCHECKBOX;
+    static const wxWindowID ID_STATICTEXT4;
+    static const wxWindowID ID_STATICTEXT5;
     //*)
     // static const wxWindowID ID_COLOUR;
 
@@ -76,6 +82,7 @@ class PaletteFrame: public wxFrame
     void OnPaletteRemapChoiceSelect(wxCommandEvent& event);
     void OnRowColourChoiceSelect(wxCommandEvent& event);
     void OnPageColourChoiceSelect(wxCommandEvent& event);
+    void OnBlackBGSubCheckBoxClick(wxCommandEvent& event);
     //*)
     wxBoxSizer* palSizer; // CLUT Layout
     wxBoxSizer* clutSizer[4]; // fgs Colours and caption text

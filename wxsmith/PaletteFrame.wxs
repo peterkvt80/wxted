@@ -76,7 +76,7 @@
 		</object>
 		<object class="wxButton" name="ID_DEFAULT_BUTTON" variable="DefaultsButton" member="yes">
 			<label>Set defaults</label>
-			<pos>424,0</pos>
+			<pos>472,0</pos>
 			<handler function="OnDefaultButtonClick" entry="EVT_BUTTON" />
 		</object>
 		<object class="wxChoice" name="ID_CHOICE1" variable="RowColourChoice" member="yes">
@@ -115,10 +115,8 @@
 				<item>3:7</item>
 			</content>
 			<use_items_array>1</use_items_array>
-			<pos>216,0</pos>
-			<size>64,23</size>
-			<fg>#FF0000</fg>
-			<bg>#00FF00</bg>
+			<pos>208,0</pos>
+			<size>48,23</size>
 			<handler function="OnRowColourChoiceSelect" entry="EVT_CHOICE" />
 		</object>
 		<object class="wxPanel" name="ID_ROW_COLOUR_PANEL" variable="RowColourPanel" member="yes">
@@ -129,7 +127,7 @@
 			<style>wxFULL_REPAINT_ON_RESIZE</style>
 		</object>
 		<object class="wxPanel" name="ID_PAGE_COLOUR_PANEL" variable="PageColourPanel" member="yes">
-			<pos>288,0</pos>
+			<pos>264,0</pos>
 			<size>40,20</size>
 			<fg>wxSYS_COLOUR_ACTIVECAPTION</fg>
 			<bg>wxSYS_COLOUR_HIGHLIGHT</bg>
@@ -170,9 +168,24 @@
 				<item>3:6</item>
 				<item>3:7</item>
 			</content>
-			<pos>336,0</pos>
-			<size>72,23</size>
+			<pos>304,0</pos>
+			<size>48,23</size>
 			<handler function="OnPageColourChoiceSelect" entry="EVT_CHOICE" />
+		</object>
+		<object class="wxCheckBox" name="ID_BLACKBGCHECKBOX" variable="BlackBGSubCheckBox" member="yes">
+			<label>Black bg sub</label>
+			<pos>360,0</pos>
+			<handler function="OnBlackBGSubCheckBoxClick" entry="EVT_CHECKBOX" />
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT4" variable="StaticText1" member="yes">
+			<label>Row b/g</label>
+			<pos>168,24</pos>
+			<size>88,16</size>
+		</object>
+		<object class="wxStaticText" name="ID_STATICTEXT5" variable="StaticText2" member="yes">
+			<label>Screen b/g</label>
+			<pos>264,24</pos>
+			<size>88,16</size>
 		</object>
 		<object class="wxColourDialog" variable="ColourDialog1" member="yes">
 			<colour>#8000FF</colour>

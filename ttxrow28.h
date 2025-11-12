@@ -91,6 +91,14 @@ class TTXRow28 : public TTXLine
     unsigned int GetColour(unsigned int clutIx, unsigned int colour){return clut[clutIx][colour];};
     void SetColour(unsigned int colourVal, unsigned int clutIx, unsigned int colour){clut[clutIx][colour] = colourVal;};
 
+    /** @return True if black background substitution is enabled
+     */
+    bool BlackBackgroundSubstitution();
+
+    /** @param enabled - True if black background substitution is enabled
+     */
+    void SetBlackBackgroundSubstitution(bool enabled);
+
   protected:
 
   private:
@@ -105,7 +113,7 @@ class TTXRow28 : public TTXLine
     unsigned int defaultScreenColour = 0; /// default black. [!] Bits 4,3 are CLUT, 2,1,0 are Colour
     unsigned int defaultRowColour= 0; /// default black [!] Bits 4,3 are CLUT, 2,1,0 are Colour
     unsigned int remap = 0; /// 0..7 Colour Table remapping.
-    bool blackBackgroundSub = false; /// Allow CLUT to change the background colour
+    bool blackBackgroundSub = false; /// Allow row and screen background colour remapping from black
     bool enableLeftPanel = false; /// Show the left hand panel. false = do not show left panel
     bool enableRightPanel = false; /// Show the right panel. false = do not show right panel
     bool sidePanelStatusFlag = false; /// false = side panels only required at level 3.5.

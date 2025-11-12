@@ -396,3 +396,13 @@ std::string TTXRow28::encode()
   return result;
 } // EncodeOL28
 
+
+bool TTXRow28::BlackBackgroundSubstitution()
+{
+  return blackBackgroundSub;
+}
+
+void TTXRow28::SetBlackBackgroundSubstitution(bool enabled)
+{
+  blackBackgroundSub = enabled;
+}
