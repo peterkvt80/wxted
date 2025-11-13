@@ -34,16 +34,13 @@
 TTXRow28::TTXRow28()
 {
   //ctor
-  std::cout << "[TTXRow28::TTXRow28] called without parameters " << std::endl;
   this->defaultClut();
 }
 
 TTXRow28::TTXRow28(std::string line)
 {
   //ctor
-  std::cout << "[TTXRow28::TTXRow28] called. Line=" << line << std::endl;
   std::string str=validate(line);
-  std::cout << "[TTXRow28::TTXRow28] called. str=" << str << std::endl;
   this->defaultClut();
   if (this->decode(str))
   {
@@ -77,9 +74,9 @@ bool TTXRow28::decode(std::string line)
 
     triples[i] = (triple[2] << 12) | (triple[1] << 6) | triple[0];
 
-    std::cout << triples[i] << " ";
+    // std::cout << triples[i] << " ";
   }
-  std::cout << std::endl;
+  // std::cout << std::endl;
 
   this->dc = line.c_str()[0] & 0x3f;
 
@@ -119,7 +116,7 @@ bool TTXRow28::decode(std::string line)
     if (colourValue == 2) // Done an RGB value
     {
       this->clut[clutIx][colourIndex % 8] = colour;
-      if (true) {
+      if (false) {
         std::cout << "Clut[" << clutIx << "][" << colourIndex % 8 << "] = " << colour << std::endl;
       }
       colour = 0;
@@ -131,7 +128,7 @@ bool TTXRow28::decode(std::string line)
   this->defaultRowColour = (triples[12] >> 9) & 0x1f; // t13, 10..14
   this->blackBackgroundSub = (triples[12] >> 14) & 0x01; // t13, 15
   this->remap = (triples[12] >> 15) & 0x07; // t13, 16..18
-  std::cout << "[TTXRow28::TTXRow28] this->remap =  " << this->remap << std::endl;
+  // std::cout << "[TTXRow28::TTXRow28] this->remap =  " << this->remap << std::endl;
 
   // left and right extension panels
   this->enableLeftPanel = (triples[1] & 0x08) > 0; // t2, 4
@@ -392,7 +389,7 @@ std::string TTXRow28::encode()
     result += static_cast<char>( ((t>>6) & 0x3f) | 0x40 );
     result += static_cast<char>( ((t>>12) & 0x3f) | 0x40 );
   }
-  std::cout << "result = " << result << std::endl;
+  // std::cout << "result = " << result << std::endl;
   return result;
 } // EncodeOL28
 

@@ -278,7 +278,7 @@ void PaletteFrame::SetX28(TTXRow28* x28)
   x28row = x28;
   if (x28 == nullptr)
   {
-    std::cout << "[PaletteFrame::SetX28] x28 is null :-(" << std::endl;
+    std::cout << "[PaletteFrame::SetX28] ERROR: x28 is null :-(" << std::endl;
     return;
   }
   // Copy remap to the choice widget
@@ -314,7 +314,7 @@ std::string int_to_hex( T i )
 
 void PaletteFrame::OnColourClick(wxCommandEvent& event)
 {
-  std::cout << "[PaletteFrame::OnColourClick] an event happened" << std::endl;
+  // std::cout << "[PaletteFrame::OnColourClick] an event happened" << std::endl;
   // Which button did we click on?
   wxButton* button = static_cast<wxButton*>(event.GetEventObject());
 
@@ -360,7 +360,7 @@ void PaletteFrame::OnColourClick(wxCommandEvent& event)
         break;
       }
     }
-    std::cout << "Found button, clut = " << clut << " colour = " << colour << std::endl;
+    // std::cout << "Found button, clut = " << clut << " colour = " << colour << std::endl;
     unsigned int colourVal = ((red & 0xf0) << 4) | ((green & 0xf0)) | (blue & 0xf0 >> 4);
     button->SetLabel(int_to_hex(colourVal));
     x28row->SetColour(colourVal, clut, colour);
