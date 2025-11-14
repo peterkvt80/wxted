@@ -47,6 +47,7 @@ cd wxted
 g++ -o wxTED \
     -I./include \
     charchange.cpp \
+    hamm.c \
     HelpFrame.cpp \
     mapchar.cpp \
     PageSettingsDialog.cpp \
@@ -59,7 +60,6 @@ g++ -o wxTED \
     ttxrow28.cpp \
     wxTEDApp.cpp \
     wxTEDMain.cpp \
-    hamm.c \
     src/T42.cpp \
     src/HeaderPacket.cpp \
     `wx-config --cxxflags --libs core,base,adv,html` \
