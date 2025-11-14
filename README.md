@@ -42,7 +42,15 @@ git clone https://github.com/peterkvt80/wxted.git
 cd wxted
 ```
 
-2. Compile the project:
+2. Install teletext fonts:
+```bash
+cd font
+mkdir ~/.fonts
+cp *.ttf ~/.fonts
+fc-cache fv
+```
+
+3. Compile the project:
 ```bash
 g++ -o wxTED \
     -I./include \
@@ -66,7 +74,7 @@ g++ -o wxTED \
     -std=c++17
 ```
 
-3. Run wxTED:
+4. Run wxTED:
 ```bash
 ./wxTED
 ```
