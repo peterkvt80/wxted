@@ -63,7 +63,7 @@ g++ -o wxTED \
     src/T42.cpp \
     src/HeaderPacket.cpp \
     `wx-config --cxxflags --libs core,base,adv,html` \
-    -std=c++11
+    -std=c++17
 ```
 
 3. Run wxTED:
