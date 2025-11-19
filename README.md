@@ -42,11 +42,20 @@ git clone https://github.com/peterkvt80/wxted.git
 cd wxted
 ```
 
-2. Compile the project:
+2. Install teletext fonts:
+```bash
+cd font
+mkdir ~/.fonts
+cp *.ttf ~/.fonts
+fc-cache fv
+```
+
+3. Compile the project:
 ```bash
 g++ -o wxTED \
     -I./include \
     charchange.cpp \
+    hamm.c \
     HelpFrame.cpp \
     mapchar.cpp \
     PageSettingsDialog.cpp \
@@ -59,14 +68,13 @@ g++ -o wxTED \
     ttxrow28.cpp \
     wxTEDApp.cpp \
     wxTEDMain.cpp \
-    hamm.c \
     src/T42.cpp \
     src/HeaderPacket.cpp \
     `wx-config --cxxflags --libs core,base,adv,html` \
-    -std=c++11
+    -std=c++17
 ```
 
-3. Run wxTED:
+4. Run wxTED:
 ```bash
 ./wxTED
 ```
