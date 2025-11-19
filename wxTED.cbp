@@ -35,9 +35,13 @@
 					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wall" />
 					<Add option="-m64" />
+					<Add option="`wx_config --cxxflags`" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
 					<Add option="-m64" />
 				</Linker>
 			</Target>
@@ -59,27 +63,35 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=gnu++17" />
 			<Add option="-m64" />
 			<Add option="-pipe" />
-			<Add option="`wx-config --cflags`" />
-			<Add option="-DwxUSE_UNICODE" />
+			<Add option="`wx-config --cxxflags`" />
 			<Add option="-D__GNUWIN32__" />
 			<Add option="-D__WXMSW__" />
-			<Add option="-DWXUSINGDLL" />
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8/lib/gcc_dll/mswu" />
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8/include/" />
+			<Add option="-DwxUSE_UNICODE" />
+			<Add directory="%WXWIN%/include" />
 			<Add directory="include" />
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8" />
 		</Compiler>
 		<ResourceCompiler>
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8/include" />
-			<Add directory="E:/dev/wxwidgets/wxWidgets-3.2.8" />
-			<Add directory="E:/dev/wxTED-GitHub/wxted/" />
+			<Add directory="%WXWIN%/lib/gcc_lib/mswu" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-m64" />
 			<Add option="`wx-config --libs`" />
-			<Add library="E:/dev/wxwidgets/wxWidgets-3.2.8/lib/gcc_dll/libwxmsw32u.a" />
+			<Add library="libwxmsw33u_richtext.a" />
+			<Add library="libwxbase33u_xml.a" />
+			<Add library="libwxmsw33u_adv.a" />
+			<Add library="libwxmsw33u_html.a" />
+			<Add library="libwxmsw33u_core.a" />
+			<Add library="libwxbase33u.a" />
+			<Add library="libwxpng.a" />
+			<Add library="libwxjpeg.a" />
+			<Add library="libwxtiff.a" />
+			<Add library="libwxzlib.a" />
+			<Add library="libwxregexu.a" />
+			<Add library="libwxexpat.a" />
+			<Add directory="%WXWIN%/lib/gcc_lib/" />
 		</Linker>
 		<Unit filename="HelpFrame.cpp">
 			<Option target="Debug" />

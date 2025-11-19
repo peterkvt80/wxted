@@ -221,3 +221,5 @@ manual-127.odt
 wxTED.depend
 *.depend
 wxTED.layout
+*.o
+*.res

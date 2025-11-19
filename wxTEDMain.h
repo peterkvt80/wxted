@@ -433,6 +433,7 @@ class wxTEDFrame: public wxFrame
 };
 
 #ifdef __WXMSW__
+#include <windows.h>
 int send(LPCTSTR ftp, LPCTSTR user, LPCTSTR pass, LPCTSTR pathondisk, LPTSTR nameonftp);
 #endif // __WXMSW__
 
