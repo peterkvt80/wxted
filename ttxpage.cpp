@@ -1528,7 +1528,6 @@ bool TTXPage::IsAlphaMode(wxPoint loc)
   // Check that the parameter is valid
   if (loc.x<0 || loc.x>39 || loc.y<1 || loc.y>24) return result;
   // Get pointer to the relevant line
-  if (m_pLine==nullptr) return result;
   TTXLine* line=m_pLine[loc.y];
   if (line)
   {

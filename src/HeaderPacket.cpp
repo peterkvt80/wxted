@@ -11,7 +11,7 @@ HeaderPacket::HeaderPacket(T42& t42)
     if (t42.GetRow() != 0)
     {
         //                    0123456789012345678901234567890123456789
-        strncpy(&heading[0], "This is not a header    ", 24);
+        strncpy(&heading[0], "This is not a header    ", 25);
     }
     else
     {

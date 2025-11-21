@@ -75,6 +75,7 @@
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="%WXWIN%/lib/gcc_lib/mswu" />
+			<Add directory="%WXWIN%/include" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-m64" />
@@ -91,6 +92,25 @@
 			<Add library="libwxzlib.a" />
 			<Add library="libwxregexu.a" />
 			<Add library="libwxexpat.a" />
+			<Add library="libkernel32.a" />
+			<Add library="libuser32.a" />
+			<Add library="libgdi32.a" />
+			<Add library="libwinspool.a" />
+			<Add library="libcomdlg32.a" />
+			<Add library="libadvapi32.a" />
+			<Add library="libshell32.a" />
+			<Add library="libole32.a" />
+			<Add library="liboleaut32.a" />
+			<Add library="libuuid.a" />
+			<Add library="libcomctl32.a" />
+			<Add library="libwsock32.a" />
+			<Add library="libshlwapi.a" />
+			<Add library="libversion.a" />
+			<Add library="liboleacc.a" />
+			<Add library="libuxtheme.a" />
+			<Add library="libgdiplus.a" />
+			<Add library="libmsimg32.a" />
+			<Add library="libwxwebp.a" />
 			<Add directory="%WXWIN%/lib/gcc_lib/" />
 		</Linker>
 		<Unit filename="HelpFrame.cpp">
