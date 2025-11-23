@@ -15,6 +15,7 @@
 				<Option compiler="gcc-mingw64" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
+					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-m64" />
 					<Add option="-g" />
@@ -63,7 +64,8 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-std=gnu++17" />
+			<Add option="-std=c++17" />
+			<Add option="-std=c17" />
 			<Add option="-m64" />
 			<Add option="-pipe" />
 			<Add option="`wx-config --cxxflags`" />

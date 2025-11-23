@@ -2,7 +2,7 @@
  * Description       : Class for a teletext page
  * Compiler          : C++
  *
- * Copyright (C) 2014-2020, Peter Kwan
+ * Copyright (C) 2014-2025, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -26,7 +26,10 @@
 
 bool TTXPage::pageChanged=false;
 
-TTXPage::TTXPage() : undoList(nullptr), m_current(nullptr)    //ctor
+TTXPage::TTXPage() :
+  m_PageNumber(0x100),
+  m_SubPage(nullptr),
+  undoList(nullptr), m_current(nullptr)    //ctor
 {
   m_Init();
 }
@@ -42,7 +45,7 @@ void TTXPage::m_Init()
     // m_pLine[i]=new TTXLine("                                        ");
     m_pLine[i]=nullptr;
   }
-  m_row28 = new TTXRow28();
+  m_row28 = std::shared_ptr<TTXRow28>(new TTXRow28());
   for (int i=0;i<6;i++)
   {
     SetFastextLink(i,0x8ff);
@@ -85,13 +88,18 @@ TTXPage::~TTXPage()
 
 bool TTXPage::m_LoadT42(std::string filename)
 {
-    // T42 is raw teletext data.
+  std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+  if (not filein.good())
+  {
+    return false;
+  }
+
+  // T42 is raw teletext data.
   std::cout << "Trying T42" << std::endl;
   T42* t42;
   char buf[500];
   TTXPage* p=this;
   bool ok{false};
-  std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
 
   // todo Decode the packet to see what we do
   // header/text line/fastext/other.
@@ -160,10 +168,16 @@ bool TTXPage::m_LoadT42(std::string filename)
 // See http://rtlalphanet.asp.tss.nl/RTL4/100s01 for examples
 bool TTXPage::m_LoadVTX(std::string filename)
 {
+  std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+  if (not filein.good())
+  {
+    return false;
+  }
+
   std::cout << "Trying VTX" << std::endl;
   char buf[500];
   TTXPage* p=this;
-  std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+
   // First 10 chars should be ham encoded. No error correction allowed
   filein.read(buf,9);
   for (int i=0;i<9;i++)
@@ -254,9 +268,15 @@ bool TTXPage::m_LoadVTX(std::string filename)
 
 bool TTXPage::m_LoadEP1(std::string filename)
 {
+    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+    if (not filein.good())
+    {
+      return false;
+    }
+
     char buf[100];
     TTXPage* p=this;
-    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+
     // First 6 chars should be FE 01 09 00 00 00
     filein.read(buf,6);
     if ((buf[0]!=(char)0xFE) || (buf[1]!=(char)0x01) || (buf[2]!=(char)0x09))
@@ -283,10 +303,16 @@ bool TTXPage::m_LoadEP1(std::string filename)
 
 bool TTXPage::m_LoadVTP(std::string filename)
 {
+    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+    if (not filein.good())
+    {
+      return false;
+    }
+
     char buf[0x100];
     TTXPage* p=this;
     int subPageCount=0;
-    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+
     // First 6 chars should be 56 64 60 (VTP)
     filein.read(buf,3);
     if ((buf[0]!=(char)0x56) || (buf[1]!=(char)0x54) || (buf[2]!=(char)0x50))
@@ -353,9 +379,15 @@ bool TTXPage::m_LoadVTP(std::string filename)
 
 bool TTXPage::m_LoadTTX(std::string filename)
 {
+    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+    if (not filein.good())
+    {
+      return false;
+    }
+
     char buf[1100]; // Don't think we need this much buffer. Just a line will do
     TTXPage* p=this;
-    std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
+
     // First 0x61 chars are some sort of header. TODO: Find out what the format is to get metadata out
     filein.read(buf,0x61);
 
@@ -515,6 +547,11 @@ bool TTXPage::m_LoadTTI(std::string filename)
     int lines=0;
     // Open the file
     std::ifstream filein(filename.c_str());
+    if (not filein.good())
+    {
+      return false;
+    }
+
     TTXPage* p=this;
     char * ptr;
     int subcode;
@@ -626,12 +663,12 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     std::getline(filein, line);
                     if (lineNumber>MAXROW) break;
                     // std::cout << "reading " << lineNumber << std::endl;
-                    p->m_pLine[lineNumber]=new TTXLine(line);
+                    p->m_pLine[lineNumber] = new TTXLine(line);
                     // TODO: Change this implementation to use SetRow
                     // std::cout << lineNumber << ": OL partly implemented. " << line << std::endl;
                     if (lineNumber==28)
                     {
-                      p->m_row28=new TTXRow28(line);
+                      p->m_row28=std::shared_ptr<TTXRow28>(new TTXRow28(line));
                     }
                     lines++;
                     break;
@@ -682,10 +719,33 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
   m_Init();
   SetSourcePage(filename);
   SetShortFilename(shortFilename);
-  // Try all the possible formats.
 
-  int type=1;
-  if (!m_loaded)
+  std::ifstream file(filename);
+  if (not file.good())
+  {
+    SetRow(5,filename);
+    SetRow(8,"Q7#####################################k");
+    SetRow(9,"Q5ASoftware Failure. Your teletext    Qj");
+    SetRow(10,"Q5Apage could not be loaded.          Qj");
+    SetRow(11,"Q5                                    Qj");
+    SetRow(12,"Q5A    Guru Meditation _baadf00d      Qj");
+    SetRow(13,"Q-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.");
+    SetRow(14,"Q                                       ");
+    SetRow(15,"Q                   `&)0                ");
+    SetRow(16,"Q                  `%h4*0               ");
+    SetRow(17,"Q                 `% j5 *0              ");
+    SetRow(18,"Q                `&  b1  )0             ");
+    SetRow(19,"Q                uppprqpppz             ");
+    SetSourcePage("Unable to load page");
+    SetShortFilename("no page");
+
+    return;
+  }
+  file.close();
+
+  // Try all the possible formats.
+ int type=1;
+  if (!m_loaded) // [!] Will never be set
   {
     SetRow(1,"                                        ");
     if (m_LoadTTI(filename))
@@ -759,7 +819,9 @@ TTXPage::TTXPage(std::string filename, std::string shortFilename) :
 }
 
 
-TTXPage::TTXPage(const TTXPage& other) : undoList(0), m_current(nullptr)
+TTXPage::TTXPage(const TTXPage& other) :
+  undoList(0),
+  m_current(nullptr)
 {
   //copy ctor.
   std::cout << "Would be a great idea to implement the copy constructor" << std::endl;
@@ -1585,10 +1647,7 @@ int TTXPage::GetLanguage(bool primary)
   int language;
   // language=(m_pagestatus >> 7) & 0x07;
   // std::cout << "Get Language PS," << std::setw(4) << std::setfill('X') << std::hex << m_pagestatus << std::endl;
-  if (m_row28 != nullptr)
-  {
-    language = m_row28->Language(primary);
-  }
+  language = m_row28->Language(primary);
   return language;
 }
 

@@ -177,8 +177,8 @@ END_EVENT_TABLE()
 
 void wxTEDFrame::OnEraseBackground(wxEraseEvent& event)
 {
-    // NULL method!
-    std::cout << "Erase..." << std::endl;
+  // NULL method! Something to help with double buffering flashing.
+  // std::cout << "Erase..." << std::endl;
 }
 
 void wxTEDFrame::OnSize(wxSizeEvent& event)
@@ -1416,7 +1416,7 @@ void wxTEDFrame::m_SetStatus()
     }
     StatusBar1->SetLabelText(str.str());
 }
-wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
+wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     : m_escapeMode(false)
     , m_controlModifier(false)
     , m_menuCount(0)
@@ -1429,7 +1429,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     , m_cursorIsAlpha(true)
     , m_dragging(false)
     , m_MarqueeStart(wxPoint(0,0))
-    , m_currentPage(NULL)
+    , m_rootPage(nullptr)
+    , m_currentPage(nullptr)
 
     , m_iPageCount(1)
     , iPage(0)
@@ -1819,7 +1820,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
     m_resize(GetSize()); // Adjust the font to fit the available space
 
     /* Initial page */
-    m_currentPage=m_rootPage = new TTXPage(initialPage.ToStdString(),"");
+    m_currentPage = m_rootPage = new TTXPage(initialPage.ToStdString(),"");
     m_setLanguage(true);
 
     m_iPageCount=m_rootPage->GetPageCount();
@@ -1832,7 +1833,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent,wxWindowID id, wxString initialPage)
       SetTitle(_("wxTED ")+VERSION_STRING);
       m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
     }
-    else // Started with a page argument
+    else
     {
       // Typically when a page file is double clicked.
       //MenuItemSave->Enable(true);
@@ -3192,7 +3193,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     wxString filename=LoadPageFileDialog->GetFilename();
     std::cout << "the filename was " << filename << std::endl;
     std::cout << "Loading a teletext page " << str << " path " << m_path << std::endl;
-    m_rootPage = new TTXPage(str,filename.ToStdString());
+    m_rootPage = new TTXPage(str, filename.ToStdString());
 
     // MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
     EnableSave(m_rootPage->IsLoaded());
@@ -3284,7 +3285,7 @@ const wxColour* wxTEDFrame::ttxCode2wxColour(const unsigned int colour) // Given
 void wxTEDFrame::OnMenuItemPaletteSelected(wxCommandEvent& event)
 {
   // "todo Get cluts from the X28 row if it exists and populate the palette
-  TTXRow28* x28row;
+  std::shared_ptr<TTXRow28> x28row;
   x28row = m_currentPage->GetX28Row(); // @todo If we change subpage, do we set the correct page???
   paletteFrame->SetX28(x28row);
   paletteFrame->Show(true);

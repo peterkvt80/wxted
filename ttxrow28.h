@@ -104,7 +104,7 @@ class TTXRow28 : public TTXLine
   private:
     // See ETSI EN 300 706 Table 4
     // Expanded fields from the packet 28 row
-    unsigned int dc = -1; /// Designation code
+    unsigned int dc = 1000; /// Designation code. 1000 indicates that it is invalid
     unsigned int pageFunction = 0; /// Page function (dc 3..0) default 0 = level 1 page
     unsigned int pageCoding = 0; /// Page coding (dc 6..4) default 2 = Hamming DC + 13 triples
     unsigned int defaultG0G2CharacterSet = 0; /// Primary character set. 4 bits region and 3 bits language. 0 = Region 0 English
@@ -130,7 +130,7 @@ class TTXRow28 : public TTXLine
      */
     bool decode(std::string line);
 
-    bool isValid(){return dc >= 0;}; /// If this object has valid data
+    bool isValid(){return dc < 1000;}; /// If this object has valid data
 
 };
 

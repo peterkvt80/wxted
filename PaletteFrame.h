@@ -42,7 +42,7 @@ class PaletteFrame: public wxFrame
     wxStaticText* StaticTextCLUT2;
     wxStaticText* StaticTextCLUT3;
     //*)
-    void SetX28(TTXRow28* x28); /// Save a pointer to Packet 28
+    void SetX28(std::shared_ptr<TTXRow28> x28); /// Save a pointer to Packet 28
 
     void UpdateDefaultRowColour();   /// Draw the row colour
     void UpdateDefaultScreenColour();   /// Draw the screen colour
@@ -90,7 +90,7 @@ class PaletteFrame: public wxFrame
     wxPanel* cluts[4];  // Pointers to each clut panel
     wxStaticText* captions[4]; // One caption per clut
     wxButton* colours[4][8]; // Four CLUTs with eight colours each
-    TTXRow28* x28row;
+    std::shared_ptr<TTXRow28> x28row;
     DECLARE_EVENT_TABLE()
 };
 

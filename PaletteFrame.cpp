@@ -32,7 +32,8 @@ BEGIN_EVENT_TABLE(PaletteFrame,wxFrame)
   //*)
 END_EVENT_TABLE()
 
-PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
+PaletteFrame::PaletteFrame(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size) :
+  x28row(nullptr)
 {
   wxBoxSizer* palSizer = new wxBoxSizer(wxVERTICAL);
   //(*Initialize(PaletteFrame)
@@ -273,7 +274,7 @@ void PaletteFrame::OnChoiceRemapSelect(wxCommandEvent& event)
   }
 }
 
-void PaletteFrame::SetX28(TTXRow28* x28)
+void PaletteFrame::SetX28(std::shared_ptr<TTXRow28> x28)
 {
   x28row = x28;
   if (x28 == nullptr)

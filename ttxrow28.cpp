@@ -137,7 +137,6 @@ bool TTXRow28::decode(std::string line)
   this->leftColumns = (triples[1] >> 6) & 0x0f; // t2, 7..10
   // result.rightColumns = (triples[12]) Implied. Always 16-leftColumns  [!] Make this a function
 
-
   return result;
 }
 
@@ -306,7 +305,7 @@ void TTXRow28::SetLanguage(int language, bool primary)
  */
 std::string TTXRow28::encode()
 {
-  if (dc <0) { // Uninitialised?
+  if (dc == 1000) { // Uninitialised?
     return "";
   }
   unsigned int triples[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

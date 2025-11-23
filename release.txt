@@ -6,8 +6,8 @@ Release Procedure
 2) Set the current build to Release by selecting
 Build->Select Target
 
-If you updated the compiler, then double check that Build options, Compiler options, static libgcc and static libstdc++ are checked.
-However, it still seems to want various compiler dlls so what the heck, just bundle those in too.
+If you updated the compiler, then double check that Build options, Compiler options, static libgcc and static libstdc++ are NOT checked.
+If the build wants various dlls then bundle those in too.
 
 3) Select Build->Rebuild
 
@@ -21,8 +21,9 @@ However, it still seems to want various compiler dlls so what the heck, just bun
    Select Build->Compile.
    This creates a setup.exe in the same folder.
    Rename setup.exe to include the version number like setup_1.45.exe.
-  
-  
+   
+   Maybe check that it installs OK if anything major was changed?
+   
 7) Open the Github repo online https://github.com/peterkvt80/wxted 
    Click Releases. Press the "Draft a new release" button. Fill in the next tag number.
    Write a release description.
@@ -30,12 +31,6 @@ However, it still seems to want various compiler dlls so what the heck, just bun
    Drop the zip onto the release.
   Click the Release now button.
   
-7B) Old Publish. 
-Copy setup_x_yy.exe to e:\dev\wxted-web-release.
-Edit index.html to reflect the new file.
-Upload the changed files [using WinSCP] to the home page for wxTED at
-http://teastop.co.uk/teletext/wxted/
-
 Attention
 =========
 Each year update the copyright year in wxTEDMain.cpp.

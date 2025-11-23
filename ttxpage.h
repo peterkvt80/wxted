@@ -4,6 +4,7 @@
 #include "string.h"
 #include <iostream>
 #include <sstream>
+#include <memory>
 
 #include <fstream>
 #include <string>
@@ -296,7 +297,7 @@ class TTXPage
       /** @brief GetX28Row - Get access to the X28 language and palette enhancement packet
        *  @return - TTXRow28* pointer
        */
-       TTXRow28* GetX28Row(){return m_row28;};
+       std::shared_ptr<TTXRow28> GetX28Row(){return m_row28;};
 
 
     protected:
@@ -307,7 +308,7 @@ class TTXPage
         // Private objects
         TTXPage* m_SubPage; //!< Member variable "m_SubPage"
         TTXLine* m_pLine[MAXROW+1];   // OL. 26,27,28,29 might be set by other apps. Keep whatever people put in there
-        TTXRow28* m_row28;           // OL,28 Packet X28 only
+        std::shared_ptr<TTXRow28> m_row28;           // OL,28 Packet X28 only
         int m_fastextlinks[6];      // FL
 
         std::string m_destination;  // DS
