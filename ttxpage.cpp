@@ -845,7 +845,7 @@ TTXPage* TTXPage::GetPage(unsigned int pageNumber)
 
 void TTXPage::Undo(wxPoint& cursorloc)
 {
-  TEDEvent* tev=m_current; // This is the event we are going to undo
+  std::shared_ptr<TEDEvent> tev=m_current; // This is the event we are going to undo
   if (!m_current) // Nothing to undo?
   {
     return;
@@ -859,7 +859,7 @@ void TTXPage::Undo(wxPoint& cursorloc)
   line->SetCharAt(loc.x,oldChar);
   // Dump the Undo (or do we?) No, just move the m_current pointer. Keep it in case we want to do a Redo
   // Step back to the previous event
-  TEDEvent* last=tev->GetlastEvent();
+  std::shared_ptr<TEDEvent> last=tev->GetlastEvent();
   if (last!=0)
   {
     m_current=last;
@@ -915,7 +915,7 @@ void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldChar, char newChar)
   {
     return;
   }
-  TEDEvent* tev=new TEDEvent(evt);
+  std::shared_ptr<TEDEvent> tev(new TEDEvent(evt));
   CharChange* cc=nullptr;
   if (!undoList) // First time we need to set the root
   {
@@ -945,7 +945,7 @@ void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldChar, char newChar)
   }
 }
 
-TEDEvent* TTXPage::GetUndo()
+std::shared_ptr<TEDEvent> TTXPage::GetUndo()
 {
     return m_current;
 }

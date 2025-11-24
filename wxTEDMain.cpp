@@ -194,7 +194,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
   std::cout << "[OnChar]Key event..." << code << std::endl;
   // We look at a few codes which apply to a page set rather than just a single page
   // If none of these codes apply, we send the character to the page
-  TEDEvent* tev;
+  std::shared_ptr<TEDEvent> tev;
   // Toggle invisible control codes?
   if (m_escapeMode)
   {
@@ -306,7 +306,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_CONTROL_Y: // Ah. This is why we can't use CTRL-Y as a special key. This was for debugging undo.
     // std::cout << "CTRL-Y test" << std::endl; // Testing
-    tev=m_currentPage->GetUndo();
+    tev = m_currentPage->GetUndo();
     if (tev!=NULL)
     {
       tev->dump();

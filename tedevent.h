@@ -2,6 +2,7 @@
 #define TEDEVENT_H
 
 #include <iostream>
+#include <memory>
 #include "charchange.h"
 
 /***************************************************************
@@ -43,6 +44,7 @@ enum EventType {EventNone, EventSave, EventKey, EventLanguage};
 
 
 class TEDEvent
+  : public std::enable_shared_from_this<TEDEvent>
 {
     public:
         /** Default constructor */
@@ -62,18 +64,18 @@ class TEDEvent
         /** Access nextEvent
          * \return The current value of nextEvent
          */
-        TEDEvent* GetnextEvent() { return nextEvent; }
+        std::shared_ptr<TEDEvent> GetnextEvent() { return nextEvent; }
         /** Set nextEvent
          * \param val New value to set
          */
-        void SetlastEvent(TEDEvent* val) { lastEvent = val; }        /** Access nextEvent
+        void SetlastEvent(std::shared_ptr<TEDEvent> val) { lastEvent = val; }        /** Access nextEvent
          * \return The current value of nextEvent
          */
-        TEDEvent* GetlastEvent() { return lastEvent; }
+        std::shared_ptr<TEDEvent> GetlastEvent() { return lastEvent; }
         /** Set nextEvent
          * \param val New value to set
          */
-        void SetnextEvent(TEDEvent* val);
+        void SetnextEvent(std::shared_ptr<TEDEvent> val);
 
         /** If the char list is empty
          * \return true if the char list is empty
@@ -104,8 +106,8 @@ class TEDEvent
     protected:
     private:
         EventType eventType; //!< Member variable "eventType"
-        TEDEvent* nextEvent; //!< Member variable "nextEvent"
-        TEDEvent* lastEvent; //!< Member variable "nextEvent"
+        std::shared_ptr<TEDEvent> nextEvent; //!< Member variable "nextEvent"
+        std::shared_ptr<TEDEvent> lastEvent; //!< Member variable "nextEvent"
         CharChange* charList;
 };
 

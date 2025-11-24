@@ -13,6 +13,8 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include "ttxrow28.h"
+#include <memory>
+
 
 
 class PaletteFrame: public wxFrame

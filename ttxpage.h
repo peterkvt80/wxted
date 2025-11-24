@@ -264,7 +264,7 @@ class TTXPage
       /** undo/redo
        * \return the last event
        */
-      TEDEvent* GetUndo();
+      std::shared_ptr<TEDEvent> GetUndo();
 
       /** undo/redo
        * Step back one keystroke
@@ -325,8 +325,8 @@ class TTXPage
         int instance;
 
         /* Undo/Redo */
-        TEDEvent* undoList; // Root
-        TEDEvent* m_current;  // Current pointer
+        std::shared_ptr<TEDEvent> undoList; // Root
+        std::shared_ptr<TEDEvent> m_current;  // Current pointer
         void AddEvent(EventType evt, wxPoint wxc, char oldChar, char newChar); // Add an event to the undo list
 
         std::string m_FormatPageNumber(TTXPage* p); /// \return the page number ready to write to file

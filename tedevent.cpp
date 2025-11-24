@@ -1,6 +1,8 @@
 #include "tedevent.h"
 
-TEDEvent::TEDEvent(EventType evt) : eventType(EventNone), nextEvent(nullptr), lastEvent(nullptr), charList(NULL)
+TEDEvent::TEDEvent(EventType evt) :
+
+  eventType(EventNone), nextEvent(nullptr), lastEvent(nullptr), charList(NULL)
 {
     SeteventType(evt);
 }
@@ -12,9 +14,6 @@ TEDEvent::TEDEvent() : eventType(EventNone), nextEvent(nullptr), lastEvent(nullp
 
 TEDEvent::~TEDEvent()
 {
-    //dtor
-    if (this->nextEvent!=nullptr)
-        delete (nextEvent);
 }
 
 void TEDEvent::print()
@@ -48,9 +47,9 @@ void TEDEvent::print()
 
 void TEDEvent::dump()
 {
-    TEDEvent* p;
+    std::shared_ptr<TEDEvent> p;
     EventType evt;
-    for (p=this;p!=nullptr;p=p->GetlastEvent())
+    for (p = shared_from_this(); p != nullptr; p = p->GetlastEvent() )
     {
         std::cout << "[TEDEvent::dump]" << std::endl;
         evt=p->GeteventType();
@@ -60,10 +59,8 @@ void TEDEvent::dump()
     }
 }
 
-void TEDEvent::SetnextEvent(TEDEvent* val)
+void TEDEvent::SetnextEvent(std::shared_ptr<TEDEvent> val)
 {
-    // Before setting the next event, clear the previous head.
-    if (nextEvent!=NULL)
-        delete nextEvent;
-    nextEvent = val;
+  // Smart pointer old value is destroyed automatically
+  nextEvent = val;
 }

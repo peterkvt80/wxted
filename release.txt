@@ -1,7 +1,7 @@
 Release Procedure
 =================
 
-1) Increment the version string. This is in wxTEDMain.h as #define VERSION_STRING wxT("1.08")
+1) Increment the version string. This is in wxTEDMain.h as #define VERSION_STRING wxT("1.58")
 
 2) Set the current build to Release by selecting
 Build->Select Target
@@ -17,10 +17,10 @@ If the build wants various dlls then bundle those in too.
 
 6) Run Inno Setup Compiler using the configuration that is in the Release folder and load winpackage.iss.
    Set the myAppVersion and VersionInfoVersion to the new version number.
-   If you are using a rebuilt wxWidgets then copy the new dll (eg. wxmsw32u_gcc_custom.dll) and update the file entry.
+   If you are using a dynamic wxWidgets library then copy the new dll (eg. wxmsw32u_gcc_custom.dll) and update the file entry.
    Select Build->Compile.
    This creates a setup.exe in the same folder.
-   Rename setup.exe to include the version number like setup_1.45.exe.
+   Rename setup.exe to include the version number like setup_1.58.exe.
    
    Maybe check that it installs OK if anything major was changed?
    
