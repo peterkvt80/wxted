@@ -49,7 +49,7 @@
 // Hopefully we will preserve these rows even if we don't process them
 #define MAXROW 29
 
-class TTXPage
+class TTXPage : public std::enable_shared_from_this<TTXPage>
 {
   public:
       /** Default constructor */
@@ -80,18 +80,18 @@ class TTXPage
       /** Access m_SubPage
        * \return The current value of m_SubPage
        */
-      TTXPage* Getm_SubPage() { return m_SubPage; }
+      std::shared_ptr<TTXPage> Getm_SubPage() { return m_SubPage; }
 
       /** Set m_SubPage
        * \param val New value to set
        */
-      void Setm_SubPage(TTXPage* val) { m_SubPage = val; }
+      void Setm_SubPage(std::shared_ptr<TTXPage> val) { m_SubPage = val; }
 
       /** Get the page
        *  Warning! This is not the teletext page number. It is just an index to the pages in this list.
        * \return Pointer to the page object that we want
        */
-       TTXPage* GetPage(unsigned int pageNumber);
+       std::shared_ptr<TTXPage> GetPage(unsigned int pageNumber);
 
        /** Setter/Getter for m_pageNumber
         */
@@ -221,7 +221,7 @@ class TTXPage
        * \param page : A TTXPage object to copy from
        * \return
        */
-      void CopyMetaData(TTXPage* page);
+      void CopyMetaData(std::shared_ptr<TTXPage> page);
 
       /** Set the language.
        * 0=Engliah, 1=German, 2=Swedish, 3=Italian, 4=French, 5=Spanish, 6=Czech
@@ -306,7 +306,7 @@ class TTXPage
         // Private variables
         int m_PageNumber;  // PN
         // Private objects
-        TTXPage* m_SubPage; //!< Member variable "m_SubPage"
+        std::shared_ptr<TTXPage> m_SubPage; //!< Member variable "m_SubPage"
         TTXLine* m_pLine[MAXROW+1];   // OL. 26,27,28,29 might be set by other apps. Keep whatever people put in there
         std::shared_ptr<TTXRow28> m_row28;           // OL,28 Packet X28 only
         int m_fastextlinks[6];      // FL
@@ -321,7 +321,7 @@ class TTXPage
         int m_pagestatus;           // PS
         // Private functions
         void m_Init();
-        void m_OutputLines(std::ofstream& ttxfile, TTXPage* p); /// Send ttx lines to an output stream
+        void m_OutputLines(std::ofstream& ttxfile, std::shared_ptr<TTXPage> p); /// Send ttx lines to an output stream
         int instance;
 
         /* Undo/Redo */
@@ -329,7 +329,7 @@ class TTXPage
         std::shared_ptr<TEDEvent> m_current;  // Current pointer
         void AddEvent(EventType evt, wxPoint wxc, char oldChar, char newChar); // Add an event to the undo list
 
-        std::string m_FormatPageNumber(TTXPage* p); /// \return the page number ready to write to file
+        std::string m_FormatPageNumber(std::shared_ptr<TTXPage> p); /// \return the page number ready to write to file
         int findPageNumber(char* buf);
 
 				bool m_loaded;

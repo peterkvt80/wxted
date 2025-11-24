@@ -73,7 +73,7 @@ class wxTEDFrame: public wxFrame
 
         wxTEDFrame(wxWindow* parent,wxWindowID id = -1, wxString initialPage="wxtedsplash.tti");
         virtual ~wxTEDFrame();
-        inline TTXPage* Page(){return m_rootPage;};
+        inline std::shared_ptr<TTXPage> Page(){return m_rootPage;};
 
     private:
         bool m_escapeMode; /// True if the last key pressed was Escape
@@ -110,8 +110,8 @@ class wxTEDFrame: public wxFrame
         wxString GetTextFromClipboard();
 
         // Page
-        TTXPage* m_rootPage; /// This is the root page used for load/save
-        TTXPage* m_currentPage; /// This may point to a sub-page and is the page currently viewed and edited
+        std::shared_ptr<TTXPage> m_rootPage; /// This is the root page used for load/save
+        std::shared_ptr<TTXPage> m_currentPage; /// This may point to a sub-page and is the page currently viewed and edited
         void m_resize(wxSize event);
         wchar_t mapTextChar(wchar_t ch, bool primary);  /// Maps a teletext character to a teletext2 font
 

@@ -76,14 +76,6 @@ TTXPage::~TTXPage()
       m_pLine[i]=nullptr;
     }
   }
-  /* Does this leave sub pages leaking memory?
-     No. The destructor will cascade through the whole chain */
-  if (Getm_SubPage()!=nullptr)
-  {
-    //std::cout << "~[TTXPage]: " << j << std::endl;
-    delete m_SubPage;
-    m_SubPage=nullptr;
-  }
 }
 
 bool TTXPage::m_LoadT42(std::string filename)
@@ -98,7 +90,7 @@ bool TTXPage::m_LoadT42(std::string filename)
   std::cout << "Trying T42" << std::endl;
   T42* t42;
   char buf[500];
-  TTXPage* p=this;
+  std::shared_ptr<TTXPage> p(shared_from_this());
   bool ok{false};
 
   // todo Decode the packet to see what we do
@@ -176,7 +168,7 @@ bool TTXPage::m_LoadVTX(std::string filename)
 
   std::cout << "Trying VTX" << std::endl;
   char buf[500];
-  TTXPage* p=this;
+  std::shared_ptr<TTXPage> p(shared_from_this());
 
   // First 10 chars should be ham encoded. No error correction allowed
   filein.read(buf,9);
@@ -275,7 +267,7 @@ bool TTXPage::m_LoadEP1(std::string filename)
     }
 
     char buf[100];
-    TTXPage* p=this;
+    std::shared_ptr<TTXPage> p(shared_from_this());
 
     // First 6 chars should be FE 01 09 00 00 00
     filein.read(buf,6);
@@ -310,7 +302,7 @@ bool TTXPage::m_LoadVTP(std::string filename)
     }
 
     char buf[0x100];
-    TTXPage* p=this;
+    std::shared_ptr<TTXPage> p(shared_from_this());
     int subPageCount=0;
 
     // First 6 chars should be 56 64 60 (VTP)
@@ -365,7 +357,7 @@ bool TTXPage::m_LoadVTP(std::string filename)
       // Is there another subpage?
       if (more && subPageCount>1)
       {
-        TTXPage* newSubPage=new TTXPage();  // Create a new instance for the subpage
+        std::shared_ptr<TTXPage> newSubPage(new TTXPage());  // Create a new instance for the subpage
         p->Setm_SubPage(newSubPage);        // Put in a link to it
         p=newSubPage;                       // And jump to the next subpage ready to populate
       }
@@ -386,7 +378,7 @@ bool TTXPage::m_LoadTTX(std::string filename)
     }
 
     char buf[1100]; // Don't think we need this much buffer. Just a line will do
-    TTXPage* p=this;
+    std::shared_ptr<TTXPage> p(shared_from_this());
 
     // First 0x61 chars are some sort of header. TODO: Find out what the format is to get metadata out
     filein.read(buf,0x61);
@@ -542,7 +534,7 @@ int TTXPage::findPageNumber(char* buf)
 bool TTXPage::m_LoadTTI(std::string filename)
 {
     const std::string cmd[]={"DS","SP","DE","CT","PN","SC","PS","MS","OL","FL","RD"};
-    const int cmdCount = 12; // There are 12 possible commands, maybe DT and RT too on really old files
+    const int cmdCount(11); // Number of possible commands, maybe DT and RT too on really old files
     unsigned int lineNumber;
     int lines=0;
     // Open the file
@@ -552,7 +544,7 @@ bool TTXPage::m_LoadTTI(std::string filename)
       return false;
     }
 
-    TTXPage* p=this;
+    TTXPage* p(this);
     char * ptr;
     int subcode;
     std::string subpage;
@@ -560,15 +552,15 @@ bool TTXPage::m_LoadTTI(std::string filename)
     char m;
     for (std::string line; std::getline(filein, line, ','); )
     {
-        // std::cout << line << std::endl; // Shows the command code
+         std::cout << line << std::endl; // Shows the command code
         bool found=false;
         for (int i=0;i<cmdCount && !found; i++)
         {
-            // std::cout << "matching " << line << std::endl;
+            std::cout << "matching " << line << std::endl;
             if (!line.compare(cmd[i]))
             {
                 found=true;
-                // std::cout << "Matched " << line << std::endl;
+                std::cout << "Matched " << line << std::endl;
                 switch (i)
                 {
                 case 0 : // "DS" - Destination inserter name
@@ -626,9 +618,9 @@ bool TTXPage::m_LoadTTI(std::string filename)
                     if (p->m_PageNumber!=FIRSTPAGE) // // Subsequent pages need new page instances
                     {
                         std::cout << "Created a new subpage" << std::endl;
-                        TTXPage* newSubPage=new TTXPage();  // Create a new instance for the subpage
+                        std::shared_ptr<TTXPage> newSubPage(new TTXPage());  // Create a new instance for the subpage
                         p->Setm_SubPage(newSubPage);            // Put in a link to it
-                        p=newSubPage;                       // And jump to the next subpage ready to populate
+                        p=newSubPage.get();                       // And jump to the next subpage ready to populate
                     }
                     p->SetPageNumber(pageNumber);
 
@@ -834,10 +826,10 @@ TTXPage& TTXPage::operator=(const TTXPage& rhs)
   return *this;
 }
 
-TTXPage* TTXPage::GetPage(unsigned int pageNumber)
+std::shared_ptr<TTXPage> TTXPage::GetPage(unsigned int pageNumber)
 {
   //std::cout << "[TTXPage::GetPage]" << std::endl;
-  TTXPage* p=this;
+  std::shared_ptr<TTXPage> p(shared_from_this());
   for (;pageNumber>0 && p->m_SubPage!=nullptr;p=p->m_SubPage, pageNumber--);
   // Iterate down the page list to find the required page object
   return p;
@@ -1421,7 +1413,7 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     }
 }
 
-void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
+void TTXPage::m_OutputLines(std::ofstream& ttxfile, std::shared_ptr<TTXPage> p)
 {
   ttxfile << "PN," << m_FormatPageNumber(p) << "\n";
   if (p->m_subcode<0)
@@ -1489,7 +1481,7 @@ void TTXPage::m_OutputLines(std::ofstream& ttxfile, TTXPage* p)
   std::cout << "sent a subpage" << "\n";
 }
 
-std::string TTXPage::m_FormatPageNumber(TTXPage* p)
+std::string TTXPage::m_FormatPageNumber(std::shared_ptr<TTXPage> p)
 {
   std::ostringstream PN;
   int page=p->m_PageNumber;
@@ -1519,7 +1511,7 @@ bool TTXPage::SavePage(std::string filename)
     // Subcodes need to be ascending starting from 1
     int sc=1;
     int pageNum=this->GetPageNumber() & 0xfff00; // Mask off the original subcode
-    for (TTXPage* p=this;p!=nullptr;p=p->m_SubPage)
+    for (std::shared_ptr<TTXPage> p(shared_from_this());p!=nullptr;p=p->m_SubPage)
     {
       p->SetSubCode(sc);            // Monotonic subcode
       p->SetPageNumber(pageNum + (sc & 0xff)); // Fix the page number too. (@todo: sc needs to be decimal, not hex)
@@ -1535,7 +1527,7 @@ bool TTXPage::SavePage(std::string filename)
     ttxfile << "DS," << m_destination << std::dec << std::endl;
     ttxfile << "SP," << GetSourcePage() << std::endl; // SP is set every time there is a save
     // My spidey instincts tell me that this code could be factorised
-    m_OutputLines(ttxfile, this);
+    m_OutputLines(ttxfile, shared_from_this());
     ttxfile << std::hex;
     // Don't output null links
     if (m_fastextlinks[0]!=0x8ff)
@@ -1555,7 +1547,7 @@ bool TTXPage::SavePage(std::string filename)
       if (Getm_SubPage()->m_subcode>=0) // Shouldn't have to test this!
       {
         std::cout << "m_SubPage=" << std::hex << Getm_SubPage() << std::endl;
-        for (TTXPage* p=this->m_SubPage;p!=nullptr;p=p->m_SubPage)
+        for (std::shared_ptr<TTXPage> p=this->m_SubPage;p!=nullptr;p=p->m_SubPage)
         {
           m_OutputLines(ttxfile, p);
           // Subpages now have an identical copy of the main fastext links
@@ -1602,7 +1594,7 @@ int TTXPage::GetPageCount()
 {
   int count=0;
   int subcode=0;
-  for (TTXPage* p=this;p!=nullptr;p=p->m_SubPage)
+  for (std::shared_ptr<TTXPage> p(shared_from_this());p!=nullptr;p=p->m_SubPage)
   {
      // std::cout <<"Get page count happens here, subcode=" << subcode << " " << (int)p << std::endl;
      if (p)
@@ -1615,7 +1607,7 @@ int TTXPage::GetPageCount()
   return count;
 }
 
-void TTXPage::CopyMetaData(TTXPage* page)
+void TTXPage::CopyMetaData(std::shared_ptr<TTXPage> page)
 {
   m_PageNumber=page->m_PageNumber;
   for (int i=0;i<6;i++)

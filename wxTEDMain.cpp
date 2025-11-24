@@ -653,7 +653,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     /* page */
 
     // Assume horizontal subpages for now
-    for(TTXPage* p=m_rootPage;
+    for(std::shared_ptr<TTXPage> p=m_rootPage;
         p!=nullptr && (offset.x < this->GetClientSize().GetWidth()); // Don't bother to render pages outside of the window
         p=p->Getm_SubPage())
     {
@@ -743,7 +743,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
           doubleHeightDC.SetBackground(*wxBLACK_BRUSH); //  wxBLACK_BRUSH. Change this to GREY to track down bugs
           doubleHeightDC.Clear();
 
-          // TTXPage* p=page.GetPage(0);
+          // std::shared_ptr<TTXPage> p=page.GetPage(0);
           TTXLine* line=p->GetRow(row);
 
           if (m_cursorPoint.y>0 && row==0) // If we are actually in the header, then edit the raw header
@@ -1820,7 +1820,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     m_resize(GetSize()); // Adjust the font to fit the available space
 
     /* Initial page */
-    m_currentPage = m_rootPage = new TTXPage(initialPage.ToStdString(),"");
+    m_currentPage = m_rootPage = std::shared_ptr<TTXPage>(new TTXPage(initialPage.ToStdString(),""));
     m_setLanguage(true);
 
     m_iPageCount=m_rootPage->GetPageCount();
@@ -1891,11 +1891,6 @@ wxTEDFrame::~wxTEDFrame()
     delete helpFrame;
     delete paletteFrame;
     delete m_config;
-    if (m_rootPage!=NULL)
-    {
-        delete m_rootPage;
-        m_rootPage=NULL;
-    }
     //(*Destroy(wxTEDFrame)
     LoadPageFileDialog->Destroy();
     FileDialogSaveAs->Destroy();
@@ -1983,8 +1978,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 
     // std::cout << "New page" << std::endl;
     // @todo - If the page has changed and not been saved, trap that here
-    delete m_rootPage;
-    m_rootPage=new TTXPage();
+    m_rootPage=std::shared_ptr<TTXPage>(new TTXPage());
     SetTitle(_("wxTED ")+VERSION_STRING);
     m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
     m_setLanguage(true);
@@ -2097,10 +2091,10 @@ void OnMenuOpen(wxPaintEvent& event); // On opening the menu
 void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 {
     //std::cout << "Insert page after #" << iPage << std::endl;
-    TTXPage* p;
-    TTXPage* childPage;
+    std::shared_ptr<TTXPage> p;
+    std::shared_ptr<TTXPage> childPage;
     // Create a new page
-    p=new TTXPage();
+    p = std::shared_ptr<TTXPage>(new TTXPage());
     m_setLanguage(true);
     SetRegionMenu(m_currentPage->GetRegion(true), true); // Region language [!] Move to dialog and add second G0
     iPage++;
@@ -2137,18 +2131,17 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
     // This is more complicated because it affects the page pointers and the metadata.
     if (m_currentPage==m_rootPage)
     {
-        TTXPage* p=m_rootPage->Getm_SubPage(); // This is the new root
+        std::shared_ptr<TTXPage> p=m_rootPage->Getm_SubPage(); // This is the new root
         p->CopyMetaData(m_rootPage);            // As the root, it needs the metadata
         m_rootPage->Setm_SubPage(NULL);         // Unlink the old root node
-        delete m_rootPage;                      // Dump the old root object
-        m_rootPage=p;                           // And set the page pointers to the new root page
-        m_currentPage=p;
+        m_rootPage = p;                           // And set the page pointers to the new root page
+        m_currentPage = p;
     }
     else
     {
         // We are not on the first page, we go to the previous page.
         // Seek the parent page p
-        TTXPage* p=m_rootPage;
+        std::shared_ptr<TTXPage> p=m_rootPage;
         for (;p->Getm_SubPage()!=m_currentPage && p->Getm_SubPage()!=NULL;p=p->Getm_SubPage());
         if (p->Getm_SubPage()==m_currentPage)
             std::cout << "Hurrah, found parent object" << std::endl;
@@ -2158,16 +2151,18 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
             return;
         }
         // Before we delete the page, save the pointer to the next sub page
-        TTXPage* nextSub=m_currentPage->Getm_SubPage();
+        std::shared_ptr<TTXPage> nextSub=m_currentPage->Getm_SubPage();
         // Delete the page.
         m_currentPage->Setm_SubPage(NULL); // Break the link before delete, or the rest of the chain vanishes!
-        delete m_currentPage;
         // Make the parent the current page
-        m_currentPage=p;
+        m_currentPage = p;
         // Repair the page chain by relinking the next subpage.
         p->Setm_SubPage(nextSub);
         // Fix the counters
-        if (iPage>0) iPage--;
+        if (iPage>0)
+        {
+          iPage--;
+        }
     }
     // Recalculate the subcode sequence.
     m_iPageCount=m_rootPage->GetPageCount();
@@ -2338,19 +2333,19 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
         int link;
         link=std::strtol(m_propertiesDlg->TextCtrlFastext1->GetValue().ToStdString().c_str(), &ptr, 16);
         // m_rootPage->SetFastextLink(0,link);
-        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(0,link);
+        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(0,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext2->GetValue().ToStdString().c_str(), &ptr, 16);
         //m_rootPage->SetFastextLink(1,link);
-        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(1,link);
+        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(1,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext3->GetValue().ToStdString().c_str(), &ptr, 16);
         //m_rootPage->SetFastextLink(2,link);
-        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(2,link);
+        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(2,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext4->GetValue().ToStdString().c_str(), &ptr, 16);
         // m_rootPage->SetFastextLink(3,link);
-        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(3,link);
+        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(3,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastextIndex->GetValue().ToStdString().c_str(), &ptr, 16);
         // m_rootPage->SetFastextLink(5,link);
-        for (TTXPage* p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(5,link);
+        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(5,link);
     }
 }
 
@@ -3094,14 +3089,10 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 
   if (LoadPageFileDialog->ShowModal() != wxID_CANCEL)
   {
-    if (m_rootPage!=NULL)
-    {
-      delete m_rootPage; // Delete the root page. All subpages will go too.
-    }
     auto pathStr=LoadPageFileDialog->GetPath().ToStdString();
 
     wxString filename=LoadPageFileDialog->GetFilename();
-    m_rootPage = new TTXPage(pathStr,filename.ToStdString());
+    m_rootPage = std::shared_ptr<TTXPage>(new TTXPage(pathStr,filename.ToStdString()));
 
     // Change the filename so that we can't overwrite it by mistake.
     m_rootPage->SetShortFilename("");
@@ -3185,7 +3176,6 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     {
       return;     // the user bottled out
     }
-    if (m_rootPage!=NULL) delete m_rootPage; // Delete the root page. All subpages will go too.
     str=LoadPageFileDialog->GetPath().ToStdString();
 
     m_path = LoadPageFileDialog->GetDirectory().ToStdString(); // Save the path
@@ -3193,7 +3183,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     wxString filename=LoadPageFileDialog->GetFilename();
     std::cout << "the filename was " << filename << std::endl;
     std::cout << "Loading a teletext page " << str << " path " << m_path << std::endl;
-    m_rootPage = new TTXPage(str, filename.ToStdString());
+    m_rootPage = std::shared_ptr<TTXPage>(new TTXPage(str, filename.ToStdString()));
 
     // MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
     EnableSave(m_rootPage->IsLoaded());

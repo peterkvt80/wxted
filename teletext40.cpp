@@ -22,7 +22,7 @@
  #include "teletext40.h"
  using namespace std;
 
- void load_from_hash(TTXPage* page, char* str)
+ void load_from_hash(std::shared_ptr<TTXPage> page, char* str)
  {
      const char base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
      char* hashstring=strchr(str,'#'); // Find the start of hash string
@@ -130,7 +130,7 @@
  * \param cset A character set 0-Eng 1-Ger 2-Swe 3-Ita 4-Bel 5-ASCII 6=Heb 7=Cyr
  * \param website The website prefix eg. "http://edit.tf"
  */
-void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], const char* website, TTXPage* page)
+void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], const char* website, std::shared_ptr<TTXPage> page)
 {
 
 	// Construct the metadata as described above.
