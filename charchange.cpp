@@ -8,11 +8,7 @@ CharChange::CharChange() : next(nullptr), m_OldChar(' '), m_NewChar(' '), m_Curs
 CharChange::~CharChange()
 {
     //dtor
-    if (next!=nullptr)
-    {
-        std::cout << "TODO: need to destruct any remaining changes in this list" << std::endl;
-        delete next;
-    }
+    // std::cout << "TODO: need to destruct any remaining changes in this list" << std::endl;
 }
 
 void CharChange::AddChange(wxPoint wxc,char oldchar, char newchar)

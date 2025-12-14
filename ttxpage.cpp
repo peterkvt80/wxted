@@ -908,7 +908,7 @@ void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldChar, char newChar)
     return;
   }
   std::shared_ptr<TEDEvent> tev(new TEDEvent(evt));
-  CharChange* cc=nullptr;
+  std::shared_ptr<CharChange>cc(nullptr);
   if (!undoList) // First time we need to set the root
   {
     undoList=tev;
@@ -927,7 +927,7 @@ void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldChar, char newChar)
   case EventSave :    // Save to file (@todo)
     break;
   case EventKey :     // Keyboard press
-    cc=new CharChange(); // A bit redundant. This is always executed
+    cc=std::shared_ptr<CharChange>(new CharChange()); // A bit redundant. This is always executed
     tev->SetCharList(cc);
     // tev->SetCharList(cc); // not correct. Need to add to the end of the list NOT the root
     cc->AddChange(wxc,oldChar,newChar);

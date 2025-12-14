@@ -85,12 +85,12 @@ class TEDEvent
         /** Set the char iist
          * TODO: Test that the charList is not already set. Danger of memory leaks.
          */
-        void SetCharList(CharChange* cc) {charList=cc;}
+        void SetCharList(std::shared_ptr<CharChange> cc) {charList=cc;}
 
         /** Get the charList
          *
          */
-         CharChange* GetCharList() {return charList;}
+         std::shared_ptr<CharChange> GetCharList() {return charList;}
 
         /** Display the event details
          *
@@ -108,7 +108,7 @@ class TEDEvent
         EventType eventType; //!< Member variable "eventType"
         std::shared_ptr<TEDEvent> nextEvent; //!< Member variable "nextEvent"
         std::shared_ptr<TEDEvent> lastEvent; //!< Member variable "nextEvent"
-        CharChange* charList;
+        std::shared_ptr<CharChange> charList;
 };
 
 #endif // TEDEVENT_H

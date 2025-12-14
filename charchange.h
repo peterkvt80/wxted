@@ -5,6 +5,7 @@
 #ifndef CHARCHANGE_H
 #define CHARCHANGE_H
 #include <iostream>
+#include <memory>
 #include "wx/gdicmn.h"
 
 class CharChange
@@ -17,11 +18,11 @@ class CharChange
         /** Access next
          * \return The current value of next
          */
-        CharChange* Getnext() { return next; }
+        std::shared_ptr<CharChange> Getnext() { return next; }
         /** Set next
          * \param val New value to set
          */
-        void Setnext(CharChange* val) { next = val; }
+        void Setnext(std::shared_ptr<CharChange> val) { next = val; }
 
         /** When a character on the screen changes, log it
          * \param wxc : Cursor coordinate
@@ -57,7 +58,7 @@ class CharChange
 
     protected:
     private:
-        CharChange* next; //!< Member variable "next"
+        std::shared_ptr<CharChange> next; //!< Member variable "next"
         char m_OldChar;
         char m_NewChar;
         wxPoint m_CursorLoc;
