@@ -458,7 +458,7 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
     {
       str[i]=' ';
     }
-    int k=pageSet->GetPageNumber(); // pageSet->GetPage(0)->GetPageNumber()/0x100;
+    int k=pageSet->GetPageNumber()/0x100;
     if (k<0x100 || k>0x8ff)
     {
       k=0x100;
@@ -1812,7 +1812,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     m_resize(GetSize()); // Adjust the font to fit the available space
 
     /* Initial page */
-    // pageSet->CurrentPage = pageSet->GetPage(0) = std::shared_ptr<TTXPage>(new TTXPage(initialPage.ToStdString(),""));
+    pageSet = std::make_unique<TTXPageSet>(initialPage.ToStdString(),"");
     m_setLanguage(true);
 
     std::cerr  << "[wxTEDFrame::wxTEDFrame]initialPage=" << initialPage << std::endl;

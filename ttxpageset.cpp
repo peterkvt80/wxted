@@ -788,7 +788,11 @@ void TTXPageSet::SetPageNumber(int page)
 {
   if ((page<0x10000) || (page>0x8ff99))
   {
-    std::cout << "Page number is out of range: " << page << std::endl;
+    // std::cout << "Page number is out of range: " << page << std::endl;
+    if (page>=0x100 && page <=0x8ff) // Fix a missing subcode ss if only mpp is supplied
+    {
+      page *= 0x100;
+    }
   }
   // Clip limits
   if (page<0x10000)
@@ -813,14 +817,14 @@ void TTXPageSet::SetPageNumber(int page)
 
 int TTXPageSet::GetPageNumber()
 {
-  unsigned int mpp = m_PageNumber & 0x8ff00; // Strip the subcode
+  unsigned int mpp = m_PageNumber & 0xfff00; // Strip the subcode
   // The subcode is decimal 00..99
   // but we need to store it in a hex encoded variable
   unsigned int subCode = m_currentPageIndex;
   unsigned tens = subCode / 10;
   unsigned units = subCode % 10;
   subCode = tens * 0x10 + units;
-  return mpp & subCode;
+  return mpp | subCode;
 }
 
 
