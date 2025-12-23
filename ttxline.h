@@ -25,7 +25,7 @@ class TTXLine
         /** Set m_textline
          * \param val New value to set
          */
-        void Setm_textline(std::string const& val);
+        void SetRow(std::string const& val);
 
         /** Access m_textline
          * \return The current value of m_textline
