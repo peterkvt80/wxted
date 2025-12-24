@@ -2074,38 +2074,14 @@ void OnMenuOpen(wxPaintEvent& event); // On opening the menu
 
 void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 {
-  /* TODO!! This logic moves into TTXPageSet
-    //std::cout << "Insert page after #" << iPage << std::endl;
-    std::shared_ptr<TTXPage> p;
-    std::shared_ptr<TTXPage> childPage;
-    // Create a new page
-    p = std::shared_ptr<TTXPage>(new TTXPage());
-    m_setLanguage(true);
-    SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // Region language [!] Move to dialog and add second G0
-    iPage++;
-    // Save the child page pointer
-    childPage=pageSet->CurrentPage()->Getm_SubPage();
-    // Set the child pointer to the new child page
-    pageSet->CurrentPage()->Setm_SubPage(p);
-    // Make the new page the current one
-    pageSet->CurrentPage()=p;
-    // Set the child pointer to the saved pointer
-    pageSet->CurrentPage()->Setm_SubPage(childPage);
-
-    // Recalculate the subcode sequence.
-    m_iPageCount=pageSet->GetPage(0)->GetPageCount();
-
-    // Put up a welcome message
-    std::ostringstream str;
-    str << "New subpage inserted " << iPage+1 << "/" << m_iPageCount;
-    pageSet->CurrentPage()->SetRow(1,str.str());
-    // pageSet->GetPage(0)->pageChanged=true;
-    ShowPreviewMenu();
-    */
+  pageSet->InsertPageAfter();
+  // TODO Reposition the page offset
+  ShowPreviewMenu();
 }
 
 void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
 {
+  pageSet->DeletePage();
   /* TODO This logic moves into TTXPageSet
     // How many pages do we have?
     int count=pageSet->GetPage(0)->GetPageCount();
@@ -2154,6 +2130,7 @@ void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
     m_iPageCount=pageSet->GetPage(0)->GetPageCount();
     ShowPreviewMenu();
     */
+  ShowPreviewMenu();
 }
 
 void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)

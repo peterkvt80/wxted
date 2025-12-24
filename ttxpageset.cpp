@@ -943,3 +943,64 @@ void TTXPageSet::debug(std::string message)
 {
 //  std::cout << "pageSet size = " << pages.size() << " " << message << std::endl;
 }
+
+void TTXPageSet::InsertPageAfter() // Insert a new page after the current page
+{
+  // We can't just emplace back our way out of this one
+  // 1. Ensure the index is within valid bounds
+  if (m_currentPageIndex >= 0 && m_currentPageIndex < static_cast<int>(pages.size()))
+  {
+    // 2. Insert after the current index (m_currentPageIndex + 1)
+    // std::move is required because unique_ptr cannot be copied
+    pages.insert(pages.begin() + m_currentPageIndex + 1, std::make_unique<TTXPage>());
+
+    // 3. Update the index to the newly created page
+    m_currentPageIndex++;
+  }
+  else if (pages.empty())
+  {
+      // Handle case where list is empty
+      pages.push_back(std::make_unique<TTXPage>());
+      m_currentPageIndex = 0;
+  }
+  std::ostringstream str;
+  str << "New subpage inserted " << GetPageIndex() << "/" << pages.size();
+  CurrentPage()->SetRow(1,str.str());
+
+
+  /* TODO!! 1) Copy region and language flags from previous page
+     TODO. 2) Add little message to indicate that this is a new page
+    //std::cout << "Insert page after #" << iPage << std::endl;
+    std::shared_ptr<TTXPage> p;
+    std::shared_ptr<TTXPage> childPage;
+    // Create a new page
+    p = std::shared_ptr<TTXPage>(new TTXPage());
+    m_setLanguage(true);
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // Region language [!] Move to dialog and add second G0
+    iPage++;
+    // Save the child page pointer
+    childPage=pageSet->CurrentPage()->Getm_SubPage();
+    // Set the child pointer to the new child page
+    pageSet->CurrentPage()->Setm_SubPage(p);
+    // Make the new page the current one
+    pageSet->CurrentPage()=p;
+    // Set the child pointer to the saved pointer
+    pageSet->CurrentPage()->Setm_SubPage(childPage);
+
+    // Recalculate the subcode sequence.
+    m_iPageCount=pageSet->GetPage(0)->GetPageCount();
+
+    // Put up a welcome message
+    std::ostringstream str;
+    str << "New subpage inserted " << iPage+1 << "/" << m_iPageCount;
+    pageSet->CurrentPage()->SetRow(1,str.str());
+    // pageSet->GetPage(0)->pageChanged=true;
+    ShowPreviewMenu();
+    */
+
+}
+
+void TTXPageSet::DeletePage() // Delete the current page
+{
+
+}

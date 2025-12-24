@@ -145,6 +145,11 @@ class TTXPageSet
     bool DeleteCurrentPage();
     // @todo AddPage
 
+    //////////////////// CAROUSEL MANAGEMENT
+    void InsertPageAfter(); /// Insert a new page after the current page
+    void DeletePage(); /// Delete the current page
+
+
     void debug(std::string message);
 
   protected:
