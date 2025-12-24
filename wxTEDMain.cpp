@@ -2082,54 +2082,6 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
 {
   pageSet->DeletePage();
-  /* TODO This logic moves into TTXPageSet
-    // How many pages do we have?
-    int count=pageSet->GetPage(0)->GetPageCount();
-    // Can't delete the last remaining page
-    if (count<2)
-        return;
-    // Delete the current page...
-
-    // If we are on the first page we move to the second page.
-    // This is more complicated because it affects the page pointers and the metadata.
-    if (pageSet->CurrentPage==pageSet->GetPage(0))
-    {
-        std::shared_ptr<TTXPage> p=pageSet->GetPage(0)->Getm_SubPage(); // This is the new root
-        pageSet->GetPage(0)->Setm_SubPage(NULL);         // Unlink the old root node
-        pageSet->GetPage(0) = p;                           // And set the page pointers to the new root page
-        pageSet->CurrentPage = p;
-    }
-    else
-    {
-        // We are not on the first page, we go to the previous page.
-        // Seek the parent page p
-        std::shared_ptr<TTXPage> p=pageSet->GetPage(0);
-        for (;p->Getm_SubPage()!=pageSet->CurrentPage && p->Getm_SubPage()!=NULL;p=p->Getm_SubPage());
-        if (p->Getm_SubPage()==pageSet->CurrentPage)
-            std::cout << "Hurrah, found parent object" << std::endl;
-        else
-        {
-            std::cout << "Boo. Can not locate. Your code does not work" << std::endl;
-            return;
-        }
-        // Before we delete the page, save the pointer to the next sub page
-        std::shared_ptr<TTXPage> nextSub=pageSet->CurrentPage()->Getm_SubPage();
-        // Delete the page.
-        pageSet->CurrentPage()->Setm_SubPage(NULL); // Break the link before delete, or the rest of the chain vanishes!
-        // Make the parent the current page
-        pageSet->CurrentPage = p;
-        // Repair the page chain by relinking the next subpage.
-        p->Setm_SubPage(nextSub);
-        // Fix the counters
-        if (iPage>0)
-        {
-          iPage--;
-        }
-    }
-    // Recalculate the subcode sequence.
-    m_iPageCount=pageSet->GetPage(0)->GetPageCount();
-    ShowPreviewMenu();
-    */
   ShowPreviewMenu();
 }
 
