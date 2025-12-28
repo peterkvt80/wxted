@@ -248,6 +248,7 @@ class wxTEDFrame: public wxFrame
 
       /// Update the preview settings (speed and mode)
       void UpdatePreview();
+      std::string previewSavedCaption;
 
       static const wxColour* ttxCode2wxColour(const unsigned int); // Given a ttxCode 0..7 return a wxColour
 

@@ -203,13 +203,16 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       code=WXK_ESCAPE;
     }
   }
-  // hack for preview mode
+  // hack for preview mode. Any keyboard key cancels preview mode
   if (m_previewMode)
   {
       if (code>0) // Cancel preview mode
       {
           m_previewMode = false;
+          SetTitle(previewSavedCaption); // Restore the previous caption
           m_Timer1.Start(456);
+          // We don't want to issue a random edit key so quit now
+          return;
       }
       else
       {
@@ -221,30 +224,27 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
           }
           if (m_previewForwards)
           {
-            pageSet->NextPage();
-//              if (iPage>=m_iPageCount-1) // forwards loop preview wrap
-            if (false) // forwards loop preview wrap. @TODO FIX THIS
+            if (m_bounceMode && pageSet->CurrentPageIndex()+1 >= pageSet->GetPageCount())
             {
-              if (m_bounceMode)
-              {
-                m_previewForwards = false; // reverse direction
-              }
-              else
-              {
-                // iPage = -1;                // loop to beginning
-              }
+              m_previewForwards = false; // reverse direction
+              code = WXK_PAGEDOWN;
             }
-            code = WXK_PAGEUP;
+            else
+            {
+              code = WXK_PAGEUP;
+            }
           }
           else
           {
-            pageSet->PreviousPage();
-            if (false) // backwards loop preview @TODO FIX THIS
+            if (pageSet->CurrentPageIndex() == 0) // backwards loop carousel
             {
-                // iPage = 0;
-                m_previewForwards = true;
+              m_previewForwards = true; // Bounce back
+              code = WXK_PAGEUP;
             }
-            code = WXK_PAGEDOWN;
+            else
+            {
+              code = WXK_PAGEDOWN;  // Bouncing down
+            }
           }
       }
   }
@@ -255,7 +255,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_PAGEUP:
     // std::cout << "Page up will get next page of a multiple page carousel" << std::endl;
-    if (m_cursorPoint.y<1) // @todo Temporary hack to stop crash, when going up one page while on row 0.
+    if (m_cursorPoint.y<1)
     {
       m_cursorPoint.y=1;
     }
@@ -270,7 +270,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
-      auto rightEdge=(pageSet->GetPageIndex()+1)*m_ttxW*41; // Distance from first page to end of current page
+      auto rightEdge=(pageSet->CurrentPageIndex()+1)*m_ttxW*41; // Distance from first page to end of current page
       uint32_t mappedEdge=rightEdge-m_ttxW+m_offset.x; // Edge that we want mapped to the right hand side of the client frame space
       uint32_t clientWidth=GetClientSize().GetWidth();
       if (mappedEdge>clientWidth)
@@ -288,9 +288,9 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     paletteFrame->SetX28(pageSet->CurrentPage()->GetX28Row()); // Update PaletteFrame in case we have it open
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
-      int leftEdge = pageSet->GetPageIndex() * m_ttxW * 41; // Distance from first page to left edge of current page
+      int leftEdge = pageSet->CurrentPageIndex() * m_ttxW * 41; // Distance from first page to left edge of current page
       int mappedEdge = leftEdge - m_ttxW + m_offset.x; // Edge that we want mapped to client frame space
-      std::cout << std::dec << "iPage= " << pageSet->GetPageIndex() << " mappedEdge=" << mappedEdge << " leftEdge=" << leftEdge << std::endl;
+      std::cout << std::dec << "iPage= " << pageSet->CurrentPageIndex() << " mappedEdge=" << mappedEdge << " leftEdge=" << leftEdge << std::endl;
       if (mappedEdge<0 || mappedEdge>GetClientSize().GetWidth())
       {
         m_offset.x=-leftEdge; // Scroll left to bring the right side into frame
@@ -1255,7 +1255,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     if (m_blinkToggle==true)
     {
-        wxPoint dx(m_ttxW*41*pageSet->GetPageIndex(),0); // The page offset
+        wxPoint dx(m_ttxW*41*pageSet->CurrentPageIndex(),0); // The page offset
         dx+=m_offset; // Add the slide offset
 
         paintDC.SetPen(*wxBLACK_PEN); // outline on
@@ -1316,13 +1316,13 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
       siz.y*=m_ttxH;
 
       // Draw a box TODO: Marquee crawling ants
-      paintDC.DrawRectangle(m_offset+loc+wxSize(pageSet->GetPageIndex()*m_ttxW*41,0), siz);
+      paintDC.DrawRectangle(m_offset+loc+wxSize(pageSet->CurrentPageIndex()*m_ttxW*41,0), siz);
     }
 
     // Outline the current frame around the current page
     paintDC.SetPen(*wxWHITE_PEN); // outline on
     wxSize sz(static_cast<int>(m_ttxW*40.5), m_ttxH*25);
-    wxPoint loc(m_offset.x+pageSet->GetPageIndex()*m_ttxW*41,0);
+    wxPoint loc(m_offset.x+pageSet->CurrentPageIndex()*m_ttxW*41,0);
     paintDC.DrawRectangle(loc,sz);
     // std::cout << "[OnPaint] exits " << std::endl;
 } // OnPaint
@@ -1350,7 +1350,7 @@ void wxTEDFrame::m_SetStatus()
     TTXLine* line=pageSet->CurrentPage()->GetRow(c.y);
     if (pageSet->GetPage(0)->GetPageChanged())
       str << "* ";
-    str << "P" << pageSet->GetPageIndex()+1 << "/" << pageSet->GetPageCount() << ", ";
+    str << "P" << pageSet->CurrentPageIndex()+1 << "/" << pageSet->GetPageCount() << ", ";
     if (line!=NULL)
     {
         ch=line->GetLine()[c.x] & 0x7f;
@@ -1634,7 +1634,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     Menu2->Append(Preview6fps);
     Preview2fps = new wxMenuItem(Menu2, idRadioMode5, _("2 fps"), wxEmptyString, wxITEM_RADIO);
     Menu2->Append(Preview2fps);
-    MenuBar1->Append(Menu2, _("Preview"));
+    MenuBar1->Append(Menu2, _("Carousel"));
     MenuHelp = new wxMenu();
     MenuItemSpecialKeys = new wxMenuItem(MenuHelp, idSpecialKeys, _("Special keys"), _("Show the special function key table"), wxITEM_NORMAL);
     MenuHelp->Append(MenuItemSpecialKeys);
@@ -2416,7 +2416,7 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
         wxPoint p=event.GetPosition();
         p.x-=m_offset.x; // Which page are we on? 40 Characters + 1 space.
         p.x/=m_ttxW;
-        p.x-=pageSet->GetPageIndex()*41;
+        p.x-=pageSet->CurrentPageIndex()*41;
         p.y/=m_ttxH;
         if (p.x>40) p.x=40;
         if (p.y>=25) p.y=25;
@@ -3127,6 +3127,9 @@ void wxTEDFrame::OnPreviewRunSelected(wxCommandEvent& event)
     // Enter Preview mode.
     // Cancelled by any key
     m_previewMode = true;
+
+    previewSavedCaption = GetTitle(); // Save the caption for later
+    SetTitle("Carousel running. Press any key to stop"); // Set a new caption
     UpdatePreview();
 }
 

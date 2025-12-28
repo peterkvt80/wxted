@@ -37,17 +37,14 @@ class TTXPageSet
     TTXPageSet(std::string filename, std::string shortFilename);
 
     TTXPage* GetPage(int page){
-      // @todo Check that page is in range
+      // Check that page is in range
+      if (page >= pages.size())
+      {
+        return nullptr;
+      }
       return pages[page].get();
     };
 
-    // [!] @todo a routine to return the current TTXPage*
-    /** Setter/Getter for m_pageNumber
-    */
-   int GetPageNumber();
-   void SetPageNumber(int page);
-
-   int GetPageIndex(){return m_currentPageIndex;}; /// The index of the current page
 
     /** Load an EP1 page
      * \param filename : The source file
@@ -138,17 +135,18 @@ class TTXPageSet
     int findPageNumber(char* buf); /// ?
 
     // Page management. Current page, add page, delete page
-    TTXPage* CurrentPage();
-    TTXPage* PreviousPage();
-    TTXPage* NextPage();
-    TTXPage* SelectPage(int pageNumber); /// Same as ??? but also sets the current page index
-    bool DeleteCurrentPage();
-    // @todo AddPage
+    TTXPage* CurrentPage(); /// Get a raw TTXPage pointer to the current page
+    TTXPage* PreviousPage(); /// Set the current page to the previous page and return its raw TTXPage pointer
+    TTXPage* NextPage(); /// Set the current page to the next page and return its raw TTXPage pointer
+    TTXPage* SelectPage(int pageIndex); /// Sets the current page index. Also returns the TTXPage raw pointer
+    int CurrentPageIndex(){return m_currentPageIndex;}; /// Return the index of the current page
+
+    int GetPageNumber(); /// Return the current mppss page number
+    void SetPageNumber(int mppss); /// Set the mppss number of the page
 
     //////////////////// CAROUSEL MANAGEMENT
     void InsertPageAfter(); /// Insert a new page after the current page
     void DeletePage(); /// Delete the current page
-
 
     void debug(std::string message);
 

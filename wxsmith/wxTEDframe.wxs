@@ -410,7 +410,7 @@
 				</object>
 			</object>
 			<object class="wxMenu" variable="Menu2" member="yes">
-				<label>Preview</label>
+				<label>Carousel</label>
 				<object class="wxMenuItem" name="idRun" variable="PreviewRun" member="yes">
 					<label>Run</label>
 					<handler function="OnPreviewRunSelected" entry="EVT_MENU" />

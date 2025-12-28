@@ -648,7 +648,6 @@ bool TTXPageSet::m_LoadTTI(std::string filename)
                     // m_pageStatus=std::strtol(line.c_str(), &ptr, 16);
                     p->SetPageStatus(std::strtol(line.c_str(), &ptr, 16));
                     // Don't copy the bits to the UI...
-                    // because this may not be the root page.
                     break;
                 case 7 : // "MS" - Mask
                     // MS,0
@@ -666,12 +665,8 @@ bool TTXPageSet::m_LoadTTI(std::string filename)
                     }
                     // std::cout << "reading " << lineNumber << std::endl;
                     p->SetRow(lineNumber, line);
-                    // p->m_pLine[lineNumber] = new TTXLine(line);
-                    // TODO: Change this implementation to use SetRow
-                    // std::cout << lineNumber << ": OL partly implemented. " << line << std::endl;
                     if (lineNumber==28)
                     {
-                      // p->SetRow28(std::shared_ptr<TTXRow28>(new TTXRow28(line)));
                       p->SetRow28(std::make_shared<TTXRow28>(line));
                     }
                     lines++;
@@ -784,33 +779,33 @@ bool TTXPageSet::SavePage(std::string filename)
   return true; // success
 }
 
-void TTXPageSet::SetPageNumber(int page)
+void TTXPageSet::SetPageNumber(int mppss)
 {
-  if ((page<0x10000) || (page>0x8ff99))
+  if ((mppss<0x10000) || (mppss>0x8ff99))
   {
-    // std::cout << "Page number is out of range: " << page << std::endl;
-    if (page>=0x100 && page <=0x8ff) // Fix a missing subcode ss if only mpp is supplied
+    // std::cout << "Page number is out of range: " << mppss << std::endl;
+    if (mppss>=0x100 && mppss <=0x8ff) // Fix a missing subcode ss if only mpp is supplied
     {
-      page *= 0x100;
+      mppss *= 0x100;
     }
   }
   // Clip limits
-  if (page<0x10000)
+  if (mppss<0x10000)
   {
-    page=0x10000;
+    mppss=0x10000;
   }
   else
-  if (page>0x8ff99)
+  if (mppss>0x8ff99)
   {
-    page=0x8ff99;
+    mppss=0x8ff99;
   }
 
   // Don't flag a subcode change as a page change
-  if ((m_PageNumber & 0x8ff00) != (page & 0x8ff00))
+  if ((m_PageNumber & 0x8ff00) != (mppss & 0x8ff00))
   {
     SetPageChanged(true);
   }
-  m_PageNumber=page;
+  m_PageNumber=mppss;
 
   // subcode ss is implied by the position in the pages vector
 }
@@ -925,18 +920,13 @@ TTXPage* TTXPageSet::NextPage()
   return pages[m_currentPageIndex].get();
 }
 
-TTXPage* TTXPageSet::SelectPage(int pageNumber)
+TTXPage* TTXPageSet::SelectPage(int pageIndex)
 {
   if (pageChanged < pages.size())
   {
-    m_currentPageIndex = pageNumber;
+    m_currentPageIndex = pageIndex;
   }
   return pages[m_currentPageIndex].get();
-}
-
-bool TTXPageSet::DeleteCurrentPage()
-{
-  // @todo
 }
 
 void TTXPageSet::debug(std::string message)
@@ -964,7 +954,7 @@ void TTXPageSet::InsertPageAfter() // Insert a new page after the current page
       m_currentPageIndex = 0;
   }
   std::ostringstream str;
-  str << "New subpage inserted " << GetPageIndex() << "/" << pages.size();
+  str << "New subpage inserted " << CurrentPageIndex() << "/" << pages.size();
   CurrentPage()->SetRow(1,str.str());
 
 
