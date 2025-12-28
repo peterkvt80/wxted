@@ -409,7 +409,7 @@
 					</object>
 				</object>
 			</object>
-			<object class="wxMenu" variable="Menu2" member="yes">
+			<object class="wxMenu" variable="MenuCarousel" member="yes">
 				<label>Carousel</label>
 				<object class="wxMenuItem" name="idRun" variable="PreviewRun" member="yes">
 					<label>Run</label>

@@ -128,12 +128,12 @@ class wxTEDFrame: public wxFrame
 
       bool m_focused; /// Frame
 
-      bool m_previewMode{false};    /// Preview carousel mode. @todo Hide the menu option for a single frame page
+      bool m_previewCarouselMode{false};    /// Preview carousel mode.
       bool m_normalMode{true};      /// Normal mode means using the page's animation timings
       bool m_bounceMode{false};     /// Does the animation direction bounce?
       bool m_previewForwards{true}; /// true = forwards, false = backwards
 
-      void ShowPreviewMenu(); /// Show the preview menu if appropriate
+      void ShowCarouselMenu(); /// Show/hide the carousel menu as appropriate. Call when the page count changes.
 
       std::string m_path{""}; /// Path of the last file that was loaded (Do we need to set this to dot? What about Windows?)
 
@@ -347,8 +347,8 @@ class wxTEDFrame: public wxFrame
       //(*Declarations(wxTEDFrame)
       wxFileDialog* FileDialogSaveAs;
       wxFileDialog* LoadPageFileDialog;
-      wxMenu* Menu2;
       wxMenu* Menu3;
+      wxMenu* MenuCarousel;
       wxMenu* MenuItem5;
       wxMenu* MenuItem7;
       wxMenu* MenuItemLanguage;
@@ -433,6 +433,8 @@ class wxTEDFrame: public wxFrame
       //*)
 
       DECLARE_EVENT_TABLE()
+
+      wxMenuBar* MenuBar;
 };
 
 #ifdef __WXMSW__

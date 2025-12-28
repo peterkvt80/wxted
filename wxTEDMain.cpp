@@ -204,11 +204,11 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     }
   }
   // hack for preview mode. Any keyboard key cancels preview mode
-  if (m_previewMode)
+  if (m_previewCarouselMode)
   {
       if (code>0) // Cancel preview mode
       {
-          m_previewMode = false;
+          m_previewCarouselMode = false;
           SetTitle(previewSavedCaption); // Restore the previous caption
           m_Timer1.Start(456);
           // We don't want to issue a random edit key so quit now
@@ -403,12 +403,12 @@ void wxTEDFrame::OnTimer(wxTimerEvent& event)
   // Don't show the cursor in preview mode.
   // std::cout << "blink=" << m_blinkToggle << " m_focused=" << m_focused << std::endl;
 
-  if ((m_blinkToggle && m_focused) || m_previewMode)
+  if ((m_blinkToggle && m_focused) || m_previewCarouselMode)
       m_blinkToggle=false;
   else
       m_blinkToggle=true;
 
-  if (m_previewMode)
+  if (m_previewCarouselMode)
   {
       wxKeyEvent pageup(wxEVT_CHAR);
       //auto pageup = wxKeyEvent(WXK_PAGEUP);
@@ -1613,28 +1613,28 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     MenuItem5->Append(MenuItemPalette);
     MenuPresentation->Append(x28enhance, _("X28 enhancements"), MenuItem5, wxEmptyString);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
-    Menu2 = new wxMenu();
-    PreviewRun = new wxMenuItem(Menu2, idRun, _("Run"), wxEmptyString, wxITEM_NORMAL);
-    Menu2->Append(PreviewRun);
-    Menu2->AppendSeparator();
-    ModeLoop = new wxMenuItem(Menu2, idRadioMode, _("Loop"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(ModeLoop);
-    ModeBounce = new wxMenuItem(Menu2, idRadioBounce, _("Bounce"), _("Bounce animation"), wxITEM_RADIO);
-    Menu2->Append(ModeBounce);
-    Menu2->AppendSeparator();
-    PreviewNormal = new wxMenuItem(Menu2, idRadioMode0, _("Normal"), _("Normal carousel timing"), wxITEM_RADIO);
-    Menu2->Append(PreviewNormal);
-    Preview30fps = new wxMenuItem(Menu2, idRadioMode1, _("30 fps"), _("Frame rate"), wxITEM_RADIO);
-    Menu2->Append(Preview30fps);
-    Preview25fps = new wxMenuItem(Menu2, idRadioMode2, _("25 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview25fps);
-    Preview12fps = new wxMenuItem(Menu2, idRadioMode3, _("12 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview12fps);
-    Preview6fps = new wxMenuItem(Menu2, idRadioMode4, _("6 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview6fps);
-    Preview2fps = new wxMenuItem(Menu2, idRadioMode5, _("2 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview2fps);
-    MenuBar1->Append(Menu2, _("Carousel"));
+    MenuCarousel = new wxMenu();
+    PreviewRun = new wxMenuItem(MenuCarousel, idRun, _("Run"), wxEmptyString, wxITEM_NORMAL);
+    MenuCarousel->Append(PreviewRun);
+    MenuCarousel->AppendSeparator();
+    ModeLoop = new wxMenuItem(MenuCarousel, idRadioMode, _("Loop"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(ModeLoop);
+    ModeBounce = new wxMenuItem(MenuCarousel, idRadioBounce, _("Bounce"), _("Bounce animation"), wxITEM_RADIO);
+    MenuCarousel->Append(ModeBounce);
+    MenuCarousel->AppendSeparator();
+    PreviewNormal = new wxMenuItem(MenuCarousel, idRadioMode0, _("Normal"), _("Normal carousel timing"), wxITEM_RADIO);
+    MenuCarousel->Append(PreviewNormal);
+    Preview30fps = new wxMenuItem(MenuCarousel, idRadioMode1, _("30 fps"), _("Frame rate"), wxITEM_RADIO);
+    MenuCarousel->Append(Preview30fps);
+    Preview25fps = new wxMenuItem(MenuCarousel, idRadioMode2, _("25 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview25fps);
+    Preview12fps = new wxMenuItem(MenuCarousel, idRadioMode3, _("12 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview12fps);
+    Preview6fps = new wxMenuItem(MenuCarousel, idRadioMode4, _("6 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview6fps);
+    Preview2fps = new wxMenuItem(MenuCarousel, idRadioMode5, _("2 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview2fps);
+    MenuBar1->Append(MenuCarousel, _("Carousel"));
     MenuHelp = new wxMenu();
     MenuItemSpecialKeys = new wxMenuItem(MenuHelp, idSpecialKeys, _("Special keys"), _("Show the special function key table"), wxITEM_NORMAL);
     MenuHelp->Append(MenuItemSpecialKeys);
@@ -1749,6 +1749,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     Connect(wxEVT_MOUSEWHEEL, (wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
 
+    MenuBar = MenuBar1;
     PrimaryLanguage[0] = MenuItemEnglish;
     PrimaryLanguage[1] = MenuItemFrench;
     PrimaryLanguage[2] = MenuItemSwedish;
@@ -1971,6 +1972,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
   pageSet->SetSourcePage(""); // Prevent an accidental Save of the default page
   m_setLanguage(true);
   SetRegionMenu(0, true);
+  ShowCarouselMenu();
 }
 
 void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
@@ -2061,7 +2063,7 @@ void wxTEDFrame::OnMenuClose(wxMenuEvent& event)
       m_inhibitStatus=false;
     }
     // If we are in preview mode, we just changed a setting, so run the handler to update everything
-    if (m_previewMode)
+    if (m_previewCarouselMode)
     {
       std::cout << "Refresh preview settings" << std::endl;
       UpdatePreview();
@@ -2076,13 +2078,13 @@ void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 {
   pageSet->InsertPageAfter();
   // TODO Reposition the page offset
-  ShowPreviewMenu();
+  ShowCarouselMenu();
 }
 
 void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
 {
   pageSet->DeletePage();
-  ShowPreviewMenu();
+  ShowCarouselMenu();
 }
 
 void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
@@ -3034,7 +3036,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     // Force an update now
     Refresh();
     Update();
-    ShowPreviewMenu();
+    ShowCarouselMenu();
   }
 
 }
@@ -3118,7 +3120,7 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     // Force an update now
     Refresh();
     Update();
-    ShowPreviewMenu();
+    ShowCarouselMenu();
 }
 
 /// Preview a carousel.
@@ -3126,7 +3128,7 @@ void wxTEDFrame::OnPreviewRunSelected(wxCommandEvent& event)
 {
     // Enter Preview mode.
     // Cancelled by any key
-    m_previewMode = true;
+    m_previewCarouselMode = true;
 
     previewSavedCaption = GetTitle(); // Save the caption for later
     SetTitle("Carousel running. Press any key to stop"); // Set a new caption
@@ -3147,15 +3149,10 @@ void wxTEDFrame::UpdatePreview()
     m_bounceMode = ModeBounce->IsChecked();
 }
 
-void wxTEDFrame::ShowPreviewMenu()
+void wxTEDFrame::ShowCarouselMenu()
 {
     const bool show{ pageSet->GetPageCount() > 1 };
-    std::clog << "[ShowPreviewMenu] show = " << (show?"SHOW":"HIDE") << std::endl;
-    //MenuPreview->Enable(idRadioMode1, show);
-    //MenuPreview->Enable(idRadioMode2, show);
-    //MenuPreview->Enable(idRadioMode3, show);
-    //MenuPreview->Enable(idRadioMode4, show);
-    //MenuPreview->Enable(idRadioMode5, show);
+    MenuBar->EnableTop(3, show); // Third row is carousel.
 }
 
 void wxTEDFrame::OnPreviewSpeed(wxCommandEvent& event)
