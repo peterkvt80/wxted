@@ -1539,25 +1539,25 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     MenuPresentation->Append(MenuItemConcealToggle);
     MenuPresentation->AppendSeparator();
     MenuItem5 = new wxMenu();
-    MenuItem7 = new wxMenu();
-    MenuItemEnglishX28 = new wxMenuItem(MenuItem7, idMainLanguage0, _("English"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemEnglishX28);
-    MenuItemFrenchX28 = new wxMenuItem(MenuItem7, idMainLanguage1, _("French"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemFrenchX28);
-    MenuItemSwedishX28 = new wxMenuItem(MenuItem7, idMainLanguage2, _("Swedish/Finnish/Hungarian"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemSwedishX28);
-    MenuItemCzechX28 = new wxMenuItem(MenuItem7, idMainLanguage3, _("Czech/Slovak"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemCzechX28);
-    MenuItemGermanX28 = new wxMenuItem(MenuItem7, idMainLanguage4, _("German"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemGermanX28);
-    MenuItemSpanishX28 = new wxMenuItem(MenuItem7, idMainLanguage5, _("Spanish/Portuguese"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemSpanishX28);
-    MenuItemItalianX28 = new wxMenuItem(MenuItem7, idMainLanguage6, _("Italian"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemItalianX28);
-    MenuItemUnusedX28 = new wxMenuItem(MenuItem7, idMainLanguage7, _("Unused"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemUnusedX28);
+    MenuMainLanguage = new wxMenu();
+    MenuItemEnglishX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage0, _("English"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemEnglishX28);
+    MenuItemFrenchX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage1, _("French"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemFrenchX28);
+    MenuItemSwedishX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage2, _("Swedish/Finnish/Hungarian"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemSwedishX28);
+    MenuItemCzechX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage3, _("Czech/Slovak"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemCzechX28);
+    MenuItemGermanX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage4, _("German"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemGermanX28);
+    MenuItemSpanishX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage5, _("Spanish/Portuguese"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemSpanishX28);
+    MenuItemItalianX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage6, _("Italian"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemItalianX28);
+    MenuItemUnusedX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage7, _("Unused"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemUnusedX28);
     MenuItemUnusedX28->Enable(false);
-    MenuItem5->Append(ID_MAINLANGUAGE, _("Main language"), MenuItem7, wxEmptyString);
+    MenuItem5->Append(ID_MAINLANGUAGE, _("Main language"), MenuMainLanguage, wxEmptyString);
     MenuMainRegion = new wxMenu();
     MenuItemRegion0 = new wxMenuItem(MenuMainRegion, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), _("Language group"), wxITEM_RADIO);
     MenuMainRegion->Append(MenuItemRegion0);
@@ -3114,14 +3114,14 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     m_setLanguage(true);
     m_offset.x=0;
 
-    // TODO FIX THIS SetRegionMenu(pageSet->GetRegion(true), true); // Region language
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // Primary Region language
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(false), false); // Secondary Region language
 
     SetTitle(pageSet->GetSourcePage());
 
     // Update the palette in case it is visible
-    paletteFrame->SetX28(pageSet->GetPage(0)->GetX28Row());
+    paletteFrame->SetX28(pageSet->CurrentPage()->GetX28Row());
 
-    // TODO FIX THIS pageSet->CurrentPage=pageSet->GetPage(0);
 
     // Force an update now
     Refresh();

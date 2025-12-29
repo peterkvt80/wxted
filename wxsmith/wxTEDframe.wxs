@@ -226,7 +226,7 @@
 				<object class="separator" />
 				<object class="wxMenu" name="x28enhance" variable="MenuItem5" member="yes">
 					<label>X28 enhancements</label>
-					<object class="wxMenu" name="ID_MAINLANGUAGE" variable="MenuItem7" member="yes">
+					<object class="wxMenu" name="ID_MAINLANGUAGE" variable="MenuMainLanguage" member="yes">
 						<label>Main language</label>
 						<object class="wxMenuItem" name="idMainLanguage0" variable="MenuItemEnglishX28" member="yes">
 							<label>English</label>

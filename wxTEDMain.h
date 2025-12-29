@@ -58,7 +58,7 @@
 
 
 // Version number
-#define VERSION_STRING wxT("1.58")
+#define VERSION_STRING wxT("1.59")
 
 // Hacky stand in for Magenta
 #define wxMAGENTA wxLIGHT_GREY
@@ -352,8 +352,8 @@ class wxTEDFrame: public wxFrame
       wxMenu* Menu3;
       wxMenu* MenuCarousel;
       wxMenu* MenuItem5;
-      wxMenu* MenuItem7;
       wxMenu* MenuItemLanguage;
+      wxMenu* MenuMainLanguage;
       wxMenu* MenuMainRegion;
       wxMenu* MenuPresentation;
       wxMenu* MenuSecondLanguage;
