@@ -212,6 +212,12 @@
 					<checked>1</checked>
 					<checkable>1</checkable>
 				</object>
+				<object class="wxMenuItem" name="ID_SHOWCONTROL" variable="MenuItemShowCodes" member="yes">
+					<label>Show control codes</label>
+					<help>Show invisible codes</help>
+					<handler function="OnMenuItemShowCodesSelected" entry="EVT_MENU" />
+					<checkable>1</checkable>
+				</object>
 				<object class="wxMenuItem" name="ID_HIDECONCEAL" variable="MenuItemConcealToggle" member="yes">
 					<label>Toggle Conceal</label>
 					<help>Conceal/show hidden text</help>

@@ -236,6 +236,7 @@ class wxTEDFrame: public wxFrame
       void OnMenuItemRegionBSelected(wxCommandEvent& event);
       void OnMenuItemLanguageB(wxCommandEvent& event);
       void OnMenuItemLanguageX28(wxCommandEvent& event);
+      void OnMenuItemShowCodesSelected(wxCommandEvent& event);
       //*)
 
       /* Set the language menu radio option */
@@ -287,6 +288,7 @@ class wxTEDFrame: public wxFrame
       static const wxWindowID ID_MENUITEM1;
       static const wxWindowID idPageNumber;
       static const wxWindowID ID_MENUITEMSHOWHEADER;
+      static const wxWindowID ID_SHOWCONTROL;
       static const wxWindowID ID_HIDECONCEAL;
       static const wxWindowID idMainLanguage0;
       static const wxWindowID idMainLanguage1;
@@ -408,6 +410,7 @@ class wxTEDFrame: public wxFrame
       wxMenuItem* MenuItemSave;
       wxMenuItem* MenuItemSaveAs;
       wxMenuItem* MenuItemSelectAll;
+      wxMenuItem* MenuItemShowCodes;
       wxMenuItem* MenuItemShowHeader;
       wxMenuItem* MenuItemSpanish;
       wxMenuItem* MenuItemSpanishX28;

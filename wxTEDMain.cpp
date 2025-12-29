@@ -104,6 +104,7 @@ const wxWindowID wxTEDFrame::idLanguageUnused = wxNewId();
 const wxWindowID wxTEDFrame::ID_MENUITEM1 = wxNewId();
 const wxWindowID wxTEDFrame::idPageNumber = wxNewId();
 const wxWindowID wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
+const wxWindowID wxTEDFrame::ID_SHOWCONTROL = wxNewId();
 const wxWindowID wxTEDFrame::ID_HIDECONCEAL = wxNewId();
 const wxWindowID wxTEDFrame::idMainLanguage0 = wxNewId();
 const wxWindowID wxTEDFrame::idMainLanguage1 = wxNewId();
@@ -200,6 +201,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     if (code=='Q' || code=='q' || code=='X' || code=='x') // Codes and Grid are combined in wxTED
     {
       m_ShowMarkup=!m_ShowMarkup;
+      MenuItemShowCodes-> Check(m_ShowMarkup);
       code=WXK_ESCAPE;
     }
   }
@@ -1531,6 +1533,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), _("Show/hide header row"), wxITEM_CHECK);
     MenuPresentation->Append(MenuItemShowHeader);
     MenuItemShowHeader->Check(true);
+    MenuItemShowCodes = new wxMenuItem(MenuPresentation, ID_SHOWCONTROL, _("Show control codes"), _("Show invisible codes"), wxITEM_CHECK);
+    MenuPresentation->Append(MenuItemShowCodes);
     MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), _("Conceal/show hidden text"), wxITEM_NORMAL);
     MenuPresentation->Append(MenuItemConcealToggle);
     MenuPresentation->AppendSeparator();
@@ -1691,6 +1695,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     Connect(idLanguageItalian, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idLanguageUnused, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idPageNumber, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
+    Connect(ID_SHOWCONTROL, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemShowCodesSelected);
     Connect(ID_HIDECONCEAL, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
     Connect(idMainLanguage0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
     Connect(idMainLanguage1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
@@ -1749,7 +1754,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     Connect(wxEVT_MOUSEWHEEL, (wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
 
-    MenuBar = MenuBar1;
+    MenuBar = MenuBar1; // @todo [!] This is a risk as Menubar1 has no guarantee of existing outside of this constructor
+    // Presumably it it stored somewhere on a wxWidgets structure that we can traverse?
     PrimaryLanguage[0] = MenuItemEnglish;
     PrimaryLanguage[1] = MenuItemFrench;
     PrimaryLanguage[2] = MenuItemSwedish;
@@ -3194,3 +3200,9 @@ void wxTEDFrame::OnMenuItemPaletteSelected(wxCommandEvent& event)
 }
 
 
+
+void wxTEDFrame::OnMenuItemShowCodesSelected(wxCommandEvent& event)
+{
+  bool checked = MenuItemShowCodes-> IsChecked();
+  m_ShowMarkup=checked;
+}
