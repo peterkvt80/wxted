@@ -44,7 +44,7 @@ enum EventType {EventNone, EventSave, EventKey, EventLanguage};
 
 
 class TEDEvent
-  : public std::enable_shared_from_this<TEDEvent>
+//  : public std::enable_shared_from_this<TEDEvent>
 {
     public:
         /** Default constructor */

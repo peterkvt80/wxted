@@ -16,8 +16,6 @@ class PageSettingsDialog: public wxDialog
 
 		PageSettingsDialog(wxWindow* parent,wxWindowID id=wxID_ANY,const wxPoint& pos=wxDefaultPosition,const wxSize& size=wxDefaultSize);
 
-		void SetPageNumber(int page);
-
 		virtual ~PageSettingsDialog();
 
 		//(*Declarations(PageSettingsDialog)

@@ -54,8 +54,6 @@ TTXRow28::~TTXRow28()
   //dtor
 }
 
-/// @todo Encode a TTI formatted packet
-
 /// Decode a tti formatted packet 28
 bool TTXRow28::decode(std::string line)
 {
@@ -339,7 +337,7 @@ std::string TTXRow28::encode()
   // Work our way along the packet
   AddX28(pageFunction, 1, 1, 4); // 1: 1-4 Page function. 4 bits
   AddX28(pageCoding, 1, 5, 3); // 1: 5-7 Page coding. 3 bits
-  // @todo Implement X28 character sets
+
   AddX28(defaultG0G2CharacterSet, 1, 8, 7); // 1: 8-14 Default G0 and G2 character set designation. 7 bits
   AddX28(secondG0G2CharacterSet, 1, 15, 7); // 1: 15-18, 2: 1-3 Second G0 Set designation
   AddX28(enableLeftPanel, 2, 4, 1);

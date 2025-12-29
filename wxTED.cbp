@@ -5,20 +5,22 @@
 		<Option title="wxTED" />
 		<Option platforms="Windows;Unix;" />
 		<Option pch_mode="2" />
-		<Option compiler="gcc-mingw64" />
+		<Option compiler="gcc-msys2-mingw64" />
 		<Build>
 			<Target title="Debug">
 				<Option platforms="Windows;Unix;" />
 				<Option output="bin/Debug/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
-				<Option compiler="gcc-mingw64" />
+				<Option compiler="gcc-msys2-mingw64" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-m64" />
+					<Add option="-Og" />
 					<Add option="-g" />
+					<Add directory="./" />
 				</Compiler>
 				<Linker>
 					<Add option="-m64" />
@@ -29,14 +31,16 @@
 				<Option output="bin/Release/wxTED" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
-				<Option compiler="gcc-mingw64" />
+				<Option compiler="gcc-msys2-mingw64" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wzero-as-null-pointer-constant" />
+					<Add option="-Wextra" />
 					<Add option="-Wall" />
 					<Add option="-m64" />
 					<Add option="`wx_config --cxxflags`" />
+					<Add directory="./" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -49,7 +53,7 @@
 			<Target title="debug2">
 				<Option output="wxTED" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
-				<Option compiler="gcc-mingw64" />
+				<Option compiler="gcc-msys2-mingw64" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-Wall" />
@@ -228,6 +232,14 @@
 			<Option target="Release" />
 		</Unit>
 		<Unit filename="ttxpage.h">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="ttxpageset.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="ttxpageset.h">
 			<Option target="Debug" />
 			<Option target="Release" />
 		</Unit>

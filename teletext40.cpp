@@ -22,7 +22,7 @@
  #include "teletext40.h"
  using namespace std;
 
- void load_from_hash(std::shared_ptr<TTXPage> page, char* str)
+ void load_from_hash(TTXPageSet* pageSet, char* str)
  {
      const char base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
      char* hashstring=strchr(str,'#'); // Find the start of hash string
@@ -76,7 +76,8 @@
                         outCol++;   // next column
                         if (outCol>=40)
                         {
-                            page->SetRow(outRow,std::string(line));
+                            // page->pages[0].get()->SetRow(outRow,std::string(line));
+                            pageSet->GetPage(0)->SetRow(outRow,std::string(line));
                             outCol=0;
                             outRow++;
                         }
@@ -97,21 +98,21 @@
                 value++;
                 if (!strcmp("PN",key)) { // Page Number - 3 hex digits
                   int page_num=std::strtol(value,NULL,16);
-                  page->SetPageNumber(page_num*0x100);
+                  pageSet->SetPageNumber(page_num*0x100);
                 }
                 if (!strcmp("SC",key)) { // Subcode - 4 hex digits
                   int subcode_num=std::strtol(value,NULL,16);
-                  page->SetSubCode(subcode_num);
+                  pageSet->GetPage(0)->SetSubCode(subcode_num);
                 }
                 if (!strcmp("PS",key)) { // Page Status - 4 hex digits
                   int status_num=std::strtol(value,NULL,16);
-                  page->SetPageStatus(status_num);
+                  pageSet->GetPage(0)->SetPageStatus(status_num);
                 }
                 if (!strcmp("X270",key)) { // X/27/0 fastext. 6 x MPPSSSSS
                     for (int i=0;i<6;i++) {
                       int link;
                       sscanf(&value[i*7],"%3x",&link);
-                      page->SetFastextLink(i,link);
+                      pageSet->GetPage(0)->SetFastextLink(i,link);
                     }
                 }
                 if (!strcmp("X280",key)) { // X/28/0 format 1 enhancement data
@@ -130,9 +131,8 @@
  * \param cset A character set 0-Eng 1-Ger 2-Swe 3-Ita 4-Bel 5-ASCII 6=Heb 7=Cyr
  * \param website The website prefix eg. "http://edit.tf"
  */
-void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], const char* website, std::shared_ptr<TTXPage> page)
+void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], const char* website, TTXPageSet* pageSet)
 {
-
 	// Construct the metadata as described above.
 	uint8_t metadata = cset;
 	// if ( blackfg != 0 ) { metadata += 8; } // wxTED says NO
@@ -176,9 +176,11 @@ void save_to_hash(int cset, char* encoding, uint8_t cc[25][40], const char* webs
 	}
 	{ // metadata
 	  char *p = &encoding[1167+sz];
-	  int pagenumber=page->GetPageNumber();
-	  int subcode=page->GetSubCode();
-	  int status=page->GetPageStatus();
+	  int pagenumber=pageSet->GetPageNumber();
+	  int subcode=pageSet->GetPage(0)->GetSubCode();
+	  int status=pageSet->GetPage(0)->GetPageStatus();
+	  // @todo This should be per Page, not pageSet
+	  TTXPage* page = pageSet->GetPage(0);
 	  sprintf(p,":PN=%03x:SC=%04x:PS=%04X:X270=%03X%04X%03X%04X%03X%04X%03X%04X%03X%04X%03X%04XF",pagenumber >> 8, subcode, status,
            page->GetFastextLink(0),0x3f7f, // The six Fastext links
            page->GetFastextLink(1),0x3f7f,

@@ -97,6 +97,5 @@ class PaletteFrame: public wxFrame
 };
 
 wxColour Pal2wxColour(unsigned int pal);
-unsigned int wxColour2Pal(wxColour wxc);
 
 #endif

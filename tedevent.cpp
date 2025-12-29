@@ -46,15 +46,15 @@ void TEDEvent::print()
 
 void TEDEvent::dump()
 {
-    EventType evt;
-    for (std::shared_ptr<TEDEvent> p = shared_from_this(); p != nullptr; p = p->GetlastEvent() )
-    {
-        std::cout << "[TEDEvent::dump]" << std::endl;
-        evt=p->GeteventType();
-        char oc=p->charList->GetOldChar();
-        char nc=p->charList->GetNewChar();
-        std::cout << "Event type=" << evt << "char=" << oc << "=>" << nc << std::endl;
-    }
+//    EventType evt;
+    //for (std::shared_ptr<TEDEvent> p = shared_from_this(); p != nullptr; p = p->GetlastEvent() )
+    //{
+        //std::cout << "[TEDEvent::dump]" << std::endl;
+        //evt=p->GeteventType();
+        //char oc=p->charList->GetOldChar();
+        //char nc=p->charList->GetNewChar();
+        //std::cout << "Event type=" << evt << "char=" << oc << "=>" << nc << std::endl;
+    //}
 }
 
 void TEDEvent::SetnextEvent(std::shared_ptr<TEDEvent> val)

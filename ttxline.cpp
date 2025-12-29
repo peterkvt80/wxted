@@ -44,7 +44,7 @@ TTXLine::~TTXLine()
 /** Set m_textline
  * \param val New value to set
  */
-void TTXLine::Setm_textline(std::string const& val)
+void TTXLine::SetRow(std::string const& val)
 {
     m_textline = validate(val);
 }

@@ -46,7 +46,6 @@
 // include <wx/filename.h>
 #include <wx/stdpaths.h>
 
-
 //helper functions
 enum wxbuildinfoformat {
     short_f, long_f };
@@ -105,6 +104,7 @@ const wxWindowID wxTEDFrame::idLanguageUnused = wxNewId();
 const wxWindowID wxTEDFrame::ID_MENUITEM1 = wxNewId();
 const wxWindowID wxTEDFrame::idPageNumber = wxNewId();
 const wxWindowID wxTEDFrame::ID_MENUITEMSHOWHEADER = wxNewId();
+const wxWindowID wxTEDFrame::ID_SHOWCONTROL = wxNewId();
 const wxWindowID wxTEDFrame::ID_HIDECONCEAL = wxNewId();
 const wxWindowID wxTEDFrame::idMainLanguage0 = wxNewId();
 const wxWindowID wxTEDFrame::idMainLanguage1 = wxNewId();
@@ -201,48 +201,52 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     if (code=='Q' || code=='q' || code=='X' || code=='x') // Codes and Grid are combined in wxTED
     {
       m_ShowMarkup=!m_ShowMarkup;
+      MenuItemShowCodes-> Check(m_ShowMarkup);
       code=WXK_ESCAPE;
     }
   }
-  // hack for preview mode
-  if (m_previewMode)
+  // hack for preview mode. Any keyboard key cancels preview mode
+  if (m_previewCarouselMode)
   {
       if (code>0) // Cancel preview mode
       {
-          m_previewMode = false;
+          m_previewCarouselMode = false;
+          SetTitle(previewSavedCaption); // Restore the previous caption
           m_Timer1.Start(456);
+          // We don't want to issue a random edit key so quit now
+          return;
       }
       else
       {
           if (PreviewNormal->IsChecked())
           {
               // The timing comes from the file.
-              int seconds = m_currentPage->GetCycleTime();
+              int seconds = pageSet->CurrentPage()->GetCycleTime();
               m_Timer1.Start(seconds * 1000);
           }
           if (m_previewForwards)
           {
-              if (iPage>=m_iPageCount-1) // forwards loop preview wrap
-              {
-                  if (m_bounceMode)
-                  {
-                    m_previewForwards = false; // reverse direction
-                  }
-                  else
-                  {
-                    iPage = -1;                // loop to beginning
-                  }
-              }
+            if (m_bounceMode && pageSet->CurrentPageIndex()+1 >= pageSet->GetPageCount())
+            {
+              m_previewForwards = false; // reverse direction
+              code = WXK_PAGEDOWN;
+            }
+            else
+            {
               code = WXK_PAGEUP;
+            }
           }
           else
           {
-              if (iPage<=0) // backwards loop preview
-              {
-                  iPage = 0;
-                  m_previewForwards = true;
-              }
-              code = WXK_PAGEDOWN;
+            if (pageSet->CurrentPageIndex() == 0) // backwards loop carousel
+            {
+              m_previewForwards = true; // Bounce back
+              code = WXK_PAGEUP;
+            }
+            else
+            {
+              code = WXK_PAGEDOWN;  // Bouncing down
+            }
           }
       }
   }
@@ -253,25 +257,22 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_PAGEUP:
     // std::cout << "Page up will get next page of a multiple page carousel" << std::endl;
-    if ( m_cursorPoint.y<1) // @todo Temporary hack to stop crash, when going up one page while on row 0.
+    if (m_cursorPoint.y<1)
     {
       m_cursorPoint.y=1;
     }
-    m_iPageCount=m_rootPage->GetPageCount();
-    iPage++;
-    if (iPage>=m_iPageCount) iPage=m_iPageCount-1; // Check we don't go past the last page
-    m_currentPage=m_rootPage->GetPage(iPage);
+    pageSet->NextPage();
 
-    paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
+    paletteFrame->SetX28(pageSet->CurrentPage()->GetX28Row()); // Update PaletteFrame in case we have it open
 
     // Take the languages and regions and update the menu selections
-    SetRegionMenu(m_currentPage->GetRegion(true), true); // true is primary
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // true is primary
     // @todo Secondary language
 
 
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
-      auto rightEdge=(iPage+1)*m_ttxW*41; // Distance from first page to end of current page
+      auto rightEdge=(pageSet->CurrentPageIndex()+1)*m_ttxW*41; // Distance from first page to end of current page
       uint32_t mappedEdge=rightEdge-m_ttxW+m_offset.x; // Edge that we want mapped to the right hand side of the client frame space
       uint32_t clientWidth=GetClientSize().GetWidth();
       if (mappedEdge>clientWidth)
@@ -282,20 +283,17 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_PAGEDOWN:
     // std::cout << "Page down will get previous page of a multiple page carousel" << std::endl;
-    m_iPageCount=m_rootPage->GetPageCount();
-    iPage--;
-    if (iPage<0) iPage=0;
-    m_currentPage=m_rootPage->GetPage(iPage);
-    SetRegionMenu(m_currentPage->GetRegion(true), true); // true is primary
+    pageSet->PreviousPage();
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // true is primary
     // @todo Secondary language
 
-    paletteFrame->SetX28(m_currentPage->GetX28Row()); // Update PaletteFrame in case we have it open
+    paletteFrame->SetX28(pageSet->CurrentPage()->GetX28Row()); // Update PaletteFrame in case we have it open
     // If the page is now off screen, scroll left to bring the right edge aligned with the window
     {
-      int leftEdge=iPage*m_ttxW*41; // Distance from first page to left edge of current page
-      int mappedEdge=leftEdge-m_ttxW+m_offset.x; // Edge that we want mapped to client frame space
-      std::cout << std::dec << "iPage= " << iPage << " mappedEdge=" << mappedEdge << " leftEdge=" << leftEdge << std::endl;
-      if (mappedEdge<0)
+      int leftEdge = pageSet->CurrentPageIndex() * m_ttxW * 41; // Distance from first page to left edge of current page
+      int mappedEdge = leftEdge - m_ttxW + m_offset.x; // Edge that we want mapped to client frame space
+      std::cout << std::dec << "iPage= " << pageSet->CurrentPageIndex() << " mappedEdge=" << mappedEdge << " leftEdge=" << leftEdge << std::endl;
+      if (mappedEdge<0 || mappedEdge>GetClientSize().GetWidth())
       {
         m_offset.x=-leftEdge; // Scroll left to bring the right side into frame
       }
@@ -306,7 +304,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_CONTROL_Y: // Ah. This is why we can't use CTRL-Y as a special key. This was for debugging undo.
     // std::cout << "CTRL-Y test" << std::endl; // Testing
-    tev = m_currentPage->GetUndo();
+    tev = pageSet->CurrentPage()->GetUndo();
     if (tev!=NULL)
     {
       tev->dump();
@@ -314,8 +312,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
     break;
   case WXK_CONTROL_Z:
     // std::cout << "CTRL-Z undo" << std::endl;
-    // tev=m_currentPage->GetUndo();
-    m_currentPage->Undo(m_cursorPoint);
+    // tev=pageSet->CurrentPage()->GetUndo();
+    pageSet->CurrentPage()->Undo(m_cursorPoint);
     break;
     // Moved this to ttxpage as it acts on the page
   //case WXK_TAB: // This will insert a space
@@ -390,12 +388,12 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       }
       std::cout << "[wxTEDFrame::OnChar] code = " << (int)code << std::endl;
     } // edit.tf escape mode
-    m_currentPage->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
+    pageSet->CurrentPage()->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
   }
 
   //std::cout << "Cursor = " << m_cursorPoint.x << "." << m_subPixelPoint.x << ", "
   //     << m_cursorPoint.y << "." << m_subPixelPoint.y << ", "  << std::endl;
-  m_cursorIsAlpha=m_currentPage->IsAlphaMode(m_cursorPoint);
+  m_cursorIsAlpha=pageSet->CurrentPage()->IsAlphaMode(m_cursorPoint);
   m_blinkToggle=true; // HCI: Make cursor moves immediately visible
   Refresh();
   event.Skip();
@@ -403,29 +401,23 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
 
 void wxTEDFrame::OnTimer(wxTimerEvent& event)
 {
-    // Only blink while focused otherwise stay on.
-    // Don't show the cursor in preview mode.
-    // std::cout << "blink=" << m_blinkToggle << " m_focused=" << m_focused << std::endl;
+  // Only blink while focused otherwise stay on.
+  // Don't show the cursor in preview mode.
+  // std::cout << "blink=" << m_blinkToggle << " m_focused=" << m_focused << std::endl;
 
-    if ((m_blinkToggle && m_focused) || m_previewMode)
-        m_blinkToggle=false;
-    else
-        m_blinkToggle=true;
+  if ((m_blinkToggle && m_focused) || m_previewCarouselMode)
+      m_blinkToggle=false;
+  else
+      m_blinkToggle=true;
 
-    if (m_previewMode)
-    {
-        wxKeyEvent pageup(wxEVT_CHAR);
-        //auto pageup = wxKeyEvent(WXK_PAGEUP);
-        OnChar(pageup);
-    }
+  if (m_previewCarouselMode)
+  {
+      wxKeyEvent pageup(wxEVT_CHAR);
+      //auto pageup = wxKeyEvent(WXK_PAGEUP);
+      OnChar(pageup);
+  }
 
-    // wxString s=GetTitle();
-    if (m_currentPage)
-    {
-        Refresh(false); // Paint it
-        // To prevent flicker....may need to analyse the whole page
-        // and just refresh changed bits, like the header clock, cursor and flashing parts.
-    }
+  Refresh(false); // Paint it
 }
 
 bool wxTEDFrame::isMosaic(char ch)
@@ -462,14 +454,17 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
     timeinfo=localtime(&rawtime);
 
     std::string str=line->GetLine();
+
     int i;
-
-
-    for (i=0;i<8;i++) // First 8 characters are not taken from the header
-        str[i]=' ';
-    int k=m_rootPage->GetPageNumber()/0x100;
-    if (k<0x100 && k>0x8ff)
-        k=0x100;
+    for (i=0; i<8; i++) // First 8 characters are not taken from the header
+    {
+      str[i]=' ';
+    }
+    int k=pageSet->GetPageNumber()/0x100;
+    if (k<0x100 || k>0x8ff)
+    {
+      k=0x100;
+    }
     val << std::hex << k;
     str[0]='P';
     str.replace(1,3,val.str()); // Replace the first 4 characters with the page number
@@ -566,7 +561,7 @@ void wxTEDFrame::GenerateHeader(TTXLine* line)
     }
 
     // std::cout << "GenerateHeader exits with str=" << str << std::endl;
-    line->Setm_textline(str);
+    line->SetRow(str);
 }
 
 
@@ -648,15 +643,16 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
 
-
-
     /* page */
 
     // Assume horizontal subpages for now
-    for(std::shared_ptr<TTXPage> p=m_rootPage;
-        p!=nullptr && (offset.x < this->GetClientSize().GetWidth()); // Don't bother to render pages outside of the window
-        p=p->Getm_SubPage())
+    for (int i=0; i<pageSet->GetPageCount(); ++i)
     {
+      TTXPage* p = pageSet->GetPage(i); // Get an observer pointer
+      if (offset.x > this->GetClientSize().GetWidth())  // Don't bother to render pages outside of the window
+      {
+        break;
+      }
       // Some lambdas because we want functions with access to the local environment
       auto SetTTXForegroundColour = [&](const unsigned int colour)
       {
@@ -706,7 +702,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         continue;
       }
 
-      auto addMarkup=(p==m_currentPage) && m_ShowMarkup;
+      auto addMarkup=(p==pageSet->CurrentPage()) && m_ShowMarkup;
       if (addMarkup)
       {
         doubleHeightDC.SetPen(*wxGREY_PEN);
@@ -1261,14 +1257,14 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 
     if (m_blinkToggle==true)
     {
-        wxPoint dx(m_ttxW*41*iPage,0); // The page offset
+        wxPoint dx(m_ttxW*41*pageSet->CurrentPageIndex(),0); // The page offset
         dx+=m_offset; // Add the slide offset
 
         paintDC.SetPen(*wxBLACK_PEN); // outline on
         paintDC.SetBrush(wxBrush(*wxWHITE));
             // In the current page, get the line that the cursor is on, and test if it is double height
         bool doubleHeight;
-        doubleHeight=m_currentPage->GetRow(m_cursorPoint.y)->IsDoubleHeight(m_cursorPoint.x); // @todo Extend to deal with double height transitions.
+        doubleHeight=pageSet->CurrentPage()->GetRow(m_cursorPoint.y)->IsDoubleHeight(m_cursorPoint.x); // @todo Extend to deal with double height transitions.
         if (m_cursorIsAlpha) // Alpha cursor
         {
             paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH)+dx,wxSize(m_ttxW,m_ttxH));
@@ -1322,20 +1318,20 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
       siz.y*=m_ttxH;
 
       // Draw a box TODO: Marquee crawling ants
-      paintDC.DrawRectangle(m_offset+loc+wxSize(iPage*m_ttxW*41,0), siz);
+      paintDC.DrawRectangle(m_offset+loc+wxSize(pageSet->CurrentPageIndex()*m_ttxW*41,0), siz);
     }
 
     // Outline the current frame around the current page
     paintDC.SetPen(*wxWHITE_PEN); // outline on
     wxSize sz(static_cast<int>(m_ttxW*40.5), m_ttxH*25);
-    wxPoint loc(m_offset.x+iPage*m_ttxW*41,0);
+    wxPoint loc(m_offset.x+pageSet->CurrentPageIndex()*m_ttxW*41,0);
     paintDC.DrawRectangle(loc,sz);
     // std::cout << "[OnPaint] exits " << std::endl;
 } // OnPaint
 
 wchar_t wxTEDFrame::mapTextChar(wchar_t ch, bool primary)
 {
-  return MapChar(ch, m_currentPage->GetLanguage(primary), m_currentPage->GetRegion(primary));
+  return MapChar(ch, pageSet->CurrentPage()->GetLanguage(primary), pageSet->CurrentPage()->GetRegion(primary));
 }
 
 void wxTEDFrame::m_SetStatus()
@@ -1353,10 +1349,10 @@ void wxTEDFrame::m_SetStatus()
       return;
     }
 
-    TTXLine* line=m_currentPage->GetRow(c.y);
-    if (m_rootPage->GetPageChanged())
+    TTXLine* line=pageSet->CurrentPage()->GetRow(c.y);
+    if (pageSet->GetPage(0)->GetPageChanged())
       str << "* ";
-    str << "P" << iPage+1 << "/" << m_iPageCount << ", ";
+    str << "P" << pageSet->CurrentPageIndex()+1 << "/" << pageSet->GetPageCount() << ", ";
     if (line!=NULL)
     {
         ch=line->GetLine()[c.x] & 0x7f;
@@ -1397,7 +1393,7 @@ void wxTEDFrame::m_SetStatus()
     }
     else
         ch='?';
-    if (m_currentPage->IsAlphaMode(m_cursorPoint))
+    if (pageSet->CurrentPage()->IsAlphaMode(m_cursorPoint))
     {
         if (ch>' ')
         {
@@ -1416,6 +1412,7 @@ void wxTEDFrame::m_SetStatus()
     }
     StatusBar1->SetLabelText(str.str());
 }
+
 wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     : m_escapeMode(false)
     , m_controlModifier(false)
@@ -1429,11 +1426,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     , m_cursorIsAlpha(true)
     , m_dragging(false)
     , m_MarqueeStart(wxPoint(0,0))
-    , m_rootPage(nullptr)
-    , m_currentPage(nullptr)
-
-    , m_iPageCount(1)
-    , iPage(0)
     , m_offset(wxPoint(0,0))
     , m_slideOrigin(wxPoint(0,0))
     , m_slidePages(false)
@@ -1442,6 +1434,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     , m_config(new wxConfig("wxTED"))
 
 {
+  pageSet = std::make_unique<TTXPageSet>();
+  pageSet->debug("one");
     m_parentWindow=parent;
     m_blinkToggle=false;
 
@@ -1539,29 +1533,31 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     MenuItemShowHeader = new wxMenuItem(MenuPresentation, ID_MENUITEMSHOWHEADER, _("Show header"), _("Show/hide header row"), wxITEM_CHECK);
     MenuPresentation->Append(MenuItemShowHeader);
     MenuItemShowHeader->Check(true);
+    MenuItemShowCodes = new wxMenuItem(MenuPresentation, ID_SHOWCONTROL, _("Show control codes"), _("Show invisible codes"), wxITEM_CHECK);
+    MenuPresentation->Append(MenuItemShowCodes);
     MenuItemConcealToggle = new wxMenuItem(MenuPresentation, ID_HIDECONCEAL, _("Toggle Conceal"), _("Conceal/show hidden text"), wxITEM_NORMAL);
     MenuPresentation->Append(MenuItemConcealToggle);
     MenuPresentation->AppendSeparator();
     MenuItem5 = new wxMenu();
-    MenuItem7 = new wxMenu();
-    MenuItemEnglishX28 = new wxMenuItem(MenuItem7, idMainLanguage0, _("English"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemEnglishX28);
-    MenuItemFrenchX28 = new wxMenuItem(MenuItem7, idMainLanguage1, _("French"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemFrenchX28);
-    MenuItemSwedishX28 = new wxMenuItem(MenuItem7, idMainLanguage2, _("Swedish/Finnish/Hungarian"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemSwedishX28);
-    MenuItemCzechX28 = new wxMenuItem(MenuItem7, idMainLanguage3, _("Czech/Slovak"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemCzechX28);
-    MenuItemGermanX28 = new wxMenuItem(MenuItem7, idMainLanguage4, _("German"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemGermanX28);
-    MenuItemSpanishX28 = new wxMenuItem(MenuItem7, idMainLanguage5, _("Spanish/Portuguese"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemSpanishX28);
-    MenuItemItalianX28 = new wxMenuItem(MenuItem7, idMainLanguage6, _("Italian"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemItalianX28);
-    MenuItemUnusedX28 = new wxMenuItem(MenuItem7, idMainLanguage7, _("Unused"), wxEmptyString, wxITEM_RADIO);
-    MenuItem7->Append(MenuItemUnusedX28);
+    MenuMainLanguage = new wxMenu();
+    MenuItemEnglishX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage0, _("English"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemEnglishX28);
+    MenuItemFrenchX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage1, _("French"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemFrenchX28);
+    MenuItemSwedishX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage2, _("Swedish/Finnish/Hungarian"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemSwedishX28);
+    MenuItemCzechX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage3, _("Czech/Slovak"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemCzechX28);
+    MenuItemGermanX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage4, _("German"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemGermanX28);
+    MenuItemSpanishX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage5, _("Spanish/Portuguese"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemSpanishX28);
+    MenuItemItalianX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage6, _("Italian"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemItalianX28);
+    MenuItemUnusedX28 = new wxMenuItem(MenuMainLanguage, idMainLanguage7, _("Unused"), wxEmptyString, wxITEM_RADIO);
+    MenuMainLanguage->Append(MenuItemUnusedX28);
     MenuItemUnusedX28->Enable(false);
-    MenuItem5->Append(ID_MAINLANGUAGE, _("Main language"), MenuItem7, wxEmptyString);
+    MenuItem5->Append(ID_MAINLANGUAGE, _("Main language"), MenuMainLanguage, wxEmptyString);
     MenuMainRegion = new wxMenu();
     MenuItemRegion0 = new wxMenuItem(MenuMainRegion, ID_REGION0, _("0: Eng/Ger/Swe/Fin/Hun/Ita/Fre/Por/Spa/Cze/Slo"), _("Language group"), wxITEM_RADIO);
     MenuMainRegion->Append(MenuItemRegion0);
@@ -1621,28 +1617,28 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     MenuItem5->Append(MenuItemPalette);
     MenuPresentation->Append(x28enhance, _("X28 enhancements"), MenuItem5, wxEmptyString);
     MenuBar1->Append(MenuPresentation, _("Presentation"));
-    Menu2 = new wxMenu();
-    PreviewRun = new wxMenuItem(Menu2, idRun, _("Run"), wxEmptyString, wxITEM_NORMAL);
-    Menu2->Append(PreviewRun);
-    Menu2->AppendSeparator();
-    ModeLoop = new wxMenuItem(Menu2, idRadioMode, _("Loop"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(ModeLoop);
-    ModeBounce = new wxMenuItem(Menu2, idRadioBounce, _("Bounce"), _("Bounce animation"), wxITEM_RADIO);
-    Menu2->Append(ModeBounce);
-    Menu2->AppendSeparator();
-    PreviewNormal = new wxMenuItem(Menu2, idRadioMode0, _("Normal"), _("Normal carousel timing"), wxITEM_RADIO);
-    Menu2->Append(PreviewNormal);
-    Preview30fps = new wxMenuItem(Menu2, idRadioMode1, _("30 fps"), _("Frame rate"), wxITEM_RADIO);
-    Menu2->Append(Preview30fps);
-    Preview25fps = new wxMenuItem(Menu2, idRadioMode2, _("25 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview25fps);
-    Preview12fps = new wxMenuItem(Menu2, idRadioMode3, _("12 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview12fps);
-    Preview6fps = new wxMenuItem(Menu2, idRadioMode4, _("6 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview6fps);
-    Preview2fps = new wxMenuItem(Menu2, idRadioMode5, _("2 fps"), wxEmptyString, wxITEM_RADIO);
-    Menu2->Append(Preview2fps);
-    MenuBar1->Append(Menu2, _("Preview"));
+    MenuCarousel = new wxMenu();
+    PreviewRun = new wxMenuItem(MenuCarousel, idRun, _("Run"), wxEmptyString, wxITEM_NORMAL);
+    MenuCarousel->Append(PreviewRun);
+    MenuCarousel->AppendSeparator();
+    ModeLoop = new wxMenuItem(MenuCarousel, idRadioMode, _("Loop"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(ModeLoop);
+    ModeBounce = new wxMenuItem(MenuCarousel, idRadioBounce, _("Bounce"), _("Bounce animation"), wxITEM_RADIO);
+    MenuCarousel->Append(ModeBounce);
+    MenuCarousel->AppendSeparator();
+    PreviewNormal = new wxMenuItem(MenuCarousel, idRadioMode0, _("Normal"), _("Normal carousel timing"), wxITEM_RADIO);
+    MenuCarousel->Append(PreviewNormal);
+    Preview30fps = new wxMenuItem(MenuCarousel, idRadioMode1, _("30 fps"), _("Frame rate"), wxITEM_RADIO);
+    MenuCarousel->Append(Preview30fps);
+    Preview25fps = new wxMenuItem(MenuCarousel, idRadioMode2, _("25 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview25fps);
+    Preview12fps = new wxMenuItem(MenuCarousel, idRadioMode3, _("12 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview12fps);
+    Preview6fps = new wxMenuItem(MenuCarousel, idRadioMode4, _("6 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview6fps);
+    Preview2fps = new wxMenuItem(MenuCarousel, idRadioMode5, _("2 fps"), wxEmptyString, wxITEM_RADIO);
+    MenuCarousel->Append(Preview2fps);
+    MenuBar1->Append(MenuCarousel, _("Carousel"));
     MenuHelp = new wxMenu();
     MenuItemSpecialKeys = new wxMenuItem(MenuHelp, idSpecialKeys, _("Special keys"), _("Show the special function key table"), wxITEM_NORMAL);
     MenuHelp->Append(MenuItemSpecialKeys);
@@ -1699,6 +1695,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     Connect(idLanguageItalian, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idLanguageUnused, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguage);
     Connect(idPageNumber, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemProperties);
+    Connect(ID_SHOWCONTROL, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemShowCodesSelected);
     Connect(ID_HIDECONCEAL, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemConcealToggle);
     Connect(idMainLanguage0, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
     Connect(idMainLanguage1, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxTEDFrame::OnMenuItemLanguageX28);
@@ -1757,6 +1754,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     Connect(wxEVT_MOUSEWHEEL, (wxObjectEventFunction)&wxTEDFrame::OnMouseWheel);
     //*)
 
+    MenuBar = MenuBar1; // @todo [!] This is a risk as Menubar1 has no guarantee of existing outside of this constructor
+    // Presumably it it stored somewhere on a wxWidgets structure that we can traverse?
     PrimaryLanguage[0] = MenuItemEnglish;
     PrimaryLanguage[1] = MenuItemFrench;
     PrimaryLanguage[2] = MenuItemSwedish;
@@ -1820,18 +1819,15 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     m_resize(GetSize()); // Adjust the font to fit the available space
 
     /* Initial page */
-    m_currentPage = m_rootPage = std::shared_ptr<TTXPage>(new TTXPage(initialPage.ToStdString(),""));
+    pageSet = std::make_unique<TTXPageSet>(initialPage.ToStdString(),"");
     m_setLanguage(true);
-
-    m_iPageCount=m_rootPage->GetPageCount();
-    iPage=0;
 
     std::cerr  << "[wxTEDFrame::wxTEDFrame]initialPage=" << initialPage << std::endl;
 
     if (initialPage=="wxtedsplash.tti") // Started with default page
     {
       SetTitle(_("wxTED ")+VERSION_STRING);
-      m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
+      pageSet->SetSourcePage(""); // Prevent an accidental Save of the default page
     }
     else
     {
@@ -1858,7 +1854,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     m_publish_ftp_password=m_config->Read("/wxted/FTP/Password");
     m_publish_ftp_remote=m_config->Read("/wxted/FTP/Remote");
 
-    SetRegionMenu(m_currentPage->GetRegion(true), true); // Region language [!] @todo Add second language but probably on an X28 config dialog
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // Region language [!] @todo Add second language but probably on an X28 config dialog
 
 
 // wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
@@ -1875,7 +1871,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
 
     paletteFrame = new PaletteFrame(this->GetDefaultItem(), 1, wxPoint(100,100), wxSize(500, 200));
 
-    m_rootPage->SetPageChanged(false);
+    pageSet->GetPage(0)->SetPageChanged(false);
 
     // Compatibility.
     // Windows: Panel1 must be hidden or it makes an ugly rectangle on the screen
@@ -1908,12 +1904,12 @@ void wxTEDFrame::OnSave(wxCommandEvent& event)
   {
     // Special hack. esc ctrl-s writes an ESC character. (Toggle G0 G2 language)
     std::cout << "[OnSave] swap G0 g2 " << std::endl;
-    m_currentPage->SetCharAt(WXK_ESCAPE, 0, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
+    pageSet->CurrentPage()->SetCharAt(WXK_ESCAPE, 0, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
     m_escapeMode = false;
   }
   else
   {
-    bool result=m_rootPage->SavePageDefault(); // Write the file back where it came from
+    bool result=pageSet->SavePageDefault(); // Write the file back where it came from
     if (!result)
     {
         wxString msg="File NOT saved.\nUse Save As and choose a new name";
@@ -1939,7 +1935,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
     }
     std::string str=saveFileDialog.GetPath().ToStdString();
     // std::cout << "Saving page to " << str << std::endl;
-    bool result=m_rootPage->SavePage(str);
+    bool result=pageSet->SavePage(str);
     if (!result)
     {
         wxString msg="File NOT saved.\nUse Save As and choose a new name";
@@ -1948,8 +1944,8 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
     else // Set the filename
     {
         wxString filename=saveFileDialog.GetFilename();
-        m_rootPage->SetSourcePage(str);
-        m_rootPage->SetShortFilename(filename.ToStdString());
+        pageSet->SetSourcePage(str);
+        pageSet->SetShortFilename(filename.ToStdString());
         SetTitle(str);
         // MenuItemSave->Enable(true);
         EnableSave(true);
@@ -1965,28 +1961,24 @@ void wxTEDFrame::OnAbout(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 {
-
-    if ( m_rootPage->GetPageChanged() )
+  if ( pageSet->GetPage(0)->GetPageChanged() )
+  {
+    if ( wxMessageBox("Wipe everything and start a new page?",
+                      "Please confirm",
+                      wxICON_WARNING | wxCANCEL | wxCANCEL_DEFAULT) == wxCANCEL )
     {
-        if ( wxMessageBox("Wipe everything and start a new page?",
-                          "Please confirm",
-                          wxICON_WARNING | wxCANCEL | wxCANCEL_DEFAULT) == wxCANCEL )
-        {
-            return;
-        }
+      return;
     }
+  }
 
-    // std::cout << "New page" << std::endl;
-    // @todo - If the page has changed and not been saved, trap that here
-    m_rootPage=std::shared_ptr<TTXPage>(new TTXPage());
-    SetTitle(_("wxTED ")+VERSION_STRING);
-    m_rootPage->SetSourcePage(""); // Prevent an accidental Save of the default page
-    m_setLanguage(true);
-    SetRegionMenu(0, true);
-    m_iPageCount=1;
-    iPage=0;
-    m_currentPage=m_rootPage;
-
+  // std::cout << "New page" << std::endl;
+  // @todo - If the page has changed and not been saved, trap that here
+  pageSet = std::make_unique<TTXPageSet>(); // Assigning a new TTXPageSet destroys the old one
+  SetTitle(_("wxTED ")+VERSION_STRING);
+  pageSet->SetSourcePage(""); // Prevent an accidental Save of the default page
+  m_setLanguage(true);
+  SetRegionMenu(0, true);
+  ShowCarouselMenu();
 }
 
 void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
@@ -1994,8 +1986,8 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
 #ifdef __WXMSW_DISABLED__
     // If the page has no filename, we can not save it. Do Save As or load another page.
     // We probably alao want to prevent Publishing a page with unsaved work in it. TODO.
-    wxString sp=m_rootPage->GetSourcePage();
-    wxString spShort=m_rootPage->GetShortFilename();
+    wxString sp=pageSet->GetPage(0)->GetSourcePage();
+    wxString spShort=pageSet->GetPage(0)->GetShortFilename();
     if (sp.IsEmpty())
     {
         wxString msg="To publish this Page, do Save As first";
@@ -2036,7 +2028,7 @@ void wxTEDFrame::OnMenuItemPublish(wxCommandEvent& event)
 void wxTEDFrame::OnMenuItemUndo(wxCommandEvent& event)
 {
     // TODO: Grey out this option when there is nothing to undo.
-    m_currentPage->Undo(m_cursorPoint);
+    pageSet->CurrentPage()->Undo(m_cursorPoint);
 }
 
 void wxTEDFrame::OnKillFocus(wxFocusEvent& event)
@@ -2077,7 +2069,7 @@ void wxTEDFrame::OnMenuClose(wxMenuEvent& event)
       m_inhibitStatus=false;
     }
     // If we are in preview mode, we just changed a setting, so run the handler to update everything
-    if (m_previewMode)
+    if (m_previewCarouselMode)
     {
       std::cout << "Refresh preview settings" << std::endl;
       UpdatePreview();
@@ -2090,115 +2082,47 @@ void OnMenuOpen(wxPaintEvent& event); // On opening the menu
 
 void wxTEDFrame::OnMenuItemInsertSubpage(wxCommandEvent& event)
 {
-    //std::cout << "Insert page after #" << iPage << std::endl;
-    std::shared_ptr<TTXPage> p;
-    std::shared_ptr<TTXPage> childPage;
-    // Create a new page
-    p = std::shared_ptr<TTXPage>(new TTXPage());
-    m_setLanguage(true);
-    SetRegionMenu(m_currentPage->GetRegion(true), true); // Region language [!] Move to dialog and add second G0
-    iPage++;
-    // Save the child page pointer
-    childPage=m_currentPage->Getm_SubPage();
-    // Set the child pointer to the new child page
-    m_currentPage->Setm_SubPage(p);
-    // Make the new page the current one
-    m_currentPage=p;
-    // Set the child pointer to the saved pointer
-    m_currentPage->Setm_SubPage(childPage);
-
-    // Recalculate the subcode sequence.
-    m_iPageCount=m_rootPage->GetPageCount();
-
-    // Put up a welcome message
-    std::ostringstream str;
-    str << "New subpage inserted " << iPage+1 << "/" << m_iPageCount;
-    m_currentPage->SetRow(1,str.str());
-    // m_rootPage->pageChanged=true;
-    ShowPreviewMenu();
+  pageSet->InsertPageAfter();
+  // TODO Reposition the page offset
+  ShowCarouselMenu();
 }
 
 void wxTEDFrame::OnMenuItemDeletePage(wxCommandEvent& event)
 {
-    // How many pages do we have?
-    int count=m_rootPage->GetPageCount();
-    // Can't delete the last remaining page
-    if (count<2)
-        return;
-    // Delete the current page...
-
-    // If we are on the first page we move to the second page.
-    // This is more complicated because it affects the page pointers and the metadata.
-    if (m_currentPage==m_rootPage)
-    {
-        std::shared_ptr<TTXPage> p=m_rootPage->Getm_SubPage(); // This is the new root
-        p->CopyMetaData(m_rootPage);            // As the root, it needs the metadata
-        m_rootPage->Setm_SubPage(NULL);         // Unlink the old root node
-        m_rootPage = p;                           // And set the page pointers to the new root page
-        m_currentPage = p;
-    }
-    else
-    {
-        // We are not on the first page, we go to the previous page.
-        // Seek the parent page p
-        std::shared_ptr<TTXPage> p=m_rootPage;
-        for (;p->Getm_SubPage()!=m_currentPage && p->Getm_SubPage()!=NULL;p=p->Getm_SubPage());
-        if (p->Getm_SubPage()==m_currentPage)
-            std::cout << "Hurrah, found parent object" << std::endl;
-        else
-        {
-            std::cout << "Boo. Can not locate. Your code does not work" << std::endl;
-            return;
-        }
-        // Before we delete the page, save the pointer to the next sub page
-        std::shared_ptr<TTXPage> nextSub=m_currentPage->Getm_SubPage();
-        // Delete the page.
-        m_currentPage->Setm_SubPage(NULL); // Break the link before delete, or the rest of the chain vanishes!
-        // Make the parent the current page
-        m_currentPage = p;
-        // Repair the page chain by relinking the next subpage.
-        p->Setm_SubPage(nextSub);
-        // Fix the counters
-        if (iPage>0)
-        {
-          iPage--;
-        }
-    }
-    // Recalculate the subcode sequence.
-    m_iPageCount=m_rootPage->GetPageCount();
-    ShowPreviewMenu();
+  pageSet->DeletePage();
+  ShowCarouselMenu();
 }
 
 void wxTEDFrame::OnMenuItemLanguage(wxCommandEvent& event)
 {
   int language = (event.GetId() - MenuItemEnglish->GetId()) & 0x07;
-  m_currentPage->SetLanguage(language, true);
+  pageSet->CurrentPage()->SetLanguage(language, true);
   // Update the X28 checked item
   PrimaryLanguageX28[language]->Check(true);
-  std::cout << "Language handler " << m_currentPage->GetLanguage(true) << std::endl;
+  std::cout << "Language handler " << pageSet->CurrentPage()->GetLanguage(true) << std::endl;
 }
 
 void wxTEDFrame::OnMenuItemLanguageX28(wxCommandEvent& event)
 {
   int language = (event.GetId()- MenuItemEnglishX28->GetId()) & 0x07;
-  m_currentPage->SetLanguage(language, true);
+  pageSet->CurrentPage()->SetLanguage(language, true);
   // Update the original language checked item
   PrimaryLanguage[language]->Check(true);
-  std::cout << "Language handler " << m_currentPage->GetLanguage(true) << std::endl;
+  std::cout << "Language handler " << pageSet->CurrentPage()->GetLanguage(true) << std::endl;
 }
 
 
 void wxTEDFrame::OnMenuItemLanguageB(wxCommandEvent& event)
 {
     int language = (event.GetId() - MenuItem2ndLang0->GetId()) & 0x07;
-    m_currentPage->SetLanguage(language, false);
-    std::cout << "Language handler " << m_currentPage->GetLanguage(false) << std::endl;
+    pageSet->CurrentPage()->SetLanguage(language, false);
+    std::cout << "Language handler " << pageSet->CurrentPage()->GetLanguage(false) << std::endl;
 }
 
 void wxTEDFrame::m_setLanguage(bool UsePrimary)
 {
-//    std::cout << "m_setLanguage " << m_rootPage->GetLanguage() << std::endl;
-  int language=m_currentPage->GetLanguage(UsePrimary);
+//    std::cout << "m_setLanguage " << pageSet->GetPage(0)->GetLanguage() << std::endl;
+  int language=pageSet->CurrentPage()->GetLanguage(UsePrimary);
   wxMenuItem** languages = UsePrimary ? PrimaryLanguage : SecondLanguage;
   languages[language]->Check(true);
     // idLanguageEnglish
@@ -2232,14 +2156,14 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
     std::ostringstream value("");
 
     // Page Number
-    value << std::hex << m_rootPage->GetPageNumber();    // Get Page Number formatted as a hex string
+    value << std::hex << pageSet->GetPageNumber();    // Get Page Number formatted as a hex string
     wxString s = wxString(value.str());
     m_propertiesDlg->TextCtrlPageNumber->SetValue(s); // And put it in the dialog
 
-    // Description
-    m_propertiesDlg->TextCtrlDescription->SetValue(wxString(m_rootPage->GetDescription()));
-    // Page Status flags
-    int ps=m_rootPage->GetPageStatus();
+    // Description (per page set)
+    m_propertiesDlg->TextCtrlDescription->SetValue(wxString(pageSet->GetDescription()));
+    // Page Status flags (per subpage)
+    int ps=pageSet->CurrentPage()->GetPageStatus();
     m_propertiesDlg->CheckBoxC4ErasePage ->SetValue((ps & PAGESTATUS_C4_ERASEPAGE)  >0);
     m_propertiesDlg->CheckBoxC5Newsflash ->SetValue((ps & PAGESTATUS_C5_NEWSFLASH)  >0);
     m_propertiesDlg->CheckBoxC6Subtitle  ->SetValue((ps & PAGESTATUS_C6_SUBTITLE)   >0);
@@ -2249,12 +2173,12 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
     // Counter/Timer
     value.str("");
 
-    // NOTE: Don't use m_rootPage, use m_currentPage so we can get timings per page
-    value << std::dec << m_currentPage->GetCycleTime();    // The cycle count / time (seconds)
+    // per subpage
+    value << std::dec << pageSet->CurrentPage()->GetCycleTime();    // The cycle count / time (seconds)
     s = wxString(value.str());
     m_propertiesDlg->TextCtrlCycleTime->SetValue(s); // And put it in the dialog
 
-    char mode=m_rootPage->GetCycleTimeMode();
+    char mode=pageSet->CurrentPage()->GetCycleTimeMode();
     if (mode=='C')
         m_propertiesDlg->RadioBoxCycleMode->SetSelection(0);
     else
@@ -2262,21 +2186,21 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
 
     // FASTEXT Link
     value.str("");
-    value << std::hex << m_rootPage->GetFastextLink(0);
+    value << std::hex << pageSet->CurrentPage()->GetFastextLink(0);
     m_propertiesDlg->TextCtrlFastext1->SetValue(value.str());
     value.str("");
-    value << std::hex << m_rootPage->GetFastextLink(1);
+    value << std::hex << pageSet->CurrentPage()->GetFastextLink(1);
     m_propertiesDlg->TextCtrlFastext2->SetValue(value.str());
     value.str("");
-    value << std::hex << m_rootPage->GetFastextLink(2);
+    value << std::hex << pageSet->CurrentPage()->GetFastextLink(2);
     m_propertiesDlg->TextCtrlFastext3->SetValue(value.str());
     value.str("");
-    value << std::hex << m_rootPage->GetFastextLink(3);
+    value << std::hex << pageSet->CurrentPage()->GetFastextLink(3);
     m_propertiesDlg->TextCtrlFastext4->SetValue(value.str());
 
     // FASTEXT Index
     value.str("");
-    value << std::hex << m_rootPage->GetFastextLink(5);
+    value << std::hex << pageSet->CurrentPage()->GetFastextLink(5);
     m_propertiesDlg->TextCtrlFastextIndex->SetValue(value.str());
 
     // Properties are now populated. Now show the dialog
@@ -2303,7 +2227,7 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
         // Page Number
         int pageNum;
         pageNum=std::strtol(m_propertiesDlg->TextCtrlPageNumber->GetValue().ToStdString().c_str(), &ptr, 16);
-        m_rootPage->SetPageNumber(pageNum);
+        pageSet->SetPageNumber(pageNum);
         //std::cout << "Page number=" << std::hex << pageNum << std::endl;
 
         // Page Status
@@ -2314,38 +2238,40 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
         b=m_propertiesDlg->CheckBoxC8Update        ->GetValue();    if (b) ps|=PAGESTATUS_C8_UPDATE;
         b=m_propertiesDlg->CheckBoxTransmitPage    ->GetValue();    if (b) ps|=PAGESTATUS_TRANSMITPAGE;
 
-        m_rootPage->SetPageStatus(ps); // Put ps back into the object
+        pageSet->CurrentPage()->SetPageStatus(ps); // Put ps back into the object
         //std::cout << "Page status=" << std::hex << ps << std::endl;
 
         // Description
-        m_rootPage->SetDescription(m_propertiesDlg->TextCtrlDescription->GetValue().ToStdString()); // Description
+        pageSet->SetDescription(m_propertiesDlg->TextCtrlDescription->GetValue().ToStdString()); // Description
 
         // Counter/Timer. NOTE: This is a per subpage property
         std::string str=m_propertiesDlg->TextCtrlCycleTime->GetValue().ToStdString(); // Read the time from the dialog
-        m_currentPage->SetCycleTime(atoi(str.c_str()));    // The cycle count / time (seconds)
+        pageSet->CurrentPage()->SetCycleTime(atoi(str.c_str()));    // The cycle count / time (seconds)
 
         char ctmode=(m_propertiesDlg->RadioBoxCycleMode->GetSelection())==0?'C':'T';
-        m_rootPage->SetCycleTimeMode(ctmode);
+        pageSet->GetPage(0)->SetCycleTimeMode(ctmode);
 
         // Fastext
         // Changed to ensure that ALL subpages have the same fastext links. It makes VBIT work much better
         //.. Hmm doesn't work
+        /* TODO FIX THIS MESS
         int link;
         link=std::strtol(m_propertiesDlg->TextCtrlFastext1->GetValue().ToStdString().c_str(), &ptr, 16);
-        // m_rootPage->SetFastextLink(0,link);
-        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(0,link);
+        // pageSet->GetPage(0)->SetFastextLink(0,link);
+        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(0,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext2->GetValue().ToStdString().c_str(), &ptr, 16);
-        //m_rootPage->SetFastextLink(1,link);
-        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(1,link);
+        //pageSet->GetPage(0)->SetFastextLink(1,link);
+        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(1,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext3->GetValue().ToStdString().c_str(), &ptr, 16);
-        //m_rootPage->SetFastextLink(2,link);
-        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(2,link);
+        //pageSet->GetPage(0)->SetFastextLink(2,link);
+        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(2,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastext4->GetValue().ToStdString().c_str(), &ptr, 16);
-        // m_rootPage->SetFastextLink(3,link);
-        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(3,link);
+        // pageSet->GetPage(0)->SetFastextLink(3,link);
+        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(3,link);
         link=std::strtol(m_propertiesDlg->TextCtrlFastextIndex->GetValue().ToStdString().c_str(), &ptr, 16);
-        // m_rootPage->SetFastextLink(5,link);
-        for (std::shared_ptr<TTXPage> p=m_rootPage;p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(5,link);
+        // pageSet->GetPage(0)->SetFastextLink(5,link);
+        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(5,link);
+          */
     }
 }
 
@@ -2423,7 +2349,7 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 
 void wxTEDFrame::OnClose(wxCloseEvent& event)
 {
-    if ( event.CanVeto() && m_rootPage->GetPageChanged() )
+    if ( event.CanVeto() && pageSet->GetPage(0)->GetPageChanged() )
     {
         if ( wxMessageBox("The file has not been saved... continue closing?",
                           "Please confirm",
@@ -2449,18 +2375,14 @@ void wxTEDFrame::OnMouseWheel(wxMouseEvent& event)
    //int delta=event.GetWheelDelta();
    int rotate=event.GetWheelRotation();
    //std::cout << "Wheel Delta is " << delta << " Distance=" << rotate << std::endl;
-   m_iPageCount=m_rootPage->GetPageCount();
    if (rotate>=0)
    {
-        iPage++;
-        if (iPage>=m_iPageCount) iPage=m_iPageCount-1;
+        pageSet->NextPage();
    }
    if (rotate<0)
    {
-        iPage--;
-        if (iPage<0) iPage=0;
+        pageSet->PreviousPage();
    }
-   m_currentPage=m_rootPage->GetPage(iPage);
 }
 
 void wxTEDFrame::OnLeftUp(wxMouseEvent& event)
@@ -2478,9 +2400,9 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
 {
   auto xloc=event.GetPosition().x;
   // std::cout << std::dec <<"Mouse move, yay!" << xloc <<  std::endl;
-  auto leftX=m_offset.x;
-  int rightX=leftX+m_ttxW*41*m_iPageCount;
-  if (xloc<leftX || xloc>rightX)
+  auto leftX = m_offset.x;
+  int rightX = leftX + m_ttxW * 41 * pageSet->GetPageCount();
+  if (xloc < leftX || xloc > rightX)
   {
     wxSetCursor (wxCursor (wxCURSOR_NO_ENTRY));
   }
@@ -2502,7 +2424,7 @@ void wxTEDFrame::OnMouseMove(wxMouseEvent& event)
         wxPoint p=event.GetPosition();
         p.x-=m_offset.x; // Which page are we on? 40 Characters + 1 space.
         p.x/=m_ttxW;
-        p.x-=iPage*41;
+        p.x-=pageSet->CurrentPageIndex()*41;
         p.y/=m_ttxH;
         if (p.x>40) p.x=40;
         if (p.y>=25) p.y=25;
@@ -2532,7 +2454,7 @@ void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
 {
   // Must be over an actual page or we ignore the click
   int x=event.GetPosition().x;
-  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *m_iPageCount)
+  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) * pageSet->GetPageCount())
   {
     m_dragging=true;
 
@@ -2548,8 +2470,9 @@ void wxTEDFrame::OnLeftDown(wxMouseEvent& event) // Left Mouse down
     // Need to think about the page number (each page 40 characters + one space)
     auto page=m_cursorPoint.x/41; // 40 Characters + 1 space
     std::cout << "Page " << page << std::endl;
-    iPage=page; // Set the page index
-    m_currentPage=m_rootPage->GetPage(iPage); // and set the pointer as the new current page
+    pageSet->SelectPage(page);
+    // iPage=page; // Set the page index
+    // pageSet->CurrentPage=pageSet->GetPage(iPage); // and set the pointer as the new current page
 
 
     // Now we know the page, where in the page did we click?
@@ -2604,7 +2527,7 @@ void wxTEDFrame::OnMenuItemCopySelected(wxCommandEvent& event)
     int ix=0;
     for (int y=y1;y<y2;y++)
     {
-        TTXLine* line=m_currentPage->GetRow(y);
+        TTXLine* line=pageSet->CurrentPage()->GetRow(y);
         if (!line)
         {
           std::cout << "[wxTEDMain::wxTEDFrame] We got a null line, we are about to crash" << std::endl;
@@ -2671,7 +2594,9 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
     (wxs.Find("teletextarchaeologist.org/editor")!=wxNOT_FOUND) // Jason
        )     // Paste edit.tf URL?
    {
-       load_from_hash(m_currentPage,wxs.char_str());
+     // @todo [!] paste into the current subpage
+     // so how are we going to handle pageSet->CurrentPage?
+       load_from_hash(pageSet.get(), wxs.char_str());
    }
    else
    {
@@ -2680,13 +2605,13 @@ void wxTEDFrame::OnMenuItemPasteSelected(wxCommandEvent& event)
        wxChar ch;
        int x=m_cursorPoint.x;
        int y=m_cursorPoint.y;
-       TTXLine* line=m_currentPage->GetRow(y++);
+       TTXLine* line=pageSet->CurrentPage()->GetRow(y++);
        for (uint16_t i=0;i<wxs.Length();i++)
        {
             ch=wxs[i];
             if (ch==0xff)
             {
-                line=m_currentPage->GetRow(y++);
+                line=pageSet->CurrentPage()->GetRow(y++);
                 x=m_cursorPoint.x;
             }
             else
@@ -2749,7 +2674,7 @@ void wxTEDFrame::SetRegion(int region, bool UsePrimary)
   // Selection bits in packets X/28/0 Format 1, X/28/4, M/29/0 and M/29/4
 
   SetRegionMenu(region, UsePrimary);
-  m_currentPage->SetRegion(region, UsePrimary);
+  pageSet->CurrentPage()->SetRegion(region, UsePrimary);
 }
 
 void wxTEDFrame::SetRegionMenu(int region, bool UsePrimary)
@@ -2842,8 +2767,8 @@ void wxTEDFrame::SetRegionMenu(int region, bool UsePrimary)
     }
 
     // Now check the appropriate menu item
-    m_currentPage->SetRegion(region, UsePrimary);
-    int language=m_currentPage->GetLanguage(UsePrimary);
+    pageSet->CurrentPage()->SetRegion(region, UsePrimary);
+    int language=pageSet->CurrentPage()->GetLanguage(UsePrimary);
     // Is language not checkable?
     if (!languages[language]->IsCheckable())
     {
@@ -2902,7 +2827,7 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
   uint8_t cc[25][40];
   for (uint8_t y=0;y<25;y++)
   {
-    TTXLine* line=m_currentPage->GetRow(y);
+    TTXLine* line=pageSet->CurrentPage()->GetRow(y);
     for (uint8_t x=0;x<40;x++)
     {
         uint8_t c=line->GetCharAt(x) & 0x7f;
@@ -2913,7 +2838,7 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
     {
       for (int i=0;i<8;i++) // First 8 characters are not taken from the header
           cc[y][i]=' ';
-      int k=m_rootPage->GetPageNumber()/0x100;
+      int k=pageSet->GetPageNumber()/0x100;
       if (k<0x100 && k>0x8ff)
           k=0x100;
       std::ostringstream val;
@@ -2927,7 +2852,7 @@ void wxTEDFrame::OnMenuItemExportTTX40Selected(wxCommandEvent& event)
   // Convert to a teletext 40 URL
   // TODO: Implement character set
   char page[1300];
-  save_to_hash(1, page,cc, "http://edit.tf", m_currentPage);
+  save_to_hash(1, page,cc, "http://edit.tf", pageSet.get());
   CopyTextToClipboard(page);
   // Launch a browser with the URL
   // Widen the URL
@@ -2958,19 +2883,19 @@ void wxTEDFrame::OnKeyDown(wxKeyEvent& event)
 
 void wxTEDFrame::OnKeyUp(wxKeyEvent& event)
 {
-    std::cout << "TRACE2:OnKeyUp..." << std::endl;
-    auto modifier = event.GetModifiers();
+  std::cout << "TRACE2:OnKeyUp..." << std::endl;
+  auto modifier = event.GetModifiers();
 
-    // int k=event.GetKeyCode();
-    if (modifier == WXK_ALT)
-    {
-        m_Released=true;
-    }
-    if (modifier == wxMOD_CONTROL)
-    {
-      m_controlModifier = false;
-    }
-    event.Skip();
+  // int k=event.GetKeyCode();
+  if (modifier == WXK_ALT)
+  {
+      m_Released=true;
+  }
+  if (modifier == wxMOD_CONTROL)
+  {
+    m_controlModifier = false;
+  }
+  event.Skip();
 }
 
 void wxTEDFrame::OnMenuItemNewWindow(wxCommandEvent& event)
@@ -2986,7 +2911,7 @@ void wxTEDFrame::OnMenuItemZXNetSelected(wxCommandEvent& event)
   uint8_t cc[25][40];
   for (uint8_t y=0;y<25;y++)
   {
-    TTXLine* line=m_currentPage->GetRow(y);
+    TTXLine* line=pageSet->CurrentPage()->GetRow(y);
     for (uint8_t x=0;x<40;x++)
     {
         uint8_t c=line->GetCharAt(x) & 0x7f;
@@ -2997,7 +2922,7 @@ void wxTEDFrame::OnMenuItemZXNetSelected(wxCommandEvent& event)
     {
       for (int i=0;i<8;i++) // First 8 characters are not taken from the header
           cc[y][i]=' ';
-      int k=m_rootPage->GetPageNumber()/0x100;
+      int k=pageSet->GetPageNumber()/0x100;
       if (k<0x100 && k>0x8ff)
           k=0x100;
       std::ostringstream val;
@@ -3011,7 +2936,7 @@ void wxTEDFrame::OnMenuItemZXNetSelected(wxCommandEvent& event)
   // Convert to a teletext 40 URL
   // TODO: Implement character set
   char page[1300];
-  save_to_hash(1, page,cc, "http://zxnet.co.uk/teletext/editor", m_currentPage);
+  save_to_hash(1, page,cc, "http://zxnet.co.uk/teletext/editor", pageSet.get());
   CopyTextToClipboard(page);
   // Launch a browser with the URL
   // Widen the URL
@@ -3027,7 +2952,7 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
   // find the actual character row/column
   // Must be over an actual page or we ignore the click
   int x=event.GetPosition().x;
-  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) *m_iPageCount)
+  if (x>=m_offset.x && x<=m_offset.x+static_cast<int>(m_ttxW*41) * pageSet->GetPageCount())
   {
 
     std::cout << "Right button pressed..." << std::endl;
@@ -3041,7 +2966,7 @@ void wxTEDFrame::OnRightDown(wxMouseEvent& event)
     m_cursorPoint.y/=m_ttxH;
 
     // What character is at this position?
-    TTXLine* line=m_currentPage->GetRow(m_cursorPoint.y);
+    TTXLine* line=pageSet->CurrentPage()->GetRow(m_cursorPoint.y);
     if (!line)
     {
       std::cout << "[wxTEDFrame::OnRightDown] We got a null line, we are about to crash" << std::endl;
@@ -3092,35 +3017,32 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     auto pathStr=LoadPageFileDialog->GetPath().ToStdString();
 
     wxString filename=LoadPageFileDialog->GetFilename();
-    m_rootPage = std::shared_ptr<TTXPage>(new TTXPage(pathStr,filename.ToStdString()));
+    pageSet = std::make_unique<TTXPageSet>(pathStr,filename.ToStdString());
 
     // Change the filename so that we can't overwrite it by mistake.
-    m_rootPage->SetShortFilename("");
-    m_rootPage->SetSourcePage("");
-    m_rootPage->SetPageNumber(0x1ff); // Invalid
+    pageSet->SetShortFilename("");
+    pageSet->SetSourcePage("");
+    pageSet->SetPageNumber(0x1ff00); // Invalid
 
-    // MenuItemSave->Enable(false); // Protect the template, do not enable save
+    // Protect the template, do not enable save
     EnableSave(false);
 
-    m_iPageCount=m_rootPage->GetPageCount();
-
     m_setLanguage(true);
-    iPage=0;
     m_offset.x=0;
 
-    SetRegionMenu(m_rootPage->GetRegion(true), true); // Region language
+    SetRegionMenu(pageSet->GetPage(0)->GetRegion(true), true); // Region language
 
-    SetTitle(m_rootPage->GetSourcePage());
+    SetTitle("Template");
 
     // Update the palette in case it is visible
-    paletteFrame->SetX28(m_rootPage->GetX28Row());
+    paletteFrame->SetX28(pageSet->GetPage(0)->GetX28Row());
 
-    m_currentPage=m_rootPage;
+    // TODO FIX THIS pageSet->CurrentPage=pageSet->GetPage(0);
 
     // Force an update now
     Refresh();
     Update();
-    ShowPreviewMenu();
+    ShowCarouselMenu();
   }
 
 }
@@ -3130,7 +3052,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
 // @todo Map this to ESC-I
 void wxTEDFrame::OnMenuDeleteLineSelected(wxCommandEvent& event)
 {
-  m_currentPage->DeleteLine(m_cursorPoint);
+  pageSet->CurrentPage()->DeleteLine(m_cursorPoint);
 }
 
 // Scroll lines below down one, and leave current line blank
@@ -3138,7 +3060,7 @@ void wxTEDFrame::OnMenuDeleteLineSelected(wxCommandEvent& event)
 // @todo Map ESC-i onto this
 void wxTEDFrame::OnMenuInsertLineSelected(wxCommandEvent& event)
 {
-  m_currentPage->InsertLine(m_cursorPoint);
+  pageSet->CurrentPage()->InsertLine(m_cursorPoint);
 }
 
 // This does nothing. Where are my events going?
@@ -3183,30 +3105,28 @@ void wxTEDFrame::OnMenuOpenPage(wxCommandEvent& event)
     wxString filename=LoadPageFileDialog->GetFilename();
     std::cout << "the filename was " << filename << std::endl;
     std::cout << "Loading a teletext page " << str << " path " << m_path << std::endl;
-    m_rootPage = std::shared_ptr<TTXPage>(new TTXPage(str, filename.ToStdString()));
+    // @TODO, we might want to warn the user that they are destroying the previous page
+    pageSet = std::make_unique<TTXPageSet>(str, filename.ToStdString());
 
-    // MenuItemSave->Enable(m_rootPage->IsLoaded()); // Enable save if we had a good load
-    EnableSave(m_rootPage->IsLoaded());
-
-    m_iPageCount=m_rootPage->GetPageCount();
+    // MenuItemSave->Enable(pageSet->GetPage(0)->IsLoaded()); // Enable save if we had a good load
+    EnableSave(pageSet->IsLoaded());
 
     m_setLanguage(true);
-    iPage=0;
     m_offset.x=0;
 
-    SetRegionMenu(m_rootPage->GetRegion(true), true); // Region language
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // Primary Region language
+    SetRegionMenu(pageSet->CurrentPage()->GetRegion(false), false); // Secondary Region language
 
-    SetTitle(m_rootPage->GetSourcePage());
+    SetTitle(pageSet->GetSourcePage());
 
     // Update the palette in case it is visible
-    paletteFrame->SetX28(m_rootPage->GetX28Row());
+    paletteFrame->SetX28(pageSet->CurrentPage()->GetX28Row());
 
-    m_currentPage=m_rootPage;
 
     // Force an update now
     Refresh();
     Update();
-    ShowPreviewMenu();
+    ShowCarouselMenu();
 }
 
 /// Preview a carousel.
@@ -3214,7 +3134,10 @@ void wxTEDFrame::OnPreviewRunSelected(wxCommandEvent& event)
 {
     // Enter Preview mode.
     // Cancelled by any key
-    m_previewMode = true;
+    m_previewCarouselMode = true;
+
+    previewSavedCaption = GetTitle(); // Save the caption for later
+    SetTitle("Carousel running. Press any key to stop"); // Set a new caption
     UpdatePreview();
 }
 
@@ -3232,15 +3155,10 @@ void wxTEDFrame::UpdatePreview()
     m_bounceMode = ModeBounce->IsChecked();
 }
 
-void wxTEDFrame::ShowPreviewMenu()
+void wxTEDFrame::ShowCarouselMenu()
 {
-    const bool show{ m_iPageCount>1 };
-    std::clog << "[ShowPreviewMenu] show = " << (show?"SHOW":"HIDE") << std::endl;
-    //MenuPreview->Enable(idRadioMode1, show);
-    //MenuPreview->Enable(idRadioMode2, show);
-    //MenuPreview->Enable(idRadioMode3, show);
-    //MenuPreview->Enable(idRadioMode4, show);
-    //MenuPreview->Enable(idRadioMode5, show);
+    const bool show{ pageSet->GetPageCount() > 1 };
+    MenuBar->EnableTop(3, show); // Third row is carousel.
 }
 
 void wxTEDFrame::OnPreviewSpeed(wxCommandEvent& event)
@@ -3276,9 +3194,15 @@ void wxTEDFrame::OnMenuItemPaletteSelected(wxCommandEvent& event)
 {
   // "todo Get cluts from the X28 row if it exists and populate the palette
   std::shared_ptr<TTXRow28> x28row;
-  x28row = m_currentPage->GetX28Row(); // @todo If we change subpage, do we set the correct page???
+  x28row = pageSet->CurrentPage()->GetX28Row(); // @todo If we change subpage, do we set the correct page???
   paletteFrame->SetX28(x28row);
   paletteFrame->Show(true);
 }
 
 
+
+void wxTEDFrame::OnMenuItemShowCodesSelected(wxCommandEvent& event)
+{
+  bool checked = MenuItemShowCodes-> IsChecked();
+  m_ShowMarkup=checked;
+}

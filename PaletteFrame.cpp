@@ -380,11 +380,6 @@ wxColour Pal2wxColour(unsigned int pal)
   return wxColour(r, g, b);
 }
 
-unsigned int wxColour2Pal(wxColour wxc)
-{
-  return 0; // @todo
-}
-
 void PaletteFrame::OnClutPanel1MouseEnter(wxMouseEvent& event)
 {
   // Set the cursor to unclickable
@@ -397,11 +392,12 @@ void PaletteFrame::OnClutPanel1MouseLeave(wxMouseEvent& event)
   SetCursor(*wxSTANDARD_CURSOR);
 }
 
+/// Set the palette back to default colours and mappings
 void PaletteFrame::OnDefaultButtonClick(wxCommandEvent& event)
 {
   x28row->defaultClut();
   x28row->SetRemap(0);
-  // @todo black background substitution
+  x28row->SetBlackBackgroundSubstitution(false);
   SetX28(x28row);
 }
 

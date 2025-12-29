@@ -24,9 +24,9 @@ class TTXRow28 : public TTXLine
     unsigned int Remap(unsigned int colour, bool useForeground);
 
     /** SetRemap. Controls the CLUT remapping.
-     *  @param mapval - CLUT remapping value 0..7
+     *  @param mapVal - CLUT remapping value 0..7
      */
-    void SetRemap(unsigned int mapVal){remap = mapVal;}; // @todo Check range of value
+    void SetRemap(unsigned int mapVal){remap = mapVal & 0x07;};
 
     /** GetRemap. Controls the CLUT remapping.
      *  @return - The current CLUT remapping value 0..7
@@ -109,7 +109,7 @@ class TTXRow28 : public TTXLine
     unsigned int pageCoding = 0; /// Page coding (dc 6..4) default 2 = Hamming DC + 13 triples
     unsigned int defaultG0G2CharacterSet = 0; /// Primary character set. 4 bits region and 3 bits language. 0 = Region 0 English
     unsigned int secondG0G2CharacterSet = 0; /// Second character set. 4 bits region and 3 bits language. 0 = region 0 English
-    unsigned int clut[4][8]; /// Four CLUTs of eight colours each 12 bits @todo load this up with the standard defaults
+    unsigned int clut[4][8]; /// Four CLUTs of eight colours each 12 bits. Init with defaultClut()
     unsigned int defaultScreenColour = 0; /// default black. [!] Bits 4,3 are CLUT, 2,1,0 are Colour
     unsigned int defaultRowColour= 0; /// default black [!] Bits 4,3 are CLUT, 2,1,0 are Colour
     unsigned int remap = 0; /// 0..7 Colour Table remapping.
