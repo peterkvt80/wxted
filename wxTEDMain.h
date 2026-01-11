@@ -3,7 +3,7 @@
  * Purpose:   Defines Application Frame
  * Author:    Peter Kwan (peterk.vt80@gmail.com)
  * Created:   2014-10-30
- * Copyright: Peter Kwan (c) 2014-2025
+ * Copyright: Peter Kwan (c) 2014-2026
  * License:
  *
  * Permission to use, copy, modify, and distribute this software
@@ -58,10 +58,7 @@
 
 
 // Version number
-#define VERSION_STRING wxT("1.59")
-
-// Hacky stand in for Magenta
-#define wxMAGENTA wxLIGHT_GREY
+#define VERSION_STRING wxT("1.60")
 
 // Publish setup
 #include "PublishSetupDialog.h"
@@ -77,8 +74,11 @@ class wxTEDFrame: public wxFrame
         virtual ~wxTEDFrame();
         //inline std::shared_ptr<TTXPage> Page(){return m_rootPage;};
 
+
     private:
 
+      static inline const wxColour wxMAGENTA{255, 0, 255}; // Teletext colour not defined as standard
+      static inline const wxColour wxORANGE{0xff, 0x88, 0x00}; // Fallback colour for errors
       bool m_escapeMode; /// True if the last key pressed was Escape
       bool m_controlModifier; /// True if the control key is currently active
       int m_menuCount;      // How many menus are open

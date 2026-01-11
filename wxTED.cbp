@@ -71,6 +71,8 @@
 			<Add option="-std=c++17" />
 			<Add option="-std=c17" />
 			<Add option="-m64" />
+			<Add option="-gdwarf-4" />
+			<Add option="-g" />
 			<Add option="-pipe" />
 			<Add option="`wx-config --cxxflags`" />
 			<Add option="-D__GNUWIN32__" />
@@ -84,6 +86,8 @@
 			<Add directory="%WXWIN%/include" />
 		</ResourceCompiler>
 		<Linker>
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
 			<Add option="-m64" />
 			<Add option="`wx-config --libs`" />
 			<Add library="libwxmsw33u_richtext.a" />

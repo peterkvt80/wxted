@@ -27,8 +27,7 @@ If the build wants various dlls then bundle those in too.
 7) Open the Github repo online https://github.com/peterkvt80/wxted 
    Click Releases. Press the "Draft a new release" button. Fill in the next tag number.
    Write a release description.
-   Zip the setup_a_bc.exe.
-   Drop the zip onto the release.
+   Drop setup_a.bc.exe onto the release.
   Click the Release now button.
   
 Attention

@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan
  * License:
   *
- * Copyright (C) 2014-2025, Peter Kwan
+ * Copyright (C) 2014-2026, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -641,8 +641,6 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
     paintDC.SetBackgroundMode(wxSOLID); // Otherwise the background colour is transparent!
     doubleHeightDC.SetBackgroundMode(wxSOLID); // Otherwise the background colour is transparent!
 
-    wxColour* magenta=new wxColour(255,0,255); // wxMagenta is not a thing
-
     /* page */
 
     // Assume horizontal subpages for now
@@ -663,9 +661,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         unsigned char R = (clrRemap >> 8) & 0x0f;
         unsigned char G = (clrRemap >> 4) & 0x0f;
         unsigned char B = (clrRemap) & 0x0f;
-        const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
-        doubleHeightDC.SetTextForeground(*wxc);
-        paintDC.SetTextForeground(*wxc);
+        const wxColour wxc(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+        doubleHeightDC.SetTextForeground(wxc);
+        paintDC.SetTextForeground(wxc);
       };
 
       auto SetTTXBackgroundColour = [&](const unsigned int colour)
@@ -675,9 +673,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         unsigned char R = (clrRemap >> 8) & 0x0f;
         unsigned char G = (clrRemap >> 4) & 0x0f;
         unsigned char B = (clrRemap) & 0x0f;
-        const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
-        doubleHeightDC.SetTextBackground(*wxc);
-        paintDC.SetTextBackground(*wxc);
+        const wxColour wxc(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+        doubleHeightDC.SetTextBackground(wxc);
+        paintDC.SetTextBackground(wxc);
       };
 
       auto SetTTXBrushColour = [&](const unsigned int colour, bool foreground)
@@ -687,9 +685,9 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         unsigned char R = (clrRemap >> 8) & 0x0f;
         unsigned char G = (clrRemap >> 4) & 0x0f;
         unsigned char B = (clrRemap) & 0x0f;
-        const wxColour* wxc = new wxColour(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
-        paintDC.SetBrush(wxBrush(*wxc));
-        doubleHeightDC.SetBrush(wxBrush(*wxc));
+        const wxColour wxc(R<<4 | R, G<<4 | G, B<<4 | B); // ttxCode2wxColour(colour);
+        paintDC.SetBrush(wxBrush(wxc));
+        doubleHeightDC.SetBrush(wxBrush(wxc));
       };
 
 
@@ -1252,7 +1250,6 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
       } // For each text row
       offset.x+=m_ttxW*41; // The next subpage is drawn with a one character gap
     } // for each page that we can show
-    delete magenta;
     // cursor
 
     if (m_blinkToggle==true)
@@ -1865,10 +1862,8 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     wxS.SetWidth(200);
     wxS.SetHeight(600);
 
-
-    helpFrame=new HelpFrame(this->GetDefaultItem(),1,wxP,wxS);
-
-
+    // Make these once and keep them until we quit
+    helpFrame = new HelpFrame(this->GetDefaultItem(),1,wxP,wxS);
     paletteFrame = new PaletteFrame(this->GetDefaultItem(), 1, wxPoint(100,100), wxSize(500, 200));
 
     pageSet->GetPage(0)->SetPageChanged(false);
@@ -3181,11 +3176,11 @@ const wxColour* wxTEDFrame::ttxCode2wxColour(const unsigned int colour) // Given
     case 2: return wxGREEN;
     case 3: return wxYELLOW;
     case 4: return wxBLUE;
-    case 5: return new wxColour(0xff, 0x00, 0xff); // Magenta
+    case 5: return &wxMAGENTA; // new wxColour(0xff, 0x00, 0xff); // Magenta
     case 6: return wxCYAN;
     case 7: return wxWHITE;
     default:
-      return(new wxColour(0xff, 0x88, 0x00));
+      return &wxORANGE;
   }
 }
 
