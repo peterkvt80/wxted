@@ -1879,13 +1879,14 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
 
 wxTEDFrame::~wxTEDFrame()
 {
-    delete helpFrame;
-    delete paletteFrame;
-    delete m_config;
-    //(*Destroy(wxTEDFrame)
-    LoadPageFileDialog->Destroy();
-    FileDialogSaveAs->Destroy();
-    //*)
+  helpFrame->Destroy();
+  paletteFrame->Destroy();
+  delete m_config;
+  delete m_propertiesDlg;
+  //(*Destroy(wxTEDFrame)
+  LoadPageFileDialog->Destroy();
+  FileDialogSaveAs->Destroy();
+  //*)
 }
 
 void wxTEDFrame::OnQuit(wxCommandEvent& event)
