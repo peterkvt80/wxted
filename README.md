@@ -70,6 +70,7 @@ g++ -o wxTED \
     wxTEDMain.cpp \
     src/T42.cpp \
     src/HeaderPacket.cpp \
+    ttxpageset.cpp \    
     `wx-config --cxxflags --libs core,base,adv,html` \
     -std=c++17
 ```
