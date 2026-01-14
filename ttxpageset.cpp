@@ -757,8 +757,8 @@ bool TTXPageSet::SavePage(std::string filename)
       // My spidey instincts tell me that this code could be factorised
       p->OutputLines(ttxfile, GetPageNumber());
       ttxfile << std::hex;
-      // Don't output null links
-      if (p->GetLink(0) != 0x8ff)
+      // Output links if any link is valid
+      if ( p->GetLink(0) != 0x8ff || p->GetLink(1) != 0x8ff || p->GetLink(2) != 0x8ff || p->GetLink(3) != 0x8ff )
       {
         ttxfile << "FL,"
         << p->GetLink(0) << ","

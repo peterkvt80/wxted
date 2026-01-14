@@ -4,7 +4,7 @@
  * Description       : Class for a teletext page set. ie. a page and none or more subpages
  * Compiler          : C++
  *
- * Copyright (C) 2025, Peter Kwan
+ * Copyright (C) 2025 - 2026, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby

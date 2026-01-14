@@ -1951,7 +1951,7 @@ void wxTEDFrame::OnMenuSaveAs(wxCommandEvent& event)
 
 void wxTEDFrame::OnAbout(wxCommandEvent& event)
 {
-    wxString msg="Teletext editor\n(c) 2014-2025, Peter Kwan.\nwxTED";
+    wxString msg="Teletext editor\n(c) 2014-2026, Peter Kwan.\nwxTED";
     wxMessageBox(msg, _("Welcome to wxTED ")+VERSION_STRING);
 }
 
@@ -2213,61 +2213,55 @@ void wxTEDFrame::OnMenuItemProperties(wxCommandEvent& event)
 
     if (result==wxID_OK)
     {
-        char * ptr;
-        bool b;
+      char * ptr;
+      bool b;
 
-        int mask=PAGESTATUS_C4_ERASEPAGE | PAGESTATUS_C5_NEWSFLASH | PAGESTATUS_C6_SUBTITLE | PAGESTATUS_C7_SUPPRESSHDR |
-        PAGESTATUS_C8_UPDATE | PAGESTATUS_TRANSMITPAGE; // Other flags are irrelevant
-        ps&=~mask;   // Remove all the bits that we test
+      int mask=PAGESTATUS_C4_ERASEPAGE | PAGESTATUS_C5_NEWSFLASH | PAGESTATUS_C6_SUBTITLE | PAGESTATUS_C7_SUPPRESSHDR |
+      PAGESTATUS_C8_UPDATE | PAGESTATUS_TRANSMITPAGE; // Other flags are irrelevant
+      ps&=~mask;   // Remove all the bits that we test
 
-        // Page Number
-        int pageNum;
-        pageNum=std::strtol(m_propertiesDlg->TextCtrlPageNumber->GetValue().ToStdString().c_str(), &ptr, 16);
-        pageSet->SetPageNumber(pageNum);
-        //std::cout << "Page number=" << std::hex << pageNum << std::endl;
+      // Page Number
+      int pageNum;
+      pageNum=std::strtol(m_propertiesDlg->TextCtrlPageNumber->GetValue().ToStdString().c_str(), &ptr, 16);
+      pageSet->SetPageNumber(pageNum);
+      //std::cout << "Page number=" << std::hex << pageNum << std::endl;
 
-        // Page Status
-        b=m_propertiesDlg->CheckBoxC4ErasePage     ->GetValue();    if (b) ps|=PAGESTATUS_C4_ERASEPAGE;
-        b=m_propertiesDlg->CheckBoxC5Newsflash     ->GetValue();    if (b) ps|=PAGESTATUS_C5_NEWSFLASH;
-        b=m_propertiesDlg->CheckBoxC6Subtitle      ->GetValue();    if (b) ps|=PAGESTATUS_C6_SUBTITLE;
-        b=m_propertiesDlg->CheckBoxC7SuppressHeader->GetValue();    if (b) ps|=PAGESTATUS_C7_SUPPRESSHDR;
-        b=m_propertiesDlg->CheckBoxC8Update        ->GetValue();    if (b) ps|=PAGESTATUS_C8_UPDATE;
-        b=m_propertiesDlg->CheckBoxTransmitPage    ->GetValue();    if (b) ps|=PAGESTATUS_TRANSMITPAGE;
+      // Page Status
+      b=m_propertiesDlg->CheckBoxC4ErasePage     ->GetValue();    if (b) ps|=PAGESTATUS_C4_ERASEPAGE;
+      b=m_propertiesDlg->CheckBoxC5Newsflash     ->GetValue();    if (b) ps|=PAGESTATUS_C5_NEWSFLASH;
+      b=m_propertiesDlg->CheckBoxC6Subtitle      ->GetValue();    if (b) ps|=PAGESTATUS_C6_SUBTITLE;
+      b=m_propertiesDlg->CheckBoxC7SuppressHeader->GetValue();    if (b) ps|=PAGESTATUS_C7_SUPPRESSHDR;
+      b=m_propertiesDlg->CheckBoxC8Update        ->GetValue();    if (b) ps|=PAGESTATUS_C8_UPDATE;
+      b=m_propertiesDlg->CheckBoxTransmitPage    ->GetValue();    if (b) ps|=PAGESTATUS_TRANSMITPAGE;
 
-        pageSet->CurrentPage()->SetPageStatus(ps); // Put ps back into the object
-        //std::cout << "Page status=" << std::hex << ps << std::endl;
+      pageSet->CurrentPage()->SetPageStatus(ps); // Put ps back into the object
+      //std::cout << "Page status=" << std::hex << ps << std::endl;
 
-        // Description
-        pageSet->SetDescription(m_propertiesDlg->TextCtrlDescription->GetValue().ToStdString()); // Description
+      // Description
+      pageSet->SetDescription(m_propertiesDlg->TextCtrlDescription->GetValue().ToStdString()); // Description
 
-        // Counter/Timer. NOTE: This is a per subpage property
-        std::string str=m_propertiesDlg->TextCtrlCycleTime->GetValue().ToStdString(); // Read the time from the dialog
-        pageSet->CurrentPage()->SetCycleTime(atoi(str.c_str()));    // The cycle count / time (seconds)
+      // Counter/Timer. NOTE: This is a per subpage property
+      std::string str=m_propertiesDlg->TextCtrlCycleTime->GetValue().ToStdString(); // Read the time from the dialog
+      pageSet->CurrentPage()->SetCycleTime(atoi(str.c_str()));    // The cycle count / time (seconds)
 
-        char ctmode=(m_propertiesDlg->RadioBoxCycleMode->GetSelection())==0?'C':'T';
-        pageSet->GetPage(0)->SetCycleTimeMode(ctmode);
+      char ctmode=(m_propertiesDlg->RadioBoxCycleMode->GetSelection())==0?'C':'T';
+      pageSet->GetPage(0)->SetCycleTimeMode(ctmode);
 
-        // Fastext
-        // Changed to ensure that ALL subpages have the same fastext links. It makes VBIT work much better
-        //.. Hmm doesn't work
-        /* TODO FIX THIS MESS
-        int link;
-        link=std::strtol(m_propertiesDlg->TextCtrlFastext1->GetValue().ToStdString().c_str(), &ptr, 16);
-        // pageSet->GetPage(0)->SetFastextLink(0,link);
-        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(0,link);
-        link=std::strtol(m_propertiesDlg->TextCtrlFastext2->GetValue().ToStdString().c_str(), &ptr, 16);
-        //pageSet->GetPage(0)->SetFastextLink(1,link);
-        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(1,link);
-        link=std::strtol(m_propertiesDlg->TextCtrlFastext3->GetValue().ToStdString().c_str(), &ptr, 16);
-        //pageSet->GetPage(0)->SetFastextLink(2,link);
-        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(2,link);
-        link=std::strtol(m_propertiesDlg->TextCtrlFastext4->GetValue().ToStdString().c_str(), &ptr, 16);
-        // pageSet->GetPage(0)->SetFastextLink(3,link);
-        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(3,link);
-        link=std::strtol(m_propertiesDlg->TextCtrlFastextIndex->GetValue().ToStdString().c_str(), &ptr, 16);
-        // pageSet->GetPage(0)->SetFastextLink(5,link);
-        for (std::shared_ptr<TTXPage> p=pageSet->GetPage(0);p!=NULL;p=p->Getm_SubPage()) p->SetFastextLink(5,link);
-          */
+      // Each page can have its own Fastext packet. [!] Link 4 is skipped by this dialog
+      int link;
+      // pointer to the current page
+      auto p = pageSet->CurrentPage();
+      link=std::strtol(m_propertiesDlg->TextCtrlFastext1->GetValue().ToStdString().c_str(), &ptr, 16);
+      p->SetFastextLink(0,link);
+      link=std::strtol(m_propertiesDlg->TextCtrlFastext2->GetValue().ToStdString().c_str(), &ptr, 16);
+      p->SetFastextLink(1,link);
+      link=std::strtol(m_propertiesDlg->TextCtrlFastext3->GetValue().ToStdString().c_str(), &ptr, 16);
+      p->SetFastextLink(2,link);
+      link=std::strtol(m_propertiesDlg->TextCtrlFastext4->GetValue().ToStdString().c_str(), &ptr, 16);
+      p->SetFastextLink(3,link);
+      link=std::strtol(m_propertiesDlg->TextCtrlFastextIndex->GetValue().ToStdString().c_str(), &ptr, 16);
+      p->SetFastextLink(5,link);
+
     }
 }
 
