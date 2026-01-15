@@ -57,15 +57,15 @@ class PageSettingsDialog: public wxDialog
 		static const wxWindowID ID_RADIOBOXCYCLE;
 		static const wxWindowID ID_CHECKBOXC4ERASEPAGE;
 		static const wxWindowID ID_CHECKBOXC5Newsflash;
-		static const wxWindowID ID_CHECKBOXTransmitPage;
-		static const wxWindowID ID_CHECKBOXC8UPDATE;
-		static const wxWindowID ID_CHECKBOXC7SuppressHeader;
 		static const wxWindowID ID_CHECKBOXC6Subtitle;
+		static const wxWindowID ID_CHECKBOXC7SuppressHeader;
+		static const wxWindowID ID_CHECKBOXC8UPDATE;
+		static const wxWindowID ID_CHECKBOXTransmitPage;
 		static const wxWindowID ID_TEXTCTRLFASTEXTLINK1;
-		static const wxWindowID ID_TEXTCTRLFASTEXTINDEX;
-		static const wxWindowID ID_TEXTCTRLFASTEXTLINK4;
-		static const wxWindowID ID_TEXTCTRLFASTEXTLINK3;
 		static const wxWindowID ID_TEXTCTRLFASTEXTLINK2;
+		static const wxWindowID ID_TEXTCTRLFASTEXTLINK3;
+		static const wxWindowID ID_TEXTCTRLFASTEXTLINK4;
+		static const wxWindowID ID_TEXTCTRLFASTEXTINDEX;
 		//*)
 
 	private:

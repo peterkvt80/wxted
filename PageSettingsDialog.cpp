@@ -17,15 +17,15 @@ const wxWindowID PageSettingsDialog::ID_TEXTCTRLCYCLETIME = wxNewId();
 const wxWindowID PageSettingsDialog::ID_RADIOBOXCYCLE = wxNewId();
 const wxWindowID PageSettingsDialog::ID_CHECKBOXC4ERASEPAGE = wxNewId();
 const wxWindowID PageSettingsDialog::ID_CHECKBOXC5Newsflash = wxNewId();
-const wxWindowID PageSettingsDialog::ID_CHECKBOXTransmitPage = wxNewId();
-const wxWindowID PageSettingsDialog::ID_CHECKBOXC8UPDATE = wxNewId();
-const wxWindowID PageSettingsDialog::ID_CHECKBOXC7SuppressHeader = wxNewId();
 const wxWindowID PageSettingsDialog::ID_CHECKBOXC6Subtitle = wxNewId();
+const wxWindowID PageSettingsDialog::ID_CHECKBOXC7SuppressHeader = wxNewId();
+const wxWindowID PageSettingsDialog::ID_CHECKBOXC8UPDATE = wxNewId();
+const wxWindowID PageSettingsDialog::ID_CHECKBOXTransmitPage = wxNewId();
 const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK1 = wxNewId();
-const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTINDEX = wxNewId();
-const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK4 = wxNewId();
-const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK3 = wxNewId();
 const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK2 = wxNewId();
+const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK3 = wxNewId();
+const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTLINK4 = wxNewId();
+const wxWindowID PageSettingsDialog::ID_TEXTCTRLFASTEXTINDEX = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(PageSettingsDialog,wxDialog)
@@ -44,9 +44,6 @@ PageSettingsDialog::PageSettingsDialog(wxWindow* parent,wxWindowID id,const wxPo
 	StaticText2 = new wxStaticText(this, ID_STATICTEXT3, _("Description"), wxPoint(8,48), wxSize(72,16), 0, _T("ID_STATICTEXT3"));
 	StaticTextLabel1 = new wxStaticText(this, ID_STATICTEXT1, _("Cycle time"), wxPoint(8,88), wxSize(72,16), 0, _T("ID_STATICTEXT1"));
 	TextCtrlPageNumber = new wxTextCtrl(this, ID_TEXTCTRLPAGENUMBER, _T("10000"), wxPoint(88,16), wxSize(56,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLPAGENUMBER"));
-	ButtonOK = new wxButton(this, wxID_OK, _("OK"), wxPoint(184,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_OK"));
-	ButtonOK->SetHelpText(_("Keep the current settings"));
-	ButtonCancel = new wxButton(this, wxID_CANCEL, _("Cancel"), wxPoint(272,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_CANCEL"));
 	TextCtrlDescription = new wxTextCtrl(this, ID_TEXTCTRLDESCRIPTION, _("Text"), wxPoint(88,48), wxSize(304,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLDESCRIPTION"));
 	TextCtrlCycleTime = new wxTextCtrl(this, ID_TEXTCTRLCYCLETIME, _T("8"), wxPoint(88,88), wxSize(72,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLCYCLETIME"));
 	wxString __wxRadioBoxChoices_1[2] =
@@ -54,29 +51,32 @@ PageSettingsDialog::PageSettingsDialog(wxWindow* parent,wxWindowID id,const wxPo
 	  _("Cycled"),
 	  _("Timed")
 	};
-	RadioBoxCycleMode = new wxRadioBox(this, ID_RADIOBOXCYCLE, _("Mode"), wxPoint(0,120), wxSize(88,64), 2, __wxRadioBoxChoices_1, 1, 0, wxDefaultValidator, _T("ID_RADIOBOXCYCLE"));
+	RadioBoxCycleMode = new wxRadioBox(this, ID_RADIOBOXCYCLE, _("Mode"), wxPoint(8,128), wxDefaultSize, 2, __wxRadioBoxChoices_1, 2, 0, wxDefaultValidator, _T("ID_RADIOBOXCYCLE"));
 	RadioBoxCycleMode->SetSelection(1);
 	CheckBoxC4ErasePage = new wxCheckBox(this, ID_CHECKBOXC4ERASEPAGE, _("C4 Erase Page"), wxPoint(192,88), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC4ERASEPAGE"));
 	CheckBoxC4ErasePage->SetValue(false);
 	CheckBoxC5Newsflash = new wxCheckBox(this, ID_CHECKBOXC5Newsflash, _("C5 Newsflash"), wxPoint(192,112), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC5Newsflash"));
 	CheckBoxC5Newsflash->SetValue(false);
-	CheckBoxTransmitPage = new wxCheckBox(this, ID_CHECKBOXTransmitPage, _("Transmit Page"), wxPoint(192,208), wxSize(104,13), 0, wxDefaultValidator, _T("ID_CHECKBOXTransmitPage"));
-	CheckBoxTransmitPage->SetValue(false);
-	CheckBoxC8Update = new wxCheckBox(this, ID_CHECKBOXC8UPDATE, _("C8 Update"), wxPoint(192,184), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC8UPDATE"));
-	CheckBoxC8Update->SetValue(false);
-	CheckBoxC7SuppressHeader = new wxCheckBox(this, ID_CHECKBOXC7SuppressHeader, _("C7 Suppress Header"), wxPoint(192,160), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC7SuppressHeader"));
-	CheckBoxC7SuppressHeader->SetValue(false);
 	CheckBoxC6Subtitle = new wxCheckBox(this, ID_CHECKBOXC6Subtitle, _("C6 Subtitle"), wxPoint(192,136), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC6Subtitle"));
 	CheckBoxC6Subtitle->SetValue(false);
+	CheckBoxC7SuppressHeader = new wxCheckBox(this, ID_CHECKBOXC7SuppressHeader, _("C7 Suppress Header"), wxPoint(192,160), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC7SuppressHeader"));
+	CheckBoxC7SuppressHeader->SetValue(false);
+	CheckBoxC8Update = new wxCheckBox(this, ID_CHECKBOXC8UPDATE, _("C8 Update"), wxPoint(192,184), wxSize(150,13), 0, wxDefaultValidator, _T("ID_CHECKBOXC8UPDATE"));
+	CheckBoxC8Update->SetValue(false);
+	CheckBoxTransmitPage = new wxCheckBox(this, ID_CHECKBOXTransmitPage, _("Transmit Page"), wxPoint(192,208), wxSize(104,13), 0, wxDefaultValidator, _T("ID_CHECKBOXTransmitPage"));
+	CheckBoxTransmitPage->SetValue(false);
 	TextCtrlFastext1 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK1, _T("100"), wxPoint(8,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK1"));
 	TextCtrlFastext1->SetBackgroundColour(wxColour(255,174,174));
-	TextCtrlFastextIndex = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTINDEX, _T("100"), wxPoint(48,240), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTINDEX"));
-	TextCtrlFastext4 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK4, _T("100"), wxPoint(128,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK4"));
-	TextCtrlFastext4->SetBackgroundColour(wxColour(177,249,252));
-	TextCtrlFastext3 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK3, _T("100"), wxPoint(88,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK3"));
-	TextCtrlFastext3->SetBackgroundColour(wxColour(249,253,176));
 	TextCtrlFastext2 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK2, _T("100"), wxPoint(48,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK2"));
 	TextCtrlFastext2->SetBackgroundColour(wxColour(184,249,181));
+	TextCtrlFastext3 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK3, _T("100"), wxPoint(88,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK3"));
+	TextCtrlFastext3->SetBackgroundColour(wxColour(249,253,176));
+	TextCtrlFastext4 = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTLINK4, _T("100"), wxPoint(128,208), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTLINK4"));
+	TextCtrlFastext4->SetBackgroundColour(wxColour(177,249,252));
+	TextCtrlFastextIndex = new wxTextCtrl(this, ID_TEXTCTRLFASTEXTINDEX, _T("100"), wxPoint(48,240), wxSize(32,21), 0, wxDefaultValidator, _T("ID_TEXTCTRLFASTEXTINDEX"));
+	ButtonOK = new wxButton(this, wxID_OK, _("OK"), wxPoint(184,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_OK"));
+	ButtonOK->SetHelpText(_("Keep the current settings"));
+	ButtonCancel = new wxButton(this, wxID_CANCEL, _("Cancel"), wxPoint(272,240), wxDefaultSize, 0, wxDefaultValidator, _T("wxID_CANCEL"));
 
 	Connect(wxID_OK, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PageSettingsDialog::OnButtonOKClick);
 	Connect(wxID_CANCEL, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&PageSettingsDialog::OnButtonCancelClick);
