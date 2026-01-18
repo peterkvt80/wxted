@@ -2,7 +2,7 @@
  * Description       : Class for a teletext page
  * Compiler          : C++
  *
- * Copyright (C) 2014-2025, Peter Kwan
+ * Copyright (C) 2014-2026, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -644,13 +644,15 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
 void TTXPage::OutputLines(std::ofstream& ttxfile, int mpp)
 {
   // Page number mpp comes from TTXPageSet but subcode ss comes from TTXPage
-  ttxfile << "PN," << std::hex << mpp << "\n";
-  if (m_subCode<0)
+  ttxfile << "PN," << std::hex;
+  if (m_subCode<0) // no subpages
   {
+    ttxfile << (mpp & 0xfff00) << "00\n";
     ttxfile << "SC,0000" << "\n";
   }
   else
   {
+    ttxfile << (mpp & 0xfff00) + m_subCode << "\n";
     ttxfile << "SC," << std::dec << std::setw(4) << std::setfill('0') << m_subCode << "\n";   // Subcode for these lines
   }
   ttxfile << "PS," << std::setw(4) << std::setfill('X') << std::hex << m_pageStatus << std::endl;
