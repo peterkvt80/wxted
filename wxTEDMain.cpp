@@ -1347,7 +1347,7 @@ void wxTEDFrame::m_SetStatus()
     }
 
     TTXLine* line=pageSet->CurrentPage()->GetRow(c.y);
-    if (pageSet->GetPage(0)->GetPageChanged())
+    if (pageSet->GetPageChanged())
       str << "* ";
     str << "P" << pageSet->CurrentPageIndex()+1 << "/" << pageSet->GetPageCount() << ", ";
     if (line!=NULL)
@@ -1875,6 +1875,7 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     Panel1->Hide();
 #endif
     // std::cout << "Finished starting frame" << std::endl;
+    pageSet->SetPageChanged(false);
 }
 
 wxTEDFrame::~wxTEDFrame()
@@ -1957,7 +1958,7 @@ void wxTEDFrame::OnAbout(wxCommandEvent& event)
 
 void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
 {
-  if ( pageSet->GetPage(0)->GetPageChanged() )
+  if ( pageSet->GetPageChanged() )
   {
     if ( wxMessageBox("Wipe everything and start a new page?",
                       "Please confirm",
@@ -1974,6 +1975,7 @@ void wxTEDFrame::OnMenuNew(wxCommandEvent& event)
   pageSet->SetSourcePage(""); // Prevent an accidental Save of the default page
   m_setLanguage(true);
   SetRegionMenu(0, true);
+  pageSet->SetPageChanged(false);
   ShowCarouselMenu();
 }
 
@@ -2339,7 +2341,7 @@ void wxTEDFrame::OnMenuItemPublishSettings(wxCommandEvent& event)
 
 void wxTEDFrame::OnClose(wxCloseEvent& event)
 {
-    if ( event.CanVeto() && pageSet->GetPage(0)->GetPageChanged() )
+    if ( event.CanVeto() && pageSet->GetPageChanged() )
     {
         if ( wxMessageBox("The file has not been saved... continue closing?",
                           "Please confirm",
@@ -3033,6 +3035,7 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     Refresh();
     Update();
     ShowCarouselMenu();
+    pageSet->SetPageChanged(false);
   }
 
 }

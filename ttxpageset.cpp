@@ -623,7 +623,8 @@ bool TTXPageSet::m_LoadTTI(std::string filename)
                     if (m_PageNumber!=FIRSTPAGE) // // Subsequent pages need new page instances
                     {
                       std::cout << "Created a new subpage" << std::endl;
-                      pages.emplace_back(std::make_unique<TTXPage>()); // make the page
+                      p->SetPageChanged(false); // Done with this page, set it to unchanged
+                      pages.emplace_back(std::make_unique<TTXPage>()); // make the next page
                       p = pages.back().get(); // get a pointer to the next page
                     }
                     SetPageNumber(pageNumber);
@@ -714,11 +715,23 @@ bool TTXPageSet::GetPageChanged()
   {
     if (p->GetPageChanged())
     {
+      SetPageChanged(true);
       return true;
     }
   }
   return false;
 }
+
+void TTXPageSet::SetPageChanged(bool change)
+{
+  pageChanged = change;
+  // Now we don't care about the other pages so clear their flags
+  for (const auto& p : pages )
+  {
+    p->SetPageChanged(false);
+  }
+}
+
 
 bool TTXPageSet::SavePageDefault()
 {

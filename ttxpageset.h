@@ -93,6 +93,12 @@ class TTXPageSet
      */
     bool SavePageDefault();
 
+    /** @brief Has anything changed that would require a Save?
+     * Should check this before closing a page
+     */
+    bool GetPageChanged(); //
+    void SetPageChanged(bool changed);
+
     /** Setter/Getter for m_description
     */
     std::string GetDescription() {return m_description;}
@@ -105,11 +111,6 @@ class TTXPageSet
     std::string GetSourcePage() {return m_sourcepage;}
     void SetSourcePage(std::string fname){if(m_sourcepage!=fname)SetPageChanged(true);m_sourcepage=fname;}
 
-    /** @brief Has anything changed that would require a Save?
-     * Should check this before closing a page
-     */
-    bool GetPageChanged(); //
-    void SetPageChanged(bool change){pageChanged=change;};
 
     /** Setter/Getter for m_shortFilename
     *  The short filename doesn't have a path
@@ -166,9 +167,6 @@ class TTXPageSet
     std::string m_sourcepage;   // SP
     std::string m_shortFilename;
     std::string m_description;  // DE
-    //int m_cycleTimeSeconds;     // CT
-    //char m_cycleTimeType;       // CT
-    //int m_pageStatus; // PS
 
     void m_Init();  /// Constructor initialisations
 

@@ -165,6 +165,7 @@ void TTXPage::AddEvent(EventType evt,wxPoint wxc,char oldChar, char newChar)
     tev->SetCharList(cc);
     // tev->SetCharList(cc); // not correct. Need to add to the end of the list NOT the root
     cc->AddChange(wxc,oldChar,newChar);
+    SetPageChanged(true);
     break;
   case EventLanguage :     // No idea
     break;
@@ -192,10 +193,17 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
     {
         yMin=0;
     }
-    if (cursorLoc.y>24 || cursorLoc.y<yMin) return;       // Out of range. Don't allow row 0 either.
+
+    if (cursorLoc.y>24 || cursorLoc.y<yMin)
+    {
+      return;       // Out of range. Don't allow row 0 either.
+    }
 
     // Do not allow DoubleHeight on row 23 or 24
-    if (cursorLoc.y>22 && code==WXK_CONTROL_M) return;
+    if (cursorLoc.y>22 && code==WXK_CONTROL_M)
+    {
+      return;
+    }
 
     TTXLine* line=m_pLine[cursorLoc.y].get();
 
@@ -222,12 +230,14 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_F6: ch=ttxCodeAlphaCyan;break;     // Shift-F6 cyan
             case WXK_F7: ch=ttxCodeAlphaWhite;break;    // Shift-F7 white
             case WXK_F8: ch=0x80;break;                 // Shift-F8 black SPECIAL CASE!
-            // case WXK_F9: InsertLine(); break; // Oh. We don't have the y location at this point
+            case WXK_F9: InsertLine(cursorLoc);         // Shift-F9 (esc-i) insert line
+              ch = 0;
+              break;
             default: ch=0; // not a valid shift code.
         }
         if (ch>0)
         {
-            if (static_cast<unsigned char>(ch)==0x80) ch=ttxCodeAlphaBlack; // Alpha black shenanigans
+            if (static_cast<unsigned char>(ch)==0x80) { ch=ttxCodeAlphaBlack; } // Alpha black shenanigans
             char oldChar=line->SetCharAt(cursorLoc.x,ch);
             AddEvent(EventKey,cursorLoc,oldChar,ch);
             if (cursorLoc.x<39) cursorLoc.x++; // right
@@ -249,6 +259,10 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_F6: ch=ttxCodeGraphicsCyan;break;
             case WXK_F7: ch=ttxCodeGraphicsWhite;break;
             case WXK_F8: ch=ttxCodeGraphicsBlack;break;
+            case WXK_F9: DeleteLine(cursorLoc);   // Ctrl-F9 (esc-I) delete line and close up space
+              ch = 0;
+              break;
+
             // Special codes
             // A=select all
             case WXK_CONTROL_H: ch=ttxCodeFlash;break;          // Ctrl-H: flash
@@ -267,10 +281,11 @@ void TTXPage::SetCharAt(int code, int modifiers, wxPoint& cursorLoc, wxPoint& cu
             case WXK_CONTROL_B: ch=ttxCodeNewBackground;break;      // Ctrl-B:
             case WXK_CONTROL_W: ch=ttxCodeHoldGraphics;break;       // Ctrl-W:
             case WXK_CONTROL_X: ch=ttxCodeReleaseGraphics;break;    // Ctrl-X:
-                        // Also want to delete!
 
+            // Also want to delete!
             case WXK_DELETE:
                 // Delete the whole row. Don't think this gets used!
+                // Not to be confused with DeleteLine()
                 for (cursorLoc.x=0;cursorLoc.x<40;cursorLoc.x++)
                 {
                     AddEvent(EventKey,cursorLoc,line->GetCharAt(cursorLoc.x),' ');
