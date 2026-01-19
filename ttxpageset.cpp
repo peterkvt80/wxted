@@ -133,7 +133,7 @@ void TTXPageSet::m_Init()
   undoList = nullptr,
   m_current = nullptr,
   m_loaded = false;
-  // std::vector<std::unique_ptr<TTXPage>> pages; /// Where all the pages are stored
+  // Make an initial page
   pages.emplace_back(std::make_unique<TTXPage>()); /// @todo Replace this with AddPage function
   SetPageNumber(FIRSTPAGE); // Valid but unlikely page
   SetPageChanged(false);

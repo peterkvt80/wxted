@@ -3029,8 +3029,6 @@ void wxTEDFrame::OnMenuNewFromTemplate(wxCommandEvent& event)
     // Update the palette in case it is visible
     paletteFrame->SetX28(pageSet->GetPage(0)->GetX28Row());
 
-    // TODO FIX THIS pageSet->CurrentPage=pageSet->GetPage(0);
-
     // Force an update now
     Refresh();
     Update();
