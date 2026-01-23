@@ -82,9 +82,21 @@ bool TTXRow28::decode(std::string line)
   this->pageFunction = triples[0] & 0x0f; // t1, 1..4
   this->pageCoding = (triples[0] >> 4) & 0x07; // t1, 5..7
   this->defaultG0G2CharacterSet = (triples[0] >> 7) & 0x7f; // t1, 8..14
+
+  // Reverse the order of the language bits
+  auto a = this->defaultG0G2CharacterSet & 0x7a; // Mask off the b2, b0 of the language bits
+  if (this->defaultG0G2CharacterSet & 0x01) { a |= 0x04; } // move b0
+  if (this->defaultG0G2CharacterSet & 0x04) { a |= 0x01; } // move b2
+  this->defaultG0G2CharacterSet = a;
+
   this->secondG0G2CharacterSet = (  // t1, 15..18, t2, 1-3
-    ((triples[0] >> 14) & 0x0f) | ((triples[1] & 0x07) << 4)
-  );
+    ((triples[0] >> 14) & 0x0f) | ((triples[1] & 0x07) << 4));
+
+  // Reverse the order of the language bits
+  a = this->secondG0G2CharacterSet & 0x7a; // Mask off the b2, b0 of the language bits
+  if (this->secondG0G2CharacterSet & 0x01) { a |= 0x04; } // move b0
+  if (this->secondG0G2CharacterSet & 0x04) { a |= 0x01; } // move b2
+  this->secondG0G2CharacterSet = a;
 
   // Colours
     // Colour mappings
@@ -238,6 +250,13 @@ unsigned int TTXRow28::Remap(unsigned int colour, bool useForeground)
   return clut[clutIndex][colour];
 }
 
+void TTXRow28::SetRemap(unsigned int mapVal)
+{
+  setValid();
+  remap = mapVal & 0x07;
+}
+
+
 unsigned int TTXRow28::Region(bool primary)
 {
   if (primary)
@@ -252,6 +271,7 @@ unsigned int TTXRow28::Region(bool primary)
 
 void TTXRow28::SetRegion(int region, bool primary)
 {
+  setValid();
   region &= 0x0f;
   region <<= 3;
   if (primary)
@@ -281,6 +301,7 @@ unsigned int TTXRow28::Language(bool primary)
 
 void TTXRow28::SetLanguage(int language, bool primary)
 {
+  setValid();
   language &= 0x07; // Mask language
   if (primary)
   {
@@ -303,7 +324,7 @@ void TTXRow28::SetLanguage(int language, bool primary)
  */
 std::string TTXRow28::encode()
 {
-  if (dc == 1000) { // Uninitialised?
+  if (!isValid()) { // Uninitialised?
     return "";
   }
   unsigned int triples[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -338,8 +359,17 @@ std::string TTXRow28::encode()
   AddX28(pageFunction, 1, 1, 4); // 1: 1-4 Page function. 4 bits
   AddX28(pageCoding, 1, 5, 3); // 1: 5-7 Page coding. 3 bits
 
-  AddX28(defaultG0G2CharacterSet, 1, 8, 7); // 1: 8-14 Default G0 and G2 character set designation. 7 bits
-  AddX28(secondG0G2CharacterSet, 1, 15, 7); // 1: 15-18, 2: 1-3 Second G0 Set designation
+  // Reverse the order of the language bits
+  auto a = this->defaultG0G2CharacterSet & 0x7a; // Mask off the b2, b0 of the language bits
+  if (this->defaultG0G2CharacterSet & 0x01) { a |= 0x04; } // move b0
+  if (this->defaultG0G2CharacterSet & 0x04) { a |= 0x01; } // move b2
+  AddX28(a, 1, 8, 7); // 1: 8-14 Default G0 and G2 character set designation. 7 bits
+
+  // Reverse the order of the language bits
+  a = this->secondG0G2CharacterSet & 0x7a; // Mask off the b2, b0 of the language bits
+  if (this->secondG0G2CharacterSet & 0x01) { a |= 0x04; } // move b0
+  if (this->secondG0G2CharacterSet & 0x04) { a |= 0x01; } // move b2
+  AddX28(a, 1, 15, 7); // 1: 15-18, 2: 1-3 Second G0 Set designation
   AddX28(enableLeftPanel, 2, 4, 1);
   AddX28(enableRightPanel, 2, 5, 1);
   AddX28(sidePanelStatusFlag, 2, 6, 1);
@@ -398,5 +428,6 @@ bool TTXRow28::BlackBackgroundSubstitution()
 
 void TTXRow28::SetBlackBackgroundSubstitution(bool enabled)
 {
+  setValid();
   blackBackgroundSub = enabled;
 }

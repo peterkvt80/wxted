@@ -23,10 +23,15 @@ class TTXRow28 : public TTXLine
      */
     unsigned int Remap(unsigned int colour, bool useForeground);
 
+    /**
+     * @brief If any parameter is changed, set a valid dc if not already valid
+     */
+    void setValid(){if (!isValid()){dc = 0;}};
+
     /** SetRemap. Controls the CLUT remapping.
      *  @param mapVal - CLUT remapping value 0..7
      */
-    void SetRemap(unsigned int mapVal){remap = mapVal & 0x07;};
+    void SetRemap(unsigned int mapVal);
 
     /** GetRemap. Controls the CLUT remapping.
      *  @return - The current CLUT remapping value 0..7
@@ -66,7 +71,7 @@ class TTXRow28 : public TTXLine
     /** SetDefaultRowColour - Set the default row colour.
      * @return Row colour 5 bits: 2 Clut + 3 Colour
      */
-    void SetDefaultRowColour(unsigned int colour){defaultRowColour = colour;};
+    void SetDefaultRowColour(unsigned int colour){setValid(); defaultRowColour = colour;};
 
     /** GetDefaultScreenColour - Get the default screen colour.
      * @return Screen colour 5 bits: 2 Clut + 3 Colour
