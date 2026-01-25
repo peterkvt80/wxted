@@ -30,6 +30,9 @@
 #include "hamm.h"
 // #include "hamm-tables.h"
 #include "tedevent.h"
+
+#include "masktemplate.h" // MS command in tti files
+
 //#include "wxTEDMain.h"
 #define FIRSTPAGE 0x1ff00
 
@@ -205,6 +208,12 @@ class TTXPage
     char GetCycleTimeMode() {return m_cycleTimeType;}
     void SetCycleTimeMode(char mode){if(m_cycleTimeType!=mode)SetPageChanged(true);m_cycleTimeType=mode;}
 
+    /** mask template access
+    */
+    bool AddMask(std::string line){return m_mask.AddMask(line);};
+    std::string WriteMask(){return m_mask.WriteMask();};
+    size_t GetMaskCount(){return m_mask.GetMaskCount();};
+
   protected:
   private:
     // Private variables
@@ -228,6 +237,8 @@ class TTXPage
     bool pageChanged; // True if anything in this page changed
     int m_cycleTimeSeconds; // Carousel display time
     char m_cycleTimeType; // C or T. Cycled or Timed
+
+    MaskTemplate m_mask; // Templating mask for data fields
 };
 
 #endif // TTXPAGE_H

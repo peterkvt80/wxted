@@ -58,6 +58,8 @@ void TTXPage::m_Init()
   m_cycleTimeType = 'T';
   m_pageStatus=0x8000;
 
+  // Templating. Allows preprocessors to add dynamic data fields. Can ignore for transmission.
+  m_mask.ClearMask();
 }
 
 TTXPage::~TTXPage()

@@ -650,10 +650,14 @@ bool TTXPageSet::m_LoadTTI(std::string filename)
                     p->SetPageStatus(std::strtol(line.c_str(), &ptr, 16));
                     // Don't copy the bits to the UI...
                     break;
-                case 7 : // "MS" - Mask
-                    // MS,0
-                    // std::cout << "MS not implemented\n";
+                case 7 : // "MS" - Mask MS,<row>,<column>,<size>,<database id>[,<align>[,<datatype>]]
+                    // MS,6,14,4,display.current.pressure
                     std::getline(filein, line);
+                    if (not p->AddMask(line))
+                    {
+                      std::cerr << "[m_LoadTTI] Failed to load mask from: " << line << std::endl;
+                    }
+                    std::cout << "[m_loadTTI] Mask list count = " << p->GetMaskCount() << std::endl;
                     break;
                 case 8 : // "OL" - Output line
                     // OL,9,ƒA-Z INDEX     ‡199ƒNEWS HEADLINES  ‡101
@@ -782,6 +786,8 @@ bool TTXPageSet::SavePage(std::string filename)
         << p->GetLink(5) << std::endl;
       }
       ttxfile << std::dec;
+      ttxfile << p->WriteMask(); // mask templates
+      std::cout << "[SavePage] mask = " << p->WriteMask();
     }
   }
   else
