@@ -6,7 +6,7 @@
  * Copyright: Peter Kwan
  * License:
  *
- * Copyright (C) 2014 - 2025, Peter Kwan
+ * Copyright (C) 2014 - 2026, Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -30,6 +30,11 @@
 
 wchar_t MapChar(wchar_t ch, int language, int region)
 {
+  // All char sets have this mapping (except maybe Cyrillic G2?)
+  if (ch == 0x7f)
+  {
+    return 0xe65f;
+  }
   switch (region)
   {
   case 0: // West Europe

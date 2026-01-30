@@ -13,12 +13,17 @@
 #include <cstdlib>
 #include <iomanip>
 
-// wxWidgets stuff
+// wxWidgets stuff is already declared at a higher level in wxTED
 // For wxPoint
-#include <wx/gdicmn.h>
+// #include <wx/gdicmn.h>
 // For wx keyboard codes
-#include <wx/defs.h>
+// #include <wx/defs.h>
 
+/* May need minimal stub when used in wxTEDIcon
+// Minimal stubs if you want to avoid full wxWidgets overhead
+typedef int wxInt32;
+struct wxPoint { int x, y; };
+*/
 
 #include "ttxcodes.h"
 #include "ttxline.h"
