@@ -347,6 +347,14 @@ bool TTXPageSet::m_LoadEP1(std::string filename)
   {
       filein.read(buf,40); // TODO: Check for a failed read and abandon
       buf[40]=0;
+      // What psycho would insert escapes?
+      for (int j=0; j<40; ++j)
+      {
+        if (buf[j]==0x1b)
+        {
+          buf[j]=' ';
+        }
+      }
       std::string s(buf);
       p->SetRow(i,s);
   }

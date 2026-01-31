@@ -58,7 +58,7 @@
 
 
 // Version number
-#define VERSION_STRING wxT("1.64")
+#define VERSION_STRING wxT("1.65")
 
 // Publish setup
 #include "PublishSetupDialog.h"

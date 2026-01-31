@@ -15,6 +15,10 @@ If the build wants various dlls then bundle those in too.
 
 5) Commit the changes to Github Master and then Push origin.
 
+5A) Load up TTIThumbnailProvider in Visual Studio, select the release version and rebuild.
+
+5B) Copy x64\Release\TTIThumbnailProvider.dll to E:\dev\TTIIcon\
+
 6) Run Inno Setup Compiler using the configuration that is in the Release folder and load winpackage.iss.
    Set the myAppVersion and VersionInfoVersion to the new version number.
    If you are using a dynamic wxWidgets library then copy the new dll (eg. wxmsw32u_gcc_custom.dll) and update the file entry.
