@@ -2,7 +2,7 @@
  * Description       : Class for a single teletext line
  * Compiler          : C++
  *
- * Copyright (C) 2014,2016 Peter Kwan
+ * Copyright (C) 2014,2016,2026 Peter Kwan
  *
  * Permission to use, copy, modify, and distribute this software
  * and its documentation for any purpose and without fee is hereby
@@ -32,8 +32,16 @@ TTXLine::TTXLine(std::string const& line):m_textline(line)
     m_textline=validate(line);
 }
 
-TTXLine::TTXLine():m_textline("                                        ")
+TTXLine::TTXLine():m_textline("                                      ")
 {
+}
+
+/** Copy Constructor
+ * \param other The source TTXLine to copy from
+ */
+TTXLine::TTXLine(const TTXLine& other) : m_textline(other.m_textline)
+{
+    // std::string's copy constructor handles the deep copy of the text data
 }
 
 TTXLine::~TTXLine()
@@ -58,8 +66,7 @@ void TTXLine::SetRow(std::string const& val)
 std::string TTXLine::validate(std::string const& val)
 {
     int j=0;
-    std::string str="                                       ";
-    str.resize(80);
+    std::string str="";
     // std::cout << "Validating length= " << val.length() << std::endl;
     for (unsigned int i=0;i<val.length() && i<80;i++)
     {
@@ -79,7 +86,8 @@ std::string TTXLine::validate(std::string const& val)
             ch='?'; // Black text.
         }
         */
-        str[j++]=ch;
+        j++;
+        str.push_back(ch);
     }
     // short line? Remove the text terminator.
     if (str[j-1]=='\n') j--;

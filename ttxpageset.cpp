@@ -125,6 +125,8 @@ TTXPageSet::TTXPageSet(std::string filename, std::string shortFilename)
 
 void TTXPageSet::m_Init()
 {
+  std::lock_guard<std::mutex> lock(m_pageMutex); // Prevent overlapping inits
+  pages.clear();
   m_destination="inserter";
   m_description="Description goes here";
   SetSourcePage("");
@@ -166,10 +168,11 @@ bool TTXPageSet::m_LoadT42(std::string filename)
   {
       // Read in a packet
       filein.read(buf,42); // TODO: Check for a failed read and abandon
-      t42 = new T42(buf);
+      buf[42]=0;
+      T42 t42(buf);
       // What sort of packet is it?
-      int mag = t42->GetMag();
-      int row = t42->GetRow();
+      int mag = t42.GetMag();
+      int row = t42.GetRow();
       // @todo row 0 should extract the page number and flags
       std::cout << "[TTXPageSet::m_LoadT42] packet = " << mag << "/" << row << std::endl;
       // End of file should also terminate
@@ -192,7 +195,7 @@ bool TTXPageSet::m_LoadT42(std::string filename)
       }
       else // Row 0 header
       {
-          HeaderPacket header_packet{*t42};
+          HeaderPacket header_packet{t42};
           char str[50];
           strncpy(str, "        ",8);
           strncat(str, header_packet.GetHeading(),24);
@@ -325,44 +328,73 @@ bool TTXPageSet::m_LoadVTX(std::string filename)
 
 bool TTXPageSet::m_LoadEP1(std::string filename)
 {
-  std::ifstream filein(filename.c_str(), std::ios::binary | std::ios::in);
-  if (not filein.good())
-  {
-    return false;
-  }
+    std::lock_guard<std::mutex> lock(m_loadMutex); // Prevent overlapping loads
 
-  char buf[100];
-  auto p = GetPage(0);
 
-  // First 6 chars should be FE 01 09 00 00 00
-  filein.read(buf,6);
-  if ((buf[0]!=(char)0xFE) || (buf[1]!=(char)0x01) || (buf[2]!=(char)0x09))
-  {
-      filein.close();
-      return false;
-  }
-  SetSourcePage(filename+".tti"); // Add tti to ensure that we don't destroy the original
-  // Next we load 24 lines  of 40 characters
-  for (int i=0;i<24;i++)
-  {
-      filein.read(buf,40); // TODO: Check for a failed read and abandon
-      buf[40]=0;
-      // What psycho would insert escapes?
-      for (int j=0; j<40; ++j)
-      {
-        if (buf[j]==0x1b)
+    // 1. Clear the undo history for THIS page set to prevent old edits
+    // from bleeding into the new file data.
+    undoList = nullptr;
+    m_current = nullptr;
+
+    // 2. Open file using RAII. Binary mode is essential for EP1.
+    std::ifstream filein(filename, std::ios::binary | std::ios::in);
+    if (!filein.is_open())
+    {
+        return false;
+    }
+
+    // 3. Verify EP1 Header (FE 01 09 ...)
+    // Use unsigned char to avoid sign-extension issues with 0xFE.
+    std::vector<unsigned char> header(6);
+    if (!filein.read(reinterpret_cast<char*>(header.data()), 6) ||
+        header[0] != 0xFE || header[1] != 0x01 || header[2] != 0x09)
+    {
+        return false;
+    }
+
+    // Ensure we have a valid page target.
+    // If m_Init was called correctly, pages[0] should exist.
+    if (pages.empty())
+    {
+        return false;
+    }
+
+    SetSourcePage(filename + ".tti");
+
+    // 4. Read 24 lines of 40 characters
+    std::vector<char> rowBuf(40);
+    for (int i = 0; i < 24; ++i)
+    {
+        // 5. Check for truncated files. Fail early if read is incomplete.
+        if (!filein.read(rowBuf.data(), 40))
         {
-          buf[j]=' ';
+            break; // Stop at end of file rather than processing garbage
         }
-      }
-      std::string s(buf);
-      p->SetRow(i,s);
-  }
-  p->SetRow(0,"         wxTED %%# %%a %d %%b \x3 %H:%M.%S"); // Overwrite anything in row 0 (usually empty)
-  // With a pair of zeros at the end we can skip
-  filein.close(); // Not sure that we need to close it
-  SetPageChanged(false);
-  return true;
+
+        // 6. Clean escape characters (0x1b)
+        std::replace(rowBuf.begin(), rowBuf.end(), static_cast<char>(0x1b), ' ');
+
+        // 7. SAFE STRING CREATION
+        // Construct string from the specific 40-byte range.
+        // This avoids the 'mirrored row' bug caused by std::string(char*)
+        // reading past the buffer into neighboring row memory.
+        std::string s(rowBuf.begin(), rowBuf.end());
+
+        // Re-fetch page inside loop to be safe against vector reallocations
+        if (TTXPage* p = GetPage(0))
+        {
+            p->SetRow(i, s);
+        }
+    }
+
+    // Finalise Page 0 row
+    if (TTXPage* p = GetPage(0))
+    {
+        p->SetRow(0, "         wxTED %%# %%a %d %%b \x3 %H:%M.%S");
+    }
+
+    SetPageChanged(false);
+    return true;
 }
 
 bool TTXPageSet::m_LoadVTP(std::string filename)
@@ -564,7 +596,7 @@ bool TTXPageSet::m_LoadTTI(std::string filename)
     char m;
     for (std::string line; std::getline(filein, line, ','); )
     {
-         std::cout << line << std::endl; // Shows the command code
+         // std::cout << line << std::endl; // Shows the command code
         bool found=false;
         for (int i=0;i<cmdCount && !found; i++)
         {
@@ -572,7 +604,7 @@ bool TTXPageSet::m_LoadTTI(std::string filename)
             if (!line.compare(cmd[i]))
             {
                 found=true;
-                std::cout << "Matched " << line << std::endl;
+                // std::cout << "Matched " << line << std::endl;
                 switch (i)
                 {
                 case 0 : // "DS" - Destination inserter name
@@ -916,7 +948,12 @@ int TTXPageSet::findPageNumber(char* buf)
 // Page management. Current page, add page, delete page
 TTXPage* TTXPageSet::CurrentPage()
 {
-  return pages[m_currentPageIndex].get();
+  auto p = pages[m_currentPageIndex].get();
+  if (p==nullptr)
+  {
+    std::cout << "[TTXPageSet::CurrentPage] Invalid m_currentPageIndex = " << m_currentPageIndex << std::endl;
+  }
+  return p;
 }
 
 TTXPage* TTXPageSet::PreviousPage()

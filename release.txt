@@ -19,7 +19,10 @@ If the build wants various dlls then bundle those in too.
 
 5B) Copy x64\Release\TTIThumbnailProvider.dll to E:\dev\TTIIcon\
 
-6) Run Inno Setup Compiler using the configuration that is in the Release folder and load winpackage.iss.
+6) Run Inno Setup Compiler using the configuration that is in the Release folder and load:
+   a) winpackage.iss - My original script
+   b) winpackagethumb-improved.iss - A rather overcomplicated script written by Claude.ai. It handles the dependencies automatically.
+   c) winpackagethumb-simple.iss - A more basic script by Claude.ai. User is asked to install VC++. <<< Use this one
    Set the myAppVersion and VersionInfoVersion to the new version number.
    If you are using a dynamic wxWidgets library then copy the new dll (eg. wxmsw32u_gcc_custom.dll) and update the file entry.
    Select Build->Compile.

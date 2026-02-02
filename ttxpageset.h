@@ -25,6 +25,7 @@
  * this software.
  *************************************************************************** **/
 #include "ttxpage.h"
+#include <mutex>
 
 class TTXPageSet
 {
@@ -169,6 +170,8 @@ class TTXPageSet
     std::string m_description;  // DE
 
     void m_Init();  /// Constructor initialisations
+    std::mutex m_pageMutex;
+    std::mutex m_loadMutex;
 
 };
 

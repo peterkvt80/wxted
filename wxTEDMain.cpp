@@ -388,7 +388,8 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       }
       std::cout << "[wxTEDFrame::OnChar] code = " << (int)code << std::endl;
     } // edit.tf escape mode
-    pageSet->CurrentPage()->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
+    auto p = pageSet->CurrentPage();
+    p->SetCharAt(code, modifiers, m_cursorPoint, m_subPixelPoint, MenuItemShowHeader->IsChecked());
   }
 
   //std::cout << "Cursor = " << m_cursorPoint.x << "." << m_subPixelPoint.x << ", "
@@ -602,6 +603,12 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
 {
     if (this->IsIconized()) return; // If Iconized we shouldn't draw anything
 
+    // If our page is not ready, don't draw. (shouldn't happen?
+    if (pageSet == nullptr)
+    {
+      return;
+    }
+
     wxPoint offset=m_offset;
 
     wxBufferedPaintDC paintDC(this);
@@ -740,7 +747,7 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
           // std::shared_ptr<TTXPage> p=page.GetPage(0);
           TTXLine* line=p->GetRow(row);
 
-          if (m_cursorPoint.y>0 && row==0) // If we are actually in the header, then edit the raw header
+          if (m_cursorPoint.y>0 && row==0 && line!=nullptr) // If we are actually in the header, then edit the raw header
           {
 
               if (line==NULL)
@@ -1261,7 +1268,15 @@ void wxTEDFrame::OnPaint(wxPaintEvent& event)
         paintDC.SetBrush(wxBrush(*wxWHITE));
             // In the current page, get the line that the cursor is on, and test if it is double height
         bool doubleHeight;
-        doubleHeight=pageSet->CurrentPage()->GetRow(m_cursorPoint.y)->IsDoubleHeight(m_cursorPoint.x); // @todo Extend to deal with double height transitions.
+        auto row = pageSet->CurrentPage()->GetRow(m_cursorPoint.y);
+        if (row == nullptr)
+        {
+          doubleHeight = false;
+        }
+        else
+        {
+          doubleHeight=row->IsDoubleHeight(m_cursorPoint.x); // @todo Extend to deal with double height transitions.
+        }
         if (m_cursorIsAlpha) // Alpha cursor
         {
             paintDC.DrawRectangle(wxPoint(m_cursorPoint.x*m_ttxW,m_cursorPoint.y*m_ttxH)+dx,wxSize(m_ttxW,m_ttxH));
@@ -1431,8 +1446,6 @@ wxTEDFrame::wxTEDFrame(wxWindow* parent, wxWindowID id, wxString initialPage)
     , m_config(new wxConfig("wxTED"))
 
 {
-  pageSet = std::make_unique<TTXPageSet>();
-  pageSet->debug("one");
     m_parentWindow=parent;
     m_blinkToggle=false;
 

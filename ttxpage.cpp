@@ -32,23 +32,19 @@ TTXPage::TTXPage() :
 
 void TTXPage::m_Init()
 {
-  // Resize the vector to hold the required number of rows
-  m_pLine.resize(MAXROW + 1);
-  // All lines are instanced. However, all spaces will be skipped in the save
+  std::cout << "[TTXPage::m_Init] Enters" << std::endl;
+  std::lock_guard<std::mutex> lock(m_rowMutex); // Prevent overlapping inits
+  std::string row0{"        wxTED Header mpp        %H:%M.%S"};
+  if (m_pLine.size() > 0) {row0="aaaaaaaaabbbbbbbbbbccccccccccdddddddddd";} // debug. Didn't expect this to have data
+  m_pLine.clear();
+  // While all lines are instanced. any blank rows will be skipped in the save
   for (unsigned int i = 0; i <= MAXROW; ++i)
   {
-    m_pLine[i] = std::make_unique<TTXLine>();
-    if (i>0)
-    {
-      m_pLine[i].get()->SetRow("                                        ");
-    }
-    else
-    {
-      m_pLine[i].get()->SetRow("        wxTED Header mpp        %H:%M.%S");
-    }
+    m_pLine.push_back(std::make_unique<TTXLine>(i?"                                        ":row0));
   }
 
-  m_row28 = std::shared_ptr<TTXRow28>(new TTXRow28());
+  // m_row28 = std::shared_ptr<TTXRow28>(new TTXRow28());
+  m_row28 = std::make_shared<TTXRow28>();
   for (int i=0;i<6;i++)
   {
     SetFastextLink(i,0x8ff);
@@ -129,8 +125,9 @@ TTXLine* TTXPage::GetRow(unsigned int rowNumber) {
 
 void TTXPage::SetRow(unsigned int rownumber, std::string line)
 {
-  // Line number out of range
-  if (rownumber>MAXROW)
+  std::lock_guard<std::mutex> lock(m_rowMutex); // Prevent overlapping writes
+  // Line number out of range OR the row has not yet been instanced
+  if (rownumber>MAXROW || m_pLine.size() < rownumber || m_pLine[rownumber] == nullptr)
   {
     return;
   }
@@ -816,7 +813,7 @@ void TTXPage::InsertLine(wxPoint& cursorLoc)
     std::string line=GetRow(i-1)->GetLine();
     SetRow(i, line);
   }
-  SetRow(y,"                                        ");
+  SetRow(y,"                                                            ");
 }
 
 // @todo This doesn't support undo/redo
@@ -828,7 +825,7 @@ void TTXPage::DeleteLine(wxPoint& cursorLoc)
     std::string line=GetRow(i+1)->GetLine();
     SetRow(i, line);
   }
-  SetRow(23,"                                        ");
+  SetRow(23,"                                       ");
 }
 
 unsigned int TTXPage::Remap(unsigned int colour, bool useForeground)

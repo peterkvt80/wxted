@@ -56,9 +56,15 @@
 #include "PageSettingsDialog.h"
 #include "mapchar.h"
 
+//#include <fstream>
+//#include <vector>
+//#include <string>
+//#include <algorithm>
+
+
 
 // Version number
-#define VERSION_STRING wxT("1.65")
+#define VERSION_STRING wxT("1.66")
 
 // Publish setup
 #include "PublishSetupDialog.h"

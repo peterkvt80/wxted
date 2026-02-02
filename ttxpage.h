@@ -38,6 +38,8 @@ struct wxPoint { int x, y; };
 
 #include "masktemplate.h" // MS command in tti files
 
+#include <mutex>
+
 //#include "wxTEDMain.h"
 #define FIRSTPAGE 0x1ff00
 
@@ -244,6 +246,7 @@ class TTXPage
     char m_cycleTimeType; // C or T. Cycled or Timed
 
     MaskTemplate m_mask; // Templating mask for data fields
+    std::mutex m_rowMutex; // Attempt to stop EP1 pages being corrupted when double clicked
 };
 
 #endif // TTXPAGE_H

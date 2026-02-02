@@ -18,6 +18,7 @@ class TTXLine
         TTXLine();
         TTXLine(std::string const& line);
         // TTXLine(std::string const& line);
+        TTXLine(const TTXLine& other);  // Copy (forces copy by value)
         /** Default destructor */
         virtual ~TTXLine();
 
@@ -80,7 +81,7 @@ class TTXLine
 
         /** Clear the current line. (Used by CTRL-DEL)
          */
-        void ClearLine(){m_textline="                                        ";};
+        void ClearLine(){m_textline="        clear line DEBUG 3              ";};
 
     protected:
         std::string validate(std::string const& test);
