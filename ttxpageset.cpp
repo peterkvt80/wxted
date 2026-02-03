@@ -1056,8 +1056,9 @@ void TTXPageSet::InsertPageAfter() // Insert a new page after the current page
 
 void TTXPageSet::DeletePage() // Delete the current page
 {
+  int pageCount = static_cast<int>(pages.size());
   if (m_currentPageIndex >= 0 && // Index is not negative?
-      m_currentPageIndex < static_cast<int>(pages.size() - 1)) // Index is in range and the page vector has more than one page
+      m_currentPageIndex < pageCount) // Index is in range and the page vector has more than one page
   {
     // Erase the element at the current index
     // This automatically deletes the TTXPage object

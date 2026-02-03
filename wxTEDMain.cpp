@@ -255,8 +255,7 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
   case WXK_ESCAPE:
     m_escapeMode=!m_escapeMode;
     break;
-  case WXK_PAGEUP:
-    // std::cout << "Page up will get next page of a multiple page carousel" << std::endl;
+  case WXK_PAGEUP: // Next page of a multiple page carousel
     if (m_cursorPoint.y<1)
     {
       m_cursorPoint.y=1;
@@ -275,14 +274,18 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       auto rightEdge=(pageSet->CurrentPageIndex()+1)*m_ttxW*41; // Distance from first page to end of current page
       uint32_t mappedEdge=rightEdge-m_ttxW+m_offset.x; // Edge that we want mapped to the right hand side of the client frame space
       uint32_t clientWidth=GetClientSize().GetWidth();
-      if (mappedEdge>clientWidth)
+      if (clientWidth < m_ttxW * 41 * 2) // Less than 2 pages wide? Just align to the left edge
       {
-        m_offset.x=clientWidth-rightEdge-m_ttxW; // Scroll left to bring the right side into frame
+        int leftEdge = pageSet->CurrentPageIndex() * m_ttxW * 41; // Distance from first page to left edge of current page
+        m_offset.x = -leftEdge;
+      }
+      else if (mappedEdge>clientWidth) // Scroll left if needed to bring the right side into frame?
+      {
+        m_offset.x = clientWidth-rightEdge-m_ttxW;
       }
     }
     break;
-  case WXK_PAGEDOWN:
-    // std::cout << "Page down will get previous page of a multiple page carousel" << std::endl;
+  case WXK_PAGEDOWN: // Previous page of a multiple page carousel
     pageSet->PreviousPage();
     SetRegionMenu(pageSet->CurrentPage()->GetRegion(true), true); // true is primary
     // @todo Secondary language
@@ -293,7 +296,9 @@ void wxTEDFrame::OnChar(wxKeyEvent& event)
       int leftEdge = pageSet->CurrentPageIndex() * m_ttxW * 41; // Distance from first page to left edge of current page
       int mappedEdge = leftEdge - m_ttxW + m_offset.x; // Edge that we want mapped to client frame space
       std::cout << std::dec << "iPage= " << pageSet->CurrentPageIndex() << " mappedEdge=" << mappedEdge << " leftEdge=" << leftEdge << std::endl;
-      if (mappedEdge<0 || mappedEdge>GetClientSize().GetWidth())
+      uint32_t clientWidth=GetClientSize().GetWidth();
+      // Realign if not entirely in the window, or the window is less than 2 pages wide.
+      if (mappedEdge<0 or mappedEdge>clientWidth or (clientWidth < m_ttxW * 41 * 2))
       {
         m_offset.x=-leftEdge; // Scroll left to bring the right side into frame
       }
