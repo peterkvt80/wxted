@@ -52,7 +52,7 @@ fc-cache fv
 
 3. Compile the project:
 ```bash
-g++ -o wxTED \
+g++ -std=c++17 -o wxTED \
     -I./include \
     charchange.cpp \
     hamm.c \
@@ -70,9 +70,8 @@ g++ -o wxTED \
     wxTEDMain.cpp \
     src/T42.cpp \
     src/HeaderPacket.cpp \
-    ttxpageset.cpp \    
-    `wx-config --cxxflags --libs core,base,adv,html` \
-    -std=c++17
+    ttxpageset.cpp \
+    $(wx-config --cxxflags --libs core,base,adv,html)
 ```
 
 4. Run wxTED:
